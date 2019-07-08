@@ -1,3 +1,5 @@
+Notes for **Beasts** _2. Improving runWithDebugger_
+
 The original runWithDebugger is from Practical Javascript:
 
 **Interlude - Functions inside of functions**
