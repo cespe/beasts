@@ -41,7 +41,7 @@ Luckily, Function.prototype.apply() does exactly what is needed (see MDN doc pag
 
 2. Should I throw an error if parametersArray is not an array or an array-like object? Or if a function is not passed as the first parameter?
 
-Tested for it and it just fails silently. No error handling added for now.. No error handling added for now.. No error handling added for now.. No error handling added for now.
+I tested for malformed parameters and the function just fails silently. That seems okay, so I'm not adding error handling for now.
 
-A gist with the solution should be posted to https://github.com/gordonmzhu/beasts/issues/2.
+A gist with the solution was be posted to https://github.com/gordonmzhu/beasts/issues/2.
 
