@@ -1,17 +1,31 @@
+ // It's awkward to insert the dependency array in parameter two. It should be optional at parameter three because not
+ // all libraries have dependencies. That follows naturally from the TDD already done.
+ 
+
 tests({
-	'librarySystem should make itself available at window.librarySystem': function() {
-		fail();
+	'If given a library name and a getLibrary callback, it should store library for retrieval by name': function() {
+		function getAppLibrary() {
+			return 'app library';
+		}
+		librarySystem('app', getAppLibrary);
+		eq(libraries['app'], 'app library' );
 	},
-	'If given a library name and a callback, it should store callback for retrieval by name': function() {
-		fail();	
+	"If called with optional array of dependencies, it should load the dependencies into library": function() {
+		function getDependencyLibrary() {
+			return 'loaded dependency';
+		}
+		librarySystem('dependency', getDependencyLibrary);
+		
+		function getAppLibrary(dependency) {
+			return 'app library'+ ' with ' + dependency;
+		}
+		librarySystem('app', getAppLibrary, ['dependency']);
+		eq(libraries['app'], 'app library with loaded dependency');
 	},
-	'The callback should return the named library': function() {
-		fail();
-	},
-	"If callback is given, librarySystem should return undefined": function() {
-		fail();
-	},
-	"If only a library name is given, librarySystem should return the named library": function() {
-		fail();
+	"If only given library name, it should return the named library with dependencies loaded, if any": function() {
+		var getAppLibrary = function() { return 'library' };
+		librarySystem('app');
+		var result = librarySystem('app');
+		eq(result, 'library');
 	},
 });
