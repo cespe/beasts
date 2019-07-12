@@ -14,18 +14,42 @@ tests({
 		function getDependencyLibrary() {
 			return 'loaded dependency';
 		}
-		librarySystem('dependency', getDependencyLibrary);
+		librarySystem('dependency', getDependencyLibrary);			// simple library with no dependencies
 		
 		function getAppLibrary(dependency) {
 			return 'app library'+ ' with ' + dependency;
 		}
-		librarySystem('app', getAppLibrary, ['dependency']);
+		librarySystem('app', getAppLibrary, ['dependency']);		// library with one dependency
 		eq(libraries['app'], 'app library with loaded dependency');
 	},
 	"If only given library name, it should return the named library with dependencies loaded, if any": function() {
-		var getAppLibrary = function() { return 'library' };
-		librarySystem('app');
+		var result = librarySystem('dependency');
+		eq(result, 'loaded dependency');
+
 		var result = librarySystem('app');
-		eq(result, 'library');
-	},
+		eq(result, 'app library with loaded dependency');
+
+		// set up
+		librarySystem('name', function() {
+			return 'Gordon';
+		});
+
+		librarySystem('company', function() {
+			return 'Watch and Code';
+		});
+
+		librarySystem('workBlurb', function(name, company) {		// library with two dependencies
+			return name + ' works at ' + company;
+		}, ['name', 'company']);
+		
+		// tests
+		result = librarySystem('name');
+		eq(result, 'Gordon');
+
+		result = librarySystem('company');
+		eq(result, 'Watch and Code');
+
+		result = librarySystem('workBlurb');
+		eq(result, 'Gordon works at Watch and Code');
+	}
 });
