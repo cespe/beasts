@@ -5,15 +5,26 @@
 
 var libraries = {};
 
-function librarySystem(libraryName, getLibraryCallback, /* optional */ dependencyNamesArray) {
+function librarySystem(libraryName, /* optional */ getLibrary, /* optional */ dependencyNames) {
+	if (typeof libraryName !== "string") {
+		throw new TypeError("libraryName must be a string"); 
+	}
 	if (arguments.length > 1) {
 		if (arguments.length === 2) {
-			libraries[libraryName] = getLibraryCallback();
+			libraries[libraryName] = getLibrary();
 		} else {
-			var dependencies = dependencyNamesArray.map(function(dependencyName) {
-				return librarySystem(dependencyName);
+			if (!Array.isArray(dependencyNames)) {
+			throw new TypeError("dependencyNames must be an array");
+			}
+			for (var i = 0; i < dependencyNames.length; i++) {
+				if (typeof dependencyNames[i] !== "string") {
+					throw new TypeError("each element of dependencyNames array must be a string");
+				}
+			}
+			var dependencies = dependencyNames.map(function(dependencyName) {
+				return librarySystem(dependencyName);	// recurse for nested dependencies
 			});
-			libraries[libraryName] = getLibraryCallback.apply(this, dependencies);
+			libraries[libraryName] = getLibrary.apply(this, dependencies);
 		}
 	} else {
 		return libraries[libraryName];
