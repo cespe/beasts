@@ -99,19 +99,18 @@ tests({
 		eq(result, 'Gordon Zhu works at Watch and Code');	// tests recursion for nested dependencies
 	},
 	"It should throw a ReferenceError if a library that is called for loading is undefined.": function() {
-		function getApp3Library(dependency3, missingDependency) {
-			return 'app library three'+ ' with ' + dependency3 + " " + missingDependency;
-		}
-		var app3Dependencies = ['dependency3', 'missingDependency'];
-		librarySystem('app3', getApp3Library, app3Dependencies);	// library with one missing dependency
-
 		function getDependency3Library() {
 			return 'loaded dependency three';
 		}
 		librarySystem('dependency3', getDependency3Library);
 
+		function getApp3Library(dependency3, missingDependency) {
+			return 'app library three'+ ' with ' + dependency3 + " " + missingDependency;
+		}
+		var app3Dependencies = ['dependency3', 'missingDependency'];
+
 		try {
-			result = librarySystem('app3');
+			librarySystem('app3', getApp3Library, app3Dependencies);	// library with one missing dependency
 		} catch (error) {
 			eq(error.name, "ReferenceError");
 			eq(error.message, "missingDependency library is missing");

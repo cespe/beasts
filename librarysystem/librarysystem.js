@@ -27,7 +27,11 @@ function librarySystem(libraryName, /* optional */ getLibrary, /* optional */ de
 			libraries[libraryName] = getLibrary.apply(this, dependencies);
 		}
 	} else {
-		return libraries[libraryName];
+		if (libraries[libraryName] === undefined) {
+			throw new ReferenceError(libraryName + " library is missing");
+		} else {
+			return libraries[libraryName];
+		}
 	}
 };
 
