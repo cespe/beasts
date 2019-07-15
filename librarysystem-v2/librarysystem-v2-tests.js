@@ -1,7 +1,10 @@
-// To allow loading out of order, will need to save dependency callbacks instead of running them right away in
-// the create step.
-// Run the callbacks to load dependencies in the use step.
-// The other requirement is that each library callback is run only once. Why?
+/*
+ To allow loading out of order, will need to save a library's dependencies and callback instead of running them
+ right away in the create/store step as can still be done for a library with no dependencies.
+
+ The other requirement is that each library callback is run only once -- essentially, if a library is already stored,
+ just return it.
+*/
 
 tests({
 	"It should take a library name of type String as its first parameter.": function() {
@@ -67,8 +70,8 @@ tests({
 		eq(result, 'loaded dependency two');
 
 		// test case from the exercise
-		librarySystem('workBlurb', function(fullname, company) {		// library with two dependencies of which one
-			return fullname + ' works at ' + company;					// also has two dependencies
+		librarySystem('workBlurb', function(fullname, company) {	// library with two dependencies of which one
+			return fullname + ' works at ' + company;				// also has two dependencies
 		}, ['fullname', 'company']);
 
 		librarySystem('fullname', function(firstname, lastname) {
