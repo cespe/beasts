@@ -36,7 +36,7 @@ tests({
 			eq(error.message, "dependencyNames must be an array");
 		}
 	},
-	"Each element of 'dependencyNames' array should be of type String.": function() {
+	"Each element of 'dependencyNames' array should be a library name of type String.": function() {
 		try {
 			librarySystem('testApp', function() {}, ['depOne', 'depTwo', {lib: 'depThree'}]);
 		} catch (error) {
