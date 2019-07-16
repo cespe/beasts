@@ -16,6 +16,9 @@ function librarySystem(libraryName, /* optional */ getLibrary, /* optional */ de
 		return libraries[libraryName];
 	}
 	if (arguments.length > 1) {
+		if (typeof getLibrary !== "function") {
+			throw new TypeError("getLibrary must be a function that returns the library");
+		}
 		if (arguments.length === 2) {
 			// store library that has no dependencies
 			libraries[libraryName] = getLibrary();
