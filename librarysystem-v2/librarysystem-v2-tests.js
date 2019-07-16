@@ -10,15 +10,21 @@ tests({
 	"It should take a library name of type String as its first parameter.": function() {
 		try {
 			librarySystem({name: "myLibrary"});
-		} catch (error) {
-			eq(error.name, "TypeError");
-			eq(error.message, "libraryName must be a string");
+		} catch (nameError) {
+			eq(nameError.name, "TypeError");
+			eq(nameError.message, "libraryName must be a string");
 		}
 	},
-	//"Its optional second parameter should be a 'getLibrary' callback that returns the library.": function() {
-		// Can't see how to test this. Could require it to be a function but the function could return garbage.
-		//fail();
-	//},
+	"Its optional second parameter should be a 'getLibrary' callback that returns the library.": function() {
+		try {
+			librarySystem('myLibrary', [], function() {				// parameters out of order
+				return 'my library';
+			});
+		} catch (callbackError) {
+			eq(callbackError.name, "TypeError");
+			eq(callbackError.message, "getLibrary must be a function that returns the library");
+		}
+	},
 	"If given just the library name and 'getLibrary' callback, it should store library for retrieval by name.": function() {
 		function getApp1Library() {
 			return 'app library one';
@@ -31,17 +37,17 @@ tests({
 	"Its optional third parameter 'dependencyNames' should be an array.": function() {
 		try {
 			librarySystem('testApp', function() {}, {});
-		} catch (error) {
-			eq(error.name, "TypeError");
-			eq(error.message, "dependencyNames must be an array");
+		} catch (arrayError) {
+			eq(arrayError.name, "TypeError");
+			eq(arrayError.message, "dependencyNames must be an array");
 		}
 	},
 	"Each element of 'dependencyNames' array should be a library name of type String.": function() {
 		try {
 			librarySystem('testApp', function() {}, ['depOne', 'depTwo', {lib: 'depThree'}]);
-		} catch (error) {
-			eq(error.name, "TypeError");
-			eq(error.message, "each element of dependencyNames array must be a string");
+		} catch (stringError) {
+			eq(stringError.name, "TypeError");
+			eq(stringError.message, "each element of dependencyNames array must be a string");
 		}
 	},
 	"If called with 'dependencyNames' array, it should store the array and 'getLibrary' callback for later use.": function() {
@@ -119,9 +125,9 @@ tests({
 
 		try {
 			result = librarySystem('app3');
-		} catch (error) {
-			eq(error.name, "ReferenceError");
-			eq(error.message, "missingDependency library is missing");
+		} catch (refError) {
+			eq(refError.name, "ReferenceError");
+			eq(refError.message, "missingDependency library is missing");
 		}
 	},
 	"It should not run 'getLibrary' callback more than once for each library.": function() {
