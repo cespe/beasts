@@ -10,6 +10,9 @@ function librarySystem(libraryName, /* optional */ getLibrary, /* optional */ de
 		throw new TypeError("libraryName must be a string"); 
 	}
 	if (arguments.length > 1) {
+		if (typeof getLibrary !== "function") {
+			throw new TypeError("getLibrary must be a function that returns the library");
+		}
 		if (arguments.length === 2) {
 			libraries[libraryName] = getLibrary();
 		} else {

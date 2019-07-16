@@ -11,6 +11,16 @@ tests({
 			eq(error.message, "libraryName must be a string");
 		}
 	},
+	"Its optional second parameter should be a 'getLibrary' callback that returns the library.": function() {
+		try {
+			librarySystem('myLibrary', [], function() {				// parameters out of order
+				return 'my library';
+			});
+		} catch (callbackError) {
+			eq(callbackError.name, "TypeError");
+			eq(callbackError.message, "getLibrary must be a function that returns the library");
+		}
+	},
 	'If given a library name and a getLibrary callback, it should store library for retrieval by name': function() {
 		function getAppLibrary() {
 			return 'app library';
