@@ -24,5 +24,5 @@ function isPrototypeOf(prototypeObject, targetObject) {
 			return isPrototypeOf(prototypeObject, candidate);
 		}
 	}
-	return false;
+	return false;	// if called with just one argument
 }
