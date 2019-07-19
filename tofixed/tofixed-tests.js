@@ -156,7 +156,7 @@ tests({
 		result = shiftedToFixed(25.865, 2);
 		eq(result, "25.87");
 	},
-	"It should round down when the number with digit at precision -1 is a 5 but the number is negative.": function() {
+	"It should round down if value has precision + 1 decimal places and a 5 as the final decimal and is negative." : function() {
 		result = shiftedToFixed(-10.235, 2);	// for negative numbers five rounds down because that is
 		eq(result, "-10.23")					// what Math.round does. Same for betterToFixed scientific
 		result = shiftedToFixed(-25.865, 2);	// notation method and also for Number.prototype.toFixed.
