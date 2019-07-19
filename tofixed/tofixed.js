@@ -3,6 +3,13 @@
 function shiftedToFixed(value, precision) {
 	var validNumber = checkNumber(value);
 	var decimalPlaces = checkPrecision(precision);
+	var validNumberString = '' + validNumber;
+	if (validNumberString.includes('.') && 
+		) {
+		
+	}
+	var fixedNumber = validNumber.toFixed(decimalPlaces);
+	return '' + fixedNumber;
 }
 
 // Helper functions
