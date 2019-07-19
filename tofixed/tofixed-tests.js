@@ -139,6 +139,8 @@ tests({
 		eq(result, "25.86");
 		result = shiftedToFixed('25.864578', 2);
 		eq(result, "25.86");
+		result = shiftedToFixed('-25.864578', 2);
+		eq(result, "-25.86");
 		result = shiftedToFixed(25.864578, 4);
 		eq(result, "25.8646");
 		result = shiftedToFixed('25.864578', 4);
@@ -153,5 +155,9 @@ tests({
 		eq(result, "10.24")
 		result = shiftedToFixed(25.865, 2);
 		eq(result, "25.87");
+		result = shiftedToFixed(-10.235, 2);	// for negative numbers five rounds down because that is
+		eq(result, "-10.23")					// what Math.round does. Same for betterToFixed scientific
+		result = shiftedToFixed(-25.865, 2);	// notation method.
+		eq(result, "-25.86");
 	},
 });
