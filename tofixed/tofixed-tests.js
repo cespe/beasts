@@ -133,6 +133,8 @@ tests({
 		eq(result, "25.00");
 		result = shiftedToFixed('-25', 2);
 		eq(result, "-25.00");
+		result = shiftedToFixed(25.864, 2);
+		eq(result, "25.86");
 		result = shiftedToFixed(25.864578, 2);
 		eq(result, "25.86");
 		result = shiftedToFixed('25.864578', 2);
@@ -149,5 +151,7 @@ tests({
 		eq(result, "0.62")
 		result = shiftedToFixed(10.235, 2);
 		eq(result, "10.24")
+		result = shiftedToFixed(25.865, 2);
+		eq(result, "25.87");
 	},
 });
