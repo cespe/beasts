@@ -20,10 +20,29 @@
  *  	precision === (# of decimal places in value) - 1
  *  	AND
  *  	the last digit of decimals is a 5
- *
- *  Can't use parseInt to get the number of decimal digits:
- *  var intPart = parseInt(10.235, 10)	// intPart === 10
- *  10.235 - intPart === 0.23499999999999943	// ouch!
  */
+ 
+// Can't use parseInt to get the number of decimal digits:
+ var intPart = parseInt(10.235, 10)	// intPart === 10
+ 10.235 - intPart === 0.23499999999999943	// ouch!
 
+// get the decimal part with a regex
+'10.2353'.match(/\.\d+/);	// [".2353", index: 2, input: "10.2353", groups: undefined]
+'10.235'.match(/\.\d+/);	// [".235", index: 2, input: "10.235", groups: undefined]
+'0.615'.match(/\.\d+/);		// [".615", index: 1, input: "0.615", groups: undefined]
+'25'.match(/\.\d+/);		// null
 
+// get number of digits in the decimal part
+var decimalPartMatch = '10.235'.match(/\.\d+/);
+var numberOfDecimalDigits = decimalPartMatch[0].length - 1;		// 3
+
+// split and assemble shifted number, round, re-assemble the answer
+var splitNumber = '10.235'.split('.')	// (2) ["10", "235"]
+var insertPoint = splitNumber[1].slice(2)	// "5"
+var insertPoint2 = splitNumber[1].slice(0, 2)	// "23"
+var decimalShifted = splitNumber[0] + insertPoint2 + "." + insertPoint	// "1023.5"
+rounded = Math.round(decimalShifted);	// 1024
+roundedString = '' + rounded			// "1024"
+answerString = roundedString.slice(-2)	// "24"
+answerStringStart = roundedString.slice(0, roundedString.length - 2);	// "10"
+rebuiltNumber = answerStringStart + "." + answerString	// "10.24"
