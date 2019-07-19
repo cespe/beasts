@@ -161,5 +161,7 @@ tests({
 		eq(result, "-10.23")					// what Math.round does. Same for betterToFixed scientific
 		result = shiftedToFixed(-25.865, 2);	// notation method and also for Number.prototype.toFixed.
 		eq(result, "-25.86");
+		result = shiftedToFixed(-0.125, 2);		// betterToFixed -> "-0.12" but -0.125.toFixed -> "-0.13"
+		eq(result, "-0.12");
 	}
 });
