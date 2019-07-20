@@ -7,19 +7,43 @@
  * Original accounting.toFixed still doesn't do the right thing for 1.005.
  * Gordon's scientific notation version betterToFixed gets them all right.
  *
+ * BUT both accounting.toFixed and Gordon's betterToFixed get negative decimals wrong
+ * because they rely on Math.round and Math.round rounds towards postive infinity by design.
+ * accounting.toFixed and betterToFixed give 0.615 --> 0.62 but -0.615 --> -0.61
+ * Google Sheets, Apple Numbers and Microsoft Excel all give 0.615 --> 0.62 and -0.615 --> -0.62.
+ * That's a bug that should be fixed.
+ */
+
+// console log tests for positive/negative decimals
+accounting.toFixed(-.615, 2)	// "-0.61"
+accounting.toFixed(.615, 2)		// "0.62"
+accounting.toFixed(10.235, 2)	// "10.24"
+accounting.toFixed(-10.235, 2)	// "-10.23"
+betterToFixed(0.615, 2)		// "0.62"
+betterToFixed(-0.615, 2)	// "-0.61"
+betterToFixed(10.235, 2)	// "10.24"
+betterToFixed(-10.235, 2)	// "-10.23"
+betterToFixed(1.005, 2)		// "1.01"
+betterToFixed(-1.005, 2)	// "-1"
+
+/*
  * shiftedToFixed(value, precision)
  * Helper functions get parameter error-handling code out of the main function
- * checkNumber(value) and checkPrecision(precision)
+ * checkNumber(value)
+ * checkPrecision(precision)
  *
  * if precision >= # of decimal places in value, just use Number.toFixed
  * else precision < # of decimal places in value
  * 	if precision is (# of decimal places in value - 1), then you have a potential problem; if not, just Number.toFixed
  *  if the last digit of the decimals is a 5, then round up by special measures; if not, just Number.toFixed
+ *  
+ * REVISED
+ * It doesn't just apply to precision === # of decimal places - 1. It is applicable for any # of decimal
+ * places as long as the digit at precision + 1 is a 5. Any number that starts with a 5 is going to round up.
+ *
  *
  *  In other words, the only time you need to round up by special measures is when
- *  	precision === (# of decimal places in value) - 1
- *  	AND
- *  	the last digit of decimals is a 5
+ *  	The decimal digit at precision + 1 is a 5
  */
  
 // Can't use parseInt to get the number of decimal digits:
