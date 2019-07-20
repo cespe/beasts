@@ -27,4 +27,6 @@ function betterToFixed(value, precision) {
 	return '' + result;		// return as a string, alternative to result.toFixed(precision)
 };
 
-
+// Both of these functions have a problem with negative decimals. They round up from 5 for
+// positive decimals but DOWN from 5 for negative numbers with decimals. They should be modified
+// to handle negative values properly.
