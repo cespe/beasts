@@ -1,8 +1,7 @@
 // Beasts 7. A twist on accounting.toFixed
 
 tests({
-	// helper function used by shiftedToFixed
-	"Helper checkNumber's first parameter 'value' must be a number or a non-empty string that converts to one.": function() {
+	"Value passed in to helper function checkNumber should be a number or a non-empty string that converts to one.": function() {
 		// booleans and empty string excluded by design
 		try {
 			var result = shiftedToFixed(NaN, 2)
@@ -43,7 +42,7 @@ tests({
 		result = checkNumber("10.0");
 		eq(result, 10);
 	},
-	"shiftedToFixed's first parameter 'value' should be a number or a non-empty string that converts to one.": function() {
+	"Value passed in to shiftedToFixed should be a number or a non-empty string that converts to one.": function() {
 		try {
 			var result = shiftedToFixed(NaN, 2)
 		} catch (error) {
@@ -75,8 +74,8 @@ tests({
 			eq(error.message, "value must be a number or a non-empty string convertible to a number")
 		}
 	},
-	"Helper checkPrecision's 'precision' parameter must an integer >= 0 or a non-empty string that converts to one.": function() {
-		// A negative number or a float excluded by design
+	"Precision passed in to helper function checkPrecision should be an integer >= 0 or a non-empty string that converts to one.": function() {
+		// Negative numbers and float excluded by design
 		try {
 			var result = shiftedToFixed(1.005, 2.3);
 		} catch (error) {
@@ -104,7 +103,7 @@ tests({
 		result = checkPrecision('2')
 		eq(result, 2);
 	},
-	"shiftedToFixed's 'precision' parameter should an integer >= 0 or a non-empty string that converts to one.": function() {
+	"Precision passed in to shiftedToFixed should an integer >= 0 or a non-empty string that converts to one.": function() {
 		try {
 			var result = shiftedToFixed(1.005, 2.3);
 		} catch (error) {
@@ -124,7 +123,7 @@ tests({
 			eq(error.message, "precision must be an integer >= 0 or a non-empty string that converts to one")
 		}
 	},
-	"It should return a string representation of 'value' with 'precision' decimal places.": function() {
+	"shiftedToFixed should return a string representation of 'value' with 'precision' decimal places.": function() {
 		result = shiftedToFixed(25, 2);
 		eq(result, "25.00");
 		result = shiftedToFixed('25', 2);
@@ -146,7 +145,7 @@ tests({
 		result = shiftedToFixed('25.864578', 4);
 		eq(result, "25.8646");
 	},
-	"When rounding to final precision, it should round up if the digit at precision + 1 is a 5": function() {
+	"It should round up if the digit at precision + 1 is a 5": function() {
 		result = shiftedToFixed(1.005, 2);
 		eq(result, "1.01");
 		result = shiftedToFixed(0.615, 2);
@@ -156,12 +155,16 @@ tests({
 		result = shiftedToFixed(25.865, 2);
 		eq(result, "25.87");
 	},
-	"It should round down if value has precision + 1 decimal places and a 5 as the final decimal and is negative." : function() {
-		result = shiftedToFixed(-10.235, 2);	// for negative numbers five rounds down because that is
-		eq(result, "-10.23")					// what Math.round does. Same for betterToFixed scientific
-		result = shiftedToFixed(-25.865, 2);	// notation method and also for Number.prototype.toFixed.
-		eq(result, "-25.86");
-		result = shiftedToFixed(-0.125, 2);		// betterToFixed -> "-0.12" but -0.125.toFixed -> "-0.13"
-		eq(result, "-0.12");
+	"It should also round up (to next-higher digit) if value is negative and the digit at precision + 1 is a 5." : function() {
+		// Google Sheets, Microsoft Excel and Apple Numbers all round 0.125 to 0.13 and -0.125 to -0.13.
+		// But betterToFixed and accounting.toFixed round -0.125 to -0.12 because they use Math.round, which
+		// by design rounds a negative number towards positive infinity. This version is coded to produce results
+		// like the spreadsheet apps.
+		result = shiftedToFixed(-10.235, 2);
+		eq(result, "-10.24")
+		result = shiftedToFixed(-25.865, 2);
+		eq(result, "-25.87");
+		result = shiftedToFixed(-0.615, 2);
+		eq(result, "-0.62");
 	}
 });
