@@ -1,5 +1,6 @@
 // Beasts 7. A twist on accounting.toFixed
 
+// Run tests on all versions you are working on
 var versions = [fiveShiftedToFixed, shiftedToFixed, simpleToFixed];
 
 for (var i = 0; i < versions.length; i++) {
