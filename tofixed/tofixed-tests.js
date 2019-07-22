@@ -145,7 +145,7 @@ tests({
 		result = shiftedToFixed('25.864578', 4);
 		eq(result, "25.8646");
 	},
-	"It should round up if the digit at precision + 1 is a 5": function() {
+	"It should round up if the digit at precision + 1 is a 5.": function() {
 		result = shiftedToFixed(1.005, 2);
 		eq(result, "1.01");
 		result = shiftedToFixed(0.615, 2);

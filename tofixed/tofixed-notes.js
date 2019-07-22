@@ -32,23 +32,53 @@ betterToFixed(-1.005, 2)	// "-1"
  * checkNumber(value)
  * checkPrecision(precision)
  *
- * if precision >= # of decimal places in value, just use Number.toFixed
+ * if precision >= # of decimal places in value, just use Number.toFixed.
  * else precision < # of decimal places in value
- * 	if precision is (# of decimal places in value - 1), then you have a potential problem; if not, just Number.toFixed
- *  if the last digit of the decimals is a 5, then round up by special measures; if not, just Number.toFixed
- *  
- * REVISED
- * It doesn't just apply to precision === # of decimal places - 1. It is applicable for any # of decimal
- * places as long as the digit at precision + 1 is a 5. Any number that starts with a 5 is going to round up.
+ *  if # of decimal digits is > precision + 1, then just use Number.toFixed. Any multi-digit number that
+ *  starts with a 5 is going to round up.
+ * 	if # of decimal digits is equal to precision + 1, then you have a potential problem.
  *
- *
- *  In other words, the only time you need to round up by special measures is when
- *  	The decimal digit at precision + 1 is a 5
+ *  In other words, the only time you need to round up by special measures is when 1) the number of decimal digits
+ *   is precision + 1 and 2) the decimal digit at precision + 1 is a 5
  */
  
 // Can't use parseInt to get the number of decimal digits:
  var intPart = parseInt(10.235, 10)	// intPart === 10
  10.235 - intPart === 0.23499999999999943	// ouch!
+
+// ------- string manipulation for handling special case --------------------------------- 
+
+// get the decimal part with a regex
+'10.2353'.match(/\.\d+/);	// [".2353", index: 2, input: "10.2353", groups: undefined]
+'10.235'.match(/\.\d+/);	// [".235", index: 2, input: "10.235", groups: undefined]
+'0.615'.match(/\.\d+/);		// [".615", index: 1, input: "0.615", groups: undefined]
+'25'.match(/\.\d+/);		// null
+
+// get number of digits in the decimal part
+var decimalPartMatch = '10.235'.match(/\.\d+/);
+var numberOfDecimalDigits = decimalPartMatch[0].length - 1;		// 3
+
+// better way with a single regex that just gets the special case else null
+//  /\.\d{2}5$/ translates to "decimal point followed by 'precision' number of digits followed by 5 as
+//  the final digit"
+var precision = 2
+var precisionString = '' + precision
+var specialCase = new RegExp("\\.\\d{" + precisionString + "}5$")
+'10.235'.match(specialCase);	// [".235", index: 2, input: "10.235", groups: undefined]
+'10.2358'.match(specialCase);	// null because 5 is not the last digit
+
+// split and assemble shifted number, round, re-assemble the answer
+var splitNumber = '10.235'.split('.')	// (2) ["10", "235"]
+var insertPoint = splitNumber[1].slice(2)	// "5"
+var insertPoint2 = splitNumber[1].slice(0, 2)	// "23"
+var decimalShifted = splitNumber[0] + insertPoint2 + "." + insertPoint	// "1023.5"
+rounded = Math.round(decimalShifted);	// 1024
+roundedString = '' + rounded			// "1024"
+answerString = roundedString.slice(-2)	// "24"
+answerStringStart = roundedString.slice(0, roundedString.length - 2);	// "10"
+rebuiltNumber = answerStringStart + "." + answerString	// "10.24"
+
+// -------- string manipulation for handling all cases (no more Number.toFixed) -------------
 
 // get the decimal part with a regex
 '10.2353'.match(/\.\d+/);	// [".2353", index: 2, input: "10.2353", groups: undefined]
