@@ -1,7 +1,7 @@
 // Beasts 7. A twist on accounting.toFixed
 
 // Run tests on all versions you are working on
-var versions = [fiveShiftedToFixed, shiftedToFixed, simpleToFixed];
+var versions = [shiftedToFixed, bestToFixed];
 
 for (var i = 0; i < versions.length; i++) {
 	console.log('%c Version tested: ' + versions[i].name, " color: blue;");
@@ -131,8 +131,16 @@ for (var i = 0; i < versions.length; i++) {
 			}
 		},
 		"toFixed should return a string representation of 'value' with 'precision' decimal places.": function() {
+			result = toFixed(0, 2);
+			eq(result, "0.00");
+			result = toFixed(0, 0);
+			eq(result, "0");
+			result = toFixed(25.5, 0);
+			eq(result, "26");
 			result = toFixed(25, 2);
 			eq(result, "25.00");
+			result = toFixed(25.5, 2);
+			eq(result, "25.50");
 			result = toFixed('25', 2);
 			eq(result, "25.00");
 			result = toFixed('25.00', 2);
@@ -171,6 +179,8 @@ for (var i = 0; i < versions.length; i++) {
 			eq(result, "-10.24")
 			result = toFixed(-25.865, 2);
 			eq(result, "-25.87");
+			result = toFixed(-25.5, 0);
+			eq(result, "-26");
 			result = toFixed(-0.615, 2);
 			eq(result, "-0.62");
 		}

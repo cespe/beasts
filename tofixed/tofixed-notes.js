@@ -80,6 +80,13 @@ rebuiltNumber = answerStringStart + "." + answerString	// "10.24"
 
 // -------- string manipulation for handling all cases (no more Number.toFixed) -------------
 
+// case one value is an integer
+	// if precision = 0, return value
+	// if precision > 0, add a decimal point and pad with zeroes
+// case two value has decimal point and digits
+	// if precision < # of decimal digits, pad with zeroes
+	// else trim to precision + 1 and shift
+
 // get the decimal part with a regex
 '10.2353'.match(/\.\d+/);	// [".2353", index: 2, input: "10.2353", groups: undefined]
 '10.235'.match(/\.\d+/);	// [".235", index: 2, input: "10.235", groups: undefined]
