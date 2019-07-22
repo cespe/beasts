@@ -5,27 +5,25 @@ function fiveShiftedToFixed(value, precision) {
 	var validNumber = checkNumber(value);
 	var validPrecision = checkPrecision(precision);
 	var validNumberString = '' + validNumber;
-	if (validNumberString.includes('.')) {
-		var decimalPart = validNumberString.match(/\.\d+/);		// extracts decimal point and digits
-		var numberOfDecimalDigits = decimalPart[0].length - 1;
-		if (numberOfDecimalDigits === validPrecision + 1) {
-			var lastDigit = decimalPart[0].slice(-1);
-			if (lastDigit === "5") {	// special handling is required to round up from 5
-				var splitNumber = validNumberString.split('.');
-				var newRightOfDecimal = splitNumber[1].slice(validPrecision);
-				var newLeftOfDecimal = splitNumber[1].slice(0, validPrecision);
-				var decimalShifted = splitNumber[0] + newLeftOfDecimal + "." + newRightOfDecimal;
-				var rounded = Math.round(decimalShifted);
-				var roundedString = '' + rounded;
-				var finalDecimalPart = roundedString.slice(-2);
-				var rebuiltNumberString = splitNumber[0] + "." + finalDecimalPart;
-				return rebuiltNumberString;	
-			}
-		}
-	}
+	var validPrecisionString = '' + validPrecision;
+	// test for case where number of decimal digits is precision + 1 and the last digit is 5
+	// this special case is the only time Number.prototype.toFixed can do the wrong thing
+	var specialCase = new RegExp("\\.\\d{" + validPrecisionString + "}5$");
+	if (validNumberString.match(specialCase)) {
+		var splitNumber = validNumberString.split('.');
+		var newRightOfDecimal = splitNumber[1].slice(validPrecision);
+		var newLeftOfDecimal = splitNumber[1].slice(0, validPrecision);
+		var decimalShifted = splitNumber[0] + newLeftOfDecimal + "." + newRightOfDecimal;
+		var rounded = Math.round(Math.abs(decimalShifted));		// abs ensures rounding up to next digit
+		var roundedString = '' + rounded;
+		var finalDecimalPart = roundedString.slice(-2);
+		var rebuiltNumberString = splitNumber[0] + "." + finalDecimalPart;
+		return rebuiltNumberString;	
+	} else {
 	// built-in toFixed works fine for everything else
 	var fixedNumber = validNumber.toFixed(validPrecision);
 	return '' + fixedNumber;
+	}
 }
 
 // what the exercise asks for: move decimal point, Math.round(), move decimal point back
@@ -43,7 +41,7 @@ function shiftedToFixed(value, precision) {
 				var newRightOfDecimal = splitNumber[1].slice(validPrecision);
 				var newLeftOfDecimal = splitNumber[1].slice(0, validPrecision);
 				var decimalShifted = splitNumber[0] + newLeftOfDecimal + "." + newRightOfDecimal;
-				var rounded = Math.round(decimalShifted);
+				var rounded = Math.round(Math.abs(decimalShifted));		// abs ensures rounding up to next digit
 				var roundedString = '' + rounded;
 				var finalDecimalPart = roundedString.slice(-2);
 				var rebuiltNumberString = splitNumber[0] + "." + finalDecimalPart;
@@ -61,27 +59,25 @@ function simpleToFixed(value, precision) {
 	var validNumber = checkNumber(value);
 	var validPrecision = checkPrecision(precision);
 	var validNumberString = '' + validNumber;
-	if (validNumberString.includes('.')) {
-		var decimalPart = validNumberString.match(/\.\d+/);		// extracts decimal point and digits
-		var numberOfDecimalDigits = decimalPart[0].length - 1;
-		if (numberOfDecimalDigits === validPrecision + 1) {
-			var lastDigit = decimalPart[0].slice(-1);
-			if (lastDigit === "5") {	// special handling is required to round up from 5
-				var splitNumber = validNumberString.split('.');
-				var newRightOfDecimal = splitNumber[1].slice(validPrecision);
-				var newLeftOfDecimal = splitNumber[1].slice(0, validPrecision);
-				var decimalShifted = splitNumber[0] + newLeftOfDecimal + "." + newRightOfDecimal;
-				var rounded = Math.round(decimalShifted);
-				var roundedString = '' + rounded;
-				var finalDecimalPart = roundedString.slice(-2);
-				var rebuiltNumberString = splitNumber[0] + "." + finalDecimalPart;
-				return rebuiltNumberString;	
-			}
-		}
-	}
+	var validPrecisionString = '' + validPrecision;
+	// test for case where number of decimal digits is precision + 1 and the last digit is 5
+	// this special case is the only time Number.prototype.toFixed can do the wrong thing
+	var specialCase = new RegExp("\\.\\d{" + validPrecisionString + "}5$");
+	if (validNumberString.match(specialCase)) {
+		var splitNumber = validNumberString.split('.');
+		var newRightOfDecimal = splitNumber[1].slice(validPrecision);
+		var newLeftOfDecimal = splitNumber[1].slice(0, validPrecision);
+		var decimalShifted = splitNumber[0] + newLeftOfDecimal + "." + newRightOfDecimal;
+		var rounded = Math.round(Math.abs(decimalShifted));		// abs ensures rounding up to next digit
+		var roundedString = '' + rounded;
+		var finalDecimalPart = roundedString.slice(-2);
+		var rebuiltNumberString = splitNumber[0] + "." + finalDecimalPart;
+		return rebuiltNumberString;	
+	} else {
 	// built-in toFixed works fine for everything else
 	var fixedNumber = validNumber.toFixed(validPrecision);
 	return '' + fixedNumber;
+	}
 }
 
 // Helper functions
