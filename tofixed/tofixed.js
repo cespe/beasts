@@ -1,96 +1,71 @@
 // Beasts 7. A twist on accounting.toFixed
 
-// what the exercise asks for: move decimal point, Math.round(), move decimal point back
+// What the exercise asks for: move decimal point, Math.round(), move decimal point back
 function shiftedToFixed(value, precision) {
-	var validNumber = checkNumber(value);
-	var validPrecision = checkPrecision(precision);
-	var validNumberString = '' + validNumber;
+	var value = checkNumber(value);
+	var precision = checkPrecision(precision);
+	var valueString = '' + value;
 	// case one: value is an integer
-	if (!validNumberString.includes('.')) {	
+	if (!valueString.includes('.')) {	
 		// if precision = 0, return value
-		if (validPrecision === 0) {
-			return validNumberString;
+		if (precision === 0) {
+			return valueString;
 		} else {
-			// validPrecision > 0, add a decimal point and pad with zeros
-			return validNumberString + "." + zerosForPadding(validPrecision)
+			// precision > 0, add a decimal point and pad with zeros
+			return valueString + "." + zerosForPadding(precision)
 		}
 	} else {	// case two: value has a decimal number and digits
-		var splitNumber = validNumberString.split('.');
+		var splitNumber = valueString.split('.');
 		var basePart = splitNumber[0];
 		var decimalPart = splitNumber[1];
 		var numberOfDecimalDigits = decimalPart.length
-		if (validPrecision > numberOfDecimalDigits) {	// pad with zeros to match precision
-			var zerosNeeded = validPrecision - numberOfDecimalDigits;
+		if (precision > numberOfDecimalDigits) {	// pad with zeros to match precision
+			var zerosNeeded = precision - numberOfDecimalDigits;
 			zeros = zerosForPadding(zerosNeeded);
 			return basePart + "." + decimalPart + zeros;
-		} else if (validPrecision === numberOfDecimalDigits) {	// no transformation required
-			return validNumberString;
+		} else if (precision === numberOfDecimalDigits) {	// no transformation required
+			return valueString;
 		} else {	// precision < # of decimal digits, rounding required
 			var rounded = undefined;
 			if (numberOfDecimalDigits === 1) {	// no shift needed
-				rounded = Math.round(Math.abs(validNumber));
-				if (validNumber < 0) {
+				rounded = Math.round(Math.abs(value));
+				if (value < 0) {
 					return '-' + rounded;
 				} else {
 					return '' + rounded;
 				}
 			} else { // shift needed
-				var trimmedDecimalPart = decimalPart.slice(0, validPrecision + 1);
-				var newRightOfDecimal = trimmedDecimalPart.slice(validPrecision);
-				var newLeftOfDecimal = trimmedDecimalPart.slice(0, validPrecision);
+				var trimmedDecimalPart = decimalPart.slice(0, precision + 1);
+				var newRightOfDecimal = trimmedDecimalPart.slice(precision);
+				var newLeftOfDecimal = trimmedDecimalPart.slice(0, precision);
 				var decimalShifted = basePart + newLeftOfDecimal + "." + newRightOfDecimal;
 				rounded = Math.round(Math.abs(decimalShifted));
 				var roundedString = '' + rounded;
-				var finalDecimalPart = roundedString.slice(-validPrecision);
+				var finalDecimalPart = roundedString.slice(-precision);
 				var rebuiltNumberString = basePart + "." + finalDecimalPart;
 				return rebuiltNumberString;
 
 			}
 		}
 	}
-		// else trim to precision + 1 and shift
-	if (validPrecision === 0) {
-		return '' + parseInt(validNumber, 10);
-	}
-	if (validNumberString.includes('.')) {
-		var decimalPart = validNumberString.match(/\.\d+/);		// extracts decimal point and digits
-		var numberOfDecimalDigits = decimalPart[0].length - 1;
-		if (numberOfDecimalDigits === validPrecision + 1) {
-			var lastDigit = decimalPart[0].slice(-1);
-			if (lastDigit === "5") {	// special handling is required to round up from 5
-				var splitNumber = validNumberString.split('.');
-				var newRightOfDecimal = splitNumber[1].slice(validPrecision);
-				var newLeftOfDecimal = splitNumber[1].slice(0, validPrecision);
-				var decimalShifted = splitNumber[0] + newLeftOfDecimal + "." + newRightOfDecimal;
-				var rounded = Math.round(Math.abs(decimalShifted));		// abs ensures rounding up to next digit
-				var roundedString = '' + rounded;
-				var finalDecimalPart = roundedString.slice(-2);
-				var rebuiltNumberString = splitNumber[0] + "." + finalDecimalPart;
-				return rebuiltNumberString;	
-			}
-		}
-	}
-	// built-in toFixed works fine for everything else
-	var fixedNumber = validNumber.toFixed(validPrecision);
-	return '' + fixedNumber;
 }
 
-// a better approach from a different angle
+// A better approach from a different angle
 function bestToFixed(value, precision) {
-	var validNumber = checkNumber(value);
-	var validPrecision = checkPrecision(precision);
-	var validNumberString = '' + validNumber;
-	var validPrecisionString = '' + validPrecision;
+	var value = checkNumber(value);
+	var precision = checkPrecision(precision);
+	var valueString = '' + value;
+	var precisionString = '' + precision;
 
-	// test for case where number of decimal digits is precision + 1 and the last digit is 5
-	// this special case is the only time Number.prototype.toFixed can do the wrong thing
-	var specialCase = new RegExp("\\.\\d{" + validPrecisionString + "}5$");
-	if (validNumberString.match(specialCase)) {
-		modifiedNumberString = validNumberString.replace(/5$/, "6");	// ensure proper rounding by bumping 5 to 6
+	// Test for case where number of decimal digits is precision + 1 and the last digit is 5.
+	// This special case is the only time Number.prototype.toFixed can do the wrong thing.
+	var specialCase = new RegExp("\\.\\d{" + precisionString + "}5$");
+	if (valueString.match(specialCase)) {
+		modifiedNumberString = valueString.replace(/5$/, "6");	// ensure proper rounding by bumping 5 to 6
 		modifiedNumber = Number(modifiedNumberString);
-		fixedNumber = modifiedNumber.toFixed(validPrecision);
+		fixedNumber = modifiedNumber.toFixed(precision);
 	} else {		// built-in toFixed works fine for everything else
-	var fixedNumber = validNumber.toFixed(validPrecision);
+	var fixedNumber = value.toFixed(precision);
 	}
 	return '' + fixedNumber;
 }
