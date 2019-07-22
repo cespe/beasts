@@ -60,24 +60,18 @@ function simpleToFixed(value, precision) {
 	var validPrecision = checkPrecision(precision);
 	var validNumberString = '' + validNumber;
 	var validPrecisionString = '' + validPrecision;
+
 	// test for case where number of decimal digits is precision + 1 and the last digit is 5
 	// this special case is the only time Number.prototype.toFixed can do the wrong thing
 	var specialCase = new RegExp("\\.\\d{" + validPrecisionString + "}5$");
 	if (validNumberString.match(specialCase)) {
-		var splitNumber = validNumberString.split('.');
-		var newRightOfDecimal = splitNumber[1].slice(validPrecision);
-		var newLeftOfDecimal = splitNumber[1].slice(0, validPrecision);
-		var decimalShifted = splitNumber[0] + newLeftOfDecimal + "." + newRightOfDecimal;
-		var rounded = Math.round(Math.abs(decimalShifted));		// abs ensures rounding up to next digit
-		var roundedString = '' + rounded;
-		var finalDecimalPart = roundedString.slice(-2);
-		var rebuiltNumberString = splitNumber[0] + "." + finalDecimalPart;
-		return rebuiltNumberString;	
-	} else {
-	// built-in toFixed works fine for everything else
+		modifiedNumberString = validNumberString.replace(/5$/, "6");	// ensure proper rounding by bumping 5 to 6
+		modifiedNumber = Number(modifiedNumberString);
+		fixedNumber = modifiedNumber.toFixed(validPrecision);
+	} else {		// built-in toFixed works fine for everything else
 	var fixedNumber = validNumber.toFixed(validPrecision);
-	return '' + fixedNumber;
 	}
+	return '' + fixedNumber;
 }
 
 // Helper functions
