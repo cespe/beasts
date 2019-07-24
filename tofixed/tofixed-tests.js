@@ -1,7 +1,7 @@
 // Beasts 7. A twist on accounting.toFixed
 
 // Run tests on all versions you are working on
-var versions = [shiftedToFixed, bestToFixed];
+var versions = [shiftedToFixed, simplerToFixed];
 
 for (var i = 0; i < versions.length; i++) {
 	console.log('%c Version tested: ' + versions[i].name, " color: blue;");
@@ -131,22 +131,64 @@ for (var i = 0; i < versions.length; i++) {
 			}
 		},
 		"toFixed should return a string representation of 'value' with 'precision' decimal places.": function() {
-			result = toFixed(0, 2);
-			eq(result, "0.00");
+		},
+		"If value is an integer and precision is zero, it should return value unchanged.": function() {
 			result = toFixed(0, 0);
 			eq(result, "0");
-			result = toFixed(25.5, 0);
-			eq(result, "26");
+			result = toFixed(-0, 0);
+			eq(result, "0");
+			result = toFixed('-0', 0);
+			eq(result, "0");
+			result = toFixed(25, 0);
+			eq(result, "25");
+			result = toFixed('25', 0);
+			eq(result, "25");
+			result = toFixed(-25, 0);
+			eq(result, "-25");
+			result = toFixed('-25', 0);
+			eq(result, "-25");
+	
+		},
+		"If value is an integer and precision > zero, it should add a decimal point and pad with zeros to match precision": function() {
+			result = toFixed(0, 2);
+			eq(result, "0.00");
+			result = toFixed('0', 2);
+			eq(result, "0.00");
+			result = toFixed(-0, 2);
+			eq(result, "0.00");
+			result = toFixed('-0', 2);
+			eq(result, "0.00");
 			result = toFixed(25, 2);
 			eq(result, "25.00");
-			result = toFixed(25.5, 2);
-			eq(result, "25.50");
 			result = toFixed('25', 2);
-			eq(result, "25.00");
-			result = toFixed('25.00', 2);
 			eq(result, "25.00");
 			result = toFixed('-25', 2);
 			eq(result, "-25.00");
+			result = toFixed(25.5, 2);
+			eq(result, "25.50");
+	
+		},
+		"If value is a float and precision is > the number of decimal digits, it should pad with zeros to match precision.": function() {
+			result = toFixed('25.00', 4);
+			eq(result, "25.0000");
+			result = toFixed(25.864, 5);
+			eq(result, "25.86400");
+			result = toFixed(25.864578, 8);
+			eq(result, "25.86457800");
+	
+		},
+		"If value is a float and precision is equal to the number of decimal digits, it should return value unchanged.": function() {
+			result = toFixed('25.00', 2);
+			eq(result, "25.00");
+			result = toFixed(25.864, 3);
+			eq(result, "25.864");
+			result = toFixed(25.864578, 6);
+			eq(result, "25.864578");
+
+		},
+		"If value is a float and precision is < the number of decimal digits, it should round to match precision.": function() {
+			result = toFixed(25.5, 0);
+			eq(result, "26");
 			result = toFixed(25.864, 2);
 			eq(result, "25.86");
 			result = toFixed(25.864578, 2);
@@ -169,8 +211,10 @@ for (var i = 0; i < versions.length; i++) {
 			eq(result, "10.24")
 			result = toFixed(25.865, 2);
 			eq(result, "25.87");
+			result = toFixed(25.5, 0);
+			eq(result, "26");
 		},
-		"It should also round up (to next-higher digit) if value is negative and the digit at precision + 1 is a 5." : function() {
+		"It should also round up (to next-higher digit) if value is negative and the digit at precision + 1 is a 5.": function() {
 			// Google Sheets, Microsoft Excel and Apple Numbers all round 0.125 to 0.13 and -0.125 to -0.13.
 			// But betterToFixed and accounting.toFixed round -0.125 to -0.12 because they use Math.round, which
 			// by design rounds a negative number towards positive infinity. This version is coded to produce results
@@ -183,6 +227,15 @@ for (var i = 0; i < versions.length; i++) {
 			eq(result, "-26");
 			result = toFixed(-0.615, 2);
 			eq(result, "-0.62");
+		},
+		"If value is given as a float with no leading zero before the decimal place, it should add a leading zero.": function() {
+			// .615 --> 0.615 is how Number.toFixed, accounting.toFixed, betterToFixed, and Google Sheets handle this, so this version 
+			// is coded to produce the same result.
+			result = toFixed(.615, 2);
+			eq(result, "0.62");
+			result = toFixed(.0, 2);
+			eq(result, "0.00");
+	
 		}
 	});
 };
