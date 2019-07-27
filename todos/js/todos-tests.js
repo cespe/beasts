@@ -49,6 +49,12 @@ tests({
 		eq(Array.isArray(childrenArray), true);
 		eq(childrenArray.length, 0);
 	},
+	"A todo object should be created with a 'selected' property of type boolean set to false.": function() {
+		todos = [];
+		newTodo = new Todo();
+		addNewTodo(newTodo);
+		eq(todos[0].selected, false);
+	},
 	"A todo object should be created with a 'deleted' property of type boolean set to false.": function() {
 		todos = [];
 		newTodo = new Todo();
@@ -70,14 +76,32 @@ tests({
 		eq(newTodo.entry, 'Item 1 updated');
 		eq(todos[0].entry, 'Item 1 updated');
 	},
-	"The app should have a way to mark a todo completed.": function() {
-		fail();
-	},
 	"The app should have a way to mark a todo selected.": function() {
-		fail();
+		todos = [];
+		newTodo = new Todo('Item 1');
+		addNewTodo(newTodo);
+		eq(todos[0].selected, false);
+		newTodo.select();
+		eq(newTodo.selected, true);
+		eq(todos[0].selected, true);
+	},
+	"The app should have a way to mark a todo completed.": function() {
+		todos = [];
+		newTodo = new Todo('Item 1');
+		addNewTodo(newTodo);
+		eq(todos[0].completed, false);
+		newTodo.complete();
+		eq(newTodo.completed, true);
+		eq(todos[0].completed, true);
 	},
 	"The app should have a way to mark a todo deleted.": function() {
-		fail();
+		todos = [];
+		newTodo = new Todo('Item 1');
+		addNewTodo(newTodo);
+		eq(todos[0].deleted, false);
+		newTodo.delete();
+		eq(newTodo.deleted, true);
+		eq(todos[0].deleted, true);
 	},
 	"The app should display todos.": function() {
 		fail();

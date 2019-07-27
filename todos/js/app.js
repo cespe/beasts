@@ -14,10 +14,23 @@ function Todo(entry) {
 		this.entry = entry;
 	}
 	this.children = [];
+	this.selected = false;
 	this.deleted = false;
 	this.completed = false;
 }
 
 Todo.prototype.update = function(changedEntry) {
 	this.entry = changedEntry;
+}
+
+Todo.prototype.select = function() {
+	this.selected = true;
+}
+
+Todo.prototype.complete = function() {
+	this.completed = true;
+}
+
+Todo.prototype.delete = function() {
+	this.deleted = true;
 }
