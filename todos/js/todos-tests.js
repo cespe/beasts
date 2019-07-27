@@ -76,32 +76,41 @@ tests({
 		eq(newTodo.entry, 'Item 1 updated');
 		eq(todos[0].entry, 'Item 1 updated');
 	},
-	"The app should have a way to mark a todo selected.": function() {
+	"The app should have a way to mark a todo selected or not selected.": function() {
 		todos = [];
 		newTodo = new Todo('Item 1');
 		addNewTodo(newTodo);
 		eq(todos[0].selected, false);
-		newTodo.select();
+		newTodo.markSelected(true);
 		eq(newTodo.selected, true);
 		eq(todos[0].selected, true);
+		newTodo.markSelected(false);
+		eq(newTodo.selected, false);
+		eq(todos[0].selected, false);
 	},
-	"The app should have a way to mark a todo completed.": function() {
+	"The app should have a way to mark a todo completed or not completed.": function() {
 		todos = [];
 		newTodo = new Todo('Item 1');
 		addNewTodo(newTodo);
 		eq(todos[0].completed, false);
-		newTodo.complete();
+		newTodo.markCompleted(true);
 		eq(newTodo.completed, true);
 		eq(todos[0].completed, true);
+		newTodo.markCompleted(false);
+		eq(newTodo.completed, false);
+		eq(todos[0].completed, false);
 	},
-	"The app should have a way to mark a todo deleted.": function() {
+	"The app should have a way to mark a todo deleted or not deleted.": function() {
 		todos = [];
 		newTodo = new Todo('Item 1');
 		addNewTodo(newTodo);
 		eq(todos[0].deleted, false);
-		newTodo.delete();
+		newTodo.markDeleted(true);
 		eq(newTodo.deleted, true);
 		eq(todos[0].deleted, true);
+		newTodo.markDeleted(false);
+		eq(newTodo.deleted, false);
+		eq(todos[0].deleted, false);
 	},
 	"The app should display todos.": function() {
 		fail();

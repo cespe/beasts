@@ -23,14 +23,14 @@ Todo.prototype.update = function(changedEntry) {
 	this.entry = changedEntry;
 }
 
-Todo.prototype.select = function() {
-	this.selected = true;
+Todo.prototype.markSelected = function(bool) {
+	this.selected = bool;
 }
 
-Todo.prototype.complete = function() {
-	this.completed = true;
+Todo.prototype.markCompleted = function(bool) {
+	this.completed = bool;
 }
 
-Todo.prototype.delete = function() {
-	this.deleted = true;
+Todo.prototype.markDeleted = function(bool) {
+	this.deleted = bool;
 }
