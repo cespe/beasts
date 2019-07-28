@@ -7,7 +7,7 @@ function addNewTodo(todo) {
 }
 
 function Todo(entry) {
-	this.id = 'id1';
+	this.id = Math.random().toString(36).slice(2);
 	if (typeof entry !== "string") {
 		this.entry = "";
 	} else {
@@ -17,6 +17,10 @@ function Todo(entry) {
 	this.selected = false;
 	this.deleted = false;
 	this.completed = false;
+}
+
+Todo.prototype.changeId = function() {
+	this.id = Math.random().toString(36).slice(2);
 }
 
 Todo.prototype.update = function(changedEntry) {

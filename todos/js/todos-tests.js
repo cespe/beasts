@@ -8,7 +8,8 @@ tests({
 		eq(hasStorage, true);
 	},
 	"Todo should return a new todo object.": function() {
-		var newTodo = new Todo();
+		var newTodo = undefined;
+		newTodo = new Todo();
 		eq(typeof newTodo, "object");
 	},
 	"The app should have a way to add a todo object to the todos array.": function() {
@@ -18,104 +19,107 @@ tests({
 		eq(todos[0], newTodo);
 	},
 	"A todo object should be created with an 'id' property of type string to store an identifier.": function() {
-		todos = [];
+		//todos = [];
 		newTodo = new Todo();
-		addNewTodo(newTodo);
-		eq(todos[0].id, 'id1');
+		//addNewTodo(newTodo);
+		eq(typeof newTodo.id, "string");
 	},
-	"A todo id should be a unique value of type string.": function() {
+	"The todos array and children arrays should enforce unique ids when todos are added.": function() {
 		fail();
+
 	},
 	"Todo should take an entry of type string and store it in the todo object 'entry' property.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo('Item 1');
-		addNewTodo(newTodo);
-		eq(todos[0].entry, 'Item 1');
+		eq(newTodo.entry, 'Item 1');
+//		addNewTodo(newTodo);
+//		eq(todos[0].entry, 'Item 1');
 	},
 	"If 'entry' argument is not a string or is missing, Todo should set todo entry property to an empty string.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo();
-		addNewTodo(newTodo);
-		eq(todos[0].entry, '');
-		secondTodo = new Todo([]);
-		addNewTodo(secondTodo);
-		eq(todos[1].entry, '');
+		eq(newTodo.entry, '');
+//		addNewTodo(newTodo);
+//		eq(todos[0].entry, '');
+//		secondTodo = new Todo([]);
+//		addNewTodo(secondTodo);
+//		eq(todos[1].entry, '');
 	},
 	"A todo object should be created with a 'children' property of type array to store nested todo objects.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo();
-		addNewTodo(newTodo);
-		childrenArray = todos[0].children;
-		eq(Array.isArray(childrenArray), true);
-		eq(childrenArray.length, 0);
+//		addNewTodo(newTodo);
+//		childrenArray = newTodo.children;
+		eq(Array.isArray(newTodo.children), true);
+		eq(newTodo.children.length, 0);
 	},
 	"A todo object should be created with a 'selected' property of type boolean set to false.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo();
-		addNewTodo(newTodo);
-		eq(todos[0].selected, false);
+//		addNewTodo(newTodo);
+		eq(newTodo.selected, false);
 	},
 	"A todo object should be created with a 'deleted' property of type boolean set to false.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo();
-		addNewTodo(newTodo);
-		eq(todos[0].deleted, false);
+//		addNewTodo(newTodo);
+		eq(newTodo.deleted, false);
 	},
 	"A todo object should be created with a 'completed' property of type boolean set to false.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo();
-		addNewTodo(newTodo);
-		eq(todos[0].completed, false);
+//		addNewTodo(newTodo);
+		eq(newTodo.completed, false);
 	},
 	"The app should have a way to update a todo entry.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo('Item 1');
-		addNewTodo(newTodo);
-		eq(todos[0].entry, 'Item 1');
+//		addNewTodo(newTodo);
+		eq(newTodo.entry, 'Item 1');
 		newTodo.update('Item 1 updated');
 		eq(newTodo.entry, 'Item 1 updated');
-		eq(todos[0].entry, 'Item 1 updated');
+//		eq(todos[0].entry, 'Item 1 updated');
 	},
 	"The app should have a way to mark a todo selected or not selected.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo('Item 1');
-		addNewTodo(newTodo);
-		eq(todos[0].selected, false);
+//		addNewTodo(newTodo);
+		eq(newTodo.selected, false);
 		newTodo.markSelected(true);
 		eq(newTodo.selected, true);
-		eq(todos[0].selected, true);
+//		eq(todos[0].selected, true);
 		newTodo.markSelected(false);
 		eq(newTodo.selected, false);
-		eq(todos[0].selected, false);
+//		eq(todos[0].selected, false);
 	},
 	"The app should have a way to mark a todo completed or not completed.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo('Item 1');
-		addNewTodo(newTodo);
-		eq(todos[0].completed, false);
+//		addNewTodo(newTodo);
+		eq(newTodo.completed, false);
 		newTodo.markCompleted(true);
 		eq(newTodo.completed, true);
-		eq(todos[0].completed, true);
+//		eq(todos[0].completed, true);
 		newTodo.markCompleted(false);
 		eq(newTodo.completed, false);
-		eq(todos[0].completed, false);
+//		eq(todos[0].completed, false);
 	},
 	"The app should have a way to mark a todo deleted or not deleted.": function() {
-		todos = [];
+//		todos = [];
 		newTodo = new Todo('Item 1');
-		addNewTodo(newTodo);
-		eq(todos[0].deleted, false);
+//		addNewTodo(newTodo);
+		eq(newTodo.deleted, false);
 		newTodo.markDeleted(true);
 		eq(newTodo.deleted, true);
-		eq(todos[0].deleted, true);
+//		eq(todos[0].deleted, true);
 		newTodo.markDeleted(false);
 		eq(newTodo.deleted, false);
-		eq(todos[0].deleted, false);
+//		eq(todos[0].deleted, false);
 	},
 	"The app should have a way to add a child todo to a parent todo.": function() {
-		todos = []
+//		todos = []
 		newTodo = new Todo('Item 1');
-		addNewTodo(newTodo);
+//		addNewTodo(newTodo);
 		eq(newTodo.children.length, 0);
 		childTodo = new Todo('Item 1 child 1');
 		newTodo.addChild(childTodo);
