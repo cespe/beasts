@@ -42,9 +42,39 @@ Todo.prototype.addChild = function(child) {
 	this.children.push(child);
 }
 
-function insertTodo(array, todoInPlace, todoToInsert) {
-	var position = array.indexOf(todoInPlace) + 1;
+function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
+	// enforce unique todo ids in the array
+	
+	while (	array.find(function(el) {
+				if (el.id === todoToInsert.id) {
+					return el
+				}
+			})) {
+
+		todoToInsert.id = Math.random().toString(36).slice(2);
+	}
+
+//	var isDuplicate = array.find(function(el) {
+//			if (el.id === todoInsert.id) {
+//				return el;
+//			}
+//		});
+//
+//	while (isDuplicate()) {
+//		todoToInsert.id = Math.random().toString(36).slice(2);
+//	}
+
+	// default to push if not inserting
+	
+	if (arguments.length < 3) {
+		array.push(todoToInsert);
+	} else {
+
+	// insert new todo
+	
+	var position = array.indexOf(todoBeforeInsertionPoint) + 1;
 	array.splice(position, 0, todoToInsert);
+	}
 }
 
 function deleteTodo(array, todo) {

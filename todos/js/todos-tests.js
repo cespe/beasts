@@ -1,6 +1,8 @@
 // Beasts 8. Nested todos
 // Protect properties of todo object in a closure?
-// todo should be created with a Constructor
+// todo should be created with a Constructor?
+// resolve addTodo vs insertTodo
+// resolve todo.addChild vs insertTodo or todo.insertChild
 
 tests({
 	"The app should have a 'todos' array for storing todos.": function() {
@@ -15,16 +17,12 @@ tests({
 	"The app should have a way to add a todo object to the todos array.": function() {
 		todos = [];
 		newTodo = new Todo();
-		addNewTodo(newTodo);
+		insertTodo(todos, newTodo);
 		eq(todos[0], newTodo);
 	},
 	"A todo object should be created with an 'id' property of type string to store an identifier.": function() {
 		newTodo = new Todo();
 		eq(typeof newTodo.id, "string");
-	},
-	"The todos array and children arrays should enforce unique ids when todos are added.": function() {
-		fail();
-
 	},
 	"Todo should take an entry of type string and store it in the todo object 'entry' property.": function() {
 		newTodo = new Todo('Item 1');
@@ -92,16 +90,16 @@ tests({
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
 		todos = []
 		var todo1 = new Todo('Item 1');
-		addNewTodo(todo1);
+		insertTodo(todos, todo1);
 		eq(todos[0], todo1);
 		var todo2 = new Todo('Item 2');
-		addNewTodo(todo2);
+		insertTodo(todos, todo2);
 		eq(todos[1], todo2);
 		var todo3 = new Todo('Item 3');
-		addNewTodo(todo3);
+		insertTodo(todos, todo3);
 		eq(todos[2], todo3);
 		var todo4 = new Todo('Item 4 inserted after Item 1');
-		insertTodo(todos, todo1, todo4);
+		insertTodo(todos, todo4, todo1);
 		eq(todos[0], todo1);
 		eq(todos[1], todo4);
 		eq(todos[2], todo2);
@@ -114,22 +112,64 @@ tests({
 		todo1.addChild(child2);
 		eq(todo1.children[1], child2);
 		var child3 = new Todo('Item 1 child 3 inserted after child 1');
-		insertTodo(todo1.children, child1, child3);
+		insertTodo(todo1.children, child3, child1);
 		eq(todo1.children[0], child1);
 		eq(todo1.children[1], child3);
 		eq(todo1.children[2], child2);
 
 	},
+	"If insertTodo is called without todo before insertion point, it should push the new todo to end of array.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		eq(todos[0].entry, 'Item 1');
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		eq(todos[1].entry, 'Item 2');
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo3);
+		eq(todos[2].entry, 'Item 3');
+	},
+	"The todos array and children arrays should enforce unique ids when todos are added.": function() {
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		todo1.id = 'duplicate';
+		insertTodo(todos, todo1);
+		eq(todos[0].entry, 'Item 1');
+		eq(todos[0].id, 'duplicate');
+		var todo2 = new Todo('Item 2');
+		todo2.id = 'duplicate';
+		insertTodo(todos, todo2);
+		eq(todos[0].id, 'duplicate');
+		eq(todos[1].entry, 'Item 2');
+		eq(todos[1].id !== 'duplicate', true);
+
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var child1 = new Todo('Item 1 child 1');
+		child1.id = 'duplicate';
+		todos[0].addChild(child1);
+		eq(todos[0].children[0].entry, 'Item 1 child 1');
+		eq(todos[0].children[0].id, 'duplicate');
+		var child2 = new Todo('Item 1 child 2');
+		child2.id = 'duplicate';
+		insertTodo(todos[0].children, child2);
+		eq(todos[0].children[0].id, 'duplicate');
+		eq(todos[0].children[1].entry, 'Item 1 child 2');
+		eq(todos[0].children[1].id !== 'duplicate', true);
+
+	},
 	"The app should have a way to delete a todo from the array it is in.": function() {
 		todos = []
 		var todo1 = new Todo('Item 1');
-		addNewTodo(todo1);
+		insertTodo(todos, todo1);
 		eq(todos[0], todo1);
 		var todo2 = new Todo('Item 2');
-		addNewTodo(todo2);
+		insertTodo(todos, todo2);
 		eq(todos[1], todo2);
 		var todo3 = new Todo('Item 3');
-		addNewTodo(todo3);
+		insertTodo(todos, todo3);
 		eq(todos[2], todo3);
 		deleteTodo(todos, todo2);
 		eq(todos[0], todo1);
