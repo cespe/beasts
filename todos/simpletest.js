@@ -35,9 +35,10 @@ var TinyTest = {
         }
         setTimeout(function() { // Give document a chance to complete
             if (window.document && document.body) {
-                document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
-				// Render statistics to DOM
-				document.body.innerText = "Ran " + numberOfTests + pluralize(numberOfTests, "test") + successes + " passing and " + failures + " failing."
+				var aside = document.getElementById("simpletest");
+				aside.style.backgroundColor =  (failures == 0 ? '#99ff99' : '#ff9999');
+				aside.innerText = "Ran " + numberOfTests + pluralize(numberOfTests, "test")
+									+ successes + " passing and " + failures + " failing."
             }
         }, 0);
     },

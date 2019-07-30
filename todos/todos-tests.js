@@ -189,7 +189,7 @@ tests({
 		eq(todo1.children[1], child3);
 
 	},
-	"The app should display todos.": function() {
+	"The app should display todos on a web page.": function() {
 		fail();
 	}
 });
