@@ -43,7 +43,8 @@ Todo.prototype.addChild = function(child) {
 }
 
 function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
-	// enforce unique todo ids in the array
+
+	// Enforce unique todo ids in the array.
 	
 	while (	array.find(function(el) {
 				if (el.id === todoToInsert.id) {
@@ -54,23 +55,13 @@ function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 		todoToInsert.id = Math.random().toString(36).slice(2);
 	}
 
-//	var isDuplicate = array.find(function(el) {
-//			if (el.id === todoInsert.id) {
-//				return el;
-//			}
-//		});
-//
-//	while (isDuplicate()) {
-//		todoToInsert.id = Math.random().toString(36).slice(2);
-//	}
-
-	// default to push if not inserting
+	// Default to push if not inserting.
 	
 	if (arguments.length < 3) {
 		array.push(todoToInsert);
 	} else {
 
-	// insert new todo
+	// Insert new todo.
 	
 	var position = array.indexOf(todoBeforeInsertionPoint) + 1;
 	array.splice(position, 0, todoToInsert);
@@ -80,4 +71,49 @@ function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 function deleteTodo(array, todo) {
 	var position = array.indexOf(todo);
 	array.splice(position, 1);
+}
+
+function createTodoLi(todo) {
+	var todoLi = document.createElement('li');
+	todoLi.textContent = todo.entry;
+	todoLi.id = todo.id;
+	return todoLi;
+}
+
+// Ul parameter is e.g. the todos ul or one of the children ul.
+function insertTodoLi(Ul, todoLi) {
+	Ul.appendChild(todoLi);
+}
+
+/*
+ * Takes an array of todos, either the main todos array or a todo's children array.
+ * The main todos <ul> can be appended to <main> available with getElementById('todolist').
+ * A nested todos array can be appended to the <li> it belongs to
+ *		get the <li> with getElementById(todo.id)
+ *
+
+ */
+
+
+
+function createTodosUl(todosArray, parent) {
+	
+	var todosUl = document.createElement('ul');
+
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+		if (todo.children.length > 0) {
+			return createTodosUl(todo.children, todoLi);
+		}
+		todoLi = createTodoLi(todo);
+		todosUl.appendChild(todoLi);
+	}
+
+	if (todosArray === todos) {
+		parentElement = document.getElementById('todolist');
+	} else {
+		parentElement = parent;
+	}
+
+	parentElement.appendChild(todosUl);
 }

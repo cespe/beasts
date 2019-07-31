@@ -161,7 +161,7 @@ tests({
 
 	},
 	"The app should have a way to delete a todo from the array it is in.": function() {
-		todos = []
+		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		eq(todos[0], todo1);
@@ -189,7 +189,51 @@ tests({
 		eq(todo1.children[1], child3);
 
 	},
-	"The app should display todos on a web page.": function() {
-		fail();
+	"The app should have a way to build an li element from a todo entry.": function() {
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todoLi = createTodoLi(todo1);
+		eq(todoLi.textContent, 'Item 1');	
+
+	},
+	"The todo li should have an id equal to todo.id.": function() {
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todoLi = createTodoLi(todo1);
+		eq(todoLi.id, todo1.id);	
+
+	},
+	"When loaded, the app should display todos.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		createTodosUl(todos);
+		var displayedTodo1 = document.getElementById(todo1.id).textContent
+		eq(displayedTodo1, 'Item 1');
+		var displayedTodo2 = document.getElementById(todo2.id).textContent;
+		eq(displayedTodo2, 'Item 2');
+	},
+	"When loaded, the app should also display nested todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		createTodosUl(todos);
+		var displayedTodo1 = document.getElementById(todo1.id).textContent
+		eq(displayedTodo1, 'Item 1');
+		var child1Li = document.getElementById(child1.id);
+		var displayedChild1 = child1Li.textContent;
+		eq(displayedChild1, 'Item 1 child 1');
+		var displayedTodo2 = document.getElementById(todo2.id).textContent;
+		eq(displayedTodo2, 'Item 2');
 	}
+
 });
