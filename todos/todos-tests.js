@@ -205,15 +205,44 @@ tests({
 		eq(todoLi.id, todo1.id);	
 
 	},
-	"When loaded, the app should display todos.": function() {
+	"The app should have a way to generate a ul element from an array of todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		createTodosUl(todos);
+		var result = createTodosUl(todos);
+
+		eq(result.childElementCount, 2);
+		eq(result.children.item(0).textContent, 'Item 1');
+		eq(result.children.item(1).textContent, 'Item 2');
+
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		var result = createTodosUl(todos);
+
+		eq(result.childElementCount, 2);
+		// textContent includes the text of child elements
+		eq(result.children.item(0).textContent, 'Item 1Item 1 child 1');
+		eq(result.children.item(1).textContent, 'Item 2');
+	},
+	"When loaded, the app should display todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		
 		var displayedTodo1 = document.getElementById(todo1.id).textContent
 		eq(displayedTodo1, 'Item 1');
+		
 		var displayedTodo2 = document.getElementById(todo2.id).textContent;
 		eq(displayedTodo2, 'Item 2');
 	},
@@ -226,14 +255,24 @@ tests({
 		todo1.addChild(child1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		createTodosUl(todos);
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
+
 		var displayedTodo1 = document.getElementById(todo1.id).textContent
-		eq(displayedTodo1, 'Item 1');
+		// textContent includes the text of child elements
+		eq(displayedTodo1, 'Item 1Item 1 child 1');
+		
 		var child1Li = document.getElementById(child1.id);
 		var displayedChild1 = child1Li.textContent;
 		eq(displayedChild1, 'Item 1 child 1');
+		
 		var displayedTodo2 = document.getElementById(todo2.id).textContent;
 		eq(displayedTodo2, 'Item 2');
-	}
+	},
+	"The app should have a way to insert a todo element below an existing todo.": function() {
+		fail();
+	},
+	"The app should have a way to insert a child todo element below an existing todo.": function() {
+		fail();
+	},
 
 });

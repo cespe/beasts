@@ -1,5 +1,7 @@
 // Beasts 8. Nested todos
 
+/************************************ Data manipulation ***********************************/
+
 var todos = [];
 
 function addNewTodo(todo) {
@@ -73,6 +75,8 @@ function deleteTodo(array, todo) {
 	array.splice(position, 1);
 }
 
+/************************************* DOM manipulation **********************************/
+
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
 	todoLi.textContent = todo.entry;
@@ -80,40 +84,17 @@ function createTodoLi(todo) {
 	return todoLi;
 }
 
-// Ul parameter is e.g. the todos ul or one of the children ul.
-function insertTodoLi(Ul, todoLi) {
-	Ul.appendChild(todoLi);
-}
-
-/*
- * Takes an array of todos, either the main todos array or a todo's children array.
- * The main todos <ul> can be appended to <main> available with getElementById('todolist').
- * A nested todos array can be appended to the <li> it belongs to
- *		get the <li> with getElementById(todo.id)
- *
-
- */
-
-
-
-function createTodosUl(todosArray, parent) {
+function createTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
 
 	for (var i = 0; i < todosArray.length; i++) {
 		var todo = todosArray[i];
+		var todoLi = createTodoLi(todo);
 		if (todo.children.length > 0) {
-			return createTodosUl(todo.children, todoLi);
+			todoLi.appendChild(createTodosUl(todo.children));
 		}
-		todoLi = createTodoLi(todo);
 		todosUl.appendChild(todoLi);
 	}
-
-	if (todosArray === todos) {
-		parentElement = document.getElementById('todolist');
-	} else {
-		parentElement = parent;
-	}
-
-	parentElement.appendChild(todosUl);
+	return todosUl;
 }
