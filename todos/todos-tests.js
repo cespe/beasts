@@ -118,7 +118,7 @@ tests({
 		eq(todo1.children[2], child2);
 
 	},
-	"If insertTodo is called without todo before insertion point, it should push the new todo to end of array.": function() {
+	"If insertTodo is called without insertion point, it should push the new todo to end of array.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -274,5 +274,17 @@ tests({
 	"The app should have a way to insert a child todo element below an existing todo.": function() {
 		fail();
 	},
+	"An empty todo should be created in editing mode for text entry.": function() {
+		fail();
+	},
+	"When editing, Return should save the revised entry and select the todo.": function() {
+		fail();
+	},
+	"When editing, losing focus should save the revised entry but not select the todo.": function() {
+		fail();
+	},
+	"When editing, Escape should abort changes and select the todo.": function() {
+		fail();
+	}
 
 });
