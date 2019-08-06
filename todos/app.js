@@ -98,3 +98,18 @@ function createTodosUl(todosArray) {
 	}
 	return todosUl;
 }
+
+// Insert a new empty todoLi after the given todoLi.id, ready for text entry.
+
+function insertNewTodoLi(id) {
+	var targetLi = document.getElementById(id);
+	var newLi = document.createElement('li');
+	targetLi.insertAdjacentElement('afterend', newLi);
+}
+// Insert a new todoLi in a child todosUl under a given todoLi.id, ready for text entry.
+// Create the nested todosUl if necessary.
+// Append a new todoLi.
+
+function insertNewChildTodoLi() {
+
+}

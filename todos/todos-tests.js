@@ -268,11 +268,50 @@ tests({
 		var displayedTodo2 = document.getElementById(todo2.id).textContent;
 		eq(displayedTodo2, 'Item 2');
 	},
-	"The app should have a way to insert a todo element below an existing todo.": function() {
-		fail();
+	"The app should have a way to insert a new sibling todo after a given todo.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+
+		eq(todosUl.childElementCount, 1);
+		eq(todoLi1.textContent, 'Item 1');
+		
+		insertNewTodoLi(todoLi1.id);
+
+		eq(todosUl.childElementCount, 2);
+		eq(todosUl.children[1].textContent, '');
+
 	},
-	"The app should have a way to insert a child todo element below an existing todo.": function() {
-		fail();
+	"The app should have a way to insert a new child todo after a given todo.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+
+		eq(todosUl.childElementCount, 1);
+		eq(todoLi1.textContent, 'Item 1');
+
+		insertNewChildTodoLi(todo1.id);
+
+		eq(todosUl.childElementCount, 1);
+		eq(todoLi1.childElementCount, 1);
+		
+		var todosUl1 = todoLi1.children[0];
+
+		eq(todosUl1.nodeName, "UL");
+		eq(todosUl1.childElementCount, 1);
+		eq(todosUl1.children[0].nodeName, "LI");
+		eq(todosUl1.children[0].textContent, '');
+
 	},
 	"An empty todo should be created in editing mode for text entry.": function() {
 		fail();
