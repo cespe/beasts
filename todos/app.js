@@ -1,12 +1,12 @@
 // Beasts 8. Nested todos
 
-/************************************ Data manipulation ***********************************/
+/********************************* Data manipulation ***********************************/
 
 var todos = [];
 
-function addNewTodo(todo) {
-	todos.push(todo);
-}
+//function addNewTodo(todo) {
+//	todos.push(todo);
+//}
 
 function Todo(entry) {
 	this.id = Math.random().toString(36).slice(2);
@@ -75,7 +75,7 @@ function deleteTodo(array, todo) {
 	array.splice(position, 1);
 }
 
-/************************************* DOM manipulation **********************************/
+/************************************* DOM manipulation ********************************/
 
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
@@ -98,12 +98,24 @@ function createTodosUl(todosArray) {
 	}
 	return todosUl;
 }
+//	while (	array.find(function(el) {
+//				if (el.id === todoToInsert.id) {
+//					return el
+//				}
+//			})) {
 
 // Insert a new empty todoLi after the given todoLi.id, ready for text entry.
 
 function insertNewTodoLi(id) {
 	var targetLi = document.getElementById(id);
-	var newLi = document.createElement('li');
+	var insertAfter = todos.find(function(el) {
+		if (el.id === id) {
+			return el
+		}
+	});
+	var newTodo = new Todo();
+	insertTodo(todos, newTodo, insertAfter);
+	var newLi = createTodoLi(newTodo);
 	targetLi.insertAdjacentElement('afterend', newLi);
 }
 // Insert a new todoLi in a child todosUl under a given todoLi.id, ready for text entry.

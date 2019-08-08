@@ -278,13 +278,32 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
+		eq(todos.length, 1);
+		eq(todos[0].entry, 'Item 1');
 		eq(todosUl.childElementCount, 1);
 		eq(todoLi1.textContent, 'Item 1');
 		
-		insertNewTodoLi(todoLi1.id);
+		insertNewTodoLi(todoLi1.id);				// insert/append a new todo after the existing one
 
+		eq(todos.length, 2);
+		eq(todos[1].entry, '');
 		eq(todosUl.childElementCount, 2);
 		eq(todosUl.children[1].textContent, '');
+
+		var todo2 = todos[1];
+		eq(todosUl.children[1].id, todo2.id);
+
+		insertNewTodoLi(todoLi1.id);				// insert a third todo between the two existing todos
+
+		eq(todos.length, 3)
+		eq(todos[1].entry, '');
+		eq(todosUl.childElementCount, 3);
+		eq(todosUl.children[0].textContent, 'Item 1');
+		eq(todosUl.children[1].textContent, '');
+		eq(todosUl.children[2].id, todo2.id);
+		eq(todos[2], todo2);
+
+		
 
 	},
 	"The app should have a way to insert a new child todo after a given todo.": function() {
