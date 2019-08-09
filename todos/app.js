@@ -44,6 +44,21 @@ Todo.prototype.addChild = function(child) {
 	this.children.push(child);
 }
 
+function findTodo(array, id) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.children.length > 0) {
+			var match = findTodo(todo.children, id);
+			if (match) {
+				return match;
+			}
+		}
+		if (todo.id === id) {
+			return todo;
+		}
+	}
+}
+
 function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 
 	// Enforce unique todo ids in the array.
@@ -98,30 +113,32 @@ function createTodosUl(todosArray) {
 	}
 	return todosUl;
 }
-//	while (	array.find(function(el) {
-//				if (el.id === todoToInsert.id) {
-//					return el
-//				}
-//			})) {
 
-// Insert a new empty todoLi after the given todoLi.id, ready for text entry.
+// Insert a new empty todoLi into the given array after the given todoLi.id, ready for text entry.
+// If no todoLi.id is given, defaults to push().
 
-function insertNewTodoLi(id) {
+function insertNewTodoLi(array, id) {
 	var targetLi = document.getElementById(id);
-	var insertAfter = todos.find(function(el) {
+	// insertion point needs a recursive search -- change it
+	var insertAfter = array.find(function(el) {
 		if (el.id === id) {
 			return el
 		}
 	});
 	var newTodo = new Todo();
-	insertTodo(todos, newTodo, insertAfter);
+	insertTodo(array, newTodo, insertAfter);
 	var newLi = createTodoLi(newTodo);
 	targetLi.insertAdjacentElement('afterend', newLi);
 }
-// Insert a new todoLi in a child todosUl under a given todoLi.id, ready for text entry.
+// Append a new todoLi in a child todosUl under a given todoLi.id, ready for text entry.
 // Create the nested todosUl if necessary.
-// Append a new todoLi.
 
-function insertNewChildTodoLi() {
-
+function appendNewChildTodoLi(id) {
+	var parentLi = document.getElementById(id);
+	// parentTodo requires a recursive search for id
+	var parentTodo = array.find(function(el) {
+		if (el.id === id) {
+			return el;
+		}
+	});
 }

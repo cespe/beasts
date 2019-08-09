@@ -87,6 +87,29 @@ tests({
 		eq(newTodo.children.length, 1);
 		eq(newTodo.children[0], childTodo);
 	},
+	"The app should have a way to return a todo when given its id.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+
+		debugger;
+		var result = findTodo(todos, todo2.id);
+		eq(result, todo2);
+		var result = findTodo(todos, child1.id);
+		eq(result, child1);
+		var result = findTodo(todos, child2.id);
+		eq(result, child2);
+		var result = findTodo(todos, grandchild1.id);
+		eq(result, grandchild1);
+	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
 		todos = []
 		var todo1 = new Todo('Item 1');
@@ -283,7 +306,7 @@ tests({
 		eq(todosUl.childElementCount, 1);
 		eq(todoLi1.textContent, 'Item 1');
 		
-		insertNewTodoLi(todoLi1.id);				// insert/append a new todo after the existing one
+		insertNewTodoLi(todos, todoLi1.id);				// insert/append a new todo after the existing one
 
 		eq(todos.length, 2);
 		eq(todos[1].entry, '');
@@ -293,7 +316,7 @@ tests({
 		var todo2 = todos[1];
 		eq(todosUl.children[1].id, todo2.id);
 
-		insertNewTodoLi(todoLi1.id);				// insert a third todo between the two existing todos
+		insertNewTodoLi(todos, todoLi1.id);				// insert a third todo between the two existing todos
 
 		eq(todos.length, 3)
 		eq(todos[1].entry, '');
@@ -302,9 +325,6 @@ tests({
 		eq(todosUl.children[1].textContent, '');
 		eq(todosUl.children[2].id, todo2.id);
 		eq(todos[2], todo2);
-
-		
-
 	},
 	"The app should have a way to insert a new child todo after a given todo.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -319,17 +339,16 @@ tests({
 		eq(todosUl.childElementCount, 1);
 		eq(todoLi1.textContent, 'Item 1');
 
-		insertNewChildTodoLi(todo1.id);
+		appendNewChildTodoLi(todoLi1.id);
 
-		eq(todosUl.childElementCount, 1);
 		eq(todoLi1.childElementCount, 1);
 		
-		var todosUl1 = todoLi1.children[0];
+		var todoLi1Ul = todoLi1.children[0];
 
-		eq(todosUl1.nodeName, "UL");
-		eq(todosUl1.childElementCount, 1);
-		eq(todosUl1.children[0].nodeName, "LI");
-		eq(todosUl1.children[0].textContent, '');
+		eq(todosLi1Ul.nodeName, "UL");
+		eq(todosLi1Ul.childElementCount, 1);
+		eq(todosLi1Ul.children[0].nodeName, "LI");
+		eq(todosLi1Ul.children[0].textContent, '');
 
 	},
 	"An empty todo should be created in editing mode for text entry.": function() {
