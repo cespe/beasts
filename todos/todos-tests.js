@@ -100,7 +100,6 @@ tests({
 		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
 		child1.addChild(grandchild1);
 
-		debugger;
 		var result = findTodo(todos, todo2.id);
 		eq(result, todo2);
 		var result = findTodo(todos, child1.id);
@@ -326,7 +325,7 @@ tests({
 		eq(todosUl.children[2].id, todo2.id);
 		eq(todos[2], todo2);
 	},
-	"The app should have a way to insert a new child todo after a given todo.": function() {
+	"The app should have a way to nest a new child todo under a given todo.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -336,20 +335,39 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		eq(todosUl.childElementCount, 1);
+		eq(todoLi1.childElementCount, 0);
 		eq(todoLi1.textContent, 'Item 1');
 
-		appendNewChildTodoLi(todoLi1.id);
+		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
 
 		eq(todoLi1.childElementCount, 1);
 		
 		var todoLi1Ul = todoLi1.children[0];
+		eq(todoLi1Ul.childElementCount, 1);
+		eq(todoLi1Ul.nodeName, "UL");
 
-		eq(todosLi1Ul.nodeName, "UL");
-		eq(todosLi1Ul.childElementCount, 1);
-		eq(todosLi1Ul.children[0].nodeName, "LI");
-		eq(todosLi1Ul.children[0].textContent, '');
+		var child = todo1.children[0];
+		var childLi = todoLi1Ul.children[0];
+		eq(child.id, childLi.id);
+		eq(childLi.nodeName, "LI");
 
+		appendNewChildTodoLi(todoLi1);			// case of second child added to existing UL
+
+		eq(todoLi1.childElementCount, 1);
+		
+		var todoLi1Ul = todoLi1.children[0];
+		eq(todoLi1Ul.childElementCount, 2);
+		eq(todoLi1Ul.nodeName, "UL");
+
+		var child1 = todo1.children[0];
+		var child1Li = todoLi1Ul.children[0];
+		eq(child1.id, child1Li.id);
+		eq(child1Li.nodeName, "LI");
+		
+		var child2 = todo1.children[1];
+		var child2Li = todoLi1Ul.children[1];
+		eq(child2.id, child2Li.id);
+		eq(child2Li.nodeName, "LI");
 	},
 	"An empty todo should be created in editing mode for text entry.": function() {
 		fail();

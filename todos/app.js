@@ -44,17 +44,18 @@ Todo.prototype.addChild = function(child) {
 	this.children.push(child);
 }
 
+// Used by appendNewChildTodoLi
 function findTodo(array, id) {
 	for (var i = 0; i < array.length; i++) {
 		var todo = array[i];
+		if (todo.id === id) {
+			return todo;
+		}
 		if (todo.children.length > 0) {
 			var match = findTodo(todo.children, id);
 			if (match) {
 				return match;
 			}
-		}
-		if (todo.id === id) {
-			return todo;
 		}
 	}
 }
@@ -116,10 +117,10 @@ function createTodosUl(todosArray) {
 
 // Insert a new empty todoLi into the given array after the given todoLi.id, ready for text entry.
 // If no todoLi.id is given, defaults to push().
+// 'array' argument will be either todos or a todo.children array. No recursive search is needed.
 
 function insertNewTodoLi(array, id) {
 	var targetLi = document.getElementById(id);
-	// insertion point needs a recursive search -- change it
 	var insertAfter = array.find(function(el) {
 		if (el.id === id) {
 			return el
@@ -130,15 +131,25 @@ function insertNewTodoLi(array, id) {
 	var newLi = createTodoLi(newTodo);
 	targetLi.insertAdjacentElement('afterend', newLi);
 }
-// Append a new todoLi in a child todosUl under a given todoLi.id, ready for text entry.
-// Create the nested todosUl if necessary.
 
-function appendNewChildTodoLi(id) {
-	var parentLi = document.getElementById(id);
-	// parentTodo requires a recursive search for id
-	var parentTodo = array.find(function(el) {
-		if (el.id === id) {
-			return el;
-		}
-	});
+// Append a new todoLi in a new child todosUl under a given todoLi, ready for text entry.
+// The function creates a new UL under the parent todo if necessary. Handling this case
+// explicitly avoids having to deal with the error of possibly inserting a second UL under the parent.
+
+function appendNewChildTodoLi(todoLi) {
+
+	var newTodo = new Todo();
+	var parentTodo = findTodo(todos, todoLi.id);
+	insertTodo(parentTodo.children, newTodo);
+	
+	var newLi = createTodoLi(newTodo);
+
+	if (todoLi.children.length === 0) {
+		var newUl = document.createElement('ul');
+		newUl.appendChild(newLi);
+		todoLi.appendChild(newUl);
+	} else {
+		existingUl = todoLi.children[0];
+		existingUl.appendChild(newLi);	
+	}
 }
