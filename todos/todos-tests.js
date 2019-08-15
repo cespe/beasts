@@ -340,9 +340,11 @@ tests({
 
 		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
 
-		eq(todoLi1.childElementCount, 1);
+		var todoLi1Div = todosUl.children[1];
+		eq(todoLi1Div.childElementCount, 1);
+		eq(todoLi1Div.nodeName, "DIV");
 		
-		var todoLi1Ul = todoLi1.children[0];
+		var todoLi1Ul = todoLi1Div.children[0];
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todoLi1Ul.nodeName, "UL");
 
@@ -353,11 +355,11 @@ tests({
 
 		appendNewChildTodoLi(todoLi1);			// case of second child added to existing UL
 
-		eq(todoLi1.childElementCount, 1);
+		eq(todoLi1.childElementCount, 0);
 		
-		var todoLi1Ul = todoLi1.children[0];
-		eq(todoLi1Ul.childElementCount, 2);
-		eq(todoLi1Ul.nodeName, "UL");
+		var todoLi1Div = todosUl.children[1];
+		eq(todoLi1Div.childElementCount, 1);
+		eq(todoLi1Div.nodeName, "DIV");
 
 		var child1 = todo1.children[0];
 		var child1Li = todoLi1Ul.children[0];
@@ -369,8 +371,9 @@ tests({
 		eq(child2.id, child2Li.id);
 		eq(child2Li.nodeName, "LI");
 	},
-	"A todoLi should allow creating or editing a todo entry.": function() {
+	"A todoLi should allow for creating or editing a todo entry.": function() {
 		fail();
+
 	},
 	"An empty todo should be created in editing mode for text entry.": function() {
 		fail();

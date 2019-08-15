@@ -145,12 +145,19 @@ function appendNewChildTodoLi(todoLi) {
 	
 	var newLi = createTodoLi(newTodo);
 
-	if (todoLi.children.length === 0) {
-		var newUl = document.createElement('ul');
-		newUl.appendChild(newLi);
-		todoLi.appendChild(newUl);
-	} else {
-		existingUl = todoLi.children[0];
+	// Case one: there is already a <div><ul> to hold nested children
+	
+	if (todoLi.nextSibling && todoLi.nextSibling.nodeName === "DIV") {
+		existingUl = todoLi.nextSibling.children[0];	// the <ul> in the <div>
 		existingUl.appendChild(newLi);	
+	} else {
+
+	// Case two: there are on children yet, create the <div><ul> to hold them
+	
+		var nestingWrapper = document.createElement('div');
+		var newUl = document.createElement('ul');
+		nestingWrapper.appendChild(newUl);
+		newUl.appendChild(newLi);
+		todoLi.insertAdjacentElement('afterend', nestingWrapper);
 	}
 }
