@@ -95,6 +95,7 @@ function deleteTodo(array, todo) {
 
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
+	todoLi.contentEditable = true;
 	todoLi.textContent = todo.entry;
 	todoLi.id = todo.id;
 	return todoLi;
@@ -132,7 +133,7 @@ function insertNewTodoLi(array, id) {
 	targetLi.insertAdjacentElement('afterend', newLi);
 }
 
-// Append a new todoLi in a new child todosUl under a given todoLi, ready for text entry.
+// Append a new todoLi in a child todosUl under a given todoLi, ready for text entry.
 // The function creates a new UL under the parent todo if necessary. Handling this case
 // explicitly avoids having to deal with the error of possibly inserting a second UL under the parent.
 

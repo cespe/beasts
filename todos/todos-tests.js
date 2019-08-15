@@ -369,6 +369,9 @@ tests({
 		eq(child2.id, child2Li.id);
 		eq(child2Li.nodeName, "LI");
 	},
+	"A todoLi should allow creating or editing a todo entry.": function() {
+		fail();
+	},
 	"An empty todo should be created in editing mode for text entry.": function() {
 		fail();
 	},
