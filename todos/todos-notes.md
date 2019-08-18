@@ -102,3 +102,8 @@ are wrapped in a <div>.
 	Modify appendNewChildTodoLi to include a <div> wrapper for the <ul>.
 	Modify createTodosUl as well to cover initial loading from storage.
 
+##Test event handling
+https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
+https://developer.mozilla.org/en-US/docs/Web/API/Document/createEvent
+https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent
+

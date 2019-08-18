@@ -9,7 +9,7 @@ tests({
 		var hasStorage = Array.isArray(todos);
 		eq(hasStorage, true);
 	},
-	"Todo should return a new todo object.": function() {
+	"Todo constructor should return a new todo object.": function() {
 		var newTodo = undefined;
 		newTodo = new Todo();
 		eq(typeof newTodo, "object");
@@ -371,7 +371,7 @@ tests({
 		eq(child2.id, child2Li.id);
 		eq(child2Li.nodeName, "LI");
 	},
-	"A todoLi should allow for creating or editing a todo entry.": function() {
+	"A todoLi should allow for creating or editing its todo entry.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -431,8 +431,8 @@ tests({
 		var todoLi1 = todosUl.children[0];
 
 		setUpEventListeners();
+		// test that keyUpHandler fires given Return while todoLi1 is focused...
 
-		eq(todolist.onclick, !null);
 	},
 	"When editing, Return should save the revised entry and select the todo.": function() {
 		fail();
