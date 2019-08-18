@@ -372,11 +372,67 @@ tests({
 		eq(child2Li.nodeName, "LI");
 	},
 	"A todoLi should allow for creating or editing a todo entry.": function() {
-		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+
+		eq(todoLi1.textContent, 'Item 1');
+		eq(todoLi1.contentEditable, 'true');
 
 	},
 	"An empty todo should be created in editing mode for text entry.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+
+		insertNewTodoLi(todos, todoLi1.id);				// insert a new todo after the existing one
+
+		eq(todos.length, 2);
+		eq(todos[1].entry, '');
+		eq(todosUl.childElementCount, 2);
+		eq(todosUl.children[1].textContent, '');
+		eq(document.activeElement, todosUl.children[1]);
+		eq(document.hasFocus(), true);
+
+		appendNewChildTodoLi(todoLi1);					// case of first child added to a new UL
+
+		var todoLi1Div = todosUl.children[1];
+		var todoLi1Ul = todoLi1Div.children[0];
+		var childLi = todoLi1Ul.children[0];
+		eq(document.activeElement, childLi);
+		eq(document.hasFocus(), true);
+
+		appendNewChildTodoLi(todoLi1);					// case of second child added to existing UL
+
+		var child2Li = todoLi1Ul.children[1];
+		eq(document.activeElement, child2Li);
+		eq(document.hasFocus(), true);
+
+	},
+	"The app should have a keyup event listening for the Return key when editing a todo.": function() {
 		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+
+		setUpEventListeners();
+
+		eq(todolist.onclick, !null);
 	},
 	"When editing, Return should save the revised entry and select the todo.": function() {
 		fail();

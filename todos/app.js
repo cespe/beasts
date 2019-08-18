@@ -77,6 +77,7 @@ function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 	
 	if (arguments.length < 3) {
 		array.push(todoToInsert);
+
 	} else {
 
 	// Insert new todo.
@@ -118,7 +119,7 @@ function createTodosUl(todosArray) {
 
 // Insert a new empty todoLi into the given array after the given todoLi.id, ready for text entry.
 // If no todoLi.id is given, defaults to push().
-// 'array' argument will be either todos or a todo.children array. No recursive search is needed.
+// 'array' argument will be either todos or a todo.children array, so no recursive search is needed.
 
 function insertNewTodoLi(array, id) {
 	var targetLi = document.getElementById(id);
@@ -131,6 +132,7 @@ function insertNewTodoLi(array, id) {
 	insertTodo(array, newTodo, insertAfter);
 	var newLi = createTodoLi(newTodo);
 	targetLi.insertAdjacentElement('afterend', newLi);
+	newLi.focus();
 }
 
 // Append a new todoLi in a child todosUl under a given todoLi, ready for text entry.
@@ -150,9 +152,10 @@ function appendNewChildTodoLi(todoLi) {
 	if (todoLi.nextSibling && todoLi.nextSibling.nodeName === "DIV") {
 		existingUl = todoLi.nextSibling.children[0];	// the <ul> in the <div>
 		existingUl.appendChild(newLi);	
+
 	} else {
 
-	// Case two: there are on children yet, create the <div><ul> to hold them
+	// Case two: there are no children yet, create the <div><ul> to hold them
 	
 		var nestingWrapper = document.createElement('div');
 		var newUl = document.createElement('ul');
@@ -160,4 +163,17 @@ function appendNewChildTodoLi(todoLi) {
 		newUl.appendChild(newLi);
 		todoLi.insertAdjacentElement('afterend', nestingWrapper);
 	}
+
+	newLi.focus();
+}
+
+/************************************* Event Handling ***********************************/
+
+function keyUpHandler(event) {
+	console.log(event);
+}
+
+function setUpEventListeners() {
+	var todolist = document.getElementById('todolist');
+	todolist.addEventListener('keyup', keyUpHandler);
 }

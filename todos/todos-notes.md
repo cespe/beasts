@@ -39,6 +39,11 @@ hash routes enable browser back/forward for
 -Remove todomvc-common and director from node modules.
 -Consider [cypress] (https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) for testing if simpletest doesn't work out.
 
+On second thought, just write the app from scratch with TDD.
+
+
+
+
 
 ##Features
 -Add a child todo
@@ -97,20 +102,3 @@ are wrapped in a <div>.
 	Modify appendNewChildTodoLi to include a <div> wrapper for the <ul>.
 	Modify createTodosUl as well to cover initial loading from storage.
 
-function appendNewChildTodoLi(todoLi) {
-
-	var newTodo = new Todo();
-	var parentTodo = findTodo(todos, todoLi.id);
-	insertTodo(parentTodo.children, newTodo);
-	
-	var newLi = createTodoLi(newTodo);
-
-	if (todoLi.children.length === 0) {
-		var newUl = document.createElement('ul');
-		newUl.appendChild(newLi);
-		todoLi.appendChild(newUl);
-	} else {
-		existingUl = todoLi.children[0];
-		existingUl.appendChild(newLi);	
-	}
-}
