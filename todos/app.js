@@ -75,7 +75,7 @@ function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 
 	// Default to push if not inserting.
 	
-	if (arguments.length < 3) {
+	if (todoBeforeInsertionPoint === undefined) {
 		array.push(todoToInsert);
 
 	} else {
@@ -131,7 +131,15 @@ function insertNewTodoLi(array, id) {
 	var newTodo = new Todo();
 	insertTodo(array, newTodo, insertAfter);
 	var newLi = createTodoLi(newTodo);
-	targetLi.insertAdjacentElement('afterend', newLi);
+	if (targetLi !== null) {
+		targetLi.insertAdjacentElement('afterend', newLi);
+	} else {
+		if (document.getElementById('todolist').children.length === 0) {
+			var todosUl = document.createElement('ul');
+			document.getElementById('todolist').appendChild(todosUl);
+		}
+		document.getElementById('todolist').children[0].appendChild(newLi);
+	}
 	newLi.focus();
 }
 

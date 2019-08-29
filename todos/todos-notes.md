@@ -70,7 +70,7 @@ Element.insertAdjacentElement()
 To insert a new li after a given li after use the 'afterend' position.
 ExistingLi.insertAdjacentElement('afterend', newLi)
 
-Insert a new nested todoLi in a todosUl under a given todoLi
+	Insert a new nested todoLi in a todosUl under a given todoLi
 	Is there already a <ul> for the nested todos?
 		If yes, append to end of list (or disallow entirely and make user select a child to insert after)
 		If no, create a todosUl and append a todoLi
@@ -104,6 +104,7 @@ are wrapped in a <div>.
 
 ##Test event handling
 https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/input_event
 https://developer.mozilla.org/en-US/docs/Web/API/Document/createEvent
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent
 

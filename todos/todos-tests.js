@@ -290,6 +290,19 @@ tests({
 		var displayedTodo2 = document.getElementById(todo2.id).textContent;
 		eq(displayedTodo2, 'Item 2');
 	},
+	"The app should have a way to insert the first todoLi into an empty todos list.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+
+		insertNewTodoLi(todos);
+		
+		eq(todos.length, 1);
+		eq(todos[0].entry, '');
+
+		todosUl = document.getElementById('todolist').children[0];
+		eq(todosUl.childElementCount, 1);
+		eq(todosUl.children[0].textContent, '');
+	},
 	"The app should have a way to insert a new sibling todo after a given todo.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -419,13 +432,10 @@ tests({
 		eq(document.hasFocus(), true);
 
 	},
-	"The app should have a keyup event listening for the Return key when editing a todo.": function() {
-		fail();
+	"The app should listen for keyup events when editing a todo.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		insertNewTodoLi(todos);
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
