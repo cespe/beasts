@@ -105,6 +105,22 @@ are wrapped in a <div>.
 ##Test event handling
 https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
 https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/input_event
-https://developer.mozilla.org/en-US/docs/Web/API/Document/createEvent
+https://developer.mozilla.org/en-US/docs/Web/API/Document/createEvent (deprecated in favor of
+	https://developer.mozilla.org/en-US/docs/Web/API/Event)
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent
 
+etest = new Event('keyup')
+Event {isTrusted: false, type: "keyup", target: null, currentTarget: null, eventPhase: 0, …}bubbles: falsecancelBubble: falsecancelable: falsecomposed: falsecurrentTarget: nulldefaultPrevented: falseeventPhase: 0isTrusted: falsepath: []returnValue: truesrcElement: nulltarget: nulltimeStamp: 8057749.199999991type: "keyup"__proto__: Event
+etest.key = "A";
+"A"
+etest
+Event {isTrusted: false, key: "A", type: "keyup", target: null, currentTarget: null, …}
+target = document.getElementById('todolist');
+<main id=​"todolist">​…​</main>​
+target.dispatchEvent(etest)
+app.js:181 Event {isTrusted: false, key: "A", type: "keyup", target: main#todolist, currentTarget: main#todolist, …}bubbles: falsecancelBubble: falsecancelable: falsecomposed: falsecurrentTarget: nulldefaultPrevented: falseeventPhase: 0isTrusted: falsekey: "A"path: (5) [main#todolist, body, html, document, Window]returnValue: truesrcElement: main#todolisttarget: main#todolisttimeStamp: 8057749.199999991type: "keyup"__proto__: Event
+true
+
+Use the change event for entering or editing an item.
+	Event fires when the text field loses focus, not for each key action.
+	Could make it lose focus on Return to fire a change event -- perhaps by focusing Undo button.

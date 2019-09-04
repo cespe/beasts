@@ -433,6 +433,7 @@ tests({
 
 	},
 	"The app should listen for keyup events when editing a todo.": function() {
+		fail();
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		insertNewTodoLi(todos);
@@ -442,12 +443,27 @@ tests({
 
 		setUpEventListeners();
 		// test that keyUpHandler fires given Return while todoLi1 is focused...
+		var testEvent = new Event('keyup');
+		testEvent.key = "x";
+		setTimeout(todoLi1.dispatchEvent(testEvent),1);
+///		todoLi1.dispatchEvent(testEvent);
+
+	},
+	"When editing, losing focus on the todoLi should save the revised entry.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		insertNewTodoLi(todos);
+		eq(todos[0].entry, "");					// state before edit
+		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		todoLi1.textContent = "test";			// simulate edit
+		insertNewTodoLi(todos, todoLi1.id);		// todoLi1 loses focus, firing focusout event
+
+		eq(todos[0].entry, "test");				// state after edit
 
 	},
 	"When editing, Return should save the revised entry and select the todo.": function() {
-		fail();
-	},
-	"When editing, losing focus should save the revised entry but not select the todo.": function() {
 		fail();
 	},
 	"When editing, Escape should abort changes and select the todo.": function() {

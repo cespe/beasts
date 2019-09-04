@@ -102,6 +102,7 @@ function createTodoLi(todo) {
 	return todoLi;
 }
 
+// TODO revise to insert <div><ul> for children
 function createTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
@@ -177,11 +178,39 @@ function appendNewChildTodoLi(todoLi) {
 
 /************************************* Event Handling ***********************************/
 
-function keyUpHandler(event) {
-	console.log(event);
+//function keyUpHandler(event) {
+//	event.target.textContent = "triggered";
+//}
+
+//function changeHandler(event) {
+	// if the target is a todoLi it already has an id that is also in todos array
+	//	check if content has changed
+	//		if so, update todos todo.entry
+	// else ignore, other events will handle buttons, etc (?)
+//	var changeEvent = event;
+//	var todo = findTodo(todos, event.target.id);
+//	if (todo) {
+//		todo.entry = event.target.textContent
+//	}
+//}
+
+function editHandler(event) {
+	if (event.target.nodeName === "LI") {
+		var todo = findTodo(todos, event.target.id);
+		if (todo) {
+			if (todo.entry !== event.target.textContent) {
+				todo.update(event.target.textContent);
+			}
+		}
+	}
 }
 
 function setUpEventListeners() {
 	var todolist = document.getElementById('todolist');
-	todolist.addEventListener('keyup', keyUpHandler);
+	todolist.addEventListener('focusout', editHandler);
+//	todolist.addEventListener('change', changeHandler);
+//	todolist.addEventListener('keyup', keyUpHandler);
 }
+
+setUpEventListeners();
+
