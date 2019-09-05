@@ -44,22 +44,6 @@ Todo.prototype.addChild = function(child) {
 	this.children.push(child);
 }
 
-// Used by appendNewChildTodoLi
-function findTodo(array, id) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.id === id) {
-			return todo;
-		}
-		if (todo.children.length > 0) {
-			var match = findTodo(todo.children, id);
-			if (match) {
-				return match;
-			}
-		}
-	}
-}
-
 function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 
 	// Enforce unique todo ids in the array.
@@ -92,6 +76,23 @@ function deleteTodo(array, todo) {
 	array.splice(position, 1);
 }
 
+/*********************************** Data selection **************************************/
+
+function findTodo(array, id) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.id === id) {
+			return todo;
+		}
+		if (todo.children.length > 0) {
+			var match = findTodo(todo.children, id);
+			if (match) {
+				return match;
+			}
+		}
+	}
+}
+
 /************************************* DOM manipulation ********************************/
 
 function createTodoLi(todo) {
@@ -103,7 +104,14 @@ function createTodoLi(todo) {
 }
 
 // TODO revise to insert <div><ul> for children
-function createTodosUl(todosArray) {
+//		var nestingWrapper = document.createElement('div');
+//		var newUl = document.createElement('ul');
+//		nestingWrapper.appendChild(newUl);
+//		newUl.appendChild(newLi);
+//		todoLi.insertAdjacentElement('afterend', nestingWrapper);
+
+// Builds DOM elements from the todos array, e.g. when app first loads
+function initializeTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
 
@@ -111,7 +119,7 @@ function createTodosUl(todosArray) {
 		var todo = todosArray[i];
 		var todoLi = createTodoLi(todo);
 		if (todo.children.length > 0) {
-			todoLi.appendChild(createTodosUl(todo.children));
+			todoLi.appendChild(initializeTodosUl(todo.children));
 		}
 		todosUl.appendChild(todoLi);
 	}
@@ -121,7 +129,7 @@ function createTodosUl(todosArray) {
 // Insert a new empty todoLi into the given array after the given todoLi.id, ready for text entry.
 // If no todoLi.id is given, defaults to push().
 // 'array' argument will be either todos or a todo.children array, so no recursive search is needed.
-
+// TODO run through debugger, looks like it needs revision
 function insertNewTodoLi(array, id) {
 	var targetLi = document.getElementById(id);
 	var insertAfter = array.find(function(el) {
@@ -176,7 +184,7 @@ function appendNewChildTodoLi(todoLi) {
 	newLi.focus();
 }
 
-/************************************* Event Handling ***********************************/
+/************************************* Event handling ***********************************/
 
 //function keyUpHandler(event) {
 //	event.target.textContent = "triggered";

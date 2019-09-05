@@ -233,7 +233,7 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var result = createTodosUl(todos);
+		var result = initializeTodosUl(todos);
 
 		eq(result.childElementCount, 2);
 		eq(result.children.item(0).textContent, 'Item 1');
@@ -246,7 +246,7 @@ tests({
 		todo1.addChild(child1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var result = createTodosUl(todos);
+		var result = initializeTodosUl(todos);
 
 		eq(result.childElementCount, 2);
 		// textContent includes the text of child elements
@@ -260,7 +260,7 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
 		
 		var displayedTodo1 = document.getElementById(todo1.id).textContent
 		eq(displayedTodo1, 'Item 1');
@@ -277,7 +277,7 @@ tests({
 		todo1.addChild(child1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
 
 		var displayedTodo1 = document.getElementById(todo1.id).textContent
 		// textContent includes the text of child elements
@@ -308,7 +308,7 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -343,7 +343,7 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -389,7 +389,7 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -403,7 +403,7 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
