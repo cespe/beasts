@@ -441,8 +441,7 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		setUpEventListeners();
-		// test that keyUpHandler fires given Return while todoLi1 is focused...
+		// test that keyUpHandler fires given Shift Return while todoLi1 is focused...
 		var testEvent = new Event('keyup');
 		testEvent.key = "x";
 		setTimeout(todoLi1.dispatchEvent(testEvent),1);
@@ -463,11 +462,46 @@ tests({
 		eq(todos[0].entry, "test");				// state after edit
 
 	},
-	"When editing, Return should save the revised entry and select the todo.": function() {
+	"The app should have a button to add a todo to the end of the list.": function() {
 		fail();
 	},
-	"When editing, Escape should abort changes and select the todo.": function() {
+	"Each todo should have a button to add a sibling todo after it.": function() {
+		fail();
+	},
+	"Each todo should have a button to add a child todo underneath it.": function() {
+		fail();
+	},
+	"Each todo should have a 'selected' checkbox.": function() {
+		fail();
+	},
+	"Each todo should have a 'completed' checkbox.": function() {
+		fail();
+	},
+	"Each todo should have a 'deleted' checkbox.": function() {
+		fail();
+	},
+	"The app should have a button to delete selected todos.": function() {
+		fail();
+	},
+	"The app should have a button to undelete selected todos.": function() {
+		fail();
+	},
+	"The app should have a button to mark selected todos completed.": function() {
+		fail();
+	},
+	"The app should have a button to mark selected todos uncompleted.": function() {
+		fail();
+	},
+	"Each todo should have a button to select all children.": function() {
+		fail();
+	},
+	"When editing, Shift Return should save the revised entry by unfocusing the todoLi.": function() {
+		fail();
+	},
+	"When editing, Escape should abort changes and unfocus the todoLi.": function() {
+		fail();
+	},
+	"When editing, Backspace should delete the todo if the entry is empty.": function() {
 		fail();
 	}
-
 });

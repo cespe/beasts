@@ -46,8 +46,9 @@ On second thought, just write the app from scratch with TDD.
 
 
 ##Features
--Add a child todo
+-Add the first todo to an empty list
 -Add a sibling todo (+ on hover over an item?)
+-Add a child todo
 -Triangle icon to show/hide children (enable even for empty parent so first child can be added)
 -Replace Set All Completed with Select All that selects children of entry
 -Implement Delete Selected/undo, Mark Selected Completed/undo, Out-dent/undo Selected
