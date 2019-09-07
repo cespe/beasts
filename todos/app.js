@@ -103,13 +103,6 @@ function createTodoLi(todo) {
 	return todoLi;
 }
 
-// TODO revise to insert <div><ul> for children
-//		var nestingWrapper = document.createElement('div');
-//		var newUl = document.createElement('ul');
-//		nestingWrapper.appendChild(newUl);
-//		newUl.appendChild(newLi);
-//		todoLi.insertAdjacentElement('afterend', nestingWrapper);
-
 // Builds DOM elements from the todos array, e.g. when app first loads
 function initializeTodosUl(todosArray) {
 	
@@ -119,9 +112,14 @@ function initializeTodosUl(todosArray) {
 		var todo = todosArray[i];
 		var todoLi = createTodoLi(todo);
 		if (todo.children.length > 0) {
-			todoLi.appendChild(initializeTodosUl(todo.children));
+			var nestedTodos = initializeTodosUl(todo.children);
+			var nestingWrapper = document.createElement('div');
+			nestingWrapper.appendChild(nestedTodos);
+			todosUl.appendChild(todoLi);
+			todosUl.appendChild(nestingWrapper);
+		} else {
+			todosUl.appendChild(todoLi);
 		}
-		todosUl.appendChild(todoLi);
 	}
 	return todosUl;
 }

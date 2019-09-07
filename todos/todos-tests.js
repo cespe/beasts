@@ -248,10 +248,10 @@ tests({
 		insertTodo(todos, todo2);
 		var result = initializeTodosUl(todos);
 
-		eq(result.childElementCount, 2);
-		// textContent includes the text of child elements
-		eq(result.children.item(0).textContent, 'Item 1Item 1 child 1');
-		eq(result.children.item(1).textContent, 'Item 2');
+		eq(result.childElementCount, 3);					// two items plus 'div' nest under Item 1
+		eq(result.children.item(0).textContent, 'Item 1');
+		eq(result.children.item(1).textContent, 'Item 1 child 1');
+		eq(result.children.item(2).textContent, 'Item 2');
 	},
 	"When loaded, the app should display todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -260,6 +260,8 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo3);
 		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
 		
 		var displayedTodo1 = document.getElementById(todo1.id).textContent
@@ -267,6 +269,9 @@ tests({
 		
 		var displayedTodo2 = document.getElementById(todo2.id).textContent;
 		eq(displayedTodo2, 'Item 2');
+
+		var displayedTodo3 = document.getElementById(todo3.id).textContent;
+		eq(displayedTodo3, 'Item 3');
 	},
 	"When loaded, the app should also display nested todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -275,20 +280,30 @@ tests({
 		insertTodo(todos, todo1);
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo3);
+		
+		var todolist = initializeTodosUl(todos);
+		document.getElementById('todolist').appendChild(todolist);
 
 		var displayedTodo1 = document.getElementById(todo1.id).textContent
-		// textContent includes the text of child elements
-		eq(displayedTodo1, 'Item 1Item 1 child 1');
+		eq(displayedTodo1, 'Item 1');
 		
-		var child1Li = document.getElementById(child1.id);
-		var displayedChild1 = child1Li.textContent;
+		var displayedChild1 = document.getElementById(child1.id).textContent;
 		eq(displayedChild1, 'Item 1 child 1');
 		
+		var displayedChild2 = document.getElementById(child2.id).textContent;
+		eq(displayedChild2, 'Item 1 child 2');
+
 		var displayedTodo2 = document.getElementById(todo2.id).textContent;
 		eq(displayedTodo2, 'Item 2');
+
+		var displayedTodo3 = document.getElementById(todo3.id).textContent;
+		eq(displayedTodo3, 'Item 3');
 	},
 	"The app should have a way to insert the first todoLi into an empty todos list.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -399,6 +414,7 @@ tests({
 
 	},
 	"An empty todo should be created in editing mode for text entry.": function() {
+		// Devtools must be closed for this test to pass.
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -432,23 +448,8 @@ tests({
 		eq(document.hasFocus(), true);
 
 	},
-	"The app should listen for keyup events when editing a todo.": function() {
-		fail();
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		insertNewTodoLi(todos);
-		var todolist = document.getElementById('todolist');
-		var todosUl = todolist.children[0];
-		var todoLi1 = todosUl.children[0];
-
-		// test that keyUpHandler fires given Shift Return while todoLi1 is focused...
-		var testEvent = new Event('keyup');
-		testEvent.key = "x";
-		setTimeout(todoLi1.dispatchEvent(testEvent),1);
-///		todoLi1.dispatchEvent(testEvent);
-
-	},
 	"When editing, losing focus on the todoLi should save the revised entry.": function() {
+		// Devtools must be closed for this test to pass.
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		insertNewTodoLi(todos);
@@ -494,6 +495,21 @@ tests({
 	},
 	"Each todo should have a button to select all children.": function() {
 		fail();
+	},
+	"The app should listen for keyup events when editing a todo.": function() {
+		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		insertNewTodoLi(todos);
+		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+
+		// test that keyUpHandler fires given Shift Return while todoLi1 is focused...
+		var testEvent = new Event('keyup');
+		testEvent.key = "x";
+		setTimeout(todoLi1.dispatchEvent(testEvent),1);
+///		todoLi1.dispatchEvent(testEvent);
 	},
 	"When editing, Shift Return should save the revised entry by unfocusing the todoLi.": function() {
 		fail();

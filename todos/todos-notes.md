@@ -52,6 +52,15 @@ On second thought, just write the app from scratch with TDD.
 -Triangle icon to show/hide children (enable even for empty parent so first child can be added)
 -Replace Set All Completed with Select All that selects children of entry
 -Implement Delete Selected/undo, Mark Selected Completed/undo, Out-dent/undo Selected
+-Indent Shift Right Arrow, Outdent Shift Left Arrow
+-Delete empty entry with Backspace key
+-New sibling entry with Return key
+-Abort edit with Esc key? Not sure about this one.
+-A use for child todos would be followups. When you create a followup todo, the todo you are following up on is moved to nest under the followup. Multiple followups are flattened so the audit trail is on one level. A followup-style todo is signaled by having a time frame or scenario to wait for a response.
+-'Regarding' or 'Re' field to ground the todo or provide context. Maybe also a 'Subject' or 'Topic' or 'Issue' field.
+
+##HTML and CSS
+display: inline-block to put child elements on the same line as parent, e.g. completed under a todo li
 
 ##Dom manipulation
 todolist = document.getElementById('todolist');
@@ -122,6 +131,3 @@ target.dispatchEvent(etest)
 app.js:181 Event {isTrusted: false, key: "A", type: "keyup", target: main#todolist, currentTarget: main#todolist, …}bubbles: falsecancelBubble: falsecancelable: falsecomposed: falsecurrentTarget: nulldefaultPrevented: falseeventPhase: 0isTrusted: falsekey: "A"path: (5) [main#todolist, body, html, document, Window]returnValue: truesrcElement: main#todolisttarget: main#todolisttimeStamp: 8057749.199999991type: "keyup"__proto__: Event
 true
 
-Use the change event for entering or editing an item.
-	Event fires when the text field loses focus, not for each key action.
-	Could make it lose focus on Return to fire a change event -- perhaps by focusing Undo button.
