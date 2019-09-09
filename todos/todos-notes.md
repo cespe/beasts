@@ -25,6 +25,7 @@ Icon ... appears to left of an entry when you hover over it.
 		Expand all		expands grandchildren too 
 		Collapse all	 
 		Delete			no undelete! be careful!
+Opt Tab to open the menu via the keyboard
 Up/down arrow keys go up/down the entries without regard to indentation
 Left/right arrow keys go left/right in the text of an entry or up/down if you are at the start/end of the entry
 Notes feature allows you to add paragraphs of text.
@@ -130,4 +131,8 @@ target = document.getElementById('todolist');
 target.dispatchEvent(etest)
 app.js:181 Event {isTrusted: false, key: "A", type: "keyup", target: main#todolist, currentTarget: main#todolist, …}bubbles: falsecancelBubble: falsecancelable: falsecomposed: falsecurrentTarget: nulldefaultPrevented: falseeventPhase: 0isTrusted: falsekey: "A"path: (5) [main#todolist, body, html, document, Window]returnValue: truesrcElement: main#todolisttarget: main#todolisttimeStamp: 8057749.199999991type: "keyup"__proto__: Event
 true
+
+##Buttons not Inputs
+Going with buttons setting class attributes rather than inputs. MDN says buttons are easier to style. 
+<button type="button" name="completed">Completed</button>
 

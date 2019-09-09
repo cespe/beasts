@@ -28,7 +28,16 @@
 	</ul>
 	<ul id="hardcoded2">
 		<li contentEditable="true">Hardcoded 3</li>
-		<li contentEditable="true">Hardcoded 4</li>
+		<div>
+			<input type="checkbox" name="completed">
+		</div>
+		<li> <button type="button" name="completed">Completed</button>
+			<p contentEditable="true">Hardcoded 4</p>
+			<ul class="nested">
+				<li> <button type="button" name="completed">Completed</button>
+				<p contentEditable="true">Hardcoded 4 child 1</p>
+			</ul>
+		</li>
 	</ul>
 <script src="simpletest.js"></script>
 <script src="app.js"></script>

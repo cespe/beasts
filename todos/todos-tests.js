@@ -224,8 +224,15 @@ tests({
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
-		eq(todoLi.id, todo1.id);	
-
+		eq(todoLi.id, todo1.id);
+	},
+	"The todo li should have a button to toggle 'Completed/Not Completed'": function() {
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todoLi = createTodoLi(todo1);
+		eq(todoLi.children[0].nodeName, 'BUTTON');
+		eq(todoLi.children[0].name, 'completed');
 	},
 	"The app should have a way to generate a ul element from an array of todos.": function() {
 		todos = [];
@@ -463,6 +470,9 @@ tests({
 		eq(todos[0].entry, "test");				// state after edit
 
 	},
+	"Each todoLi should have a 'completed' checkbox.": function() {
+		fail();
+	},
 	"The app should have a button to add a todo to the end of the list.": function() {
 		fail();
 	},
@@ -473,9 +483,6 @@ tests({
 		fail();
 	},
 	"Each todo should have a 'selected' checkbox.": function() {
-		fail();
-	},
-	"Each todo should have a 'completed' checkbox.": function() {
 		fail();
 	},
 	"Each todo should have a 'deleted' checkbox.": function() {

@@ -100,6 +100,10 @@ function createTodoLi(todo) {
 	todoLi.contentEditable = true;
 	todoLi.textContent = todo.entry;
 	todoLi.id = todo.id;
+	var completedButton = document.createElement('button')
+	completedButton.name = 'completed';
+	completedButton.type = 'button';	// to distinguish from a submit or reset button
+	todoLi.appendChild(completedButton);
 	return todoLi;
 }
 
