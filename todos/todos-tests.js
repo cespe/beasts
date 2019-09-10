@@ -479,15 +479,19 @@ tests({
 		eq(todos[0].entry, "test");				// state after edit
 
 	},
-	"Clicking a todoLi 'completed' button should toggle class='completed' on the entry": function() {
+	"Clicking a todoLi 'completed' button should toggle class='completed' on the entry <p>": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1')
 		insertTodo(todos, todo1);
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(initializeTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
 
+		var testEvent = new Event('click');
+		todoLi1.children[0].dispatchEvent(testEvent);
 
+		eq(todoLi1.children[1].classList[0], 'completed');
 	},
 	"The app should have a button to add a todo to the end of the list.": function() {
 		fail();
@@ -531,8 +535,7 @@ tests({
 		// test that keyUpHandler fires given Shift Return while todoLi1 is focused...
 		var testEvent = new Event('keyup');
 		testEvent.key = "x";
-		setTimeout(todoLi1.dispatchEvent(testEvent),1);
-///		todoLi1.dispatchEvent(testEvent);
+		todoLi1.dispatchEvent(testEvent);
 	},
 	"When editing, Shift Return should save the revised entry by unfocusing the todoLi.": function() {
 		fail();
