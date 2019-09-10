@@ -479,8 +479,7 @@ tests({
 		eq(todos[0].entry, "test");				// state after edit
 
 	},
-	"Clicking a todoLi 'completed' button should toggle class='completed' on the entry <p>": function() {
-		fail();	// fix above regressions before enabling this test
+	"Clicking a todoLi 'completed' button should toggle class='completed' on it.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1')
@@ -488,11 +487,15 @@ tests({
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(initializeTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompletedButton = todoLi1.children[0];
 
-		var testEvent = new Event('click');
-		todoLi1.children[0].dispatchEvent(testEvent);
+		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todo1.completed, false);
 
-		eq(todoLi1.children[1].classList[0], 'completed');
+		todoLi1CompletedButton.click();
+
+		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todo1.completed, true);
 	},
 	"The app should have a button to add a todo to the end of the list.": function() {
 		fail();

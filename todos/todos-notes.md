@@ -136,33 +136,9 @@ true
 Going with buttons setting class attributes rather than inputs. MDN says buttons are easier to style. 
 <button type="button" name="completed">Completed</button>
 
-function appendNewChildTodoLi(todoLi) {
-
-	var newTodo = new Todo();
-	var parentTodo = findTodo(todos, todoLi.id);
-	insertTodo(parentTodo.children, newTodo);
-	
-	var newLi = createTodoLi(newTodo);
-
-	// Case one: there is already a <div><ul> to hold nested children
-	
-	if (todoLi.nextSibling && todoLi.nextSibling.nodeName === "DIV") {
-		existingUl = todoLi.nextSibling.children[0];	// the <ul> in the <div>
-		existingUl.appendChild(newLi);	
-
-	} else {
-
-	// Case two: there are no children yet, create the <div><ul> to hold them
-	
-		var nestingWrapper = document.createElement('div');
-		var newUl = document.createElement('ul');
-		nestingWrapper.appendChild(newUl);
-		newUl.appendChild(newLi);
-		todoLi.insertAdjacentElement('afterend', nestingWrapper);
-	}
-
-	newLi.focus();
-}
+##Styling buttons
+Selected add a checkmark when selected (like an input field)
+Completed hide button show on hover like todomvc delete; strikethrough to signal completed
 
 
 

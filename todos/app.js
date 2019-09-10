@@ -112,6 +112,7 @@ function createTodoLi(todo) {
 }
 
 // Builds DOM elements from the todos array, e.g. when app first loads
+// TODO remove wrapper
 function initializeTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
@@ -180,11 +181,8 @@ function appendNewChildTodoLi(todoLi) {
 
 	// Case two: there are no children yet, create the <ul> to hold them
 	
-//		var nestingWrapper = document.createElement('div');
 		var newUl = document.createElement('ul');
-//		nestingWrapper.appendChild(newUl);
 		newUl.appendChild(newLi);
-//		todoLi.insertAdjacentElement('afterend', nestingWrapper);
 		todoLi.appendChild(newUl);
 	}
 
@@ -221,9 +219,22 @@ function editHandler(event) {
 	}
 }
 
+function clickHandler(event) {
+	if (event.target.nodeName === "BUTTON") {
+		var todoLi = event.target.parentElement;
+		var todo = findTodo(todos, todoLi.id)
+		if (todo) {
+			todo.completed = !todo.completed;
+		}
+		var todoLiCompletedButton = todoLi.children[0];
+		todoLiCompletedButton.classList.toggle('completed');
+	}
+}
+
 function setUpEventListeners() {
 	var todolist = document.getElementById('todolist');
 	todolist.addEventListener('focusout', editHandler);
+	todolist.addEventListener('click', clickHandler);
 //	todolist.addEventListener('change', changeHandler);
 //	todolist.addEventListener('keyup', keyUpHandler);
 }
