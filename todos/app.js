@@ -97,13 +97,17 @@ function findTodo(array, id) {
 
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
-	todoLi.contentEditable = true;
-	todoLi.textContent = todo.entry;
+	//todoLi.contentEditable = true;
+	//todoLi.textContent = todo.entry;
 	todoLi.id = todo.id;
 	var completedButton = document.createElement('button')
 	completedButton.name = 'completed';
 	completedButton.type = 'button';	// to distinguish from a submit or reset button
 	todoLi.appendChild(completedButton);
+	var entry = document.createElement('p');
+	entry.contentEditable = true;
+	entry.textContent = todo.entry;
+	todoLi.appendChild(entry);
 	return todoLi;
 }
 

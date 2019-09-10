@@ -219,20 +219,29 @@ tests({
 		eq(todoLi.textContent, 'Item 1');	
 
 	},
-	"The todo li should have an id equal to todo.id.": function() {
+	"Every todo li should have an id equal to todo.id.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
 		eq(todoLi.id, todo1.id);
 	},
-	"The todo li should have a button to toggle 'Completed/Not Completed'": function() {
+	"Every todo li should have a button to toggle 'Completed/Not Completed'": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
 		eq(todoLi.children[0].nodeName, 'BUTTON');
 		eq(todoLi.children[0].name, 'completed');
+	},
+	"Every todo li should have a contentEditable paragraph element for its entry.": function() {
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todoLi = createTodoLi(todo1);
+		eq(todoLi.children[1].nodeName, 'P');
+		eq(todoLi.children[1].textContent, 'Item 1');
+		eq(todoLi.children[1].contentEditable, 'true');
 	},
 	"The app should have a way to generate a ul element from an array of todos.": function() {
 		todos = [];
@@ -470,8 +479,15 @@ tests({
 		eq(todos[0].entry, "test");				// state after edit
 
 	},
-	"Each todoLi should have a 'completed' checkbox.": function() {
-		fail();
+	"Clicking a todoLi 'completed' button should toggle class='completed' on the entry": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1')
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+
+
 	},
 	"The app should have a button to add a todo to the end of the list.": function() {
 		fail();
