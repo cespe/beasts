@@ -155,7 +155,7 @@ function insertNewTodoLi(array, id) {
 		}
 		document.getElementById('todolist').children[0].appendChild(newLi);
 	}
-	newLi.focus();
+	newLi.children[1].focus();
 }
 
 // Append a new todoLi in a child todosUl under a given todoLi, ready for text entry.
@@ -170,24 +170,25 @@ function appendNewChildTodoLi(todoLi) {
 	
 	var newLi = createTodoLi(newTodo);
 
-	// Case one: there is already a <div><ul> to hold nested children
+	// Case one: there is already a <ul> to hold nested children
 	
-	if (todoLi.nextSibling && todoLi.nextSibling.nodeName === "DIV") {
-		existingUl = todoLi.nextSibling.children[0];	// the <ul> in the <div>
+	if (todoLi.children[2] && todoLi.children[2].nodeName === "UL") {
+		existingUl = todoLi.children[2];
 		existingUl.appendChild(newLi);	
 
 	} else {
 
-	// Case two: there are no children yet, create the <div><ul> to hold them
+	// Case two: there are no children yet, create the <ul> to hold them
 	
-		var nestingWrapper = document.createElement('div');
+//		var nestingWrapper = document.createElement('div');
 		var newUl = document.createElement('ul');
-		nestingWrapper.appendChild(newUl);
+//		nestingWrapper.appendChild(newUl);
 		newUl.appendChild(newLi);
-		todoLi.insertAdjacentElement('afterend', nestingWrapper);
+//		todoLi.insertAdjacentElement('afterend', nestingWrapper);
+		todoLi.appendChild(newUl);
 	}
 
-	newLi.focus();
+	newLi.children[1].focus();	// focus the entry <p>
 }
 
 /************************************* Event handling ***********************************/
@@ -209,8 +210,9 @@ function appendNewChildTodoLi(todoLi) {
 //}
 
 function editHandler(event) {
-	if (event.target.nodeName === "LI") {
-		var todo = findTodo(todos, event.target.id);
+	if (event.target.nodeName === "P") {
+		var todoLi = event.target.parentElement;
+		var todo = findTodo(todos, todoLi.id);
 		if (todo) {
 			if (todo.entry !== event.target.textContent) {
 				todo.update(event.target.textContent);

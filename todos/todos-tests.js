@@ -379,16 +379,13 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		eq(todoLi1.childElementCount, 0);
+		eq(todoLi1.childElementCount, 2);
 		eq(todoLi1.textContent, 'Item 1');
 
 		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
 
-		var todoLi1Div = todosUl.children[1];
-		eq(todoLi1Div.childElementCount, 1);
-		eq(todoLi1Div.nodeName, "DIV");
 		
-		var todoLi1Ul = todoLi1Div.children[0];
+		var todoLi1Ul = todoLi1.children[2];
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todoLi1Ul.nodeName, "UL");
 
@@ -399,12 +396,8 @@ tests({
 
 		appendNewChildTodoLi(todoLi1);			// case of second child added to existing UL
 
-		eq(todoLi1.childElementCount, 0);
+		eq(todoLi1.childElementCount, 3);
 		
-		var todoLi1Div = todosUl.children[1];
-		eq(todoLi1Div.childElementCount, 1);
-		eq(todoLi1Div.nodeName, "DIV");
-
 		var child1 = todo1.children[0];
 		var child1Li = todoLi1Ul.children[0];
 		eq(child1.id, child1Li.id);
@@ -415,7 +408,7 @@ tests({
 		eq(child2.id, child2Li.id);
 		eq(child2Li.nodeName, "LI");
 	},
-	"A todoLi should allow for creating or editing its todo entry.": function() {
+	"A todoLi should allow for editing its todo entry.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -424,9 +417,10 @@ tests({
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
+		var todoLi1Entry = todoLi1.children[1];
 
-		eq(todoLi1.textContent, 'Item 1');
-		eq(todoLi1.contentEditable, 'true');
+		eq(todoLi1Entry.textContent, 'Item 1');
+		eq(todoLi1Entry.contentEditable, 'true');
 
 	},
 	"An empty todo should be created in editing mode for text entry.": function() {
@@ -445,22 +439,27 @@ tests({
 		eq(todos.length, 2);
 		eq(todos[1].entry, '');
 		eq(todosUl.childElementCount, 2);
-		eq(todosUl.children[1].textContent, '');
-		eq(document.activeElement, todosUl.children[1]);
+
+		var todoLi2 = todosUl.children[1];
+		var todoLi2Entry = todoLi2.children[1];
+
+		eq(todoLi2Entry.textContent, '');
+		eq(document.activeElement, todoLi2Entry);
 		eq(document.hasFocus(), true);
 
 		appendNewChildTodoLi(todoLi1);					// case of first child added to a new UL
 
-		var todoLi1Div = todosUl.children[1];
-		var todoLi1Ul = todoLi1Div.children[0];
+		var todoLi1Ul = todoLi1.children[2];
 		var childLi = todoLi1Ul.children[0];
-		eq(document.activeElement, childLi);
+		var childLiEntry = childLi.children[1];
+		eq(document.activeElement, childLiEntry);
 		eq(document.hasFocus(), true);
 
 		appendNewChildTodoLi(todoLi1);					// case of second child added to existing UL
 
 		var child2Li = todoLi1Ul.children[1];
-		eq(document.activeElement, child2Li);
+		var child2LiEntry = child2Li.children[1];
+		eq(document.activeElement, child2LiEntry);
 		eq(document.hasFocus(), true);
 
 	},
@@ -473,13 +472,15 @@ tests({
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		todoLi1.textContent = "test";			// simulate edit
+		var todoLi1Entry = todoLi1.children[1];
+		todoLi1Entry.textContent = "test";			// simulate edit
 		insertNewTodoLi(todos, todoLi1.id);		// todoLi1 loses focus, firing focusout event
 
 		eq(todos[0].entry, "test");				// state after edit
 
 	},
 	"Clicking a todoLi 'completed' button should toggle class='completed' on the entry <p>": function() {
+		fail();	// fix above regressions before enabling this test
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1')
