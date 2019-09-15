@@ -219,29 +219,12 @@ tests({
 		eq(todoLi.textContent, 'Item 1');	
 
 	},
-	"Every todo li should have an id equal to todo.id.": function() {
+	"Each todo li should have an id equal to todo.id.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
 		eq(todoLi.id, todo1.id);
-	},
-	"Every todo li should have a button to toggle 'Completed/Not Completed'": function() {
-		todos = [];
-		var todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todoLi = createTodoLi(todo1);
-		eq(todoLi.children[0].nodeName, 'BUTTON');
-		eq(todoLi.children[0].name, 'completed');
-	},
-	"Every todo li should have a contentEditable paragraph element for its entry.": function() {
-		todos = [];
-		var todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todoLi = createTodoLi(todo1);
-		eq(todoLi.children[1].nodeName, 'P');
-		eq(todoLi.children[1].textContent, 'Item 1');
-		eq(todoLi.children[1].contentEditable, 'true');
 	},
 	"The app should have a way to generate a ul element from an array of todos.": function() {
 		todos = [];
@@ -379,13 +362,14 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		eq(todoLi1.childElementCount, 2);
+		eq(todoLi1.childElementCount, 6);
 		eq(todoLi1.textContent, 'Item 1');
 
 		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
 
 		
-		var todoLi1Ul = todoLi1.children[2];
+		eq(todoLi1.childElementCount, 7);
+		var todoLi1Ul = todoLi1.children[6];
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todoLi1Ul.nodeName, "UL");
 
@@ -396,7 +380,7 @@ tests({
 
 		appendNewChildTodoLi(todoLi1);			// case of second child added to existing UL
 
-		eq(todoLi1.childElementCount, 3);
+		eq(todoLi1.childElementCount, 7);
 		
 		var child1 = todo1.children[0];
 		var child1Li = todoLi1Ul.children[0];
@@ -417,7 +401,7 @@ tests({
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1Entry = todoLi1.children[1];
+		var todoLi1Entry = todoLi1.children[5];
 
 		eq(todoLi1Entry.textContent, 'Item 1');
 		eq(todoLi1Entry.contentEditable, 'true');
@@ -441,7 +425,7 @@ tests({
 		eq(todosUl.childElementCount, 2);
 
 		var todoLi2 = todosUl.children[1];
-		var todoLi2Entry = todoLi2.children[1];
+		var todoLi2Entry = todoLi2.children[5];
 
 		eq(todoLi2Entry.textContent, '');
 		eq(document.activeElement, todoLi2Entry);
@@ -449,16 +433,16 @@ tests({
 
 		appendNewChildTodoLi(todoLi1);					// case of first child added to a new UL
 
-		var todoLi1Ul = todoLi1.children[2];
+		var todoLi1Ul = todoLi1.children[6];
 		var childLi = todoLi1Ul.children[0];
-		var childLiEntry = childLi.children[1];
+		var childLiEntry = childLi.children[5];
 		eq(document.activeElement, childLiEntry);
 		eq(document.hasFocus(), true);
 
 		appendNewChildTodoLi(todoLi1);					// case of second child added to existing UL
 
 		var child2Li = todoLi1Ul.children[1];
-		var child2LiEntry = child2Li.children[1];
+		var child2LiEntry = child2Li.children[5];
 		eq(document.activeElement, child2LiEntry);
 		eq(document.hasFocus(), true);
 
@@ -472,22 +456,94 @@ tests({
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1Entry = todoLi1.children[1];
+		var todoLi1Entry = todoLi1.children[5];
 		todoLi1Entry.textContent = "test";			// simulate edit
 		insertNewTodoLi(todos, todoLi1.id);		// todoLi1 loses focus, firing focusout event
 
 		eq(todos[0].entry, "test");				// state after edit
 
 	},
-	"Clicking a todoLi 'completed' button should toggle class='completed' on it.": function() {
+	"Each todo li should have a button to toggle 'Selected/Unselected'.": function() {
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todoLi = createTodoLi(todo1);
+		eq(todoLi.children[0].nodeName, 'BUTTON');
+		eq(todoLi.children[0].name, 'selected');
+	},
+	"Each todo li should have a button to toggle 'Completed/Not Completed'.": function() {
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todoLi = createTodoLi(todo1);
+		eq(todoLi.children[1].nodeName, 'BUTTON');
+		eq(todoLi.children[1].name, 'completed');
+	},
+	"Each todo li should have a 'Delete' button.": function() {
+		todos = [];
+		var todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todoLi = createTodoLi(todo1);
+		eq(todoLi.children[2].nodeName, 'BUTTON');
+		eq(todoLi.children[2].name, 'deleted');
+	},
+	"Each todo li should have an 'Add todo' button to add a sibling todo after it.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
-		todo1 = new Todo('Item 1')
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1AddSibling = todoLi1.children[3];
+
+		eq(todoLi1AddSibling.nodeName, 'BUTTON');
+		eq(todoLi1AddSibling.name, 'addSibling');
+	},
+	"Each todo li should have an 'Add child' button to add a child todo underneath it.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1AddChild = todoLi1.children[4];
+
+		eq(todoLi1AddChild.nodeName, 'BUTTON');
+		eq(todoLi1AddChild.name, 'addChild');
+
+	},
+	"Clicking a 'select' button should toggle class='selected' on it.": function() {
+		// not toggling todo.deleted for now, it is probably not needed and should be removed
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(initializeTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[0];
+		var todoLi1SelectButton = todoLi1.children[0];
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		//eq(todo1.select, false);
+
+		todoLi1SelectButton.click();
+
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		//eq(todo1.completed, true);
+	},
+	"Clicking a 'completed' button should toggle class='completed' on it and toggle todo.entry.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompletedButton = todoLi1.children[1];
 
 		eq(todoLi1CompletedButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
@@ -497,25 +553,77 @@ tests({
 		eq(todoLi1CompletedButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
 	},
+	"Clicking a 'delete' button should toggle class='deleted' on it and toggle todo.deleted.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[2];
+
+		eq(todoLi1DeleteButton.classList.contains('deleted'), false);
+		eq(todo1.deleted, false);
+
+		todoLi1DeleteButton.click();
+
+		eq(todoLi1DeleteButton.classList.contains('deleted'), true);
+		eq(todo1.deleted, true);
+	},
+	"Clicking an 'Add todo' button should create a new sibling todo and todoLi.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1SiblingButton = todoLi1.children[3];
+
+		eq(todosUl.childElementCount, 1);
+
+		todoLi1SiblingButton.click();
+
+		eq(todosUl.childElementCount, 2);
+		var todoLi2 = todosUl.children[1]
+		eq(todoLi2.nodeName, 'LI');
+		eq(todoLi2.id, todos[1].id)
+	},
+	"Clicking an 'Add child' button should create a new nested child todo and todoLi.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1ChildButton = todoLi1.children[4];
+
+		eq(todosUl.childElementCount, 1);
+		eq(todoLi1.childElementCount, 6);
+
+		todoLi1ChildButton.click();
+
+		eq(todosUl.childElementCount, 1);
+		eq(todoLi1.childElementCount, 7);
+		var todoLi1Ul = todoLi1.children[6]
+		var todoLi1Child1 = todoLi1Ul.children[0];
+		eq(todoLi1Child1.nodeName, 'LI');
+		eq(todoLi1Child1.id, todos[0].children[0].id)
+		eq(todoLi1Child1.children[5].textContent, "");
+		eq(todos[0].children[0].entry, "");
+
+	},
 	"The app should have a button to add a todo to the end of the list.": function() {
-		fail();
-	},
-	"Each todo should have a button to add a sibling todo after it.": function() {
-		fail();
-	},
-	"Each todo should have a button to add a child todo underneath it.": function() {
-		fail();
-	},
-	"Each todo should have a 'selected' checkbox.": function() {
-		fail();
-	},
-	"Each todo should have a 'deleted' checkbox.": function() {
 		fail();
 	},
 	"The app should have a button to delete selected todos.": function() {
 		fail();
 	},
-	"The app should have a button to undelete selected todos.": function() {
+	"The app should have a button to undelete selected todos that were deleted.": function() {
 		fail();
 	},
 	"The app should have a button to mark selected todos completed.": function() {
@@ -527,6 +635,9 @@ tests({
 	"Each todo should have a button to select all children.": function() {
 		fail();
 	},
+	"Clicking a 'Select children' button should select each nested todo.": function() {
+		fail();
+	}
 	"The app should listen for keyup events when editing a todo.": function() {
 		fail();
 		document.getElementById('todolist').innerHTML = '';

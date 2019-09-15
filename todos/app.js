@@ -97,13 +97,27 @@ function findTodo(array, id) {
 
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
-	//todoLi.contentEditable = true;
-	//todoLi.textContent = todo.entry;
 	todoLi.id = todo.id;
+	var selectedButton = document.createElement('button')
+	selectedButton.name = 'selected';
+	selectedButton.type = 'button';	// to distinguish from a submit or reset button
+	todoLi.appendChild(selectedButton);
 	var completedButton = document.createElement('button')
 	completedButton.name = 'completed';
 	completedButton.type = 'button';	// to distinguish from a submit or reset button
 	todoLi.appendChild(completedButton);
+	var deleteButton = document.createElement('button')
+	deleteButton.name = 'deleted';
+	deleteButton.type = 'button';	// to distinguish from a submit or reset button
+	todoLi.appendChild(deleteButton);
+	var siblingButton = document.createElement('button')
+	siblingButton.name = 'addSibling';
+	siblingButton.type = 'button';	// to distinguish from a submit or reset button
+	todoLi.appendChild(siblingButton);
+	var childButton = document.createElement('button')
+	childButton.name = 'addChild';
+	childButton.type = 'button';	// to distinguish from a submit or reset button
+	todoLi.appendChild(childButton);
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
@@ -156,7 +170,7 @@ function insertNewTodoLi(array, id) {
 		}
 		document.getElementById('todolist').children[0].appendChild(newLi);
 	}
-	newLi.children[1].focus();
+	newLi.children[5].focus();
 }
 
 // Append a new todoLi in a child todosUl under a given todoLi, ready for text entry.
@@ -172,9 +186,9 @@ function appendNewChildTodoLi(todoLi) {
 	var newLi = createTodoLi(newTodo);
 
 	// Case one: there is already a <ul> to hold nested children
-	
-	if (todoLi.children[2] && todoLi.children[2].nodeName === "UL") {
-		existingUl = todoLi.children[2];
+	// TODO Identifying the nested <ul> by children[x] is brittle. Adding a class 'children' would fix that.	
+	if (todoLi.children[6] && todoLi.children[6].nodeName === "UL") {
+		existingUl = todoLi.children[6];
 		existingUl.appendChild(newLi);	
 
 	} else {
@@ -186,7 +200,7 @@ function appendNewChildTodoLi(todoLi) {
 		todoLi.appendChild(newUl);
 	}
 
-	newLi.children[1].focus();	// focus the entry <p>
+	newLi.children[5].focus();	// focus the entry <p>
 }
 
 /************************************* Event handling ***********************************/
@@ -211,6 +225,7 @@ function editHandler(event) {
 	if (event.target.nodeName === "P") {
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id);
+		// Is this conditional necessary?
 		if (todo) {
 			if (todo.entry !== event.target.textContent) {
 				todo.update(event.target.textContent);
@@ -223,11 +238,27 @@ function clickHandler(event) {
 	if (event.target.nodeName === "BUTTON") {
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id)
-		if (todo) {
+		if (event.target.name === "selected") {
+			var todoLiSelectButton = todoLi.children[0];
+			todoLiSelectButton.classList.toggle('selected');
+			//todo.selected = !todo.selected;	// probably not needed and should be removed
+		}
+		if (event.target.name === "completed") {
+			var todoLiCompletedButton = todoLi.children[1];
+			todoLiCompletedButton.classList.toggle('completed');
 			todo.completed = !todo.completed;
 		}
-		var todoLiCompletedButton = todoLi.children[0];
-		todoLiCompletedButton.classList.toggle('completed');
+		if (event.target.name === "deleted") {
+			var todoLiDeleteButton = todoLi.children[2];
+			todoLiDeleteButton.classList.toggle('deleted');
+			todo.deleted = !todo.deleted;
+		}
+		if (event.target.name === "addSibling") {
+			insertNewTodoLi(todos, todoLi.id)
+		}
+		if (event.target.name === "addChild") {
+			appendNewChildTodoLi(todoLi)
+		}
 	}
 }
 
