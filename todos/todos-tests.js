@@ -235,8 +235,8 @@ tests({
 		var result = initializeTodosUl(todos);
 
 		eq(result.childElementCount, 2);
-		eq(result.children.item(0).textContent, 'Item 1');
-		eq(result.children.item(1).textContent, 'Item 2');
+		eq(result.children.item(0).children[6].textContent, 'Item 1');
+		eq(result.children.item(1).children[6].textContent, 'Item 2');
 
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -246,11 +246,11 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 		var result = initializeTodosUl(todos);
-
-		eq(result.childElementCount, 3);					// two items plus 'div' nest under Item 1
-		eq(result.children.item(0).textContent, 'Item 1');
-		eq(result.children.item(1).textContent, 'Item 1 child 1');
-		eq(result.children.item(2).textContent, 'Item 2');
+		// write variables to get rid of these opaque children[x]'s 
+		eq(result.childElementCount, 2);
+		eq(result.children.item(0).children[6].textContent, 'Item 1');
+		eq(result.children.item(0).children[7].children[0].children[6].textContent, 'Item 1 child 1');
+		eq(result.children.item(1).children[6].textContent, 'Item 2');
 	},
 	"When loaded, the app should display todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -263,14 +263,17 @@ tests({
 		insertTodo(todos, todo3);
 		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
 		
-		var displayedTodo1 = document.getElementById(todo1.id).textContent
-		eq(displayedTodo1, 'Item 1');
+		var todo1Li = document.getElementById(todo1.id);
+		var todo1LiEntry = todo1Li.children[6].textContent;
+		eq(todo1LiEntry, 'Item 1');
 		
-		var displayedTodo2 = document.getElementById(todo2.id).textContent;
-		eq(displayedTodo2, 'Item 2');
+		var todo2Li = document.getElementById(todo2.id);
+		var todo2LiEntry = todo2Li.children[6].textContent;
+		eq(todo2LiEntry, 'Item 2');
 
-		var displayedTodo3 = document.getElementById(todo3.id).textContent;
-		eq(displayedTodo3, 'Item 3');
+		var todo3Li = document.getElementById(todo3.id);
+		var todo3LiEntry = todo3Li.children[6].textContent;
+		eq(todo3LiEntry, 'Item 3');
 	},
 	"When loaded, the app should also display nested todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -289,20 +292,26 @@ tests({
 		var todolist = initializeTodosUl(todos);
 		document.getElementById('todolist').appendChild(todolist);
 
-		var displayedTodo1 = document.getElementById(todo1.id).textContent
-		eq(displayedTodo1, 'Item 1');
+		var todo1Li = document.getElementById(todo1.id);
+		var todo1LiEntry = todo1Li.children[6].textContent;
+		eq(todo1LiEntry, 'Item 1');
 		
-		var displayedChild1 = document.getElementById(child1.id).textContent;
-		eq(displayedChild1, 'Item 1 child 1');
+		var todo1LiUl = todo1Li.children[7];
+		var todo1LiChild1Li = todo1LiUl.children[0];
+		var todo1LiChild1LiEntry = todo1LiChild1Li.children[6].textContent;
+		eq(todo1LiChild1LiEntry, 'Item 1 child 1');
 		
-		var displayedChild2 = document.getElementById(child2.id).textContent;
-		eq(displayedChild2, 'Item 1 child 2');
+		var todo1LiChild2Li = todo1LiUl.children[1];
+		var todo1LiChild2LiEntry = todo1LiChild2Li.children[6].textContent;
+		eq(todo1LiChild2LiEntry, 'Item 1 child 2');
+		
+		var todo2Li = document.getElementById(todo2.id);
+		var todo2LiEntry = todo2Li.children[6].textContent;
+		eq(todo2LiEntry, 'Item 2');
 
-		var displayedTodo2 = document.getElementById(todo2.id).textContent;
-		eq(displayedTodo2, 'Item 2');
-
-		var displayedTodo3 = document.getElementById(todo3.id).textContent;
-		eq(displayedTodo3, 'Item 3');
+		var todo3Li = document.getElementById(todo3.id);
+		var todo3LiEntry = todo3Li.children[6].textContent;
+		eq(todo3LiEntry, 'Item 3');
 	},
 	"The app should have a way to insert the first todoLi into an empty todos list.": function() {
 		document.getElementById('todolist').innerHTML = '';

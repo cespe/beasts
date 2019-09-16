@@ -130,7 +130,6 @@ function createTodoLi(todo) {
 }
 
 // Builds DOM elements from the todos array, e.g. when app first loads
-// TODO remove wrapper
 function initializeTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
@@ -140,10 +139,11 @@ function initializeTodosUl(todosArray) {
 		var todoLi = createTodoLi(todo);
 		if (todo.children.length > 0) {
 			var nestedTodos = initializeTodosUl(todo.children);
-			var nestingWrapper = document.createElement('div');
-			nestingWrapper.appendChild(nestedTodos);
+			//var nestingWrapper = document.createElement('div');
+			//nestingWrapper.appendChild(nestedTodos);
+			todoLi.appendChild(nestedTodos);
 			todosUl.appendChild(todoLi);
-			todosUl.appendChild(nestingWrapper);
+			//todosUl.appendChild(nestingWrapper);
 		} else {
 			todosUl.appendChild(todoLi);
 		}
