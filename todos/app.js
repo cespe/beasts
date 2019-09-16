@@ -118,6 +118,10 @@ function createTodoLi(todo) {
 	childButton.name = 'addChild';
 	childButton.type = 'button';	// to distinguish from a submit or reset button
 	todoLi.appendChild(childButton);
+	var selectChildrenButton = document.createElement('button')
+	selectChildrenButton.name = 'selectChildren';
+	selectChildrenButton.type = 'button';	// to distinguish from a submit or reset button
+	todoLi.appendChild(selectChildrenButton);
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
@@ -170,7 +174,7 @@ function insertNewTodoLi(array, id) {
 		}
 		document.getElementById('todolist').children[0].appendChild(newLi);
 	}
-	newLi.children[5].focus();
+	newLi.children[6].focus();	// TODO children[x] too brittle
 }
 
 // Append a new todoLi in a child todosUl under a given todoLi, ready for text entry.
@@ -187,8 +191,8 @@ function appendNewChildTodoLi(todoLi) {
 
 	// Case one: there is already a <ul> to hold nested children
 	// TODO Identifying the nested <ul> by children[x] is brittle. Adding a class 'children' would fix that.	
-	if (todoLi.children[6] && todoLi.children[6].nodeName === "UL") {
-		existingUl = todoLi.children[6];
+	if (todoLi.children[7] && todoLi.children[7].nodeName === "UL") {
+		existingUl = todoLi.children[7];
 		existingUl.appendChild(newLi);	
 
 	} else {
@@ -200,7 +204,7 @@ function appendNewChildTodoLi(todoLi) {
 		todoLi.appendChild(newUl);
 	}
 
-	newLi.children[5].focus();	// focus the entry <p>
+	newLi.children[6].focus();	// focus the entry <p>
 }
 
 /************************************* Event handling ***********************************/
