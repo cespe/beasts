@@ -129,7 +129,7 @@ function createTodoLi(todo) {
 	return todoLi;
 }
 
-// Builds DOM elements from the todos array, e.g. when app first loads
+// Build DOM elements from the todos array, e.g. when app first loads
 function initializeTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
@@ -139,11 +139,8 @@ function initializeTodosUl(todosArray) {
 		var todoLi = createTodoLi(todo);
 		if (todo.children.length > 0) {
 			var nestedTodos = initializeTodosUl(todo.children);
-			//var nestingWrapper = document.createElement('div');
-			//nestingWrapper.appendChild(nestedTodos);
 			todoLi.appendChild(nestedTodos);
 			todosUl.appendChild(todoLi);
-			//todosUl.appendChild(nestingWrapper);
 		} else {
 			todosUl.appendChild(todoLi);
 		}
@@ -262,6 +259,22 @@ function clickHandler(event) {
 		}
 		if (event.target.name === "addChild") {
 			appendNewChildTodoLi(todoLi)
+		}
+		if (event.target.name === "selectChildren") {
+			var todoLiSelectChildrenButton = todoLi.children[5];
+			var todoLiUl = todoLi.children[7];
+			if (todoLiUl && todoLiUl.children.length > 0) {
+				todoLiSelectChildrenButton.classList.toggle('selected');
+				var selected = todoLiSelectChildrenButton.classList.contains('selected');
+				
+				for (var i = 0; i < todoLiUl.children.length; i++) {
+					if (selected) {
+						todoLiUl.children[i].children[0].classList.add('selected');
+					} else {
+						todoLiUl.children[i].children[0].classList.remove('selected');
+					}
+				}
+			}
 		}
 	}
 }

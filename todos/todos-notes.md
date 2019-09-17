@@ -141,4 +141,3 @@ Selected add a checkmark when selected (like an input field)
 Completed hide button show on hover like todomvc delete; strikethrough to signal completed
 
 
-

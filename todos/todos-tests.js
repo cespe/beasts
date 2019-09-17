@@ -640,7 +640,46 @@ tests({
 		eq(todos[0].children[0].entry, "");
 
 	},
-	"Clicking a 'Select children' button should select each nested todo.": function() {
+	"If a todo has children, clicking its 'Select children' button should toggle class='selected' on it.": function() {
+		// Case one: the todo has children
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var child1 = new Todo('child 1');
+		var child2 = new Todo('child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[5];
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+
+		// Case two: the todo has no children
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[5];
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+	},
+	"If a clicked 'Select Children' button toggles class='selected', each child todo should be set to 'selected'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -662,29 +701,82 @@ tests({
 		
 		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
 		eq(child1LiSelectButton.classList.contains('selected'), false);
-		//eq(todo1.children[0].select, false);
 		eq(child2LiSelectButton.classList.contains('selected'), false);
-		//eq(todo1.children[1].select, false);
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
 		eq(child1LiSelectButton.classList.contains('selected'), true);
-		//eq(todo1.children[0].select, true);
 		eq(child2LiSelectButton.classList.contains('selected'), true);
-		//eq(todo1.children[1].select, true);
-
 	},
-	"The app should have a button to add a todo to the end of the list.": function() {
-		fail();
+	"If a clicked 'Select Children' button toggles class='', each child todo should unset 'selected'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var child1 = new Todo('child 1');
+		var child2 = new Todo('child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(initializeTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[5];
+
+		var child1Li = todoLi1.children[7].children[0];
+		var child1LiSelectButton = child1Li.children[0];
+		var child2Li = todoLi1.children[7].children[1];
+		var child2LiSelectButton = child2Li.children[0];
+		
+		// Case one: child todos are all unselected
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), false);
+
+		todoLi1SelectChildrenButton.click();	// first click sets class='selected'
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+		eq(child1LiSelectButton.classList.contains('selected'), true);
+		eq(child2LiSelectButton.classList.contains('selected'), true);
+
+		todoLi1SelectChildrenButton.click();	// second click sets class=''
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), false);
+
+		// Case two: child todos are not all selected or unselected, so they can't just be toggled
+
+		child2LiSelectButton.classList.add('selected');
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), true);
+
+		todoLi1SelectChildrenButton.click();	// first click sets class='selected'
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+		eq(child1LiSelectButton.classList.contains('selected'), true);
+		eq(child2LiSelectButton.classList.contains('selected'), true);
+
+		child1LiSelectButton.classList.remove('selected');
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+
+		todoLi1SelectChildrenButton.click();	// second click sets class=''
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), false);
+
 	},
 	"The app should have a button to select all top-level todos.": function() {
 		fail();
 	},
-	"The app should have a button to delete selected todos.": function() {
+	"If the app has todos, clicking _Select All_ should toggle class='selected' on it.": function() {
 		fail();
 	},
-	"The app should have a button to undo last delete action.": function() {
+	"Selecting a todo should not select its children.": function() {
 		fail();
 	},
 	"The app should have a button to mark selected todos completed.": function() {
@@ -693,15 +785,22 @@ tests({
 	"The app should have a button to mark selected todos uncompleted.": function() {
 		fail();
 	},
-	"Selecting a todo should not select its children.": function() {
+	"Marking a todo completed should not mark its children completed.": function() {
+		// because then marking uncompleted could incorrectly reverse some child values
 		fail();
 	},
-	"Marking a todo completed also marks its children completed.": function() {
-		// No, because then marking uncompleted could incorrectly reverse the child values
+	"The app should have a button to delete selected todos.": function() {
+		fail();
+	},
+	"The app should have a button to undo last delete action.": function() {
 		fail();
 	},
 	"Deleting a todo should not delete its children.": function() {
 		// The children are just along for the ride
+		fail();
+	},
+	"The app should have a button to add a todo to the end of the list.": function() {
+		// Alternatively, if todos is empty, create a new todo so that there is always one to start from.
 		fail();
 	},
 	"The app should listen for keyup events when editing a todo.": function() {
