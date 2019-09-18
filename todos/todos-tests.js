@@ -861,10 +861,32 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
 		eq(child1LiSelectButton.classList.contains('selected'), false);
 		eq(child2LiSelectButton.classList.contains('selected'), false);
-
 	},
-	"The app should have a 'Select All' button to select all top-level todos.": function() {
-		fail();
+	"The app should have a header section with a <div id='actions'> to hold action buttons.": function() {
+		var actionsDiv = document.getElementById('actions');
+		eq(actionsDiv.nodeName, 'DIV');
+		eq(actionsDiv.parentElement.nodeName, 'HEADER');
+	},
+	"The header actions div should have a 'Select All' button to select all top-level todos.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		eq(selectAllButton.nodeName, 'BUTTON');
+		eq(selectAllButton.innerText, 'Select all');
+		eq(actionsDiv.children[0], selectAllButton); 
+	},
+	"The header actions div should have a 'Completed' button to mark selected todos completed.": function() {
+		var actionsDiv = document.getElementById('actions');0
+		var markCompletedButton = document.getElementsByName('markCompleted')[0];
+		eq(markCompletedButton.nodeName, 'BUTTON');
+		eq(markCompletedButton.innerText, 'Mark completed');
+		eq(actionsDiv.children[1], markCompletedButton); 
+	},
+	"The header actions div should have a 'Delete selected' button to delete selected todos.": function() {
+		var actionsDiv = document.getElementById('actions');0
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		eq(deleteSelectedButton.nodeName, 'BUTTON');
+		eq(deleteSelectedButton.innerText, 'Delete selected');
+		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
 	"If the app has todos, clicking 'Select All' should toggle class='selected' on it.": function() {
 		fail();

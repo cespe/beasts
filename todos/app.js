@@ -242,7 +242,6 @@ function clickHandler(event) {
 		if (event.target.name === "selected") {
 			var todoLiSelectButton = todoLi.children[0];
 			todoLiSelectButton.classList.toggle('selected');
-			//todo.selected = !todo.selected;	// probably not needed and should be removed
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompletedButton = todoLi.children[1];

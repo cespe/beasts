@@ -140,4 +140,7 @@ Going with buttons setting class attributes rather than inputs. MDN says buttons
 Selected add a checkmark when selected (like an input field)
 Completed hide button show on hover like todomvc delete; strikethrough to signal completed
 
+##Undo strategies
+Undo delete selected (deleted todos are no longer showing)
 
+Undo mark completed (completed todos are showing)
