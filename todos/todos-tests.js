@@ -862,33 +862,33 @@ tests({
 		eq(child1LiSelectButton.classList.contains('selected'), false);
 		eq(child2LiSelectButton.classList.contains('selected'), false);
 	},
-	"The app should have a header section with a <div id='actions'> to hold action buttons.": function() {
+	"The app should have a header section with an actions bar to hold action buttons.": function() {
 		var actionsDiv = document.getElementById('actions');
 		eq(actionsDiv.nodeName, 'DIV');
 		eq(actionsDiv.parentElement.nodeName, 'HEADER');
 	},
-	"The header actions div should have a 'Select All' button to select all top-level todos.": function() {
+	"The header actions bar should have a 'Select All' button to select all top-level todos.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.innerText, 'Select all');
 		eq(actionsDiv.children[0], selectAllButton); 
 	},
-	"The header actions div should have a 'Completed' button to mark selected todos completed.": function() {
+	"The header actions bar should have a 'Completed' button to mark selected todos completed.": function() {
 		var actionsDiv = document.getElementById('actions');0
 		var markCompletedButton = document.getElementsByName('markCompleted')[0];
 		eq(markCompletedButton.nodeName, 'BUTTON');
 		eq(markCompletedButton.innerText, 'Mark completed');
 		eq(actionsDiv.children[1], markCompletedButton); 
 	},
-	"The header actions div should have a 'Delete selected' button to delete selected todos.": function() {
+	"The header actions bar should have a 'Delete selected' button to delete selected todos.": function() {
 		var actionsDiv = document.getElementById('actions');0
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		eq(deleteSelectedButton.nodeName, 'BUTTON');
 		eq(deleteSelectedButton.innerText, 'Delete selected');
 		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
-	"If the app has todos, clicking 'Select All' should toggle class='selected' on it.": function() {
+	"If the app has todos, clicking 'Select all' should toggle class='selected' on it.": function() {
 		fail();
 	},
 	"If a clicked 'Select All' button toggles class='selected', each top-level todo should be set to 'selected'.": function() {

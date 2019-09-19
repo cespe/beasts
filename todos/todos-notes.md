@@ -140,7 +140,47 @@ Going with buttons setting class attributes rather than inputs. MDN says buttons
 Selected add a checkmark when selected (like an input field)
 Completed hide button show on hover like todomvc delete; strikethrough to signal completed
 
-##Undo strategies
-Undo delete selected (deleted todos are no longer showing)
+##Behavior of Select in gmail
+Three unstarred emails showing
+Click Select unstarred
+All three selected
+Select button turns solid gray with dash but no checkmark
 
-Undo mark completed (completed todos are showing)
+##Undo strategy for Mark completed
+Display and Data states
+Ten todos showing
+Click Select all
+Ten todos selected
+Deselect one todo manually
+Nine todos selected
+
+Click Mark completed
+Nine todos marked completed
+One todo not marked completed
+Nine todos still selected (in case you want to delete them, or undo completed)
+Mark completed button becomes Undo mark completed (condition class='selected' and class='completed')
+
+Click Undo mark completed
+Ten todos marked not completed
+Nine todos selected
+One todo not selected
+Undo mark completed button becomes Mark completed (condition class='selected' and not class='completed')
+
+##Undo strategy for Delete selected
+Ten todos showing
+Click Select all
+Ten todos selected
+Deselect one todo manually
+Nine todos selected
+
+Click Delete selected
+Nine selected todos disappear
+One [unselected] todo remains
+class='selected' removed from Select all
+Delete button becomes Undelete (condition class='deleted' until next click to select or Undelete)
+
+Click Undelete
+Nine deleted todos reappear (need a way to mark them as just deleted)
+Ten todos showing
+Undelete button becomes Delete selected (condition not class='deleted' and not class='selected')
+No todos are selected
