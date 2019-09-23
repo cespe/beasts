@@ -891,10 +891,16 @@ tests({
 	"If the app has todos, clicking 'Select all' should toggle class='selected' on it.": function() {
 		fail();
 	},
-	"If a clicked 'Select All' button toggles class='selected', each top-level todo should be set to 'selected'.": function() {
+	"If a clicked 'Select All' button sets class='selected', each top-level todo should be set to 'selected'.": function() {
 		fail();
 	},
-	"If a clicked 'Select All' button toggles class='', each top-level todo should unset 'selected'.": function() {
+	"If a clicked 'Select All' button sets class='', each top-level todo should unset 'selected'.": function() {
+		fail();
+	},
+	"If a clicked todo 'Select' button sets class='selected', the 'Select All' button should also be set to class='selected'.": function() {
+		fail();
+	},
+	"If the count of selected todos is zero, the 'Select All' button should be set to class=''.": function() {
 		fail();
 	},
 	"The app should have a button to mark selected todos completed.": function() {

@@ -141,10 +141,12 @@ Selected add a checkmark when selected (like an input field)
 Completed hide button show on hover like todomvc delete; strikethrough to signal completed
 
 ##Behavior of Select in gmail
-Three unstarred emails showing
-Click Select unstarred
-All three selected
-Select button turns solid gray with dash but no checkmark
+Select checbox has three display states
+	Empty checkbox means no emails are selected. Action buttons hidden.
+	Gray with dash means at least one but not all emails are selected. Action buttons displayed.
+	Gray with checkmark means all emails are selected. Action buttons displayed.
+
+When checkbox is gray, clicking it unselects any selected emails and hides action buttons.
 
 ##Undo strategy for Mark completed
 Display and Data states
@@ -184,3 +186,24 @@ Nine deleted todos reappear (need a way to mark them as just deleted)
 Ten todos showing
 Undelete button becomes Delete selected (condition not class='deleted' and not class='selected')
 No todos are selected
+
+##Select all button states and actions
+When button is clicked
+	If class=''
+		select all todos
+		set class='selected' (which displays action buttons)
+	Else
+		unselect all todos
+		set class='' (which hides action buttons)
+
+When a todo select button is clicked
+	If class=''
+		select todo
+		set todo class='selected'
+		set select all class='selected' (which displays action buttons)
+	Else
+		unselect todo
+		set todo class=''
+		If no todos are selected
+			set select all class='' (which hides action buttons)
+
