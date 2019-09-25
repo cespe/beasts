@@ -101,26 +101,35 @@ function createTodoLi(todo) {
 	var selectedButton = document.createElement('button')
 	selectedButton.name = 'selected';
 	selectedButton.type = 'button';	// to distinguish from a submit or reset button
+	if (todo.selected) {
+		selectedButton.classList.add('selected');
+	}
 	todoLi.appendChild(selectedButton);
 	var completedButton = document.createElement('button')
 	completedButton.name = 'completed';
-	completedButton.type = 'button';	// to distinguish from a submit or reset button
+	completedButton.type = 'button';
+	if (todo.completed) {
+		completedButton.classList.add('completed');
+	}
 	todoLi.appendChild(completedButton);
 	var deleteButton = document.createElement('button')
 	deleteButton.name = 'deleted';
-	deleteButton.type = 'button';	// to distinguish from a submit or reset button
+	deleteButton.type = 'button';
+	if (todo.deleted) {
+		deleteButton.classList.add('deleted');
+	}
 	todoLi.appendChild(deleteButton);
 	var siblingButton = document.createElement('button')
 	siblingButton.name = 'addSibling';
-	siblingButton.type = 'button';	// to distinguish from a submit or reset button
+	siblingButton.type = 'button';
 	todoLi.appendChild(siblingButton);
 	var childButton = document.createElement('button')
 	childButton.name = 'addChild';
-	childButton.type = 'button';	// to distinguish from a submit or reset button
+	childButton.type = 'button';
 	todoLi.appendChild(childButton);
 	var selectChildrenButton = document.createElement('button')
 	selectChildrenButton.name = 'selectChildren';
-	selectChildrenButton.type = 'button';	// to distinguish from a submit or reset button
+	selectChildrenButton.type = 'button';
 	todoLi.appendChild(selectChildrenButton);
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
@@ -243,6 +252,7 @@ function clickHandler(event) {
 		if (event.target.name === "selected") {
 			var todoLiSelectButton = todoLi.children[0];
 			todoLiSelectButton.classList.toggle('selected');
+			todo.selected = !todo.selected;
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompletedButton = todoLi.children[1];

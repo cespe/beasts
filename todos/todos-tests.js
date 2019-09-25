@@ -539,8 +539,7 @@ tests({
 		eq(todoLi1SelectChildren.nodeName, 'BUTTON');
 		eq(todoLi1SelectChildren.name, 'selectChildren');
 	},
-	"Clicking a 'select' button should toggle class='selected' on it.": function() {
-		// not toggling todo.selected for now, it is probably not needed and should be removed
+	"Clicking a 'select' button should toggle class='selected' on it and toggle todo.selected.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -551,10 +550,12 @@ tests({
 		var todoLi1SelectButton = todoLi1.children[0];
 
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
 
 		todoLi1SelectButton.click();
 
 		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
 	},
 	"Selecting a todo should not select its children.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -894,6 +895,70 @@ tests({
 		eq(showAllButton.nodeName, 'BUTTON');
 		eq(showAllButton.innerText, 'All');
 		eq(actionsDiv.children[3], showAllButton); 
+	},
+	"createTodoLi should set button classes corresponding to todo data fields.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		var todos = [];
+		var todo1 = new Todo('Item 1 selected');
+		todo1.markSelected(true);
+		insertTodo(todos, todo1);
+		var todo2 = new Todo('Item 2 completed');
+		todo2.markCompleted(true);
+		insertTodo(todos, todo2);
+		var todo3 = new Todo('Item 3 deleted');
+		todo3.markDeleted(true);
+		insertTodo(todos, todo3);
+		var todo4 = new Todo('Item 4 base');
+		insertTodo(todos, todo4);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		var todoLi1SelectedButton = todoLi1.children[0];
+		var todoLi1CompletedButton = todoLi1.children[1];
+		var todoLi1DeletedButton = todoLi1.children[2];
+		var todoLi2 = todosUl.children[1];
+		var todoLi2SelectedButton = todoLi2.children[0];
+		var todoLi2CompletedButton = todoLi2.children[1];
+		var todoLi2DeletedButton = todoLi2.children[2];
+		var todoLi3 = todosUl.children[2];
+		var todoLi3SelectedButton = todoLi3.children[0];
+		var todoLi3CompletedButton = todoLi3.children[1];
+		var todoLi3DeletedButton = todoLi3.children[2];
+		var todoLi4 = todosUl.children[3];
+		var todoLi4SelectedButton = todoLi4.children[0];
+		var todoLi4CompletedButton = todoLi4.children[1];
+		var todoLi4DeletedButton = todoLi4.children[2];
+
+		eq(todosUl.childElementCount, 4);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi1SelectedButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todo1.completed, false);
+		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
+		eq(todo1.deleted, false);
+		eq(todoLi2.id, todo2.id);
+		eq(todoLi2SelectedButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todo2.completed, true);
+		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
+		eq(todo2.deleted, false);
+		eq(todoLi3.id, todo3.id);
+		eq(todoLi3SelectedButton.classList.contains('selected'), false);
+		eq(todo3.selected, false);
+		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todo3.completed, false);
+		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
+		eq(todo3.deleted, true);
+		eq(todoLi4.id, todo4.id);
+		eq(todoLi4SelectedButton.classList.contains('selected'), false);
+		eq(todo4.selected, false);
+		eq(todoLi4CompletedButton.classList.contains('completed'), false);
+		eq(todo4.completed, false);
+		eq(todoLi4DeletedButton.classList.contains('deleted'), false);
+		eq(todo4.deleted, false);
 	},
 	"Clicking the 'All' button should display active and completed todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
