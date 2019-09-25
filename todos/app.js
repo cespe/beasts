@@ -130,7 +130,8 @@ function createTodoLi(todo) {
 }
 
 // Build DOM elements from the todos array, e.g. when app first loads
-function initializeTodosUl(todosArray) {
+// or when todos are filtered for display
+function createTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
 
@@ -138,7 +139,7 @@ function initializeTodosUl(todosArray) {
 		var todo = todosArray[i];
 		var todoLi = createTodoLi(todo);
 		if (todo.children.length > 0) {
-			var nestedTodos = initializeTodosUl(todo.children);
+			var nestedTodos = createTodosUl(todo.children);
 			todoLi.appendChild(nestedTodos);
 			todosUl.appendChild(todoLi);
 		} else {

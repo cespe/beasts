@@ -207,3 +207,26 @@ When a todo select button is clicked
 		If no todos are selected
 			set select all class='' (which hides action buttons)
 
+When some emails are selected in gmail, and a new one comes in, the display still shows the selections.
+Therefore, adding a new todo should not disturb the selected todos.
+
+
+
+##Show filtered todos
+Four filters for displaying todos: active, completed, all (active and completed), deleted.
+
+If filter is 'all'
+	display completed and active
+If filter is 'active'
+	display active only
+If filter is 'completed'
+	display completed only
+	replace 'Mark completed' with 'Mark uncompleted'
+If filter is 'completed' and a new todo is added
+	set filter to 'none'
+If filter is 'deleted'
+	display deleted only
+	disable adding new sibling todos
+	allow adding children
+	disable 'Mark completed'
+	replace 'Delete selected' with 'Undelete selected'

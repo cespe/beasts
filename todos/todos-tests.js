@@ -232,7 +232,7 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var result = initializeTodosUl(todos);
+		var result = createTodosUl(todos);
 
 		eq(result.childElementCount, 2);
 		eq(result.children.item(0).children[6].textContent, 'Item 1');
@@ -245,7 +245,7 @@ tests({
 		todo1.addChild(child1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var result = initializeTodosUl(todos);
+		var result = createTodosUl(todos);
 		// write variables to get rid of these opaque children[x]'s 
 		eq(result.childElementCount, 2);
 		eq(result.children.item(0).children[6].textContent, 'Item 1');
@@ -261,7 +261,7 @@ tests({
 		insertTodo(todos, todo2);
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
-		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
 		
 		var todo1Li = document.getElementById(todo1.id);
 		var todo1LiEntry = todo1Li.children[6].textContent;
@@ -289,7 +289,7 @@ tests({
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
 		
-		var todolist = initializeTodosUl(todos);
+		var todolist = createTodosUl(todos);
 		document.getElementById('todolist').appendChild(todolist);
 
 		var todo1Li = document.getElementById(todo1.id);
@@ -331,7 +331,7 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -366,7 +366,7 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -406,7 +406,7 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -422,7 +422,7 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(initializeTodosUl(todos));
+		document.getElementById('todolist').appendChild(createTodosUl(todos));
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -502,7 +502,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1AddSibling = todoLi1.children[3];
@@ -516,7 +516,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1AddChild = todoLi1.children[4];
@@ -531,7 +531,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildren = todoLi1.children[5];
@@ -546,7 +546,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children[0];
 
@@ -566,7 +566,7 @@ tests({
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		var todoLi1SelectButton = todoLi1.children[0];
@@ -589,7 +589,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompletedButton = todoLi1.children[1];
 
@@ -612,7 +612,7 @@ tests({
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		var todoLi1CompletedButton = todoLi1.children[1];
@@ -641,7 +641,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children[2];
 
@@ -664,7 +664,7 @@ tests({
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		var todoLi1DeletedButton = todoLi1.children[2];
@@ -693,7 +693,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		todoLi1SiblingButton = todoLi1.children[3];
@@ -713,7 +713,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		todoLi1ChildButton = todoLi1.children[4];
@@ -744,7 +744,7 @@ tests({
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[5];
@@ -761,7 +761,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[5];
@@ -782,7 +782,7 @@ tests({
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[5];
@@ -812,7 +812,7 @@ tests({
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 		todolist = document.getElementById('todolist');
-		todolist.appendChild(initializeTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[5];
@@ -867,28 +867,116 @@ tests({
 		eq(actionsDiv.nodeName, 'DIV');
 		eq(actionsDiv.parentElement.nodeName, 'HEADER');
 	},
-	"The header actions bar should have a 'Select All' button to select all top-level todos.": function() {
+	"The header actions bar should have a 'Select all' button to select all top-level todos.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.innerText, 'Select all');
 		eq(actionsDiv.children[0], selectAllButton); 
 	},
-	"The header actions bar should have a 'Completed' button to mark selected todos completed.": function() {
-		var actionsDiv = document.getElementById('actions');0
+	"The header actions bar should have a 'Mark completed' button to mark selected todos completed.": function() {
+		var actionsDiv = document.getElementById('actions');
 		var markCompletedButton = document.getElementsByName('markCompleted')[0];
 		eq(markCompletedButton.nodeName, 'BUTTON');
 		eq(markCompletedButton.innerText, 'Mark completed');
 		eq(actionsDiv.children[1], markCompletedButton); 
 	},
 	"The header actions bar should have a 'Delete selected' button to delete selected todos.": function() {
-		var actionsDiv = document.getElementById('actions');0
+		var actionsDiv = document.getElementById('actions');
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		eq(deleteSelectedButton.nodeName, 'BUTTON');
 		eq(deleteSelectedButton.innerText, 'Delete selected');
 		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
-	"If the app has todos, clicking 'Select all' should toggle class='selected' on it.": function() {
+	"The header actions bar should have an 'All' button to show active and completed todos.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var showAllButton = document.getElementsByName('showAll')[0];
+		eq(showAllButton.nodeName, 'BUTTON');
+		eq(showAllButton.innerText, 'All');
+		eq(actionsDiv.children[3], showAllButton); 
+	},
+	"Clicking the 'All' button should display active and completed todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1 active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2 completed');
+		todo2.markCompleted(true);
+		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3 deleted');
+		todo3.markDeleted(true);
+		insertTodo(todos, todo3);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));				// base case, no filter
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		var todoLi1CompletedButton = todoLi1.children[1];
+		var todoLi1DeletedButton = todoLi1.children[2];
+		var todoLi2 = todosUl.children[1];
+		var todoLi2CompletedButton = todoLi2.children[1];
+		var todoLi2DeletedButton = todoLi2.children[2];
+		var todoLi3 = todosUl.children[2];
+		var todoLi3CompletedButton = todoLi3.children[1];
+		var todoLi3DeletedButton = todoLi3.children[2];
+
+		eq(todosUl.childElementCount, 3);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todo1.completed, false);
+		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
+		eq(todo1.deleted, false);
+		eq(todoLi2.id, todo2.id);
+		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todo2.completed, true);
+		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
+		eq(todo2.deleted, false);
+		eq(todoLi3.id, todo3.id);
+		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todo3.completed, false);
+		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
+		eq(todo3.deleted, true);
+
+		var showAllButton = document.getElementsByName('showAll')[0];
+
+		showAllButton.click();									// test 'all' filter
+
+		eq(todosUl.childElementCount, 2);
+
+		eq(todosUl.children[0], todoLi1);
+		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todo1.completed, false);
+		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
+		eq(todo1.deleted, false);
+
+		eq(todosUl.children[1], todoLi2);
+		eq(todoLi2.id, todo2.id);
+		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todo2.completed, true);
+		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
+		eq(todo2.deleted, false);
+	},
+	"The header actions bar should have an 'Active' button to show active (uncompleted) todos.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		eq(showActiveButton.nodeName, 'BUTTON');
+		eq(showActiveButton.innerText, 'Active');
+		eq(actionsDiv.children[4], showActiveButton); 
+	},
+	"The header actions bar should have a 'Completed' button to show completed todos.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		eq(showCompletedButton.nodeName, 'BUTTON');
+		eq(showCompletedButton.innerText, 'Completed');
+		eq(actionsDiv.children[5], showCompletedButton); 
+	},
+	"The header actions bar should have a 'Deleted' button to show deleted todos.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		eq(showDeletedButton.nodeName, 'BUTTON');
+		eq(showDeletedButton.innerText, 'Deleted');
+		eq(actionsDiv.children[6], showDeletedButton); 
+	},
+	"If the app displays one or more todos, clicking 'Select all' should toggle class='selected' on it.": function() {
 		fail();
 	},
 	"If a clicked 'Select All' button sets class='selected', each top-level todo should be set to 'selected'.": function() {
