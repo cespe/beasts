@@ -147,6 +147,12 @@ function createTodosUl(todosArray, filter) {
 	var filteredArray = todosArray.filter(function(todo) {
 		if (filter === "all") {
 			return !todo.deleted;
+		} else if (filter === "active") {
+			return !todo.deleted && !todo.completed;
+		} else if (filter === "completed") {
+			return todo.completed;
+		} else if (filter === "deleted") {
+			return todo.deleted;
 		} else {
 			return true;
 		}
@@ -303,6 +309,21 @@ function actionsClickHandler() {
 			document.getElementById('todolist').innerHTML = '';
 			var todolist = document.getElementById('todolist');
 			todolist.appendChild(createTodosUl(todos, 'all'));
+		}
+		if (event.target.name === "showActive") {
+			document.getElementById('todolist').innerHTML = '';
+			var todolist = document.getElementById('todolist');
+			todolist.appendChild(createTodosUl(todos, 'active'));
+		}
+		if (event.target.name === "showCompleted") {
+			document.getElementById('todolist').innerHTML = '';
+			var todolist = document.getElementById('todolist');
+			todolist.appendChild(createTodosUl(todos, 'completed'));
+		}
+		if (event.target.name === "showDeleted") {
+			document.getElementById('todolist').innerHTML = '';
+			var todolist = document.getElementById('todolist');
+			todolist.appendChild(createTodosUl(todos, 'deleted'));
 		}
 	}
 }
