@@ -140,15 +140,23 @@ function createTodoLi(todo) {
 
 // Build DOM elements from the todos array, e.g. when app first loads
 // or when todos are filtered for display
-function createTodosUl(todosArray) {
+function createTodosUl(todosArray, filter) {
 	
 	var todosUl = document.createElement('ul');
 
-	for (var i = 0; i < todosArray.length; i++) {
-		var todo = todosArray[i];
+	var filteredArray = todosArray.filter(function(todo) {
+		if (filter === "all") {
+			return !todo.deleted;
+		} else {
+			return true;
+		}
+	});
+
+	for (var i = 0; i < filteredArray.length; i++) {
+		var todo = filteredArray[i];
 		var todoLi = createTodoLi(todo);
 		if (todo.children.length > 0) {
-			var nestedTodos = createTodosUl(todo.children);
+			var nestedTodos = createTodosUl(todo.children);	// TODO add filter here to filter children?
 			todoLi.appendChild(nestedTodos);
 			todosUl.appendChild(todoLi);
 		} else {
@@ -245,7 +253,7 @@ function editHandler(event) {
 	}
 }
 
-function clickHandler(event) {
+function todoClickHandler(event) {
 	if (event.target.nodeName === "BUTTON") {
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id)
@@ -276,7 +284,7 @@ function clickHandler(event) {
 			if (todoLiUl && todoLiUl.children.length > 0) {
 				todoLiSelectChildrenButton.classList.toggle('selected');
 				var selected = todoLiSelectChildrenButton.classList.contains('selected');
-				
+			
 				for (var i = 0; i < todoLiUl.children.length; i++) {
 					if (selected) {
 						todoLiUl.children[i].children[0].classList.add('selected');
@@ -289,10 +297,22 @@ function clickHandler(event) {
 	}
 }
 
+function actionsClickHandler() {
+	if (event.target.nodeName === "BUTTON") {
+		if (event.target.name === "showAll") {
+			document.getElementById('todolist').innerHTML = '';
+			var todolist = document.getElementById('todolist');
+			todolist.appendChild(createTodosUl(todos, 'all'));
+		}
+	}
+}
+
 function setUpEventListeners() {
 	var todolist = document.getElementById('todolist');
 	todolist.addEventListener('focusout', editHandler);
-	todolist.addEventListener('click', clickHandler);
+	todolist.addEventListener('click', todoClickHandler);
+	var actions = document.getElementById('actions');
+	actions.addEventListener('click', actionsClickHandler);
 //	todolist.addEventListener('change', changeHandler);
 //	todolist.addEventListener('keyup', keyUpHandler);
 }
