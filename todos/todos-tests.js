@@ -932,12 +932,27 @@ tests({
 		eq(actionsDiv.nodeName, 'DIV');
 		eq(actionsDiv.parentElement.nodeName, 'HEADER');
 	},
-	"The header actions bar should have a 'Select all' button to select all top-level todos.": function() {
+	"The header actions bar should have a 'Select all' button to select all displayed top-level todos.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.innerText, 'Select all');
 		eq(actionsDiv.children[0], selectAllButton); 
+	},
+	"Clicking the 'Select all' button should toggle its class between 'selected' and ''.": function() {
+		fail();
+	},
+	"When 'Select all' class is '', clicking the button should select all displayed top-level todos.": function() {
+		fail();
+	},
+	"When 'Select all' class is 'selected', clicking the button should de-select all displayed top-level todos.": function() {
+		fail();
+	},
+	"When a top-level todo is selected, the 'Select all' button class should be set to 'selected'.": function() {
+		fail();
+	},
+	"If no top-level todos are selected, the 'Select all' button class should be set to ''.": function() {
+		fail();
 	},
 	"The header actions bar should have a 'Mark completed' button to mark selected todos completed.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -1234,21 +1249,6 @@ tests({
 		eq(todo3.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
-	},
-	"If the app displays one or more todos, clicking 'Select all' should toggle class='selected' on it.": function() {
-		fail();
-	},
-	"If a clicked 'Select All' button sets class='selected', each top-level todo should be set to 'selected'.": function() {
-		fail();
-	},
-	"If a clicked 'Select All' button sets class='', each top-level todo should unset 'selected'.": function() {
-		fail();
-	},
-	"If a clicked todo 'Select' button sets class='selected', the 'Select All' button should also be set to class='selected'.": function() {
-		fail();
-	},
-	"If the count of selected todos is zero, the 'Select All' button should be set to class=''.": function() {
-		fail();
 	},
 	"The app should have a button to mark selected todos uncompleted.": function() {
 		fail();

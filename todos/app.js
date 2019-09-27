@@ -290,7 +290,7 @@ function todoClickHandler(event) {
 			if (todoLiUl && todoLiUl.children.length > 0) {
 				todoLiSelectChildrenButton.classList.toggle('selected');
 				var selected = todoLiSelectChildrenButton.classList.contains('selected');
-			
+				// TODO update children todo.selected below	
 				for (var i = 0; i < todoLiUl.children.length; i++) {
 					if (selected) {
 						todoLiUl.children[i].children[0].classList.add('selected');
