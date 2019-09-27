@@ -188,7 +188,7 @@ Undelete button becomes Delete selected (condition not class='deleted' and not c
 No todos are selected
 
 ##Select all button states and actions
-When button is clicked
+When 'Select all' button is clicked
 	If class=''
 		select all todos
 		set class='selected' (which displays action buttons)

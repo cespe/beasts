@@ -325,6 +325,14 @@ function actionsClickHandler() {
 			var todolist = document.getElementById('todolist');
 			todolist.appendChild(createTodosUl(todos, 'deleted'));
 		}
+		if (event.target.name === "selectAll") {
+			var selectAllButton = event.target;
+			if (selectAllButton.classList.contains('selected')) {
+				selectAllButton.classList.remove('selected');
+			} else {
+				selectAllButton.classList.add('selected');
+			}
+		}
 	}
 }
 

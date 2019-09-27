@@ -940,12 +940,23 @@ tests({
 		eq(actionsDiv.children[0], selectAllButton); 
 	},
 	"Clicking the 'Select all' button should toggle its class between 'selected' and ''.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+
+		eq(selectAllButton.classList.contains('selected'), false);
+
+		selectAllButton.click();
+
+		eq(selectAllButton.classList.contains('selected'), true);	
+		
+		selectAllButton.click();
+
+		eq(selectAllButton.classList.contains('selected'), false);	
+	},
+	"When class is '', clicking the button should select all displayed top-level todos.": function() {
 		fail();
 	},
-	"When 'Select all' class is '', clicking the button should select all displayed top-level todos.": function() {
-		fail();
-	},
-	"When 'Select all' class is 'selected', clicking the button should de-select all displayed top-level todos.": function() {
+	"When class is 'selected', clicking the button should de-select all displayed top-level todos.": function() {
 		fail();
 	},
 	"When a top-level todo is selected, the 'Select all' button class should be set to 'selected'.": function() {
