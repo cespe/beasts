@@ -982,7 +982,34 @@ tests({
 		eq(todo2.selected, true);
 	},
 	"When class is 'selected', clicking the button should de-select all displayed top-level todos.": function() {
-		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		todo2.markSelected(true);
+		insertTodo(todos, todo2);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		var todoLi1SelectButton = todoLi1.children[0];
+		var todoLi2SelectButton = todoLi2.children[0];
+
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi2SelectButton.classList.contains('selected'), true);
+		eq(todo2.selected, true);
+
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+
+		selectAllButton.click();
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
 	},
 	"When a top-level todo is selected, the 'Select all' button class should be set to 'selected'.": function() {
 		fail();

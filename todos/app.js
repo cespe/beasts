@@ -324,11 +324,18 @@ function actionsClickHandler() {
 		}
 		if (event.target.name === "selectAll") {
 			var selectAllButton = event.target;
+			var todosUl = todolist.children[0];
 			if (selectAllButton.classList.contains('selected')) {
 				selectAllButton.classList.remove('selected');
+				for (var i = 0; i < todosUl.children.length; i++) {
+					var todoLi = todosUl.children[i];
+					var todoLiSelectButton = todoLi.children[0];
+					todoLiSelectButton.classList.remove('selected');
+					var todo = findTodo(todos, todoLi.id)
+					todo.selected = false;
+				}
 			} else {
 				selectAllButton.classList.add('selected');
-				var todosUl = todolist.children[0];
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[0];
