@@ -304,25 +304,22 @@ function todoClickHandler(event) {
 }
 
 function actionsClickHandler() {
-	if (event.target.nodeName === "BUTTON") {
+	if (event.target.nodeName === "BUTTON") {		// TODO is this conditional needed?
+		var todolist = document.getElementById('todolist');
 		if (event.target.name === "showAll") {
 			document.getElementById('todolist').innerHTML = '';
-			var todolist = document.getElementById('todolist');
 			todolist.appendChild(createTodosUl(todos, 'all'));
 		}
 		if (event.target.name === "showActive") {
 			document.getElementById('todolist').innerHTML = '';
-			var todolist = document.getElementById('todolist');
 			todolist.appendChild(createTodosUl(todos, 'active'));
 		}
 		if (event.target.name === "showCompleted") {
 			document.getElementById('todolist').innerHTML = '';
-			var todolist = document.getElementById('todolist');
 			todolist.appendChild(createTodosUl(todos, 'completed'));
 		}
 		if (event.target.name === "showDeleted") {
 			document.getElementById('todolist').innerHTML = '';
-			var todolist = document.getElementById('todolist');
 			todolist.appendChild(createTodosUl(todos, 'deleted'));
 		}
 		if (event.target.name === "selectAll") {
@@ -331,6 +328,14 @@ function actionsClickHandler() {
 				selectAllButton.classList.remove('selected');
 			} else {
 				selectAllButton.classList.add('selected');
+				var todosUl = todolist.children[0];
+				for (var i = 0; i < todosUl.children.length; i++) {
+					var todoLi = todosUl.children[i];
+					var todoLiSelectButton = todoLi.children[0];
+					todoLiSelectButton.classList.add('selected');
+					var todo = findTodo(todos, todoLi.id)
+					todo.selected = true;
+				}
 			}
 		}
 	}
