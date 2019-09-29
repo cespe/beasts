@@ -942,6 +942,7 @@ tests({
 	"Clicking the 'Select all' button should toggle its class between 'selected' and ''.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var selectAllButton = document.getElementsByName('selectAll')[0];
+		selectAllButton.classList.remove('selected');
 
 		eq(selectAllButton.classList.contains('selected'), false);
 
@@ -1012,10 +1013,96 @@ tests({
 		eq(todo2.selected, false);
 	},
 	"When a top-level todo is selected, the 'Select all' button class should be set to 'selected'.": function() {
-		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		var todoLi1SelectButton = todoLi1.children[0];
+		var todoLi2SelectButton = todoLi2.children[0];
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		selectAllButton.classList.remove('selected');
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(selectAllButton.classList.contains('selected'), false);
+
+		todoLi1SelectButton.click();
+		
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(selectAllButton.classList.contains('selected'), true);
+
+		todoLi2SelectButton.click();
+		
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi2SelectButton.classList.contains('selected'), true);
+		eq(todo2.selected, true);
+		eq(selectAllButton.classList.contains('selected'), true);
 	},
-	"If no top-level todos are selected, the 'Select all' button class should be set to ''.": function() {
-		fail();
+	"De-selecting the last selected top-level todo should set 'Select all' button class to ''.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		var todoLi1SelectButton = todoLi1.children[0];
+		var todoLi2SelectButton = todoLi2.children[0];
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		selectAllButton.classList.remove('selected');
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(selectAllButton.classList.contains('selected'), false);
+
+		todoLi1SelectButton.click();
+		
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(selectAllButton.classList.contains('selected'), true);
+
+		todoLi2SelectButton.click();
+		
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi2SelectButton.classList.contains('selected'), true);
+		eq(todo2.selected, true);
+		eq(selectAllButton.classList.contains('selected'), true);
+
+		todoLi2SelectButton.click();
+		
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(selectAllButton.classList.contains('selected'), true);
+
+		todoLi1SelectButton.click();
+		
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(selectAllButton.classList.contains('selected'), false);
 	},
 	"The header actions bar should have a 'Mark completed' button to mark selected todos completed.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -1312,6 +1399,10 @@ tests({
 		eq(todo3.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
+	},
+	"When todoLi's are created from the todos array, select should be false for each todo.": function() {
+		// Filtering produces a clean slate with no selected todos.
+		fail();
 	},
 	"The app should have a button to mark selected todos uncompleted.": function() {
 		fail();

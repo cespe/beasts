@@ -267,6 +267,20 @@ function todoClickHandler(event) {
 			var todoLiSelectButton = todoLi.children[0];
 			todoLiSelectButton.classList.toggle('selected');
 			todo.selected = !todo.selected;
+			var selectAllButton = document.getElementsByName('selectAll')[0];
+			if (todo.selected) {
+				selectAllButton.classList.add('selected');
+			} else {
+				var selectedCount = 0;
+				for (var i = 0; i < todos.length; i++) {
+					if (todos[i].selected === true) {
+						selectedCount++;
+					}
+					if (selectedCount === 0) {
+						selectAllButton.classList.remove('selected');
+					}
+				}	
+			}
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompletedButton = todoLi.children[1];
