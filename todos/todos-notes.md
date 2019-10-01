@@ -215,6 +215,8 @@ Therefore, adding a new todo should not disturb the selected todos.
 ##Show filtered todos
 Four filters for displaying todos: active, completed, all (active and completed), deleted.
 
+Set selected off, start with a clean slate
+
 If filter is 'all'
 	display completed and active
 If filter is 'active'
@@ -228,5 +230,5 @@ If filter is 'deleted'
 	display deleted only
 	disable adding new sibling todos
 	allow adding children
-	disable 'Mark completed'
+	disable 'Mark completed'? Why not allow it?
 	replace 'Delete selected' with 'Undelete selected'

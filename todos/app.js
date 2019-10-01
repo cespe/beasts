@@ -271,6 +271,7 @@ function todoClickHandler(event) {
 			if (todo.selected) {
 				selectAllButton.classList.add('selected');
 			} else {
+				// TODO convert to array.find()
 				var selectedCount = 0;
 				for (var i = 0; i < todos.length; i++) {
 					if (todos[i].selected === true) {

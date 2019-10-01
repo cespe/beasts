@@ -1400,7 +1400,7 @@ tests({
 		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
 	},
-	"When todoLi's are created from the todos array, select should be false for each todo.": function() {
+	"createTodosUl should set todo.selected = false for every todo.": function() {
 		// Filtering produces a clean slate with no selected todos.
 		fail();
 	},
