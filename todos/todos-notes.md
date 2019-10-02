@@ -169,6 +169,10 @@ One todo not selected
 Undo mark completed button becomes Mark completed (condition class='selected' and not class='completed')
 
 ##Undo strategy for Delete selected
+
+Try in a separate branch:
+Clean up UI by removing delete button from individual todos and just having delete selected.
+
 Ten todos showing
 Click Select all
 Ten todos selected

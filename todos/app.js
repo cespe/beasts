@@ -25,6 +25,8 @@ Todo.prototype.changeId = function() {
 	this.id = Math.random().toString(36).slice(2);
 }
 
+// TODO These setters are not used consistently in the code -- do I need them? What's the point?
+
 Todo.prototype.update = function(changedEntry) {
 	this.entry = changedEntry;
 }
@@ -357,6 +359,36 @@ function actionsClickHandler() {
 					todoLiSelectButton.classList.add('selected');
 					var todo = findTodo(todos, todoLi.id)
 					todo.selected = true;
+				}
+			}
+		}
+		if (event.target.name === 'markCompleted') {
+			var markCompletedButton = event.target;
+			var todosUl = todolist.children[0];
+			if (markCompletedButton.classList.contains('completed')) {
+				markCompletedButton.classList.remove('completed');
+				for (var i = 0; i < todosUl.children.length; i++) {
+					var todoLi = todosUl.children[i];
+					var todoLiSelectButton = todoLi.children[0];
+					var todoLiCompletedButton = todoLi.children[1];
+					if (todoLiSelectButton.classList.contains('selected')) {
+						todoLiCompletedButton.classList.remove('completed');
+						var todo = findTodo(todos, todoLi.id);
+						todo.markCompleted(false);
+					}	
+				}
+			} else {
+				markCompletedButton.classList.add('completed');
+				for (var i = 0; i < todosUl.children.length; i++) {
+					var todoLi = todosUl.children[i];
+					var todoLiSelectButton = todoLi.children[0];
+					var todoLiCompletedButton = todoLi.children[1];
+					if (todoLiSelectButton.classList.contains('selected')) {
+						todoLiCompletedButton.classList.add('completed');
+						var todo = findTodo(todos, todoLi.id);
+						todo.completed = true;
+				
+					}
 				}
 			}
 		}
