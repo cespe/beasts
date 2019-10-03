@@ -273,22 +273,38 @@ function todoClickHandler(event) {
 			if (todo.selected) {
 				selectAllButton.classList.add('selected');
 			} else {
-				// TODO convert to array.find()
+				// TODO convert to array.find() to stop looping as soon as a match is found
 				var selectedCount = 0;
 				for (var i = 0; i < todos.length; i++) {
 					if (todos[i].selected === true) {
 						selectedCount++;
 					}
-					if (selectedCount === 0) {
-						selectAllButton.classList.remove('selected');
-					}
-				}	
+				}
+				if (selectedCount === 0) {
+					selectAllButton.classList.remove('selected');
+				}
 			}
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompletedButton = todoLi.children[1];
 			todoLiCompletedButton.classList.toggle('completed');
 			todo.completed = !todo.completed;
+			var markCompletedButton = document.getElementsByName('markCompleted')[0];
+			if (todo.selected) {
+				markCompletedButton.classList.add('completed');
+			}
+			if (!todo.completed) {
+				// TODO convert to array.find() to stop looping as soon as a match is found
+				var count = 0;
+				for (var i = 0; i < todos.length; i++) {
+					if (todos[i].selected === true && todos[i].completed === true) {
+						count++;
+					}
+				}
+				if (count === 0) {
+					markCompletedButton.classList.remove('completed');
+				}
+			}
 		}
 		if (event.target.name === "deleted") {
 			var todoLiDeleteButton = todoLi.children[2];
