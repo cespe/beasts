@@ -408,6 +408,14 @@ function actionsClickHandler() {
 				}
 			}
 		}
+		if (event.target.name === 'deleteSelected') {
+			var deleteSelectedButton = event.target;
+			if (deleteSelectedButton.classList.contains('deleted')) {
+				deleteSelectedButton.classList.remove('deleted');
+			} else {
+				deleteSelectedButton.classList.add('deleted')
+			}
+		}
 	}
 }
 

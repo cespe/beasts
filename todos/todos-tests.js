@@ -1432,7 +1432,16 @@ tests({
 		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
 	"Clicking the 'Delete' button should toggle its class between 'deleted' and ''.": function() {
-		fail();
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		eq(deleteSelectedButton.classList.contains('deleted'), false);
+
+		deleteSelectedButton.click();
+
+		eq(deleteSelectedButton.classList.contains('deleted'), true);
+		
+		deleteSelectedButton.click();
+
+		eq(deleteSelectedButton.classList.contains('deleted'), false);
 	},
 	"When class is '', clicking the button should de-select each selected todo and mark it deleted and undoable.": function() {
 		fail();
