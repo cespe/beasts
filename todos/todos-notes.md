@@ -214,7 +214,8 @@ When a todo select button is clicked
 When some emails are selected in gmail, and a new one comes in, the display still shows the selections.
 Therefore, adding a new todo should not disturb the selected todos.
 
-
+##Hide todo completed and deleted buttons when any todos are selected
+This simplifies the UI and avoids awkward header button switches when a todo button is clicked.
 
 ##Show filtered todos
 Four filters for displaying todos: active, completed, all (active and completed), deleted.

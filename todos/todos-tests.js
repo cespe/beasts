@@ -654,6 +654,7 @@ tests({
 		eq(todoLi1DeleteButton.classList.contains('deleted'), true);
 		eq(todo1.deleted, true);
 	},
+	// TODO add tests for hiding the todoLi and for showing an Undelete button
 	"Deleting a todo should not delete its children.": function() {
 		// The children are just along for the ride
 		document.getElementById('todolist').innerHTML = '';
@@ -1431,7 +1432,7 @@ tests({
 		eq(deleteSelectedButton.innerText, 'Delete selected');
 		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
-	"Clicking the 'Delete' button should toggle its class between 'deleted' and ''.": function() {
+	"Clicking the 'Delete selected' button should toggle its class between 'deleted' and ''.": function() {
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		eq(deleteSelectedButton.classList.contains('deleted'), false);
 
@@ -1443,13 +1444,187 @@ tests({
 
 		eq(deleteSelectedButton.classList.contains('deleted'), false);
 	},
-	"When class is '', clicking the button should de-select each selected todo and mark it deleted and undoable.": function() {
+	"When class is '', clicking the 'Delete selected' button should mark each selected todo deleted.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo3);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi3 = todolist.children[0].children[2];
+		var todoLi1SelectButton = todoLi1.children[0];
+		var todoLi1DeleteButton = todoLi1.children[2];
+		var todoLi2SelectButton = todoLi2.children[0];
+		var todoLi2DeleteButton = todoLi2.children[2];
+		var todoLi3SelectButton = todoLi3.children[0];
+		var todoLi3DeleteButton = todoLi3.children[2];
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
+		eq(todoLi1DeleteButton.classList.contains('deleted'), false);
+		eq(todo1.deleted, false);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(todoLi2DeleteButton.classList.contains('deleted'), false);
+		eq(todo2.deleted, false);
+		eq(todoLi3SelectButton.classList.contains('selected'), false);
+		eq(todo3.selected, false);
+		eq(todoLi3DeleteButton.classList.contains('deleted'), false);
+		eq(todo3.deleted, false);
+
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		deleteSelectedButton.classList.remove('deleted');	// re-set to default
+
+		todoLi1SelectButton.click();
+		todoLi2SelectButton.click();
+		deleteSelectedButton.click();
+
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi1DeleteButton.classList.contains('deleted'), true);
+		eq(todo1.deleted, true);
+		eq(todoLi2SelectButton.classList.contains('selected'), true);
+		eq(todo2.selected, true);
+		eq(todoLi2DeleteButton.classList.contains('deleted'), true);
+		eq(todo2.deleted, true);
+		eq(todoLi3SelectButton.classList.contains('selected'), false);
+		eq(todo3.selected, false);
+		eq(todoLi3DeleteButton.classList.contains('deleted'), false);
+		eq(todo3.deleted, false);
+	},
+	"When class is '', clicking the 'Delete selected' button should hide deleted todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo3);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi3 = todolist.children[0].children[2];
+		var todoLi1SelectButton = todoLi1.children[0];
+		var todoLi1DeleteButton = todoLi1.children[2];
+		var todoLi2SelectButton = todoLi2.children[0];
+		var todoLi2DeleteButton = todoLi2.children[2];
+		var todoLi3SelectButton = todoLi3.children[0];
+		var todoLi3DeleteButton = todoLi3.children[2];
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
+		eq(todoLi1DeleteButton.classList.contains('deleted'), false);
+		eq(todo1.deleted, false);
+		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		eq(todoLi2DeleteButton.classList.contains('deleted'), false);
+		eq(todo2.deleted, false);
+		eq(todoLi3SelectButton.classList.contains('selected'), false);
+		eq(todo3.selected, false);
+		eq(todoLi3DeleteButton.classList.contains('deleted'), false);
+		eq(todo3.deleted, false);
+
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		deleteSelectedButton.classList.remove('deleted');	// re-set to default
+
+		todoLi1SelectButton.click();
+		todoLi2SelectButton.click();
+		deleteSelectedButton.click();
+
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi1DeleteButton.classList.contains('deleted'), true);
+		eq(todo1.deleted, true);
+		eq(todoLi1.classList.contains('hide'), true);
+		eq(todoLi2SelectButton.classList.contains('selected'), true);
+		eq(todo2.selected, true);
+		eq(todoLi2DeleteButton.classList.contains('deleted'), true);
+		eq(todo2.deleted, true);
+		eq(todoLi2.classList.contains('hide'), true);
+		eq(todoLi3SelectButton.classList.contains('selected'), false);
+		eq(todo3.selected, false);
+		eq(todoLi3DeleteButton.classList.contains('deleted'), false);
+		eq(todo3.deleted, false);
+		eq(todoLi3.classList.contains('hide'), false);
+	},
+	"When class is '', clicking the 'Delete selected' button should set button text to 'Undelete'.": function() {
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		deleteSelectedButton.classList.remove('deleted');
+		deleteSelectedButton.textContent = 'Delete selected';	// restore default
+
+		eq(deleteSelectedButton.textContent, 'Delete selected');
+
+		deleteSelectedButton.click();
+
+		eq(deleteSelectedButton.textContent, 'Undelete');
+	},
+	"When class is 'deleted', clicking the 'Undelete' button should set button name to 'Delete selected'.": function() {
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		deleteSelectedButton.classList.remove('deleted');
+		deleteSelectedButton.textContent = 'Delete selected';	// restore default
+
+		eq(deleteSelectedButton.textContent, 'Delete selected');
+		eq(deleteSelectedButton.classList.contains('deleted'), false);
+
+		deleteSelectedButton.click();
+
+		eq(deleteSelectedButton.textContent, 'Undelete');
+		eq(deleteSelectedButton.classList.contains('deleted'), true);
+
+		deleteSelectedButton.click();
+
+		eq(deleteSelectedButton.textContent, 'Delete selected');
+		eq(deleteSelectedButton.classList.contains('deleted'), false);
+	},
+	"When class is 'deleted', clicking the 'Undelete' button should mark each selected todo undeleted.": function() {
 		fail();
 	},
-	"When class is 'deleted', clicking the button should mark each undoable todo undeleted and clear undoable.": function() {
+	"When class is 'deleted', clicking the 'Undelete' button should un-hide each deleted todo.": function() {
 		fail();
 	},
-	"Each time a todo is selected, the 'Delete' button class should be set to '' and all undoables should be cleared.": function() {
+	"When class is '', clicking the 'Delete selected' button should set 'Select all' button class to ''.": function() {
+		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children[0];
+		var todoLi1DeleteButton = todoLi1.children[2];
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
+		eq(todoLi1DeleteButton.classList.contains('deleted'), false);
+		eq(todo1.deleted, false);
+		eq(selectAllButton.classList.contains('selected'), true);
+
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		selectAllButton.classList.remove('selected');	// re-set to default
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		deleteSelectedButton.classList.remove('deleted');	// re-set to default
+
+		selectAllButton.click();
+		deleteSelectedButton.click();
+
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(selectAllButton.classList.contains('selected'), true);
+		eq(todoLi1DeleteButton.classList.contains('deleted'), true);
+		eq(todo1.deleted, true);
+		eq(todoLi1.classList.contains('hide'), true);
+		eq(selectAllButton.classList.contains('selected'), false);
+	},
+	"When class is 'deleted', clicking the 'Select all' button should unselect deleted todos before marking displayed todos selected.": function() {
 		fail();
 	},
 	"The header actions bar should have an 'All' button to show active and completed todos.": function() {
@@ -1733,9 +1908,6 @@ tests({
 		eq(todo3.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
-	},
-	"The app should have a button to undo last delete action.": function() {
-		fail();
 	},
 	"createTodosUl should set todo.selected to false for every todo.": function() {
 		// Startup or filtering should produce a clean slate with no selected todos.

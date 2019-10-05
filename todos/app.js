@@ -410,10 +410,24 @@ function actionsClickHandler() {
 		}
 		if (event.target.name === 'deleteSelected') {
 			var deleteSelectedButton = event.target;
+			var todosUl = todolist.children[0];
 			if (deleteSelectedButton.classList.contains('deleted')) {
 				deleteSelectedButton.classList.remove('deleted');
+				deleteSelectedButton.textContent = 'Delete selected';
 			} else {
 				deleteSelectedButton.classList.add('deleted')
+				deleteSelectedButton.textContent = 'Undelete';
+				for (var i = 0; i < todosUl.children.length; i++) {
+					var todoLi = todosUl.children[i];
+					var todoLiSelectButton = todoLi.children[0];
+					var todoLiDeleteButton = todoLi.children[2];
+					if (todoLiSelectButton.classList.contains('selected')) {
+						todoLiDeleteButton.classList.add('deleted');
+						var todo = findTodo(todos, todoLi.id);
+						todo.deleted = true;
+						todoLi.classList.add('hide');
+					}
+				}
 			}
 		}
 	}
