@@ -155,8 +155,10 @@ function createTodosUl(todosArray, filter) {
 			return todo.completed;
 		} else if (filter === "deleted") {
 			return todo.deleted;
+		} else if (filter === 'selected') {
+			return todo.selected;
 		} else {
-			return true;
+			return true
 		}
 	});
 
@@ -357,6 +359,7 @@ function actionsClickHandler() {
 		}
 		if (event.target.name === "selectAll") {
 			var selectAllButton = event.target;
+			var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 			var todosUl = todolist.children[0];
 			if (selectAllButton.classList.contains('selected')) {
 				selectAllButton.classList.remove('selected');
@@ -375,6 +378,18 @@ function actionsClickHandler() {
 					todoLiSelectButton.classList.add('selected');
 					var todo = findTodo(todos, todoLi.id)
 					todo.selected = true;
+				}
+				if (deleteSelectedButton.classList.contains('deleted')) {
+					deleteSelectedButton.classList.remove('deleted');
+					deleteSelectedButton.textContent = 'Delete selected';
+					// remove selected from selected and deleted todos
+					for (var i = 0; i < todos.length; i++) {
+						if (todos[i].selected && todos[i].deleted) {
+							todos[i].selected = false;
+						}
+					}
+					document.getElementById('todolist').innerHTML = '';
+					todolist.appendChild(createTodosUl(todos, 'selected'));
 				}
 			}
 		}
@@ -414,9 +429,22 @@ function actionsClickHandler() {
 			if (deleteSelectedButton.classList.contains('deleted')) {
 				deleteSelectedButton.classList.remove('deleted');
 				deleteSelectedButton.textContent = 'Delete selected';
+				for (var i = 0; i < todosUl.children.length; i++) {
+					var todoLi = todosUl.children[i];
+					var todoLiSelectButton = todoLi.children[0];
+					var todoLiDeleteButton = todoLi.children[2];
+					if (todoLiSelectButton.classList.contains('selected')) {
+						todoLiDeleteButton.classList.remove('deleted');
+						var todo = findTodo(todos, todoLi.id);
+						todo.deleted = false;
+						todoLi.classList.remove('hide');
+					}
+				}
 			} else {
 				deleteSelectedButton.classList.add('deleted')
 				deleteSelectedButton.textContent = 'Undelete';
+				var selectAllButton = document.getElementsByName('selectAll')[0];
+				selectAllButton.classList.remove('selected');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[0];
