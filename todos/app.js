@@ -97,6 +97,17 @@ function findTodo(array, id) {
 
 /************************************* DOM manipulation ********************************/
 
+// index positions of todoLi.children[i]
+var selectedIndex = 0;
+var completedIndex = 1;
+var deleteIndex = 2;
+var addSiblingIndex = 3;
+var addChildIndex = 4;
+var showChildrenIndex = 5;
+var selectChildrenIndex = 6;
+var entryIndex = 7;
+var todoLiUlIndex = 8;
+
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
@@ -203,7 +214,7 @@ function insertNewTodoLi(array, id) {
 		}
 		document.getElementById('todolist').children[0].appendChild(newLi);
 	}
-	newLi.children[6].focus();	// TODO children[x] too brittle
+	newLi.children[entryIndex].focus();
 }
 
 // Append a new todoLi in a child todosUl under a given todoLi, ready for text entry.
@@ -219,9 +230,8 @@ function appendNewChildTodoLi(todoLi) {
 	var newLi = createTodoLi(newTodo);
 
 	// Case one: there is already a <ul> to hold nested children
-	// TODO Identifying the nested <ul> by children[x] is brittle. Adding a class 'children' would fix that.	
-	if (todoLi.children[7] && todoLi.children[7].nodeName === "UL") {
-		existingUl = todoLi.children[7];
+	if (todoLi.children[todoLiUlIndex] && todoLi.children[todoLiUlIndex].nodeName === "UL") {
+		existingUl = todoLi.children[todoLiUlIndex];
 		existingUl.appendChild(newLi);	
 
 	} else {
@@ -233,7 +243,7 @@ function appendNewChildTodoLi(todoLi) {
 		todoLi.appendChild(newUl);
 	}
 
-	newLi.children[6].focus();	// focus the entry <p>
+	newLi.children[entryIndex].focus();	// focus the entry <p>
 }
 
 /************************************* Event handling ***********************************/
@@ -272,7 +282,7 @@ function todoClickHandler(event) {
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id)
 		if (event.target.name === "selected") {
-			var todoLiSelectButton = todoLi.children[0];
+			var todoLiSelectButton = todoLi.children[selectedIndex];
 			todoLiSelectButton.classList.toggle('selected');
 			todo.selected = !todo.selected;
 			var selectAllButton = document.getElementsByName('selectAll')[0];
@@ -292,7 +302,7 @@ function todoClickHandler(event) {
 			}
 		}
 		if (event.target.name === "completed") {
-			var todoLiCompletedButton = todoLi.children[1];
+			var todoLiCompletedButton = todoLi.children[completedIndex];
 			todoLiCompletedButton.classList.toggle('completed');
 			todo.completed = !todo.completed;
 			var markCompletedButton = document.getElementsByName('markCompleted')[0];
@@ -313,7 +323,7 @@ function todoClickHandler(event) {
 			}
 		}
 		if (event.target.name === "deleted") {
-			var todoLiDeleteButton = todoLi.children[2];
+			var todoLiDeleteButton = todoLi.children[deleteIndex];
 			todoLiDeleteButton.classList.toggle('deleted');
 			todo.deleted = !todo.deleted;
 		}
@@ -324,17 +334,17 @@ function todoClickHandler(event) {
 			appendNewChildTodoLi(todoLi)
 		}
 		if (event.target.name === "selectChildren") {
-			var todoLiSelectChildrenButton = todoLi.children[5];
-			var todoLiUl = todoLi.children[7];
+			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+			var todoLiUl = todoLi.children[todoLiUlIndex];
 			if (todoLiUl && todoLiUl.children.length > 0) {
 				todoLiSelectChildrenButton.classList.toggle('selected');
 				var selected = todoLiSelectChildrenButton.classList.contains('selected');
 				// TODO update children todo.selected below	
 				for (var i = 0; i < todoLiUl.children.length; i++) {
 					if (selected) {
-						todoLiUl.children[i].children[0].classList.add('selected');
+						todoLiUl.children[i].children[selectedIndex].classList.add('selected');
 					} else {
-						todoLiUl.children[i].children[0].classList.remove('selected');
+						todoLiUl.children[i].children[selectedIndex].classList.remove('selected');
 					}
 				}
 			}
