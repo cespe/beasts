@@ -237,3 +237,12 @@ If filter is 'deleted'
 	allow adding children
 	disable 'Mark completed'? Why not allow it?
 	replace 'Delete selected' with 'Undelete selected'
+
+##Remaining tasks
+Show/hide buttons when appropriate.
+	Don't allow Select in a child todo unless parent is zoomed. [or make action bar actions recursive...].
+Add icons or text to identify buttons.
+Add a button to todoLi to zoom in on a todo, giving access to actions bar buttons for child elements.
+	And/or add a todoLi button to Select all children [requires recursive actions bar actions].
+Store todos in local storage.
+Retrieve todos from local storage.

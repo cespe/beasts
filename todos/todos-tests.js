@@ -523,7 +523,32 @@ tests({
 
 		eq(todoLi1AddChild.nodeName, 'BUTTON');
 		eq(todoLi1AddChild.name, 'addChild');
+	},
+	"Each todoLi should have a showChildren button to show/hide its children.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
 
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[5];
+
+		eq(todoLi1ShowChildren.nodeName, 'BUTTON');
+		eq(todoLi1ShowChildren.name, 'showChildren');
+	},
+	"If showChildren button class is '', button text should be 'Show children'.": function() {
+		fail();
+	},
+	"If showChildren button class is '', clicking button should set class to 'shown' and show child todos.": function() {
+		fail();
+	},
+	"If showChildren button class is 'shown', button text should be 'Hide children'.": function() {
+		fail();
+	},
+	"If showChildren button class is 'shown', clicking button should set class to '' and hide child todos.": function() {
+		fail();
 	},
 	"Each todo should have a button to select all children.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -534,7 +559,7 @@ tests({
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectChildren = todoLi1.children[5];
+		var todoLi1SelectChildren = todoLi1.children[6];
 
 		eq(todoLi1SelectChildren.nodeName, 'BUTTON');
 		eq(todoLi1SelectChildren.name, 'selectChildren');
@@ -1764,7 +1789,7 @@ tests({
 
 		eq(deleteSelectedButton.classList.contains('deleted'), false);
 	},
-	"When class is 'deleted', clicking the 'Select all' button should set 'Delete selected' button text to 'Delete selected'.": function() {
+	"When class is 'deleted', clicking 'Select all' button should set 'Undelete' button text to 'Delete selected'.": function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		selectAllButton.classList.remove('selected');
@@ -1776,7 +1801,7 @@ tests({
 
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 	},
-	"When class is 'deleted', clicking the 'Select all' button should unselect deleted todos before marking displayed todos selected.": function() {
+	"When class is 'deleted', clicking the 'Select all' button should unselect deleted todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1876,6 +1901,12 @@ tests({
 		eq(todo2.deleted, true);
 		eq(todo3.selected, true);
 		eq(todo3.deleted, false);
+	},
+	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
+		fail();
+	},
+	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
+		fail();
 	},
 	"The header actions bar should have an 'All' button to show active and completed todos.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -2166,8 +2197,9 @@ tests({
 	"If todos array is empty at startup, the app should create a new empty todo.": function() {
 		fail();
 	},
-	"The app should have a button to add a todo to the end of the list.": function() {
-		// In case filtering the list results in no displayed todos.
+	"The app should have a button to add a todo to the beginning of the list.": function() {
+		// In case filtering the list results in no displayed todos
+		// or if you simply want to insert a todo at the top of the list.
 		fail();
 	},
 	"The app should listen for keyup events when editing a todo.": function() {
@@ -2184,10 +2216,10 @@ tests({
 		testEvent.key = "x";
 		todoLi1.dispatchEvent(testEvent);
 	},
-	"When editing, Shift Return should save the revised entry by unfocusing the todoLi.": function() {
+	"When editing, Shift Return should be a shortcut for Add Sibling todo.": function() {
 		fail();
 	},
-	"When editing, Escape should abort changes and unfocus the todoLi.": function() {
+	"When editing, Esc should be a shortcut for Undo Edit.": function() {
 		fail();
 	},
 	"When editing, Backspace should delete the todo if the entry is empty.": function() {

@@ -129,7 +129,11 @@ function createTodoLi(todo) {
 	childButton.name = 'addChild';
 	childButton.type = 'button';
 	todoLi.appendChild(childButton);
-	var selectChildrenButton = document.createElement('button')
+	var showChildrenButton = document.createElement('button');
+	showChildrenButton.name = 'showChildren';
+	showChildrenButton.type = 'button';
+	todoLi.appendChild(showChildrenButton);
+	var selectChildrenButton = document.createElement('button');
 	selectChildrenButton.name = 'selectChildren';
 	selectChildrenButton.type = 'button';
 	todoLi.appendChild(selectChildrenButton);
