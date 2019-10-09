@@ -216,7 +216,7 @@ tests({
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
-		eq(todoLi.textContent, 'Item 1');	
+		eq(todoLi.children[entryIndex].textContent, 'Item 1');	
 
 	},
 	"Each todo li should have an id equal to todo.id.": function() {
@@ -246,7 +246,6 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 		var result = createTodosUl(todos);
-		// write variables to get rid of these opaque children[x]'s 
 		eq(result.childElementCount, 2);
 		eq(result.children.item(0).children[entryIndex].textContent, 'Item 1');
 		eq(result.children.item(0).children[[todoLiUlIndex]].children[0].children[entryIndex].textContent, 'Item 1 child 1');
@@ -324,7 +323,7 @@ tests({
 
 		todosUl = document.getElementById('todolist').children[0];
 		eq(todosUl.childElementCount, 1);
-		eq(todosUl.children[0].textContent, '');
+		eq(todosUl.children[0].children[entryIndex].textContent, '');
 	},
 	"The app should have a way to insert a new sibling todo after a given todo.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -339,14 +338,14 @@ tests({
 		eq(todos.length, 1);
 		eq(todos[0].entry, 'Item 1');
 		eq(todosUl.childElementCount, 1);
-		eq(todoLi1.textContent, 'Item 1');
+		eq(todoLi1.children[entryIndex].textContent, 'Item 1');
 		
 		insertNewTodoLi(todos, todoLi1.id);				// insert/append a new todo after the existing one
 
 		eq(todos.length, 2);
 		eq(todos[1].entry, '');
 		eq(todosUl.childElementCount, 2);
-		eq(todosUl.children[1].textContent, '');
+		eq(todosUl.children[1].children[entryIndex].textContent, '');
 
 		var todo2 = todos[1];
 		eq(todosUl.children[1].id, todo2.id);
@@ -356,8 +355,8 @@ tests({
 		eq(todos.length, 3)
 		eq(todos[1].entry, '');
 		eq(todosUl.childElementCount, 3);
-		eq(todosUl.children[0].textContent, 'Item 1');
-		eq(todosUl.children[1].textContent, '');
+		eq(todosUl.children[0].children[entryIndex].textContent, 'Item 1');
+		eq(todosUl.children[1].children[entryIndex].textContent, '');
 		eq(todosUl.children[2].id, todo2.id);
 		eq(todos[2], todo2);
 	},
@@ -372,7 +371,7 @@ tests({
 		var todoLi1 = todosUl.children[0];
 
 		eq(todoLi1.childElementCount, 8);
-		eq(todoLi1.textContent, 'Item 1');
+		eq(todoLi1.children[entryIndex].textContent, 'Item 1');
 
 		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
 
@@ -539,16 +538,62 @@ tests({
 		eq(todoLi1ShowChildren.nodeName, 'BUTTON');
 		eq(todoLi1ShowChildren.name, 'showChildren');
 	},
-	"If showChildren button class is '', button text should be 'Show children'.": function() {
-		fail();
+	"If a todoLi has no child todos, its showChildren button class should be set to 'inactive'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+
+		eq(todoLi1ShowChildren.classList.contains('inactive'), true);
 	},
-	"If showChildren button class is '', clicking button should set class to 'shown' and show child todos.": function() {
+	"If showChildren button class is '', button text should be 'Show children'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+
+		eq(todoLi1ShowChildren.classList.contains('shown'), false);
+		eq(todoLi1ShowChildren.textContent, 'Show children');
+	},
+	"If showChildren button class is '', clicking button should set class to 'shown'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+
+		eq(todoLi1ShowChildren.classList.contains('shown'), false);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('shown'), true);
+	},
+	"If showChildren button class is 'shown', child todoLis should have not have class set to 'hide'.": function() {
 		fail();
 	},
 	"If showChildren button class is 'shown', button text should be 'Hide children'.": function() {
 		fail();
 	},
-	"If showChildren button class is 'shown', clicking button should set class to '' and hide child todos.": function() {
+	"If showChildren button class is 'shown', clicking button should set class to ''.": function() {
+		fail();
+	},
+	"If showChildren button class is 'shown', clicking button should set child todoLis class to 'hide'.": function() {
 		fail();
 	},
 	"Each todo should have a button to select all children.": function() {

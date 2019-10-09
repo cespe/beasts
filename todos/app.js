@@ -143,6 +143,10 @@ function createTodoLi(todo) {
 	var showChildrenButton = document.createElement('button');
 	showChildrenButton.name = 'showChildren';
 	showChildrenButton.type = 'button';
+	showChildrenButton.textContent = 'Show children';
+	if (todo.children.length === 0) {
+		showChildrenButton.classList.add('inactive');
+	}
 	todoLi.appendChild(showChildrenButton);
 	var selectChildrenButton = document.createElement('button');
 	selectChildrenButton.name = 'selectChildren';
@@ -332,6 +336,17 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "addChild") {
 			appendNewChildTodoLi(todoLi)
+		}
+		if (event.target.name === "showChildren") {
+			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
+			var todoLiUl = todoLi.children[todoLiUlIndex];
+			if (todoLiUl && todoLiUl.children.length > 0) {
+				todoLiShowChildrenButton.classList.remove('inactive');
+				todoLiShowChildrenButton.classList.toggle('shown');
+			} else {
+				todoLiShowChildrenButton.classList.remove('shown');
+				todoLiShowChildrenButton.classList.add('inactive');
+			}
 		}
 		if (event.target.name === "selectChildren") {
 			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
