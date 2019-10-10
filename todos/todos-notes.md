@@ -246,4 +246,6 @@ Add a button to todoLi to zoom in on a todo, giving access to actions bar button
 	And/or add a todoLi button to Select all children [requires recursive actions bar actions].
 Store todos in local storage.
 Retrieve todos from local storage.
+Decide whether to store state of showChildren so that re-rendering preserves the display.
+Add a global Expand all children button. [or not]
 

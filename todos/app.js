@@ -341,11 +341,13 @@ function todoClickHandler(event) {
 			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
 			var todoLiUl = todoLi.children[todoLiUlIndex];
 			if (todoLiUl && todoLiUl.children.length > 0) {
-				todoLiShowChildrenButton.classList.remove('inactive');
-				todoLiShowChildrenButton.classList.toggle('shown');
-			} else {
-				todoLiShowChildrenButton.classList.remove('shown');
-				todoLiShowChildrenButton.classList.add('inactive');
+				if (todoLiShowChildrenButton.classList.contains('hide')) {
+						todoLiShowChildrenButton.classList.remove('hide');
+						todoLiShowChildrenButton.textContent = 'Hide children';
+					} else {
+						todoLiShowChildrenButton.classList.add('hide');
+						todoLiShowChildrenButton.textContent = 'Show children';
+				}
 			}
 		}
 		if (event.target.name === "selectChildren") {
