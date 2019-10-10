@@ -344,9 +344,15 @@ function todoClickHandler(event) {
 				if (todoLiShowChildrenButton.classList.contains('hide')) {
 						todoLiShowChildrenButton.classList.remove('hide');
 						todoLiShowChildrenButton.textContent = 'Hide children';
+						for (var i = 0; i < todoLiUl.children.length; i++) {
+							todoLiUl.children[i].classList.remove('hide');
+						}
 					} else {
 						todoLiShowChildrenButton.classList.add('hide');
 						todoLiShowChildrenButton.textContent = 'Show children';
+						for (var i = 0; i < todoLiUl.children.length; i++) {
+							todoLiUl.children[i].classList.add('hide');
+						}
 				}
 			}
 		}

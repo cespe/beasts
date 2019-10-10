@@ -635,11 +635,67 @@ tests({
 		eq(todoLi1ShowChildren.classList.contains('hide'), false);
 		eq(todoLi1ShowChildren.textContent, 'Hide children');
 	},
-	"If showChildren button class is 'hide', clicking button should set remove 'hide' from child todoLis.": function() {
-		fail();
-	},
 	"If showChildren button class is '', clicking button should add 'hide' to child todoLis.": function() {
-		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		todo1Child2 = new Todo('Item 1 child 2');
+		todo1.addChild(todo1Child2);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var todoLi1Child1 = todoLi1Ul.children[0];
+		var todoLi1Child2 = todoLi1Ul.children[1];
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+		eq(todoLi1Child1.classList.contains('hide'), false);
+		eq(todoLi1Child2.classList.contains('hide'), false);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), true);
+		eq(todoLi1Child1.classList.contains('hide'), true);
+		eq(todoLi1Child2.classList.contains('hide'), true);
+	},
+	"If showChildren button class is 'hide', clicking button should set remove 'hide' from child todoLis.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		todo1Child2 = new Todo('Item 1 child 2');
+		todo1.addChild(todo1Child2);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var todoLi1Child1 = todoLi1Ul.children[0];
+		var todoLi1Child2 = todoLi1Ul.children[1];
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+		eq(todoLi1Child1.classList.contains('hide'), false);
+		eq(todoLi1Child2.classList.contains('hide'), false);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), true);
+		eq(todoLi1Child1.classList.contains('hide'), true);
+		eq(todoLi1Child2.classList.contains('hide'), true);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+		eq(todoLi1Child1.classList.contains('hide'), false);
+		eq(todoLi1Child2.classList.contains('hide'), false);
 	},
 	"Each todo should have a button to select all children.": function() {
 		document.getElementById('todolist').innerHTML = '';
