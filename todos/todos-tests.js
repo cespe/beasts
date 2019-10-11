@@ -2049,12 +2049,6 @@ tests({
 		eq(todo3.selected, true);
 		eq(todo3.deleted, false);
 	},
-	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
-		fail();
-	},
-	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
-		fail();
-	},
 	"The header actions bar should have an 'All' button to show active and completed todos.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var showAllButton = document.getElementsByName('showAll')[0];
@@ -2347,6 +2341,12 @@ tests({
 	"The app should have a button to add a todo to the beginning of the list.": function() {
 		// In case filtering the list results in no displayed todos
 		// or if you simply want to insert a todo at the top of the list.
+		fail();
+	},
+	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
+		fail();
+	},
+	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
 		fail();
 	},
 	"The app should listen for keyup events when editing a todo.": function() {
