@@ -111,6 +111,7 @@ var todoLiUlIndex = 8;
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
+
 	var selectedButton = document.createElement('button')
 	selectedButton.name = 'selected';
 	selectedButton.type = 'button';	// to distinguish from a submit or reset button
@@ -122,13 +123,19 @@ function createTodoLi(todo) {
 		selectedButton.textContent = 'Select';
 	}
 	todoLi.appendChild(selectedButton);
+	
 	var completedButton = document.createElement('button')
 	completedButton.name = 'completed';
 	completedButton.type = 'button';
 	if (todo.completed) {
 		completedButton.classList.add('completed');
+		completedButton.textContent = 'Mark uncompleted';
+	} else {
+		completedButton.classList.remove('completed');
+		completedButton.textContent = 'Mark completed';
 	}
 	todoLi.appendChild(completedButton);
+
 	var deleteButton = document.createElement('button')
 	deleteButton.name = 'deleted';
 	deleteButton.type = 'button';
@@ -320,6 +327,7 @@ function todoClickHandler(event) {
 				markCompletedButton.classList.add('completed');
 			}
 			if (!todo.completed) {
+				todoLiCompletedButton.textContent = 'Mark completed';
 				// TODO convert to array.find() to stop looping as soon as a match is found
 				var count = 0;
 				for (var i = 0; i < todos.length; i++) {
@@ -330,6 +338,8 @@ function todoClickHandler(event) {
 				if (count === 0) {
 					markCompletedButton.classList.remove('completed');
 				}
+			} else {
+				todoLiCompletedButton.textContent = 'Mark uncompleted';
 			}
 		}
 		if (event.target.name === "deleted") {

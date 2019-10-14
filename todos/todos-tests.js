@@ -824,6 +824,56 @@ tests({
 		eq(todoLi1CompletedButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
 	},
+	"If 'completed' button class is '', button text should be 'Mark completed'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompletedButton = todoLi1.children[[completedIndex]];
+
+		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+	},
+	"If 'completed' button class is 'completed', button text should be 'Mark uncompleted'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markCompleted(true);
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompletedButton = todoLi1.children[[completedIndex]];
+
+		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompletedButton.textContent, 'Mark uncompleted');
+	},
+	"Clicking 'completed' button should toggle its text between 'Mark completed' and 'Mark uncompleted'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompletedButton = todoLi1.children[[completedIndex]];
+
+		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+
+		todoLi1CompletedButton.click();
+
+		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompletedButton.textContent, 'Mark uncompleted');
+
+		todoLi1CompletedButton.click();
+
+		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+	},
 	"Marking a todo completed should not mark its children completed.": function() {
 		// because then marking uncompleted could incorrectly reverse some child values
 		document.getElementById('todolist').innerHTML = '';
