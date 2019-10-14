@@ -711,7 +711,7 @@ tests({
 		eq(todoLi1SelectChildren.nodeName, 'BUTTON');
 		eq(todoLi1SelectChildren.name, 'selectChildren');
 	},
-	"Clicking a 'select' button should toggle class='selected' on it and toggle todo.selected.": function() {
+	"Clicking a 'selected' button should toggle class='selected' on it and toggle todo.selected.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -728,6 +728,56 @@ tests({
 
 		eq(todoLi1SelectButton.classList.contains('selected'), true);
 		eq(todo1.selected, true);
+	},
+	"If 'selected' button class is '', button text should be 'Select'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children[[selectedIndex]];
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todoLi1SelectButton.textContent, 'Select');
+	},
+	"If 'selected' button class is 'selected', button text should be 'Unselect'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children[[selectedIndex]];
+
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+	},
+	"Clicking 'selected' button should toggle its text between 'Select' and 'Unselect'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children[[selectedIndex]];
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todoLi1SelectButton.textContent, 'Select');
+
+		todoLi1SelectButton.click();
+
+		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+
+		todoLi1SelectButton.click();
+
+		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todoLi1SelectButton.textContent, 'Select');
 	},
 	"Selecting a todo should not select its children.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -2331,7 +2381,7 @@ tests({
 		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
 	},
-	"createTodosUl should set todo.selected to false for every todo.": function() {
+	"createTodosUl should set todo.selected to false for every todo(?).": function() {
 		// Startup or filtering should produce a clean slate with no selected todos.
 		fail();
 	},
@@ -2358,12 +2408,13 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		// test that keyUpHandler fires given Shift Return while todoLi1 is focused...
+		// test that keyUpHandler fires given Return while todoLi1 is focused...
 		var testEvent = new Event('keyup');
 		testEvent.key = "x";
 		todoLi1.dispatchEvent(testEvent);
 	},
-	"When editing, Shift Return should be a shortcut for Add Sibling todo.": function() {
+	"When editing, Return should be a shortcut for Add Sibling todo.": function() {
+		// Limit a todo to one line.
 		fail();
 	},
 	"When editing, Esc should be a shortcut for Undo Edit.": function() {

@@ -116,6 +116,10 @@ function createTodoLi(todo) {
 	selectedButton.type = 'button';	// to distinguish from a submit or reset button
 	if (todo.selected) {
 		selectedButton.classList.add('selected');
+		selectedButton.textContent = 'Unselect';
+	} else {
+		selectedButton.classList.remove('selected');
+		selectedButton.textContent = 'Select';
 	}
 	todoLi.appendChild(selectedButton);
 	var completedButton = document.createElement('button')
@@ -291,8 +295,10 @@ function todoClickHandler(event) {
 			todo.selected = !todo.selected;
 			var selectAllButton = document.getElementsByName('selectAll')[0];
 			if (todo.selected) {
+				todoLiSelectButton.textContent = 'Unselect';
 				selectAllButton.classList.add('selected');
 			} else {
+				todoLiSelectButton.textContent = 'Select';
 				// TODO convert to array.find() to stop looping as soon as a match is found
 				var selectedCount = 0;
 				for (var i = 0; i < todos.length; i++) {
