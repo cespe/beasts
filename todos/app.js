@@ -141,8 +141,13 @@ function createTodoLi(todo) {
 	deleteButton.type = 'button';
 	if (todo.deleted) {
 		deleteButton.classList.add('deleted');
+		deleteButton.textContent = 'Undelete';	// should only be visible when todos are filtered to show deleted todos
+	} else {
+		deleteButton.classList.remove('deleted');
+		deleteButton.textContent = 'Delete';
 	}
 	todoLi.appendChild(deleteButton);
+
 	var siblingButton = document.createElement('button')
 	siblingButton.name = 'addSibling';
 	siblingButton.type = 'button';
@@ -346,6 +351,11 @@ function todoClickHandler(event) {
 			var todoLiDeleteButton = todoLi.children[deleteIndex];
 			todoLiDeleteButton.classList.toggle('deleted');
 			todo.deleted = !todo.deleted;
+			if (todo.deleted) {
+				todoLiDeleteButton.textContent = 'Undelete';
+			} else {
+				todoLiDeleteButton.textContent = 'Delete';
+			}
 		}
 		if (event.target.name === "addSibling") {
 			insertNewTodoLi(todos, todoLi.id)
