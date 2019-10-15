@@ -151,11 +151,15 @@ function createTodoLi(todo) {
 	var siblingButton = document.createElement('button')
 	siblingButton.name = 'addSibling';
 	siblingButton.type = 'button';
+	siblingButton.textContent = 'Add todo';
 	todoLi.appendChild(siblingButton);
+
 	var childButton = document.createElement('button')
 	childButton.name = 'addChild';
 	childButton.type = 'button';
+	childButton.textContent = 'Add child';
 	todoLi.appendChild(childButton);
+
 	var showChildrenButton = document.createElement('button');
 	showChildrenButton.name = 'showChildren';
 	showChildrenButton.type = 'button';
@@ -164,6 +168,7 @@ function createTodoLi(todo) {
 		showChildrenButton.classList.add('inactive');
 	}
 	todoLi.appendChild(showChildrenButton);
+
 	var selectChildrenButton = document.createElement('button');
 	selectChildrenButton.name = 'selectChildren';
 	selectChildrenButton.type = 'button';

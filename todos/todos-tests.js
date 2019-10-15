@@ -509,6 +509,7 @@ tests({
 
 		eq(todoLi1AddSibling.nodeName, 'BUTTON');
 		eq(todoLi1AddSibling.name, 'addSibling');
+		eq(todoLi1AddSibling.textContent, 'Add todo');
 	},
 	"Each todo li should have an 'Add child' button to add a child todo underneath it.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -519,10 +520,11 @@ tests({
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1AddChild = todoLi1.children[4];
+		var todoLi1AddChild = todoLi1.children[addChildIndex];
 
 		eq(todoLi1AddChild.nodeName, 'BUTTON');
 		eq(todoLi1AddChild.name, 'addChild');
+		eq(todoLi1AddChild.textContent, 'Add child');
 	},
 	"Each todoLi should have a showChildren button to show/hide its children.": function() {
 		document.getElementById('todolist').innerHTML = '';
