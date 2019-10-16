@@ -2571,20 +2571,58 @@ tests({
 		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
 	},
-	"createTodosUl should set todo.selected to false for every todo(?).": function() {
-		// Startup or filtering should produce a clean slate with no selected todos.
-		fail();
-	},
 	"If todos array is empty at startup, the app should create a new empty todo.": function() {
-		fail();
+		todolist = document.getElementById('todolist');
+		todolist.innerHTML = '';
+		todos = [];
+		startApp();
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+
+		eq(todos.length, 1);
+		eq(todosUl.children.length, 1);
+		eq(todoLi1.children[entryIndex].textContent, '');
 	},
-	"The app should have a button to add a todo to the beginning of the list.": function() {
+	"The header actions bar should have an addTodo button that adds a todo to the end of the list.": function() {
 		// In case filtering the list results in no displayed todos
-		// or if you simply want to insert a todo at the top of the list.
-		fail();
+		var actionsDiv = document.getElementById('actions');
+		var addTodoButton = document.getElementsByName('addTodo')[0];
+		eq(addTodoButton.nodeName, 'BUTTON');
+		eq(addTodoButton.innerText, 'Add todo');
+		eq(actionsDiv.children[7], addTodoButton); 
+		
+		todolist = document.getElementById('todolist');
+		todolist.innerHTML = '';
+		todos = [];
+
+		addTodoButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		eq(todosUl.children.length, 1);
+		eq(todos.length, 1);
+		eq(todoLi1.id, todos[0].id);
+
+		addTodoButton.click();
+
+		todoLi2 = todosUl.children[1];
+		eq(todosUl.children.length, 2);
+		eq(todos.length, 2);
+		eq(todoLi2.id, todos[1].id);
+	},
+	"The header actions bar should have an Undelete button to undo a deletion caused by clicking a todoLi Delete button.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var undeleteButton = document.getElementsByName('undelete')[0];
+		eq(undeleteButton.nodeName, 'BUTTON');
+		eq(undeleteButton.innerText, 'Undelete');
+		eq(actionsDiv.children[8], undeleteButton);
 	},
 	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
-		fail();
+		var actionsDiv = document.getElementById('actions');
+		var undoEditButton = document.getElementsByName('undoEdit')[0];
+		eq(undoEditButton.nodeName, 'BUTTON');
+		eq(undoEditButton.innerText, 'Undo edit');
+		eq(actionsDiv.children[9], undoEditButton);
 	},
 	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
 		fail();
@@ -2614,6 +2652,14 @@ tests({
 		fail();
 	},
 	"If showChildren button class contains 'shown', child todoLis should not have class set to 'hide'.": function() {
+		fail();
+	},
+	"createTodosUl should set todo.selected to false for every todo?.": function() {
+		// Startup or filtering should produce a clean slate with no selected todos.
+		fail();
+	},
+	"There should be a way to move a todo up in the list, for example to the top of the list.": function() {
+		// An 'Add above' button? 'Shift-up/down' button? Drag to new position?
 		fail();
 	}
 });

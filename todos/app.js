@@ -535,6 +535,9 @@ function actionsClickHandler() {
 				}
 			}
 		}
+		if (event.target.name === 'addTodo') {
+			insertNewTodoLi(todos);
+		}
 	}
 }
 
@@ -546,6 +549,15 @@ function setUpEventListeners() {
 	actions.addEventListener('click', actionsClickHandler);
 //	todolist.addEventListener('change', changeHandler);
 //	todolist.addEventListener('keyup', keyUpHandler);
+}
+
+function startApp() {
+	if (todos.length === 0) {
+		todo1 = new Todo();
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+	}	
 }
 
 setUpEventListeners();
