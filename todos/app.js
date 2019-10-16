@@ -172,7 +172,12 @@ function createTodoLi(todo) {
 	var selectChildrenButton = document.createElement('button');
 	selectChildrenButton.name = 'selectChildren';
 	selectChildrenButton.type = 'button';
+	selectChildrenButton.textContent = 'Select children';
+	if (todo.children.length === 0) {
+		selectChildrenButton.classList.add('inactive');
+	}
 	todoLi.appendChild(selectChildrenButton);
+
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
@@ -393,11 +398,15 @@ function todoClickHandler(event) {
 			if (todoLiUl && todoLiUl.children.length > 0) {
 				todoLiSelectChildrenButton.classList.toggle('selected');
 				var selected = todoLiSelectChildrenButton.classList.contains('selected');
-				// TODO update children todo.selected below	
 				for (var i = 0; i < todoLiUl.children.length; i++) {
+					var childTodo = findTodo(todo.children, todoLiUl.children[i].id);
 					if (selected) {
+						childTodo.markSelected(true);
+						todoLiSelectChildrenButton.textContent = 'Unselect children';
 						todoLiUl.children[i].children[selectedIndex].classList.add('selected');
 					} else {
+						childTodo.markSelected(false);
+						todoLiSelectChildrenButton.textContent = 'Select children';
 						todoLiUl.children[i].children[selectedIndex].classList.remove('selected');
 					}
 				}
