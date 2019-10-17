@@ -191,25 +191,67 @@ Ten todos showing
 Undelete button becomes Delete selected (condition not class='deleted' and not class='selected')
 No todos are selected
 
-##Select all button states and actions
-When 'Select all' button is clicked
+##selectAll button states and actions
+On startup, class='' and button text is 'Select all'
+
+If class=''
+	button text is 'Select all'
+
+If class='selected'
+	button text is 'Unselect all'
+
+When selectAll button is clicked
 	If class=''
 		select all todos
+			set class='selected'
+			set button text to 'Unselect'
 		set class='selected' (which displays action buttons)
+		remove class='inactive' from markCompleted button
+		remove class='inactive' from deleteSelected button
+		set button text to 'Unselect all'
 	Else
 		unselect all todos
+			set class=''
+			set button text to 'Select'
 		set class='' (which hides action buttons)
+		add class='inactive' to markCompleted button
+		add class='inactive' to deleteSelected button
+		set button text to 'Select all'
 
-When a todo select button is clicked
+##todoLi selected button states and actions
+On startup, class and button text is set according to todo.selected
+
+When a todoLi selected button is clicked
 	If class=''
-		select todo
-		set todo class='selected'
-		set select all class='selected' (which displays action buttons)
+		set todo.selected = true
+		set button class='selected'
+		set button text to 'Unselect'
+		set action bar selectAll button class='selected' (which displays action buttons)
+		set action bar selectAll button text to 'Unselect all'
+		remove class='inactive' from action bar markCompleted button
+		if all selected todos are marked completed
+			set action bar markCompleted button class='completed'
+			set action bar markCompleted button text to 'Mark uncompleted'
+		else
+			set action bar markCompleted button class=''
+			set action bar markCompleted button text to 'Mark completed'
+		remove class='inactive' from action bar deleteSelected button
 	Else
-		unselect todo
-		set todo class=''
+		set todo.selected = false
+		set button class=''
+		set button text to 'Select'
+		if all selected todos are marked completed
+			set action bar markCompleted button class='completed'
+			set action bar markCompleted button text to 'Mark uncompleted'
+		else
+			set action bar markCompleted button class=''
+			set action bar markCompleted button text to 'Mark completed'
+
 		If no todos are selected
-			set select all class='' (which hides action buttons)
+			set action bar selectAll button class='' (which hides action buttons)
+			set action bar selectAll button text to 'Select all'
+			set action bar markCompleted button class='inactive'
+			set action bar deleteSelected button class='inactive'
 
 When some emails are selected in gmail, and a new one comes in, the display still shows the selections.
 Therefore, adding a new todo should not disturb the selected todos.
