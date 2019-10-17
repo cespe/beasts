@@ -496,7 +496,7 @@ tests({
 		eq(todoLi.children[2].nodeName, 'BUTTON');
 		eq(todoLi.children[2].name, 'deleted');
 	},
-	"Each todo li should have an 'Add todo' button to add a sibling todo after it.": function() {
+	"Each todo li should have an 'Add sibling' button to add a sibling todo after it.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -509,7 +509,7 @@ tests({
 
 		eq(todoLi1AddSibling.nodeName, 'BUTTON');
 		eq(todoLi1AddSibling.name, 'addSibling');
-		eq(todoLi1AddSibling.textContent, 'Add todo');
+		eq(todoLi1AddSibling.textContent, 'Add sibling');
 	},
 	"Each todo li should have an 'Add child' button to add a child todo underneath it.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -2660,6 +2660,18 @@ tests({
 	},
 	"There should be a way to move a todo up in the list, for example to the top of the list.": function() {
 		// An 'Add above' button? 'Shift-up/down' button? Drag to new position?
+		fail();
+	},
+	"When a todoLi Delete button class becomes 'deleted', the todoLi should be removed from the display.": function() {
+		fail();
+	},
+	"If a todoLi has children showing, the showChildren button text should be 'Hide children'.": function() {
+		fail();
+	},
+	"When a todoLi's 'Hide children' button is clicked, the children should be removed from the display.": function() {
+		fail();
+	},
+	"When a todoLi's 'addChild' button is clicked, all of the todoLi's children, if any, should be displayed.": function() {
 		fail();
 	}
 });

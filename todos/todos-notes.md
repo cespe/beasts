@@ -249,3 +249,7 @@ Retrieve todos from local storage.
 Decide whether to store state of showChildren so that re-rendering preserves the display.
 Add a global Expand all children button. [or not]
 
+##Bugs
+Clicking Select all in actions bar should toggle button text.
+Clicking Select all in actions bar sets todoLi select button class to 'selected' but does not change text to 'Unselect'
+

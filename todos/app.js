@@ -151,7 +151,7 @@ function createTodoLi(todo) {
 	var siblingButton = document.createElement('button')
 	siblingButton.name = 'addSibling';
 	siblingButton.type = 'button';
-	siblingButton.textContent = 'Add todo';
+	siblingButton.textContent = 'Add sibling';
 	todoLi.appendChild(siblingButton);
 
 	var childButton = document.createElement('button')
