@@ -363,8 +363,10 @@ function todoClickHandler(event) {
 			todo.deleted = !todo.deleted;
 			if (todo.deleted) {
 				todoLiDeleteButton.textContent = 'Undelete';
+				todoLi.style.display = 'none';	// TODO replace with css on class 'hide'
 			} else {
 				todoLiDeleteButton.textContent = 'Delete';
+				todoLi.style.display = '';
 			}
 		}
 		if (event.target.name === "addSibling") {
@@ -515,6 +517,7 @@ function actionsClickHandler() {
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = false;
 						todoLi.classList.remove('hide');
+						todoLi.style.display = '';		// TODO replace with css on class 'hide'
 					}
 				}
 			} else {
@@ -531,6 +534,7 @@ function actionsClickHandler() {
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = true;
 						todoLi.classList.add('hide');
+						todoLi.style.display = 'none';	// TODO replace with css on class 'hide'
 					}
 				}
 			}
@@ -555,9 +559,18 @@ function startApp() {
 	if (todos.length === 0) {
 		todo1 = new Todo();
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-	}	
+	}
+	var todolist = document.getElementById('todolist');
+	todolist.innerHTML = '';
+	todolist.appendChild(createTodosUl(todos));
+
+	var selectAllButton = document.getElementsByName('selectAll')[0];
+	selectAllButton.classList.remove('selected');
+	selectAllButton.textContent = 'Select all';
+	var markCompletedButton = document.getElementsByName('markCompleted')[0];
+	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+
+
 }
 
 setUpEventListeners();

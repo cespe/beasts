@@ -764,7 +764,24 @@ tests({
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todoLi1DeletedButton.textContent, 'Delete');
 	},
-	// TODO add tests for hiding the todoLi and for showing an Undelete button
+	"Clicking 'delete' button should toggle its todoLi display between 'none' and 'block'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
+
+		todoLi1DeletedButton.click();
+
+		eq(todoLi1.style.display, 'none');
+
+		todoLi1DeletedButton.click();
+
+		eq(todoLi1.style.display, '');
+	},
 	"Deleting a todo should not delete its children.": function() {
 		// The children are just along for the ride
 		document.getElementById('todolist').innerHTML = '';
@@ -1350,6 +1367,22 @@ tests({
 		var actionsDiv = document.getElementById('actions');
 		eq(actionsDiv.nodeName, 'DIV');
 		eq(actionsDiv.parentElement.nodeName, 'HEADER');
+	},
+	"When the app starts up, actions bar button classes and names should be set to default values.": function() {
+		startApp();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var markCompletedButton = document.getElementsByName('markCompleted')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+
+		eq(selectAllButton.classList.contains('selected'), false);
+		eq(selectAllButton.textContent, 'Select all');	// TODO even if some individual todos are selected?
+														// probably better to unselect all todos at startup.
+		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(markCompletedButton.textContent, 'Mark completed');
+		// should class=inactive?
+		eq(deleteSelectedButton.classList.contains('deleted'), false);
+		eq(deleteSelectedButton.textContent, 'Delete selected');
+		// should class=inactive?
 	},
 	"The header actions bar should have a 'selectAll' button to select all displayed top-level todos.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -1970,11 +2003,13 @@ tests({
 		eq(todoLi1DeleteButton.classList.contains('deleted'), true);
 		eq(todo1.deleted, true);
 		eq(todoLi1.classList.contains('hide'), true);
+		eq(todoLi1.style.display, 'none');
 		eq(todoLi2SelectButton.classList.contains('selected'), true);
 		eq(todo2.selected, true);
 		eq(todoLi2DeleteButton.classList.contains('deleted'), true);
 		eq(todo2.deleted, true);
 		eq(todoLi2.classList.contains('hide'), true);
+		eq(todoLi2.style.display, 'none');
 		eq(todoLi3SelectButton.classList.contains('selected'), false);
 		eq(todo3.selected, false);
 		eq(todoLi3DeleteButton.classList.contains('deleted'), false);
