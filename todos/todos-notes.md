@@ -295,3 +295,10 @@ Add a global Expand all children button. [or not]
 Clicking Select all in actions bar should toggle button text.
 Clicking Select all in actions bar sets todoLi select button class to 'selected' but does not change text to 'Unselect'
 
+##Variable display
+Hide/display deleted todos -- removed/restored
+Hide/display child todos -- collapsed/expanded
+Hide/display buttons -- active/inactive
+Strike-through/don't strike-through entry text -- normal/struck-through
+Toggle button text and class
+

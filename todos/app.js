@@ -181,6 +181,9 @@ function createTodoLi(todo) {
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
+	if (todo.completed) {
+		todoLi.style.textDecorationLine = 'line-through';
+	}
 	todoLi.appendChild(entry);
 	return todoLi;
 }
@@ -343,6 +346,7 @@ function todoClickHandler(event) {
 			}
 			if (!todo.completed) {
 				todoLiCompletedButton.textContent = 'Mark completed';
+				todoLi.children[entryIndex].style.textDecorationLine = 'none';
 				// TODO convert to array.find() to stop looping as soon as a match is found
 				var count = 0;
 				for (var i = 0; i < todos.length; i++) {
@@ -355,6 +359,7 @@ function todoClickHandler(event) {
 				}
 			} else {
 				todoLiCompletedButton.textContent = 'Mark uncompleted';
+				todoLi.children[entryIndex].style.textDecorationLine = 'line-through';
 			}
 		}
 		if (event.target.name === "deleted") {

@@ -586,6 +586,15 @@ tests({
 		eq(todoLi.children[1].nodeName, 'BUTTON');
 		eq(todoLi.children[1].name, 'completed');
 	},
+	"When a todoLi is created, if todo.completed is false, 'completed' button text should be 'Mark completed' and todoLi entry <p> class should be ''.": function() {
+		fail();
+	},
+	"When a todoLi is created, if todo.completed is true, 'completed' button text should be 'Mark uncompleted', and todoLi entry <p> class should be 'struck'.": function () {
+		fail();
+	},
+	"Clicking a 'completed' button should toggle button text and entry <p> class.": function() {
+		fail();
+	},
 	"Clicking a 'completed' button should toggle class='completed' on it and toggle todo.completed.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -604,7 +613,7 @@ tests({
 		eq(todoLi1CompletedButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
 	},
-	"If 'completed' button class is '', button text should be 'Mark completed'.": function() {
+	"If 'completed' button class is '', button text should be 'Mark completed' and entry line decoration ''.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -616,8 +625,9 @@ tests({
 
 		eq(todoLi1CompletedButton.classList.contains('completed'), false);
 		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+		eq(todoLi1.children[entryIndex].style.textDecorationLine, '');
 	},
-	"If 'completed' button class is 'completed', button text should be 'Mark uncompleted'.": function() {
+	"If 'completed' button class is 'completed', button text should be 'Mark uncompleted' and entry line decoration 'line-through'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -630,8 +640,9 @@ tests({
 
 		eq(todoLi1CompletedButton.classList.contains('completed'), true);
 		eq(todoLi1CompletedButton.textContent, 'Mark uncompleted');
+		eq(todoLi1.children[entryIndex].style.textDecorationLine, 'line-through');
 	},
-	"Clicking 'completed' button should toggle its text between 'Mark completed' and 'Mark uncompleted'.": function() {
+	"Clicking a 'completed' button should toggle its text between 'Mark completed' and 'Mark uncompleted'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -653,6 +664,26 @@ tests({
 
 		eq(todoLi1CompletedButton.classList.contains('completed'), false);
 		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+	},
+	"Clicking a 'completed' button should toggle entry line decoration style between none and line-through.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+
+		todoLi1CompletedButton.click();
+
+		eq(todoLi1.children[entryIndex].style.textDecorationLine, 'line-through');
+		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+
+		todoLi1CompletedButton.click();
+
+		eq(todoLi1.children[entryIndex].style.textDecorationLine, 'none');
+		eq(todoLi1CompletedButton.classList.contains('completed'), false);
 	},
 	"Marking a todo completed should not mark its children completed.": function() {
 		// because then marking uncompleted could incorrectly reverse some child values
