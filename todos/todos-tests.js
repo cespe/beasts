@@ -586,7 +586,7 @@ tests({
 		eq(todoLi.children[1].nodeName, 'BUTTON');
 		eq(todoLi.children[1].name, 'completed');
 	},
-	"When a todoLi is created, if todo.completed is false, button should be 'Mark completed' and entry <p> class should be ''.": function() {
+	"When a todoLi is created, if todo.completed is false, button should be 'Complete' and entry <p> class should be ''.": function() {
 		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		var todos = [];
@@ -594,13 +594,13 @@ tests({
 		insertTodo(todos, todo1);
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todo1.completed, false);
-		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.length, 0);
 	},
-	"If todo.completed is true, button text should be 'Mark uncompleted' and entry <p> class should be 'struck'.": function () {
+	"If todo.completed is true, button text should be 'Uncomplete' and entry <p> class should be 'struck'.": function () {
 		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		var todos = [];
@@ -609,10 +609,10 @@ tests({
 		insertTodo(todos, todo1);
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todo1.completed, true);
-		eq(todoLi1CompletedButton.textContent, 'Mark uncompleted');
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
 	},
 	"Clicking a 'completed' button should toggle button text and entry <p> class.": function() {
@@ -623,22 +623,22 @@ tests({
 		insertTodo(todos, todo1);
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todo1.completed, false);
-		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.length, 0);
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
 		eq(todo1.completed, true);
-		eq(todoLi1CompletedButton.textContent, 'Mark uncompleted');
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
 		eq(todo1.completed, false);
-		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), false);
 	},
 	"Clicking a 'completed' button should toggle class='completed' on it and toggle todo.completed.": function() {
@@ -649,17 +649,17 @@ tests({
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
 	},
-	"If 'completed' button class is '', button text should be 'Mark completed' and entry line decoration ''.": function() {
+	"If 'completed' button class is '', button text should be 'Complete' and entry line decoration ''.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -667,13 +667,13 @@ tests({
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
-		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].style.textDecorationLine, '');
 	},
-	"If 'completed' button class is 'completed', button text should be 'Mark uncompleted' and entry line decoration 'line-through'.": function() {
+	"If 'completed' button class is 'completed', button text should be 'Uncomplete' and entry line decoration 'line-through'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -682,13 +682,13 @@ tests({
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
-		eq(todoLi1CompletedButton.textContent, 'Mark uncompleted');
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
 	},
-	"Clicking a 'completed' button should toggle its text between 'Mark completed' and 'Mark uncompleted'.": function() {
+	"Clicking a 'completed' button should toggle its text between 'Complete' and 'Uncomplete'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -696,20 +696,20 @@ tests({
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
-		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
-		eq(todoLi1CompletedButton.textContent, 'Mark uncompleted');
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
-		eq(todoLi1CompletedButton.textContent, 'Mark completed');
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
 	},
 	"Clicking a 'completed' button should toggle entry line decoration style between none and line-through.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -719,17 +719,17 @@ tests({
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 	},
 	"Marking a todo completed should not mark its children completed.": function() {
 		// because then marking uncompleted could incorrectly reverse some child values
@@ -745,24 +745,24 @@ tests({
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
-		var todoLi1Child1CompletedButton = todoLi1.children[todoLiUlIndex].children[0].children[completedIndex];
-		var todoLi1Child2CompletedButton = todoLi1.children[todoLiUlIndex].children[1].children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+		var todoLi1Child1CompleteButton = todoLi1.children[todoLiUlIndex].children[0].children[completedIndex];
+		var todoLi1Child2CompleteButton = todoLi1.children[todoLiUlIndex].children[1].children[completedIndex];
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
-		eq(todoLi1Child1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1Child1CompleteButton.classList.contains('completed'), false);
 		eq(child1.completed, false);
-		eq(todoLi1Child2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1Child2CompleteButton.classList.contains('completed'), false);
 		eq(child2.completed, false);
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
-		eq(todoLi1Child1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1Child1CompleteButton.classList.contains('completed'), false);
 		eq(child1.completed, false);
-		eq(todoLi1Child2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1Child2CompleteButton.classList.contains('completed'), false);
 		eq(child2.completed, false);
 	},
 	"Each todo li should have a 'deleted' button to toggle 'Delete/Undelete'.": function() {
@@ -1392,47 +1392,47 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi1SelectedButton = todoLi1.children[selectedIndex];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		var todoLi2 = todosUl.children[1];
 		var todoLi2SelectedButton = todoLi2.children[selectedIndex];
-		var todoLi2CompletedButton = todoLi2.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		var todoLi3 = todosUl.children[2];
 		var todoLi3SelectedButton = todoLi3.children[selectedIndex];
-		var todoLi3CompletedButton = todoLi3.children[completedIndex];
+		var todoLi3CompleteButton = todoLi3.children[completedIndex];
 		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 		var todoLi4 = todosUl.children[3];
 		var todoLi4SelectedButton = todoLi4.children[selectedIndex];
-		var todoLi4CompletedButton = todoLi4.children[completedIndex];
+		var todoLi4CompleteButton = todoLi4.children[completedIndex];
 		var todoLi4DeletedButton = todoLi4.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 4);
 		eq(todoLi1.id, todo1.id);
 		eq(todoLi1SelectedButton.classList.contains('selected'), true);
 		eq(todo1.selected, true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
 		eq(todoLi2SelectedButton.classList.contains('selected'), false);
 		eq(todo2.selected, false);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
 		eq(todoLi3SelectedButton.classList.contains('selected'), false);
 		eq(todo3.selected, false);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
 		eq(todoLi4.id, todo4.id);
 		eq(todoLi4SelectedButton.classList.contains('selected'), false);
 		eq(todo4.selected, false);
-		eq(todoLi4CompletedButton.classList.contains('completed'), false);
+		eq(todoLi4CompleteButton.classList.contains('completed'), false);
 		eq(todo4.completed, false);
 		eq(todoLi4DeletedButton.classList.contains('deleted'), false);
 		eq(todo4.deleted, false);
@@ -1448,14 +1448,14 @@ tests({
 	"When the app starts up, actions bar button classes and names should be set to default values.": function() {
 		startApp();
 		var selectAllButton = document.getElementsByName('selectAll')[0];
-		var markCompletedButton = document.getElementsByName('markCompleted')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 
 		eq(selectAllButton.classList.contains('selected'), false);
 		eq(selectAllButton.textContent, 'Select all');	// TODO even if some individual todos are selected?
 														// probably better to unselect all todos at startup.
-		eq(markCompletedButton.classList.contains('completed'), false);
-		eq(markCompletedButton.textContent, 'Mark completed');
+		eq(completeSelectedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.textContent, 'Complete selected');
 		// should class=inactive?
 		eq(deleteSelectedButton.classList.contains('deleted'), false);
 		eq(deleteSelectedButton.textContent, 'Delete selected');
@@ -1642,27 +1642,27 @@ tests({
 		eq(todo2.selected, false);
 		eq(selectAllButton.classList.contains('selected'), false);
 	},
-	"The header actions bar should have a 'Mark completed' button to mark selected todos completed.": function() {
+	"The header actions bar should have a 'Complete' button to mark selected todos completed.": function() {
 		var actionsDiv = document.getElementById('actions');
-		var markCompletedButton = document.getElementsByName('markCompleted')[0];
-		eq(markCompletedButton.nodeName, 'BUTTON');
-		eq(markCompletedButton.innerText, 'Mark completed');
-		eq(actionsDiv.children[1], markCompletedButton); 
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		eq(completeSelectedButton.nodeName, 'BUTTON');
+		eq(completeSelectedButton.innerText, 'Complete selected');
+		eq(actionsDiv.children[1], completeSelectedButton); 
 	},
-	"Clicking the 'Mark completed' button should toggle its class 'completed'.": function() {
+	"Clicking the 'Complete' button should toggle its class 'completed'.": function() {
 		var actionsDiv = document.getElementById('actions');
-		var markCompletedButton = document.getElementsByName('markCompleted')[0];
-		markCompletedButton.classList.remove('completed');	// re-set to default
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		completeSelectedButton.classList.remove('completed');	// re-set to default
 
-		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.classList.contains('completed'), false);
 
-		markCompletedButton.click();
+		completeSelectedButton.click();
 		
-		eq(markCompletedButton.classList.contains('completed'), true);
+		eq(completeSelectedButton.classList.contains('completed'), true);
 
-		markCompletedButton.click();
+		completeSelectedButton.click();
 
-		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.classList.contains('completed'), false);
 	},
 	"When class is '', clicking the button should mark each selected todo completed.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -1679,43 +1679,43 @@ tests({
 		todoLi2 = todolist.children[0].children[1];
 		todoLi3 = todolist.children[0].children[2];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi2SelectButton = todoLi2.children[selectedIndex];
-		var todoLi2CompletedButton = todoLi2.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 		var todoLi3SelectButton = todoLi3.children[selectedIndex];
-		var todoLi3CompletedButton = todoLi3.children[completedIndex];
+		var todoLi3CompleteButton = todoLi3.children[completedIndex];
 
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todo1.selected, false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi2SelectButton.classList.contains('selected'), false);
 		eq(todo2.selected, false);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 		eq(todoLi3SelectButton.classList.contains('selected'), false);
 		eq(todo3.selected, false);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 
-		var markCompletedButton = document.getElementsByName('markCompleted')[0];
-		markCompletedButton.classList.remove('completed');	// re-set to default
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		completeSelectedButton.classList.remove('completed');	// re-set to default
 
 		todoLi1SelectButton.click();
 		todoLi2SelectButton.click();
-		markCompletedButton.click();
+		completeSelectedButton.click();
 
 		eq(todoLi1SelectButton.classList.contains('selected'), true);
 		eq(todo1.selected, true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
 		eq(todoLi2SelectButton.classList.contains('selected'), true);
 		eq(todo2.selected, true);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi3SelectButton.classList.contains('selected'), false);
 		eq(todo3.selected, false);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 	},
 	"When class is 'completed', clicking the button should mark each selected todo incomplete.": function() {
@@ -1733,61 +1733,61 @@ tests({
 		todoLi2 = todolist.children[0].children[1];
 		todoLi3 = todolist.children[0].children[2];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi2SelectButton = todoLi2.children[selectedIndex];
-		var todoLi2CompletedButton = todoLi2.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 		var todoLi3SelectButton = todoLi3.children[selectedIndex];
-		var todoLi3CompletedButton = todoLi3.children[completedIndex];
+		var todoLi3CompleteButton = todoLi3.children[completedIndex];
 
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todo1.selected, false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi2SelectButton.classList.contains('selected'), false);
 		eq(todo2.selected, false);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 		eq(todoLi3SelectButton.classList.contains('selected'), false);
 		eq(todo3.selected, false);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 
-		markCompletedButton = document.getElementsByName('markCompleted')[0];
-		markCompletedButton.classList.remove('completed');	// re-set to default
+		completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		completeSelectedButton.classList.remove('completed');	// re-set to default
 
 		todoLi1SelectButton.click();
 		todoLi2SelectButton.click();
-		markCompletedButton.click();
+		completeSelectedButton.click();
 
 		eq(todoLi1SelectButton.classList.contains('selected'), true);
 		eq(todo1.selected, true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
 		eq(todoLi2SelectButton.classList.contains('selected'), true);
 		eq(todo2.selected, true);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi3SelectButton.classList.contains('selected'), false);
 		eq(todo3.selected, false);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 
-		markCompletedButton.click();
+		completeSelectedButton.click();
 
 		eq(todoLi1SelectButton.classList.contains('selected'), true);
 		eq(todo1.selected, true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi2SelectButton.classList.contains('selected'), true);
 		eq(todo2.selected, true);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 		eq(todoLi3SelectButton.classList.contains('selected'), false);
 		eq(todo3.selected, false);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 	},
-	"When a selected todo is marked completed, the 'Mark completed' button class should be set to 'completed'.": function() {
+	"When a selected todo is marked completed, the 'Complete' button class should be set to 'completed'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1796,28 +1796,28 @@ tests({
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todo1.selected, false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 
-		markCompletedButton = document.getElementsByName('markCompleted')[0];
-		markCompletedButton.classList.remove('completed');	// re-set to default
+		completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		completeSelectedButton.classList.remove('completed');	// re-set to default
 
-		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.classList.contains('completed'), false);
 
 		todoLi1SelectButton.click();
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
 		eq(todoLi1SelectButton.classList.contains('selected'), true);
 		eq(todo1.selected, true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
-		eq(markCompletedButton.classList.contains('completed'), true);
+		eq(completeSelectedButton.classList.contains('completed'), true);
 	},
-	"When an unselected todo is marked completed, the 'Mark completed' button class should not change.": function() {
+	"When an unselected todo is marked completed, the 'Complete' button class should not change.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1829,62 +1829,62 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi2SelectButton = todoLi2.children[selectedIndex];
-		var todoLi2CompletedButton = todoLi2.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todo1.selected, false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi2SelectButton.classList.contains('selected'), false);
 		eq(todo2.selected, false);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 
-		markCompletedButton = document.getElementsByName('markCompleted')[0];
-		markCompletedButton.classList.remove('completed');	// re-set to default
+		completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		completeSelectedButton.classList.remove('completed');	// re-set to default
 
-		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.classList.contains('completed'), false);
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todo1.selected, false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
-		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.classList.contains('completed'), false);
 
 		eq(todoLi2SelectButton.classList.contains('selected'), false);
 		eq(todo2.selected, false);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 
 		todoLi2SelectButton.click();
-		markCompletedButton.click();
+		completeSelectedButton.click();
 		
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todo1.selected, false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
 
 		eq(todoLi2SelectButton.classList.contains('selected'), true);
 		eq(todo2.selected, true);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 
-		eq(markCompletedButton.classList.contains('completed'), true);
+		eq(completeSelectedButton.classList.contains('completed'), true);
 
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todo1.selected, false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 
-		eq(markCompletedButton.classList.contains('completed'), true);
+		eq(completeSelectedButton.classList.contains('completed'), true);
 	},
-	"If no selected todos are marked completed, the 'Mark completed' button class should be set to ''.": function() {
+	"If no selected todos are marked completed, the 'Complete' button class should be set to ''.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1897,25 +1897,25 @@ tests({
 		todoLi2 = todolist.children[0].children[1];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
 		var todoLi2SelectButton = todoLi2.children[selectedIndex];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
-		var todoLi2CompletedButton = todoLi2.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 		var selectAllButton = document.getElementsByName('selectAll')[0];
-		var markCompletedButton = document.getElementsByName('markCompleted')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		selectAllButton.classList.remove('selected');
-		markCompletedButton.classList.remove('completed');
+		completeSelectedButton.classList.remove('completed');
 
 		// defaults
 		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todo1.selected, false);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi2SelectButton.classList.contains('selected'), false);
 		eq(todo2.selected, false);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 
 		eq(selectAllButton.classList.contains('selected'), false);
-		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.classList.contains('completed'), false);
 
 		// todos selected, Mark Completed class should remain ''
 		todoLi1SelectButton.click();
@@ -1925,41 +1925,41 @@ tests({
 		eq(todo1.selected, true);
 		eq(todoLi2SelectButton.classList.contains('selected'), true);
 		eq(todo2.selected, true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 		eq(selectAllButton.classList.contains('selected'), true);
-		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.classList.contains('completed'), false);
 
 		// a todo marked completed and selected, Mark Completed class should toggle on
 		// (covered by previous test)
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 		
 		eq(todoLi1SelectButton.classList.contains('selected'), true);
 		eq(todo1.selected, true);
 		eq(todoLi2SelectButton.classList.contains('selected'), true);
 		eq(todo2.selected, true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 		eq(selectAllButton.classList.contains('selected'), true);
-		eq(markCompletedButton.classList.contains('completed'), true);
+		eq(completeSelectedButton.classList.contains('completed'), true);
 
 		// selected todo toggled to incompleted, Mark Completed class should toggle off
-		todoLi1CompletedButton.click();
+		todoLi1CompleteButton.click();
 		
 		eq(todoLi1SelectButton.classList.contains('selected'), true);
 		eq(todo1.selected, true);
 		eq(todoLi2SelectButton.classList.contains('selected'), true);
 		eq(todo2.selected, true);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
-		eq(todoLi2CompletedButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.classList.contains('completed'), false);
 		eq(todo2.completed, false);
 		eq(selectAllButton.classList.contains('selected'), true);
-		eq(markCompletedButton.classList.contains('completed'), false);
+		eq(completeSelectedButton.classList.contains('completed'), false);
 		},
 	"The header actions bar should have a 'Delete selected' button to delete selected todos.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -2440,28 +2440,28 @@ tests({
 		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		var todoLi2 = todosUl.children[completedIndex];
-		var todoLi2CompletedButton = todoLi2.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		var todoLi3 = todosUl.children[2];
-		var todoLi3CompletedButton = todoLi3.children[completedIndex];
+		var todoLi3CompleteButton = todoLi3.children[completedIndex];
 		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
@@ -2473,24 +2473,24 @@ tests({
 		// Re-set dom element variables because showAll click handler erases old todolist content.
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompletedButton = todoLi1.children[1];
+		todoLi1CompleteButton = todoLi1.children[1];
 		todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		todoLi2 = todosUl.children[1];
-		todoLi2CompletedButton = todoLi2.children[1];
+		todoLi2CompleteButton = todoLi2.children[1];
 		todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		todoLi3 = todosUl.children[2];
 
 		eq(todosUl.childElementCount, 2);
 
 		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todo1.deleted, false);
 
 		eq(todosUl.children[1], todoLi2);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
 		eq(todo2.deleted, false);
@@ -2519,28 +2519,28 @@ tests({
 		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1CompletedButton = todoLi1.children[1];
+		var todoLi1CompleteButton = todoLi1.children[1];
 		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		var todoLi2 = todosUl.children[1];
-		var todoLi2CompletedButton = todoLi2.children[1];
+		var todoLi2CompleteButton = todoLi2.children[1];
 		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		var todoLi3 = todosUl.children[2];
-		var todoLi3CompletedButton = todoLi3.children[1];
+		var todoLi3CompleteButton = todoLi3.children[1];
 		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
@@ -2552,7 +2552,7 @@ tests({
 		// Re-set dom element variables because showActive click handler erases old todolist content.
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompletedButton = todoLi1.children[completedIndex];
+		todoLi1CompleteButton = todoLi1.children[completedIndex];
 		todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		todoLi2 = todosUl.children[1];
 		todoLi3 = todosUl.children[deleteIndex];
@@ -2560,7 +2560,7 @@ tests({
 		eq(todosUl.childElementCount, 1);
 
 		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todo1.deleted, false);
@@ -2570,10 +2570,10 @@ tests({
 	},
 	"The header actions bar should have a 'Completed' button to show completed todos.": function() {
 		var actionsDiv = document.getElementById('actions');
-		var showCompletedButton = document.getElementsByName('showCompleted')[0];
-		eq(showCompletedButton.nodeName, 'BUTTON');
-		eq(showCompletedButton.innerText, 'Completed');
-		eq(actionsDiv.children[5], showCompletedButton); 
+		var showCompleteButton = document.getElementsByName('showCompleted')[0];
+		eq(showCompleteButton.nodeName, 'BUTTON');
+		eq(showCompleteButton.innerText, 'Completed');
+		eq(actionsDiv.children[5], showCompleteButton); 
 	},
 	"Clicking the 'Completed' button should display completed todos only.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -2590,46 +2590,46 @@ tests({
 		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		var todoLi2 = todosUl.children[1];
-		var todoLi2CompletedButton = todoLi2.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		var todoLi3 = todosUl.children[2];
-		var todoLi3CompletedButton = todoLi3.children[1];
+		var todoLi3CompleteButton = todoLi3.children[1];
 		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
 
-		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		var showCompleteButton = document.getElementsByName('showCompleted')[0];
 
-		showCompletedButton.click();							// test 'completed' filter
+		showCompleteButton.click();							// test 'completed' filter
 
 		// Re-set dom element variables because showCompleted click handler erases old todolist content.
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompletedButton = todoLi1.children[completedIndex];
+		todoLi1CompleteButton = todoLi1.children[completedIndex];
 		todoLi1DeletedButton = todoLi1.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 1);
 
 		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1CompletedButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todo2.deleted, false);
@@ -2656,28 +2656,28 @@ tests({
 		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		var todoLi2 = todosUl.children[1];
-		var todoLi2CompletedButton = todoLi2.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		var todoLi3 = todosUl.children[2];
-		var todoLi3CompletedButton = todoLi3.children[completedIndex];
+		var todoLi3CompleteButton = todoLi3.children[completedIndex];
 		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompletedButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
-		eq(todoLi3CompletedButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
@@ -2689,13 +2689,13 @@ tests({
 		// Re-set dom element variables because showDeleted click handler erases old todolist content.
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompletedButton = todoLi1.children[completedIndex];
+		todoLi1CompleteButton = todoLi1.children[completedIndex];
 		todoLi1DeletedButton = todoLi1.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 1);
 
 		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1CompletedButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);

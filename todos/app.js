@@ -124,17 +124,17 @@ function createTodoLi(todo) {
 	}
 	todoLi.appendChild(selectedButton);
 	
-	var completedButton = document.createElement('button')
-	completedButton.name = 'completed';
-	completedButton.type = 'button';
+	var completeButton = document.createElement('button')
+	completeButton.name = 'completed';
+	completeButton.type = 'button';
 	if (todo.completed) {
-		completedButton.classList.add('completed');
-		completedButton.textContent = 'Mark uncompleted';
+		completeButton.classList.add('completed');
+		completeButton.textContent = 'Uncomplete';
 	} else {
-		completedButton.classList.remove('completed');
-		completedButton.textContent = 'Mark completed';
+		completeButton.classList.remove('completed');
+		completeButton.textContent = 'Complete';
 	}
-	todoLi.appendChild(completedButton);
+	todoLi.appendChild(completeButton);
 
 	var deleteButton = document.createElement('button')
 	deleteButton.name = 'deleted';
@@ -337,15 +337,15 @@ function todoClickHandler(event) {
 			}
 		}
 		if (event.target.name === "completed") {
-			var todoLiCompletedButton = todoLi.children[completedIndex];
-			todoLiCompletedButton.classList.toggle('completed');
+			var todoLiCompleteButton = todoLi.children[completedIndex];
+			todoLiCompleteButton.classList.toggle('completed');
 			todo.completed = !todo.completed;
-			var markCompletedButton = document.getElementsByName('markCompleted')[0];
+			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 			if (todo.selected) {
-				markCompletedButton.classList.add('completed');
+				completeSelectedButton.classList.add('completed');
 			}
 			if (!todo.completed) {
-				todoLiCompletedButton.textContent = 'Mark completed';
+				todoLiCompleteButton.textContent = 'Complete';
 				todoLi.children[entryIndex].classList.remove('struck');
 				// TODO convert to array.find() to stop looping as soon as a match is found
 				var count = 0;
@@ -355,10 +355,10 @@ function todoClickHandler(event) {
 					}
 				}
 				if (count === 0) {
-					markCompletedButton.classList.remove('completed');
+					completeSelectedButton.classList.remove('completed');
 				}
 			} else {
-				todoLiCompletedButton.textContent = 'Mark uncompleted';
+				todoLiCompleteButton.textContent = 'Uncomplete';
 				todoLi.children[entryIndex].classList.add('struck');
 			}
 		}
@@ -477,29 +477,29 @@ function actionsClickHandler() {
 				}
 			}
 		}
-		if (event.target.name === 'markCompleted') {
-			var markCompletedButton = event.target;
+		if (event.target.name === 'completeSelected') {
+			var completeSelectedButton = event.target;
 			var todosUl = todolist.children[0];
-			if (markCompletedButton.classList.contains('completed')) {
-				markCompletedButton.classList.remove('completed');
+			if (completeSelectedButton.classList.contains('completed')) {
+				completeSelectedButton.classList.remove('completed');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[0];
-					var todoLiCompletedButton = todoLi.children[1];
+					var todoLiCompleteButton = todoLi.children[1];
 					if (todoLiSelectButton.classList.contains('selected')) {
-						todoLiCompletedButton.classList.remove('completed');
+						todoLiCompleteButton.classList.remove('completed');
 						var todo = findTodo(todos, todoLi.id);
 						todo.markCompleted(false);
 					}	
 				}
 			} else {
-				markCompletedButton.classList.add('completed');
+				completeSelectedButton.classList.add('completed');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[0];
-					var todoLiCompletedButton = todoLi.children[1];
+					var todoLiCompleteButton = todoLi.children[1];
 					if (todoLiSelectButton.classList.contains('selected')) {
-						todoLiCompletedButton.classList.add('completed');
+						todoLiCompleteButton.classList.add('completed');
 						var todo = findTodo(todos, todoLi.id);
 						todo.completed = true;
 				
@@ -572,7 +572,7 @@ function startApp() {
 	var selectAllButton = document.getElementsByName('selectAll')[0];
 	selectAllButton.classList.remove('selected');
 	selectAllButton.textContent = 'Select all';
-	var markCompletedButton = document.getElementsByName('markCompleted')[0];
+	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 
 
