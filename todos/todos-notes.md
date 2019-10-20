@@ -148,6 +148,13 @@ Select checbox has three display states
 
 When checkbox is gray, clicking it unselects any selected emails and hides action buttons.
 
+If you uncheck one of the selected emails while checkbox is gray, the button remains gray (i.e. button state is still 'Unselect')
+and the action buttons remain available. BUT if you uncheck ALL of the selected emails, the Select checkbox reverts to 'Select'.
+
+If you read the un-starred emails and then select the un-starred emails, the 'Mark read' button is 'Mark unread' -- it takes the state of the emails selected into account. If even one of the un-starred emails is un-read, then the button is 'Mark read'.
+
+Selection settings are not affected by changing from primary to promotions and back. A selected email stays selected. But on startup, the slate is clean with no emails selected.
+
 ##Undo strategy for Mark completed
 Display and Data states
 Ten todos showing
@@ -192,29 +199,17 @@ Undelete button becomes Delete selected (condition not class='deleted' and not c
 No todos are selected
 
 ##selectAll button states and actions
-On startup, class='' and button text is 'Select all'
-
-If class=''
-	button text is 'Select all'
-
-If class='selected'
-	button text is 'Unselect all'
+On startup, button text is 'Select all' unless todo.selected is true for all displayed todos; otherwise 'Unselect all'
 
 When selectAll button is clicked
-	If class=''
-		select all todos
-			set class='selected'
-			set button text to 'Unselect'
-		set class='selected' (which displays action buttons)
-		remove class='inactive' from markCompleted button
+	If text is 'Select all' 
+		select all todos and set each todoLi select button text to 'Unselect'
+		remove class='inactive' from completeSelected button
 		remove class='inactive' from deleteSelected button
 		set button text to 'Unselect all'
 	Else
-		unselect all todos
-			set class=''
-			set button text to 'Select'
-		set class='' (which hides action buttons)
-		add class='inactive' to markCompleted button
+		unselect all todos and set each todoLi select button to 'Select'
+		add class='inactive' to completeSelected button
 		add class='inactive' to deleteSelected button
 		set button text to 'Select all'
 
@@ -296,9 +291,10 @@ Clicking Select all in actions bar should toggle button text.
 Clicking Select all in actions bar sets todoLi select button class to 'selected' but does not change text to 'Unselect'
 
 ##Variable display
-Hide/display deleted todos -- removed/restored
+Hide/display deleted todos -- removed/not removed
 Hide/display child todos -- collapsed/expanded
 Hide/display buttons -- active/inactive
 Strike-through/don't strike-through entry text -- normal/struck-through
+Display normal/deleted todo -- not faded/faded (50% translucent)
 Toggle button text and class
 

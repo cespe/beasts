@@ -454,7 +454,6 @@ tests({
 		var child2LiEntry = child2Li.children[entryIndex];
 		eq(document.activeElement, child2LiEntry);
 		eq(document.hasFocus(), true);
-
 	},
 	"When editing, losing focus on the todoLi should save the revised entry.": function() {
 		// Devtools must be closed for this test to pass.
@@ -470,7 +469,6 @@ tests({
 		insertNewTodoLi(todos, todoLi1.id);		// todoLi1 loses focus, firing focusout event
 
 		eq(todos[0].entry, "test");				// state after edit
-
 	},
 	"Section marker: todoLi buttons": function() {
 		fail();
@@ -483,7 +481,28 @@ tests({
 		eq(todoLi.children[selectedIndex].nodeName, 'BUTTON');
 		eq(todoLi.children[selectedIndex].name, 'selected');
 	},
-	"Clicking a 'selected' button should toggle class='selected' on it and toggle todo.selected.": function() {
+	"When a todoLi is created, todo.selected should be set to false and 'selected' button text should be 'Select'.": function() {
+		// Start with a clean slate
+		var todolist = document.getElementById('todolist');
+		todolist.innerHTML = '';
+		var todos = []
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		var todoLi1SelectButton = todoLi1.children[selectedIndex];
+		var todoLi2SelectButton = todoLi2.children[selectedIndex];
+
+		eq(todo1.selected, false);
+		eq(todo2.selected, false);
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi2SelectButton.textContent, 'Select');
+	},
+	"Clicking a 'selected' button should toggle button text and toggle todo.selected.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -493,63 +512,18 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
 
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(todoLi1SelectButton.textContent, 'Select');
 		eq(todo1.selected, false);
 
 		todoLi1SelectButton.click();
 
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(todoLi1SelectButton.textContent, 'Unselect');
 		eq(todo1.selected, true);
-	},
-	"If 'selected' button class is '', button text should be 'Select'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todoLi1SelectButton.textContent, 'Select');
-	},
-	"If 'selected' button class is 'selected', button text should be 'Unselect'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markSelected(true);
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
-		eq(todoLi1SelectButton.textContent, 'Unselect');
-	},
-	"Clicking 'selected' button should toggle its text between 'Select' and 'Unselect'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todoLi1SelectButton.textContent, 'Select');
 
 		todoLi1SelectButton.click();
 
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
-		eq(todoLi1SelectButton.textContent, 'Unselect');
-
-		todoLi1SelectButton.click();
-
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
 		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todo1.selected, false);
 	},
 	"Selecting a todo should not select its children.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -568,15 +542,21 @@ tests({
 		var todoLi1Child1SelectButton = todoLi1.children[todoLiUlIndex].children[0].children[selectedIndex];
 		var todoLi1Child2SelectButton = todoLi1.children[todoLiUlIndex].children[1].children[selectedIndex];
 
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todoLi1Child1SelectButton.classList.contains('selected'), false);
-		eq(todoLi1Child2SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, false);
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(child1.selected, false);
+		eq(todoLi1Child1SelectButton.textContent, 'Select');
+		eq(child1.selected, false);
+		eq(todoLi1Child2SelectButton.textContent, 'Select');
 
 		todoLi1SelectButton.click();
 
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
-		eq(todoLi1Child1SelectButton.classList.contains('selected'), false);
-		eq(todoLi1Child2SelectButton.classList.contains('selected'), false);
+		eq(todo1.selected, true);
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(child1.selected, false);
+		eq(todoLi1Child1SelectButton.textContent, 'Select');
+		eq(child1.selected, false);
+		eq(todoLi1Child2SelectButton.textContent, 'Select');
 	},
 	"Each todoLi should have a 'completed' button to toggle 'Completed/Not Completed'.": function() {
 		todos = [];
@@ -615,7 +595,7 @@ tests({
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
 	},
-	"Clicking a 'completed' button should toggle button text and entry <p> class.": function() {
+	"Clicking a 'completed' button should toggle button text, todo.completed, and entry <p> class.": function() {
 		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		todos = [];
@@ -628,7 +608,6 @@ tests({
 		eq(todo1.completed, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.length, 0);
-
 		todoLi1CompleteButton.click();
 
 		eq(todo1.completed, true);
@@ -640,96 +619,6 @@ tests({
 		eq(todo1.completed, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), false);
-	},
-	"Clicking a 'completed' button should toggle class='completed' on it and toggle todo.completed.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
-		eq(todo1.completed, true);
-	},
-	"If 'completed' button class is '', button text should be 'Complete' and entry line decoration ''.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1.children[entryIndex].style.textDecorationLine, '');
-	},
-	"If 'completed' button class is 'completed', button text should be 'Uncomplete' and entry line decoration 'line-through'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markCompleted(true);
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
-		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
-	},
-	"Clicking a 'completed' button should toggle its text between 'Complete' and 'Uncomplete'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todoLi1CompleteButton.textContent, 'Complete');
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
-		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todoLi1CompleteButton.textContent, 'Complete');
-	},
-	"Clicking a 'completed' button should toggle entry line decoration style between none and line-through.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), false);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 	},
 	"Marking a todo completed should not mark its children completed.": function() {
 		// because then marking uncompleted could incorrectly reverse some child values
@@ -746,79 +635,98 @@ tests({
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-		var todoLi1Child1CompleteButton = todoLi1.children[todoLiUlIndex].children[0].children[completedIndex];
-		var todoLi1Child2CompleteButton = todoLi1.children[todoLiUlIndex].children[1].children[completedIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var todoLi1Child1 = todoLi1Ul.children[0];
+		var todoLi1Child2 = todoLi1Ul.children[1];
+		var todoLi1Child1CompleteButton = todoLi1Child1.children[completedIndex];
+		var todoLi1Child2CompleteButton = todoLi1Child2.children[completedIndex];
 
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
 		eq(todo1.completed, false);
-		eq(todoLi1Child1CompleteButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todoLi1.children[entryIndex].classList.contains('struck'), false);
 		eq(child1.completed, false);
-		eq(todoLi1Child2CompleteButton.classList.contains('completed'), false);
+		eq(todoLi1Child1CompleteButton.textContent, 'Complete');
+		eq(todoLi1Child1.children[entryIndex].classList.contains('struck'), false);
 		eq(child2.completed, false);
+		eq(todoLi1Child2CompleteButton.textContent, 'Complete');
+		eq(todoLi1Child2.children[entryIndex].classList.contains('struck'), false);
 
 		todoLi1CompleteButton.click();
 
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
 		eq(todo1.completed, true);
-		eq(todoLi1Child1CompleteButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
+		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
 		eq(child1.completed, false);
-		eq(todoLi1Child2CompleteButton.classList.contains('completed'), false);
+		eq(todoLi1Child1CompleteButton.textContent, 'Complete');
+		eq(todoLi1Child1.children[entryIndex].classList.contains('struck'), false);
 		eq(child2.completed, false);
+		eq(todoLi1Child2CompleteButton.textContent, 'Complete');
+		eq(todoLi1Child2.children[entryIndex].classList.contains('struck'), false);
 	},
 	"Each todo li should have a 'deleted' button to toggle 'Delete/Undelete'.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
-		eq(todoLi.children[2].nodeName, 'BUTTON');
-		eq(todoLi.children[2].name, 'deleted');
+		eq(todoLi.children[deleteIndex].nodeName, 'BUTTON');
+		eq(todoLi.children[deleteIndex].name, 'deleted');
 	},
-	"Clicking a 'delete' button should toggle class='deleted' on it and toggle todo.deleted.": function() {
-		document.getElementById('todolist').innerHTML = '';
+	"When a todoLi is created, if todo.deleted is false, button should be 'Delete' and entry <p> class not 'faded'.": function() {
+		var todolist = document.getElementById('todolist');
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
 
-		eq(todoLi1DeleteButton.classList.contains('deleted'), false);
 		eq(todo1.deleted, false);
-
-		todoLi1DeleteButton.click();
-
-		eq(todoLi1DeleteButton.classList.contains('deleted'), true);
-		eq(todo1.deleted, true);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1.children[entryIndex].classList.length, 0);
 	},
-	"If 'deleted' button class is '', button text should be 'Delete'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
+	"Wne a todoLi is created, if todo.deleted is true, button should be 'Undelete' and entry <p> class 'faded'.": function() {
 		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
-
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todoLi1DeletedButton.textContent, 'Delete');
-	},
-	"If 'deleted' button class is 'deleted', button text should be 'Undelete'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markDeleted(true);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
 
-		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
-		eq(todoLi1DeletedButton.textContent, 'Undelete');
+		eq(todo1.deleted, true);
+		eq(todoLi1DeleteButton.textContent, 'Undelete');
+		eq(todoLi1.children[entryIndex].classList.contains('faded'), true);
 	},
-	"Clicking 'delete' button should toggle its text between 'Delete' and 'Undelete'.": function() {
+	"Clicking a 'deleted' button should toggle button text, todo.deleted, entry <p> class.": function() {
+		var todolist = document.getElementById('todolist');
+		todolist.innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+
+		eq(todo1.deleted, false);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1.children[entryIndex].classList.length, 0);
+
+		todoLi1DeleteButton.click();
+
+		eq(todo1.deleted, true);
+		eq(todoLi1DeleteButton.textContent, 'Undelete');
+		eq(todoLi1.children[entryIndex].classList.contains('faded'), true);
+
+		todoLi1DeleteButton.click();
+
+		eq(todo1.deleted, false);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1.children[entryIndex].classList.contains('faded'), false);
+	},
+	"Clicking 'deleted' button should also toggle its todoLi class 'removed'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -828,36 +736,15 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todoLi1DeletedButton.textContent, 'Delete');
+		eq(todoLi1.classList.contains('removed'), false);
 
 		todoLi1DeletedButton.click();
 
-		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
-		eq(todoLi1DeletedButton.textContent, 'Undelete');
+		eq(todoLi1.classList.contains('removed'), true);
 
 		todoLi1DeletedButton.click();
 
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todoLi1DeletedButton.textContent, 'Delete');
-	},
-	"Clicking 'delete' button should toggle its todoLi display between 'none' and 'block'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
-
-		todoLi1DeletedButton.click();
-
-		eq(todoLi1.style.display, 'none');
-
-		todoLi1DeletedButton.click();
-
-		eq(todoLi1.style.display, '');
+		eq(todoLi1.classList.contains('removed'), false);
 	},
 	"Deleting a todo should not delete its children.": function() {
 		// The children are just along for the ride
@@ -877,23 +764,23 @@ tests({
 		var todoLi1Child1DeletedButton = todoLi1.children[todoLiUlIndex].children[0].children[deleteIndex];
 		var todoLi1Child2DeletedButton = todoLi1.children[todoLiUlIndex].children[1].children[deleteIndex];
 
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
+		eq(todoLi1DeletedButton.textContent, 'Delete');
 		eq(todo1.deleted, false);
-		eq(todoLi1Child1DeletedButton.classList.contains('deleted'), false);
+		eq(todoLi1Child1DeletedButton.textContent, 'Delete');
 		eq(child1.deleted, false);
-		eq(todoLi1Child2DeletedButton.classList.contains('deleted'), false);
+		eq(todoLi1Child2DeletedButton.textContent, 'Delete');
 		eq(child2.deleted, false);
 
 		todoLi1DeletedButton.click();
 
-		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
+		eq(todoLi1DeletedButton.textContent, 'Undelete');
 		eq(todo1.deleted, true);
-		eq(todoLi1Child1DeletedButton.classList.contains('deleted'), false);
+		eq(todoLi1Child1DeletedButton.textContent, 'Delete');
 		eq(child1.deleted, false);
-		eq(todoLi1Child2DeletedButton.classList.contains('deleted'), false);
+		eq(todoLi1Child2DeletedButton.textContent, 'Delete');
 		eq(child2.deleted, false);
 	},
-	"Each todo li should have an 'Add sibling' button to add a sibling todo after it.": function() {
+	"Each todo li should have an 'addSibling' button to add a sibling todo after it.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -969,7 +856,10 @@ tests({
 		eq(todos[0].children[0].entry, "");
 
 	},
-	"Each todoLi should have a showChildren button to show/hide its children.": function() {
+	"Clicking an 'addChild' button should remove 'collapsed' from its todoLi class list.": function() {
+		fail();
+	}, 
+	"Each todoLi should have a showChildren button to expand/collapse nested todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1418,48 +1308,32 @@ tests({
 		eq(todoLi2.id, todo2.id);
 		eq(todoLi2SelectedButton.classList.contains('selected'), false);
 		eq(todo2.selected, false);
-		eq(todoLi2CompleteButton.classList.contains('completed'), true);
+		//eq(todoLi2CompleteButton.classList.contains('completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
 		eq(todoLi3SelectedButton.classList.contains('selected'), false);
 		eq(todo3.selected, false);
-		eq(todoLi3CompleteButton.classList.contains('completed'), false);
+		//eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
 		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
 		eq(todoLi4.id, todo4.id);
 		eq(todoLi4SelectedButton.classList.contains('selected'), false);
 		eq(todo4.selected, false);
-		eq(todoLi4CompleteButton.classList.contains('completed'), false);
+		//eq(todoLi4CompleteButton.classList.contains('completed'), false);
 		eq(todo4.completed, false);
 		eq(todoLi4DeletedButton.classList.contains('deleted'), false);
 		eq(todo4.deleted, false);
 	},
-	"Section marker: actions bar": function() {
+	"Section marker: actions bar -- Selection": function() {
 		fail();
 	},
 	"The app should have a header section with an actions bar to hold action buttons.": function() {
 		var actionsDiv = document.getElementById('actions');
 		eq(actionsDiv.nodeName, 'DIV');
 		eq(actionsDiv.parentElement.nodeName, 'HEADER');
-	},
-	"When the app starts up, actions bar button classes and names should be set to default values.": function() {
-		startApp();
-		var selectAllButton = document.getElementsByName('selectAll')[0];
-		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-
-		eq(selectAllButton.classList.contains('selected'), false);
-		eq(selectAllButton.textContent, 'Select all');	// TODO even if some individual todos are selected?
-														// probably better to unselect all todos at startup.
-		eq(completeSelectedButton.classList.contains('completed'), false);
-		eq(completeSelectedButton.textContent, 'Complete selected');
-		// should class=inactive?
-		eq(deleteSelectedButton.classList.contains('deleted'), false);
-		eq(deleteSelectedButton.textContent, 'Delete selected');
-		// should class=inactive?
 	},
 	"The header actions bar should have a 'selectAll' button to select all displayed top-level todos.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -1468,6 +1342,24 @@ tests({
 		eq(selectAllButton.innerText, 'Select all');
 		eq(actionsDiv.children[0], selectAllButton); 
 	},
+	"If todo.selected is false for all displayed todos, 'selectAll' button text should be 'Select all'.": function() {
+		fail();
+	},
+	"If todo.selected is true for all displayed todos, 'selectAll' button text should be 'Unselect all'.": function() {
+		fail();
+	},
+	"Clicking 'Select all' should set button text to 'Unselect all', set each todoLi 'Select' button to 'Unselect' and set each todo.selected to true." : function() {
+		fail();
+	},
+	"Clicking 'Select all' should also remove class 'inactive' from 'completeSelected' and 'deleteSelected' buttons.": function() {
+		fail();
+},
+	"Clicking 'Unselect all' should set button text to 'Select all' and for each selected todo, set todo.selected false and todoLi 'Unselect' button to 'Select'.": function() {
+		fail();
+	},
+	"Clicking 'Unselect all' should also add class 'inactive' to 'completeSelected' and 'deleteSelected' buttons.": function() {
+		fail();
+},
 	"Clicking the 'selectAll' button should toggle its class 'selected'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -1642,7 +1534,7 @@ tests({
 		eq(todo2.selected, false);
 		eq(selectAllButton.classList.contains('selected'), false);
 	},
-	"The header actions bar should have a 'Complete' button to mark selected todos completed.": function() {
+	"The header actions bar should have a 'Complete selected' button to mark selected todos completed.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		eq(completeSelectedButton.nodeName, 'BUTTON');
@@ -2415,7 +2307,19 @@ tests({
 		eq(todo3.selected, true);
 		eq(todo3.deleted, false);
 	},
-	"Section marker: filters": function() {
+	"When the app starts up, actions bar button names should be set to default values.": function() {
+		startApp();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(completeSelectedButton.textContent, 'Complete selected');
+		eq(completeSelectedButton.classList.contains('inactive'), true);
+		eq(deleteSelectedButton.textContent, 'Delete selected');
+		eq(deleteSelectedButton.classList.contains('inactive'), true);
+	},
+	"Section marker: Actions bar -- filters": function() {
 		fail();
 	},
 	"The header actions bar should have an 'All' button to show active and completed todos.": function() {
@@ -2700,6 +2604,10 @@ tests({
 		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
 		eq(todo3.deleted, true);
 	},
+	"The app should set todo.selected to false on startup or when filtering todos.": function() {
+		// Startup or filtering should produce a clean slate with no selected todos.
+		fail();
+	},
 	"If todos array is empty at startup, the app should create a new empty todo.": function() {
 		todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
@@ -2781,10 +2689,6 @@ tests({
 		fail();
 	},
 	"If showChildren button class contains 'shown', child todoLis should not have class set to 'hide'.": function() {
-		fail();
-	},
-	"createTodosUl should set todo.selected to false for every todo?.": function() {
-		// Startup or filtering should produce a clean slate with no selected todos.
 		fail();
 	},
 	"There should be a way to move a todo up in the list, for example to the top of the list.": function() {

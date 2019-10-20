@@ -2,3 +2,11 @@
 	text-decoration: line-through;
 }
 
+.faded {
+	/* 50% translucent per MDN color page */
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.removed {
+	display: none;
+}

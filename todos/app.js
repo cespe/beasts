@@ -115,12 +115,9 @@ function createTodoLi(todo) {
 	var selectedButton = document.createElement('button')
 	selectedButton.name = 'selected';
 	selectedButton.type = 'button';	// to distinguish from a submit or reset button
+	selectedButton.textContent = 'Select';
 	if (todo.selected) {
-		selectedButton.classList.add('selected');
-		selectedButton.textContent = 'Unselect';
-	} else {
-		selectedButton.classList.remove('selected');
-		selectedButton.textContent = 'Select';
+		todo.selected = false;		// clean slate when todoLi's are created
 	}
 	todoLi.appendChild(selectedButton);
 	
@@ -128,10 +125,10 @@ function createTodoLi(todo) {
 	completeButton.name = 'completed';
 	completeButton.type = 'button';
 	if (todo.completed) {
-		completeButton.classList.add('completed');
+//		completeButton.classList.add('completed');
 		completeButton.textContent = 'Uncomplete';
 	} else {
-		completeButton.classList.remove('completed');
+//		completeButton.classList.remove('completed');
 		completeButton.textContent = 'Complete';
 	}
 	todoLi.appendChild(completeButton);
@@ -141,7 +138,8 @@ function createTodoLi(todo) {
 	deleteButton.type = 'button';
 	if (todo.deleted) {
 		deleteButton.classList.add('deleted');
-		deleteButton.textContent = 'Undelete';	// should only be visible when todos are filtered to show deleted todos
+		deleteButton.textContent = 'Undelete';	// should only be visible when todos are filtered
+												// to show deleted todos
 	} else {
 		deleteButton.classList.remove('deleted');
 		deleteButton.textContent = 'Delete';
@@ -183,6 +181,9 @@ function createTodoLi(todo) {
 	entry.textContent = todo.entry;
 	if (todo.completed) {
 		entry.classList.add('struck');
+	}
+	if (todo.deleted) {
+		entry.classList.add('faded');
 	}
 	todoLi.appendChild(entry);
 	return todoLi;
@@ -314,9 +315,10 @@ function todoClickHandler(event) {
 	if (event.target.nodeName === "BUTTON") {
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id)
+
 		if (event.target.name === "selected") {
 			var todoLiSelectButton = todoLi.children[selectedIndex];
-			todoLiSelectButton.classList.toggle('selected');
+//			todoLiSelectButton.classList.toggle('selected');
 			todo.selected = !todo.selected;
 			var selectAllButton = document.getElementsByName('selectAll')[0];
 			if (todo.selected) {
@@ -338,7 +340,7 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompleteButton = todoLi.children[completedIndex];
-			todoLiCompleteButton.classList.toggle('completed');
+//			todoLiCompleteButton.classList.toggle('completed');
 			todo.completed = !todo.completed;
 			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 			if (todo.selected) {
@@ -368,10 +370,12 @@ function todoClickHandler(event) {
 			todo.deleted = !todo.deleted;
 			if (todo.deleted) {
 				todoLiDeleteButton.textContent = 'Undelete';
-				todoLi.style.display = 'none';	// TODO replace with css on class 'hide'
+				todoLi.children[entryIndex].classList.add('faded');
+				todoLi.classList.add('removed');
 			} else {
 				todoLiDeleteButton.textContent = 'Delete';
-				todoLi.style.display = '';
+				todoLi.children[entryIndex].classList.remove('faded');
+				todoLi.classList.remove('removed');
 			}
 		}
 		if (event.target.name === "addSibling") {
