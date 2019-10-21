@@ -910,13 +910,7 @@ tests({
 		eq(todoLi1ShowChildren.nodeName, 'BUTTON');
 		eq(todoLi1ShowChildren.name, 'showChildren');
 	},
-	"When a todoLi is created, if todo.collapsed is true, button should be 'Show children' and child todoLis' class should be 'collapsed'.": function() {
-		fail();
-	}, 
-	"If todo.collapsed is false, button should be 'Hide children' and child todoLis' class should not include 'collapsed'.": function() {
-		fail();
-	},
-	"If a todoLi has no child todos, its showChildren button class should be set to 'inactive'.": function() {
+	"If a todo has no children, todoLi should be created with showChildren button class 'inactive'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -929,25 +923,94 @@ tests({
 
 		eq(todoLi1ShowChildren.classList.contains('inactive'), true);
 	},
-	"Clicking a 'showChildren' button should toggle button text and child todoLis' class.": function() {
-		fail();
-	},
-	"Clicking an addChild button should activate showChildren button.": function() {
-		fail();
-		var todolist = document.getElementById('todolist');
+	"If a todo has children and todo.collapsed is true, todoLi should be created with todoLiUl class 'collapsed' and showChildren button text 'Show children'.": function() {
+		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
-		insertTodos(todos, todo1);
+		todo1.markCollapsed(true);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+
+		eq(todoLi1Ul.classList.contains('collapsed'), true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
+},
+	"If a todo has children and todo.collapsed is false, todoLi should be created with todoLiUl class '' and showChildren button text 'Hide children'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+
+		eq(todoLi1Ul.classList.contains('collapsed'), false);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+},
+	"Clicking a showChildren button should toggle button text and todoLiUl class.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		todoLi1ChildButton = todoLi1.children[addChildIndex];
+		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
 
-		eq(todoLi1.children[showChildrenIndex].classList.contains('inactive'), true);
+		eq(todo1.collapsed, false);
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 		
-		todoLiChildButton.click();
+		todoLi1ChildButton.click();
 
-		eq(todoLi1.children[showChildrenIndex].classList.contains('inactive'), false);
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];	// <ul> created by Add child
+		eq(todo1.collapsed, false);
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+		eq(todoLi1Ul.classList.contains('collapsed'), false);
+
+		todoLi1ShowChildrenButton.click();
+
+		eq(todo1.collapsed, true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
+		eq(todoLi1Ul.classList.contains('collapsed'), true);
+
+		todoLi1ShowChildrenButton.click();
+
+		eq(todo1.collapsed, false);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+		eq(todoLi1Ul.classList.contains('collapsed'), false);
+	},
+	"Clicking an addChild button should activate showChildren button.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1ChildButton = todoLi1.children[addChildIndex];
+		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
+
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), true);
+		
+		todoLi1ChildButton.click();
+
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
 	}, 
 	"Each todo should have a 'selectChildren' button to select all of its children.": function() {
 		document.getElementById('todolist').innerHTML = '';

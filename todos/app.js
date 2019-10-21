@@ -165,7 +165,11 @@ function createTodoLi(todo) {
 	var showChildrenButton = document.createElement('button');
 	showChildrenButton.name = 'showChildren';
 	showChildrenButton.type = 'button';
-	showChildrenButton.textContent = 'Show children';
+	if (todo.collapsed) {
+		showChildrenButton.textContent = 'Show children';
+	} else {
+		showChildrenButton.textContent = 'Hide children';
+	}
 	if (todo.children.length === 0) {
 		showChildrenButton.classList.add('inactive');
 	}
@@ -219,12 +223,12 @@ function createTodosUl(todosArray, filter) {
 		var todo = filteredArray[i];
 		var todoLi = createTodoLi(todo);
 		if (todo.children.length > 0) {
-			var nestedTodos = createTodosUl(todo.children);	// TODO add filter here to filter children?
-			todoLi.appendChild(nestedTodos);
-			todosUl.appendChild(todoLi);
+			var nestedTodosUl = createTodosUl(todo.children);	// TODO add filter here to filter children?
 			if (todo.collapsed) {
-				todosUl.classList.add('collapsed');
+				nestedTodosUl.classList.add('collapsed');
 			}
+			todoLi.appendChild(nestedTodosUl);
+			todosUl.appendChild(todoLi);
 		} else {
 			todosUl.appendChild(todoLi);
 		}
@@ -392,24 +396,21 @@ function todoClickHandler(event) {
 			appendNewChildTodoLi(todoLi)
 			todo.collapsed = false;
 			todoLi.children[todoLiUlIndex].classList.remove('collapsed');
+			todoLi.children[showChildrenIndex].classList.remove('inactive');
 		}
 		if (event.target.name === "showChildren") {
 			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
 			var todoLiUl = todoLi.children[todoLiUlIndex];
-			if (todoLiUl && todoLiUl.children.length > 0) {
-				if (todoLiShowChildrenButton.classList.contains('hide')) {
-						todoLiShowChildrenButton.classList.remove('hide');
-						todoLiShowChildrenButton.textContent = 'Hide children';
-						for (var i = 0; i < todoLiUl.children.length; i++) {
-							todoLiUl.children[i].classList.remove('hide');
-						}
-					} else {
-						todoLiShowChildrenButton.classList.add('hide');
-						todoLiShowChildrenButton.textContent = 'Show children';
-						for (var i = 0; i < todoLiUl.children.length; i++) {
-							todoLiUl.children[i].classList.add('hide');
-						}
-				}
+			
+			// don't need to test for nesting because button is not available otherwise
+			if (todo.collapsed) {
+				todo.markCollapsed(false);
+				todoLiUl.classList.remove('collapsed');
+				todoLiShowChildrenButton.textContent = 'Hide children';
+			} else {
+				todo.markCollapsed(true);
+				todoLiUl.classList.add('collapsed');
+				todoLiShowChildrenButton.textContent = 'Show children';
 			}
 		}
 		if (event.target.name === "selectChildren") {
