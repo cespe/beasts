@@ -10,3 +10,11 @@
 .removed {
 	display: none;
 }
+
+.inactive {
+	display: none;
+}
+
+.collapsed {
+	display: none;
+}

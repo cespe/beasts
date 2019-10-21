@@ -208,3 +208,150 @@
 		eq(todoLi1DeletedButton.textContent, 'Delete');
 	},
 
+	"If showChildren button class is '', clicking button should set class to 'hide'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), true);
+	},
+	"If showChildren button class is '', clicking button should set text to 'Show children'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+		todoLi1ShowChildren.textContent = 'Hide children';
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+		eq(todoLi1ShowChildren.textContent, 'Hide children');
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), true);
+		eq(todoLi1ShowChildren.textContent, 'Show children');
+	},
+	"If showChildren button class is 'hide', clicking button should remove class 'hide'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+		todoLi1ShowChildren.classList.add('hide');
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), true);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+	},
+	"If showChildren button class is 'hide', clicking button should set text to 'Hide children'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+		todoLi1ShowChildren.classList.add('hide');
+		todoLi1ShowChildren.textContent = 'Show children';
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), true);
+		eq(todoLi1ShowChildren.textContent, 'Show children');
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+		eq(todoLi1ShowChildren.textContent, 'Hide children');
+	},
+	"If showChildren button class is '', clicking button should add 'hide' to child todoLis.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		todo1Child2 = new Todo('Item 1 child 2');
+		todo1.addChild(todo1Child2);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var todoLi1Child1 = todoLi1Ul.children[0];
+		var todoLi1Child2 = todoLi1Ul.children[1];
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+		eq(todoLi1Child1.classList.contains('hide'), false);
+		eq(todoLi1Child2.classList.contains('hide'), false);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), true);
+		eq(todoLi1Child1.classList.contains('hide'), true);
+		eq(todoLi1Child2.classList.contains('hide'), true);
+	},
+	"If showChildren button class is 'hide', clicking button should set remove 'hide' from child todoLis.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1Child1 = new Todo('Item 1 child 1');
+		todo1.addChild(todo1Child1);
+		todo1Child2 = new Todo('Item 1 child 2');
+		todo1.addChild(todo1Child2);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var todoLi1Child1 = todoLi1Ul.children[0];
+		var todoLi1Child2 = todoLi1Ul.children[1];
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+		eq(todoLi1Child1.classList.contains('hide'), false);
+		eq(todoLi1Child2.classList.contains('hide'), false);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), true);
+		eq(todoLi1Child1.classList.contains('hide'), true);
+		eq(todoLi1Child2.classList.contains('hide'), true);
+
+		todoLi1ShowChildren.click();
+
+		eq(todoLi1ShowChildren.classList.contains('hide'), false);
+		eq(todoLi1Child1.classList.contains('hide'), false);
+		eq(todoLi1Child2.classList.contains('hide'), false);
+	},
+

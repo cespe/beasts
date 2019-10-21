@@ -16,9 +16,10 @@ function Todo(entry) {
 		this.entry = entry;
 	}
 	this.children = [];
-	this.selected = false;
+	this.collapsed = false;
 	this.deleted = false;
 	this.completed = false;
+	this.selected = false;
 }
 
 Todo.prototype.changeId = function() {
@@ -44,6 +45,9 @@ Todo.prototype.markDeleted = function(bool) {
 }
 Todo.prototype.addChild = function(child) {
 	this.children.push(child);
+}
+Todo.prototype.markCollapsed = function(bool) {
+	this.collapsed = bool;
 }
 
 function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
@@ -218,6 +222,9 @@ function createTodosUl(todosArray, filter) {
 			var nestedTodos = createTodosUl(todo.children);	// TODO add filter here to filter children?
 			todoLi.appendChild(nestedTodos);
 			todosUl.appendChild(todoLi);
+			if (todo.collapsed) {
+				todosUl.classList.add('collapsed');
+			}
 		} else {
 			todosUl.appendChild(todoLi);
 		}
@@ -383,6 +390,8 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "addChild") {
 			appendNewChildTodoLi(todoLi)
+			todo.collapsed = false;
+			todoLi.children[todoLiUlIndex].classList.remove('collapsed');
 		}
 		if (event.target.name === "showChildren") {
 			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
