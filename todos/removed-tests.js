@@ -560,3 +560,68 @@
 		eq(child2.selected, false);
 	},
 
+	"createTodoLi should set button classes corresponding to todo data fields.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		var todos = [];
+		var todo1 = new Todo('Item 1 selected');
+		todo1.markSelected(true);
+		insertTodo(todos, todo1);
+		var todo2 = new Todo('Item 2 completed');
+		todo2.markCompleted(true);
+		insertTodo(todos, todo2);
+		var todo3 = new Todo('Item 3 deleted');
+		todo3.markDeleted(true);
+		insertTodo(todos, todo3);
+		var todo4 = new Todo('Item 4 base');
+		insertTodo(todos, todo4);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		var todoLi1SelectedButton = todoLi1.children[selectedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
+		var todoLi2 = todosUl.children[1];
+		var todoLi2SelectedButton = todoLi2.children[selectedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
+		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
+		var todoLi3 = todosUl.children[2];
+		var todoLi3SelectedButton = todoLi3.children[selectedIndex];
+		var todoLi3CompleteButton = todoLi3.children[completedIndex];
+		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
+		var todoLi4 = todosUl.children[3];
+		var todoLi4SelectedButton = todoLi4.children[selectedIndex];
+		var todoLi4CompleteButton = todoLi4.children[completedIndex];
+		var todoLi4DeletedButton = todoLi4.children[deleteIndex];
+
+		eq(todosUl.childElementCount, 4);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi1SelectedButton.classList.contains('selected'), true);
+		eq(todo1.selected, true);
+		eq(todoLi1CompleteButton.classList.contains('completed'), false);
+		eq(todo1.completed, false);
+		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
+		eq(todo1.deleted, false);
+		eq(todoLi2.id, todo2.id);
+		eq(todoLi2SelectedButton.classList.contains('selected'), false);
+		eq(todo2.selected, false);
+		//eq(todoLi2CompleteButton.classList.contains('completed'), true);
+		eq(todo2.completed, true);
+		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
+		eq(todo2.deleted, false);
+		eq(todoLi3.id, todo3.id);
+		eq(todoLi3SelectedButton.classList.contains('selected'), false);
+		eq(todo3.selected, false);
+		//eq(todoLi3CompleteButton.classList.contains('completed'), false);
+		eq(todo3.completed, false);
+		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
+		eq(todo3.deleted, true);
+		eq(todoLi4.id, todo4.id);
+		eq(todoLi4SelectedButton.classList.contains('selected'), false);
+		eq(todo4.selected, false);
+		//eq(todoLi4CompleteButton.classList.contains('completed'), false);
+		eq(todo4.completed, false);
+		eq(todoLi4DeletedButton.classList.contains('deleted'), false);
+		eq(todo4.deleted, false);
+	},
+

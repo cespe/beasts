@@ -407,6 +407,7 @@ function todoClickHandler(event) {
 			todo.collapsed = false;
 			todoLi.children[todoLiUlIndex].classList.remove('collapsed');
 			todoLi.children[showChildrenIndex].classList.remove('inactive');
+			todoLi.children[selectChildrenIndex].classList.remove('inactive');
 		}
 		if (event.target.name === "showChildren") {
 			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
