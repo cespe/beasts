@@ -483,8 +483,7 @@ tests({
 
 		eq(todos[0].entry, "test");				// state after edit
 	},
-	"Section marker: todoLi buttons": function() {
-		fail();
+	"Section: todoLi buttons": function() {
 	},
 	"Each todo li should have a 'selected' button to toggle 'Selected/Unselected'.": function() {
 		todos = [];
@@ -1089,7 +1088,7 @@ tests({
 		eq(child1LiSelectButton.textContent, 'Select');
 		eq(child2LiSelectButton.textContent, 'Select');
 	},
-	"Section marker: todoLi button interactions": function() {
+	"Section: todoLi button interactions": function() {
 		fail();
 	},
 	"If clicking 'selected' button makes all todos in a todoLiUl selected, parent 'selectChildren' button text should become 'Unselect children'.": function() {
@@ -1122,7 +1121,7 @@ tests({
 		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
 	}, 
-	"Section marker: actions bar -- Selection": function() {
+	"Section: actions bar -- Selection": function() {
 		fail();
 	},
 	"The app should have a header section with an actions bar to hold action buttons.": function() {
@@ -2114,7 +2113,7 @@ tests({
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 	},
-	"Section marker: Actions bar -- filters": function() {
+	"Section: Actions bar -- filters": function() {
 		fail();
 	},
 	"The header actions bar should have an 'All' button to show active and completed todos.": function() {

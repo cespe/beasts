@@ -24,8 +24,12 @@ var TinyTest = {
             try {
                 //testAction.apply(this); 
 				testAction();  // already bound to TinyTest so apply(this) not needed
-				successes++;
-				console.log(testName + '%c Test passed.', "color: green;");
+				if (testName.startsWith('Section:')) {
+					console.log('%c' + testName, "color: purple;");
+				} else {
+					successes++;
+					console.log(testName + '%c Test passed.', "color: green;");
+				}
             } catch (e) {
                 failures++;
 				console.groupCollapsed(testName + ' %c' +  e, "color: red;");
