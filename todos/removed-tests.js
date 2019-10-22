@@ -355,3 +355,208 @@
 		eq(todoLi1Child2.classList.contains('hide'), false);
 	},
 
+	"If selectChildren button class doesn't contain 'selected', button text should be 'Select children'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+	},
+//	"If selectChildren button class is 'selected', button text should be 'Unselect children'.": function() {
+//		document.getElementById('todolist').innerHTML = '';
+//		todos = [];
+//		todo1 = new Todo('Item 1');
+//		insertTodo(todos, todo1);
+//		var todolist = document.getElementById('todolist');
+//		todolist.appendChild(createTodosUl(todos));
+//		todoLi1 = todolist.children[0].children[0];
+//		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+//		todoLi1SelectChildrenButton.classList.add('selected');
+//
+//		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+//		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+//	},
+	"If a todo has children, clicking its selectChildren button should toggle class='selected' or '' on it.": function() {
+		// Case one: the todo has children
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var child1 = new Todo('child 1');
+		var child2 = new Todo('child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+
+		// Case two: the todo has no children
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+	},
+	"If a todo has children, clicking its selectChildren button should toggle its text between 'Select/Unselect children'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		var child1 = new Todo('child 1');
+		var child2 = new Todo('child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+	},
+	"If a clicked 'Select Children' button toggles class='selected', each child todo should be set to 'selected'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var child1 = new Todo('child 1');
+		var child2 = new Todo('child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+
+		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
+		var child1LiSelectButton = child1Li.children[selectedIndex];
+		var child2Li = todoLi1.children[todoLiUlIndex].children[1];
+		var child2LiSelectButton = child2Li.children[selectedIndex];
+		
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), false);
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+		eq(child1LiSelectButton.classList.contains('selected'), true);
+		eq(child2LiSelectButton.classList.contains('selected'), true);
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+	},
+	"If a clicked 'Select Children' button toggles class='', each child todo should unset 'selected'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		var child1 = new Todo('child 1');
+		var child2 = new Todo('child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+
+		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
+		var child1LiSelectButton = child1Li.children[selectedIndex];
+		var child2Li = todoLi1.children[todoLiUlIndex].children[completedIndex];
+		var child2LiSelectButton = child2Li.children[selectedIndex];
+		
+		// Case one: child todos are all unselected
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), false);
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+
+		todoLi1SelectChildrenButton.click();	// first click sets class='selected'
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+		eq(child1LiSelectButton.classList.contains('selected'), true);
+		eq(child2LiSelectButton.classList.contains('selected'), true);
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+
+		todoLi1SelectChildrenButton.click();	// second click sets class=''
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), false);
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+
+		// Case two: child todos are not all selected or unselected, so they can't just be toggled
+
+		child2LiSelectButton.classList.add('selected');
+		child2.markSelected(true);
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), true);
+		eq(child1.selected, false);
+		eq(child2.selected, true);
+
+		todoLi1SelectChildrenButton.click();	// first click sets class='selected'
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), true);
+		eq(child1LiSelectButton.classList.contains('selected'), true);
+		eq(child2LiSelectButton.classList.contains('selected'), true);
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+
+		child1LiSelectButton.classList.remove('selected');
+		child1.markSelected(false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child1.selected, false);
+
+		todoLi1SelectChildrenButton.click();	// second click sets class=''
+
+		eq(todoLi1SelectChildrenButton.classList.contains('selected'), false);
+		eq(child1LiSelectButton.classList.contains('selected'), false);
+		eq(child2LiSelectButton.classList.contains('selected'), false);
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+	},
+

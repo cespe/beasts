@@ -181,6 +181,16 @@ function createTodoLi(todo) {
 	selectChildrenButton.textContent = 'Select children';
 	if (todo.children.length === 0) {
 		selectChildrenButton.classList.add('inactive');
+	} else {
+		for (var i = 0; i < todo.children.length; i++) {
+			var count = 0;
+			if (todo.children[i].selected === true) {
+				count++
+			}
+		}
+		if (count === todo.children.length) {
+			selectChildrenButton.textContent = 'Unselect children';
+		}
 	}
 	todoLi.appendChild(selectChildrenButton);
 
@@ -417,19 +427,19 @@ function todoClickHandler(event) {
 			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
 			var todoLiUl = todoLi.children[todoLiUlIndex];
 			if (todoLiUl && todoLiUl.children.length > 0) {
-				todoLiSelectChildrenButton.classList.toggle('selected');
-				var selected = todoLiSelectChildrenButton.classList.contains('selected');
-				for (var i = 0; i < todoLiUl.children.length; i++) {
-					var childTodo = findTodo(todo.children, todoLiUl.children[i].id);
-					if (selected) {
-						childTodo.markSelected(true);
-						todoLiSelectChildrenButton.textContent = 'Unselect children';
-						todoLiUl.children[i].children[selectedIndex].classList.add('selected');
-					} else {
-						childTodo.markSelected(false);
-						todoLiSelectChildrenButton.textContent = 'Select children';
-						todoLiUl.children[i].children[selectedIndex].classList.remove('selected');
+				if (todoLiSelectChildrenButton.textContent === 'Select children') {
+					todoLiSelectChildrenButton.textContent = 'Unselect children';
+					for (var i = 0; i < todo.children.length; i++) {
+						todo.children[i].selected = true;
+						todoLiUl.children[i].children[selectedIndex].textContent = 'Unselect';
 					}
+				} else {
+					todoLiSelectChildrenButton.textContent = 'Select children';
+					for (var i = 0; i < todo.children.length; i++) {
+						todo.children[i].selected = false;
+						todoLiUl.children[i].children[selectedIndex].textContent = 'Select';
+					}
+					
 				}
 			}
 		}
