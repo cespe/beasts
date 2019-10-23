@@ -1017,6 +1017,22 @@ tests({
 
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
 	},
+	"If todo.collapsed is true, its todoLi should be created with selectChildren button class 'inactive'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markCollapsed(true);
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+	},
 	"If all todo children have todo.selected = true, todoLi should be created with selectChildren button text 'Unselect children'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -1089,7 +1105,6 @@ tests({
 		eq(child2LiSelectButton.textContent, 'Select');
 	},
 	"Section: todoLi button interactions": function() {
-		fail();
 	},
 	"If clicking 'selected' button makes all todos in a todoLiUl selected, parent 'selectChildren' button text should become 'Unselect children'.": function() {
 		fail();
@@ -1121,8 +1136,38 @@ tests({
 		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
 	}, 
+	"When showChildren button is clicked, selectChildren button class should toggle 'inactive'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1ChildButton = todoLi1.children[addChildIndex];
+		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
+		todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+
+		eq(todo1.collapsed, false);
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+		
+		todoLi1ShowChildrenButton.click();
+
+		eq(todo1.collapsed, true);
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
+
+		todoLi1ShowChildrenButton.click();
+
+		eq(todo1.collapsed, false);
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+	},
 	"Section: actions bar -- Selection": function() {
-		fail();
 	},
 	"The app should have a header section with an actions bar to hold action buttons.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -1136,7 +1181,7 @@ tests({
 		eq(selectAllButton.innerText, 'Select all');
 		eq(actionsDiv.children[0], selectAllButton); 
 	},
-	"If todo.selected is false for all displayed todos, 'selectAll' button text should be 'Select all'.": function() {
+	"If todo.selected is true for all todos on startup, 'selectAll' button text should be 'Unselect all'; otherwise 'Select all'.": function() {
 		fail();
 	},
 	"If todo.selected is true for all displayed todos, 'selectAll' button text should be 'Unselect all'.": function() {
@@ -2114,7 +2159,6 @@ tests({
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 	},
 	"Section: Actions bar -- filters": function() {
-		fail();
 	},
 	"The header actions bar should have an 'All' button to show active and completed todos.": function() {
 		var actionsDiv = document.getElementById('actions');

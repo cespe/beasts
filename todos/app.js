@@ -179,7 +179,7 @@ function createTodoLi(todo) {
 	selectChildrenButton.name = 'selectChildren';
 	selectChildrenButton.type = 'button';
 	selectChildrenButton.textContent = 'Select children';
-	if (todo.children.length === 0) {
+	if (todo.children.length === 0 || todo.collapsed === true) {
 		selectChildrenButton.classList.add('inactive');
 	} else {
 		for (var i = 0; i < todo.children.length; i++) {
@@ -418,10 +418,12 @@ function todoClickHandler(event) {
 				todo.markCollapsed(false);
 				todoLiUl.classList.remove('collapsed');
 				todoLiShowChildrenButton.textContent = 'Hide children';
+				todoLi.children[selectChildrenIndex].classList.remove('inactive');
 			} else {
 				todo.markCollapsed(true);
 				todoLiUl.classList.add('collapsed');
 				todoLiShowChildrenButton.textContent = 'Show children';
+				todoLi.children[selectChildrenIndex].classList.add('inactive');
 			}
 		}
 		if (event.target.name === "selectChildren") {
