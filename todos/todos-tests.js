@@ -807,25 +807,39 @@ tests({
 		eq(todoLi1AddSibling.name, 'addSibling');
 		eq(todoLi1AddSibling.textContent, 'Add sibling');
 	},
-	"Clicking an 'addSibling' button should create a new sibling todo and todoLi.": function() {
+	"Clicking an 'addSibling' button should create a new sibling todo in and todoLi nested at the same level.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 		todoLi1SiblingButton = todoLi1.children[addSiblingIndex];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		todoLi1Child1 = todoLi1Ul.children[0];
+		todoLi1Child1AddSiblingButton = todoLi1Child1.children[addSiblingIndex];
 
 		eq(todosUl.childElementCount, 1);
+		eq(todoLi1Ul.childElementCount, 1);
+		eq(todo1.children[0].id, todoLi1Child1.id);
 
-		todoLi1SiblingButton.click();
+		todoLi1SiblingButton.click();				// Add a sibling at top level to todos array
 
 		eq(todosUl.childElementCount, 2);
 		var todoLi2 = todosUl.children[1]
 		eq(todoLi2.nodeName, 'LI');
 		eq(todoLi2.id, todos[1].id)
+
+		todoLi1Child1AddSiblingButton.click();		// Add a sibling at nested level to todo.children array
+
+		eq(todoLi1Ul.childElementCount, 2);
+		var todoLi1Child2 = todoLi1Ul.children[1];
+		eq(todoLi1Child2.nodeName, 'LI');
+		eq(todo1.children[1].id, todoLi1Child2.id);
 	},
 	"Each todo li should have an 'addChild' button to add a child todo underneath it.": function() {
 		document.getElementById('todolist').innerHTML = '';

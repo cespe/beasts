@@ -99,6 +99,22 @@ function findTodo(array, id) {
 	}
 }
 
+// Return the array (either todos or a todo.children) holding todo.id
+function findArray(array, id) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.id === id) {
+			return array;
+		}
+		if (todo.children.length > 0) {
+			var match = findArray(todo.children, id);
+			if (match) {
+				return match;
+			}
+		}
+	}
+}
+
 /************************************* DOM manipulation ********************************/
 
 // index positions of todoLi.children[i]
@@ -336,6 +352,7 @@ function todoClickHandler(event) {
 	if (event.target.nodeName === "BUTTON") {
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id)
+		var todoArray = findArray(todos, todoLi.id);	// todos or a todo.children array
 
 		if (event.target.name === "selected") {
 			var todoLiSelectButton = todoLi.children[selectedIndex];
@@ -400,7 +417,7 @@ function todoClickHandler(event) {
 			}
 		}
 		if (event.target.name === "addSibling") {
-			insertNewTodoLi(todos, todoLi.id)
+			insertNewTodoLi(todoArray, todoLi.id)
 		}
 		if (event.target.name === "addChild") {
 			appendNewChildTodoLi(todoLi)
