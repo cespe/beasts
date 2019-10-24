@@ -1248,7 +1248,6 @@ tests({
 		eq(todo2.selected, false);
 	},
 	"Clicking completeSelected button should toggle button text and toggle todo.completed and todoLi completed button text for selected todos.": function() {
-		fail();
 		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -1270,37 +1269,52 @@ tests({
 		var todoLi3SelectButton = todoLi3.children[selectedIndex];
 		var todoLi3CompleteButton = todoLi3.children[completedIndex];
 
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
+		eq(completeSelectedButton.textContent, 'Complete selected');
+		eq(todoLi1SelectButton.textContent, 'Select');
 		eq(todo1.selected, false);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todo1.completed, false);
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
+		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todo2.selected, false);
-		eq(todoLi2CompleteButton.classList.contains('completed'), false);
+		eq(todoLi2CompleteButton.textContent, 'Complete');
 		eq(todo2.completed, false);
-		eq(todoLi3SelectButton.classList.contains('selected'), false);
+		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
-		eq(todoLi3CompleteButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.textContent, 'Complete');
 		eq(todo3.completed, false);
-
-		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-		completeSelectedButton.classList.remove('completed');	// re-set to default
 
 		todoLi1SelectButton.click();
 		todoLi2SelectButton.click();
 		completeSelectedButton.click();
 
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
+		eq(completeSelectedButton.textContent, 'Uncomplete selected');
+		eq(todoLi1SelectButton.textContent, 'Unselect');
 		eq(todo1.selected, true);
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todo1.completed, true);
-		eq(todoLi2SelectButton.classList.contains('selected'), true);
+		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todo2.selected, true);
-		eq(todoLi2CompleteButton.classList.contains('completed'), true);
+		eq(todoLi2CompleteButton.textContent, 'Uncomplete');
 		eq(todo2.completed, true);
-		eq(todoLi3SelectButton.classList.contains('selected'), false);
+		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
-		eq(todoLi3CompleteButton.classList.contains('completed'), false);
+		eq(todoLi3CompleteButton.textContent, 'Complete');
+		eq(todo3.completed, false);
+
+		completeSelectedButton.click();
+		
+		eq(completeSelectedButton.textContent, 'Complete selected');
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todo1.selected, true);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todo1.completed, false);
+		eq(todoLi2SelectButton.textContent, 'Unselect');
+		eq(todo2.selected, true);
+		eq(todoLi2CompleteButton.textContent, 'Complete');
+		eq(todo2.completed, false);
+		eq(todoLi3SelectButton.textContent, 'Select');
+		eq(todo3.selected, false);
+		eq(todoLi3CompleteButton.textContent, 'Complete');
 		eq(todo3.completed, false);
 	},
 	"Clicking the 'Delete selected' button should toggle its class between 'deleted' and ''.": function() {

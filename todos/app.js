@@ -529,26 +529,26 @@ function actionsClickHandler() {
 		if (event.target.name === 'completeSelected') {
 			var completeSelectedButton = event.target;
 			var todosUl = todolist.children[0];
-			if (completeSelectedButton.classList.contains('completed')) {
-				completeSelectedButton.classList.remove('completed');
+			if (completeSelectedButton.textContent === 'Uncomplete selected') {
+				completeSelectedButton.textContent = 'Complete selected';
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
-					var todoLiSelectButton = todoLi.children[0];
-					var todoLiCompleteButton = todoLi.children[1];
-					if (todoLiSelectButton.classList.contains('selected')) {
-						todoLiCompleteButton.classList.remove('completed');
+					var todoLiSelectButton = todoLi.children[selectedIndex];
+					var todoLiCompleteButton = todoLi.children[completedIndex];
+					if (todoLiSelectButton.textContent === 'Unselect') {
+						todoLiCompleteButton.textContent = 'Complete';
 						var todo = findTodo(todos, todoLi.id);
 						todo.markCompleted(false);
 					}	
 				}
 			} else {
-				completeSelectedButton.classList.add('completed');
+				completeSelectedButton.textContent = 'Uncomplete selected';
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
-					var todoLiSelectButton = todoLi.children[0];
-					var todoLiCompleteButton = todoLi.children[1];
-					if (todoLiSelectButton.classList.contains('selected')) {
-						todoLiCompleteButton.classList.add('completed');
+					var todoLiSelectButton = todoLi.children[selectedIndex];
+					var todoLiCompleteButton = todoLi.children[completedIndex];
+					if (todoLiSelectButton.textContent === 'Unselect') {
+						todoLiCompleteButton.textContent = 'Uncomplete';
 						var todo = findTodo(todos, todoLi.id);
 						todo.completed = true;
 				
