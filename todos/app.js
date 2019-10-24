@@ -613,22 +613,21 @@ function startApp() {
 	var selectAllButton = document.getElementsByName('selectAll')[0];
 	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+	// set defaults on action bar buttons
+	selectAllButton.textContent = 'Select all';
+	completeSelectedButton.textContent = 'Complete selected';
+	deleteSelectedButton.textContent = 'Delete selected';
+	completeSelectedButton.classList.add('inactive');
+	deleteSelectedButton.classList.add('inactive');
 	if (todos.length === 0) {
 		todo1 = new Todo();
 		insertTodo(todos, todo1);
-	} else {
-		for (var i = 0; i < todos.length; i++) {
-			if (todos[i].selected === true) {
-				selectAllButton.textContent = 'Unselect all';
-				completeSelectedButton.classList.remove('inactive');
-				deleteSelectedButton.classList.remove('inactive');
-				break;	
-			} else {
-				selectAllButton.textContent = 'Select all';
-				completeSelectedButton.classList.add('inactive');
-				deleteSelectedButton.classList.add('inactive');
-			}
-		}
+//	} else {
+//		for (var i = 0; i < todos.length; i++) {
+//			if (todos[i].selected === true) {
+//				todos[i].selected = false;
+//			}
+//		}
 	}
 	var todolist = document.getElementById('todolist');
 	todolist.innerHTML = '';

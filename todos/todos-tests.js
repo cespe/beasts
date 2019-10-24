@@ -1184,30 +1184,31 @@ tests({
 		eq(selectAllButton.innerText, 'Select all');
 		eq(actionsDiv.children[0], selectAllButton); 
 	},
-	"If todo.selected is true for any top-level todos on startup, selectAll button text should be 'Unselect all'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');	
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');	
-		todo2.markSelected(true);
-		insertTodo(todos, todo2);
-		startApp();
-		var selectAllButton = document.getElementsByName('selectAll')[0];
-
-		eq(selectAllButton.textContent, 'Unselect all');
+	"The header actions bar should have a 'Complete selected' button to mark selected todos completed.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		eq(completeSelectedButton.nodeName, 'BUTTON');
+		eq(completeSelectedButton.innerText, 'Complete selected');
+		eq(actionsDiv.children[1], completeSelectedButton); 
 	},
-	"If todo.selected is not true for any top-level todos on startup, 'selectAll' button text should be 'Select all'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');	
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');	
-		insertTodo(todos, todo2);
+	"The header actions bar should have a 'Delete selected' button to delete selected todos.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		eq(deleteSelectedButton.nodeName, 'BUTTON');
+		eq(deleteSelectedButton.innerText, 'Delete selected');
+		eq(actionsDiv.children[2], deleteSelectedButton); 
+	},
+	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
 		startApp();
 		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 
 		eq(selectAllButton.textContent, 'Select all');
+		eq(completeSelectedButton.textContent, 'Complete selected');
+		eq(completeSelectedButton.classList.contains('inactive'), true);
+		eq(deleteSelectedButton.textContent, 'Delete selected');
+		eq(deleteSelectedButton.classList.contains('inactive'), true);
 	},
 	"Clicking selectAll button should toggle button text, toggle each todoLi selected button, and toggle each todo.selected." : function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
@@ -1245,45 +1246,6 @@ tests({
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
-	},
-	"The header actions bar should have a 'Complete selected' button to mark selected todos completed.": function() {
-		var actionsDiv = document.getElementById('actions');
-		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-		eq(completeSelectedButton.nodeName, 'BUTTON');
-		eq(completeSelectedButton.innerText, 'Complete selected');
-		eq(actionsDiv.children[1], completeSelectedButton); 
-	},
-	"On startup if any todos that are selected are also completed, completeSelected button text should be 'Uncomplete selection'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');	
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');	
-		todo2.markSelected(true);
-		todo2.markCompleted(true);
-		insertTodo(todos, todo2);
-		startApp();
-		var selectAllButton = document.getElementsByName('selectAll')[0];
-		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-
-		eq(selectAllButton.textContent, 'Unselect all');
-		eq(completeSelectedButton.textContent, 'Uncomplete selected');
-	},
-	"Otherwise completeSelected button text should be 'Complete selection' on startup.": function() {
-		fail();
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');	
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');	
-		todo2.markSelected(true);
-		insertTodo(todos, todo2);
-		startApp();
-		var selectAllButton = document.getElementsByName('selectAll')[0];
-		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-
-		eq(selectAllButton.textContent, 'Unselect all');
-		eq(completeSelectedButton.textContent, 'Uncomplete selected');
 	},
 	"Clicking completeSelected button should toggle button text and toggle todo.completed and todoLi completed button text for selected todos.": function() {
 		fail();
@@ -1340,13 +1302,6 @@ tests({
 		eq(todo3.selected, false);
 		eq(todoLi3CompleteButton.classList.contains('completed'), false);
 		eq(todo3.completed, false);
-	},
-	"The header actions bar should have a 'Delete selected' button to delete selected todos.": function() {
-		var actionsDiv = document.getElementById('actions');
-		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-		eq(deleteSelectedButton.nodeName, 'BUTTON');
-		eq(deleteSelectedButton.innerText, 'Delete selected');
-		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
 	"Clicking the 'Delete selected' button should toggle its class between 'deleted' and ''.": function() {
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
@@ -1794,18 +1749,6 @@ tests({
 		eq(todo2.deleted, true);
 		eq(todo3.selected, true);
 		eq(todo3.deleted, false);
-	},
-	"When the app starts up, actions bar button names should be set to default values.": function() {
-		startApp();
-		var selectAllButton = document.getElementsByName('selectAll')[0];
-		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-
-		eq(selectAllButton.textContent, 'Select all');
-		eq(completeSelectedButton.textContent, 'Complete selected');
-		eq(completeSelectedButton.classList.contains('inactive'), true);
-		eq(deleteSelectedButton.textContent, 'Delete selected');
-		eq(deleteSelectedButton.classList.contains('inactive'), true);
 	},
 	"Section: Actions bar -- filters": function() {
 	},
@@ -2410,7 +2353,27 @@ tests({
 	},
 	"The app should set todo.selected to false on startup or when filtering todos.": function() {
 		// Startup or filtering should produce a clean slate with no selected todos.
-		fail();
+		selectAllButton = document.getElementsByName('selectAll')[0];
+		todolist = document.getElementById('todolist');
+		todolist.innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		startApp();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi2 = todosUl.children[1];
+
+		eq(todo1.selected, false);
+		eq(todo2.selected, false)
+		eq(todoLi1.children[selectedIndex].textContent, 'Select');
+		eq(todoLi2.children[selectedIndex].textContent, 'Select');
+		eq(selectAllButton.textContent, 'Select all');
 	},
 	"If todos array is empty at startup, the app should create a new empty todo.": function() {
 		todolist = document.getElementById('todolist');
