@@ -487,10 +487,13 @@ function actionsClickHandler() {
 		}
 		if (event.target.name === "selectAll") {
 			var selectAllButton = event.target;
+			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 			var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 			var todosUl = todolist.children[0];
 			if (selectAllButton.textContent === 'Select all') {
 				selectAllButton.textContent = 'Unselect all';
+				completeSelectedButton.classList.remove('inactive');
+				deleteSelectedButton.classList.remove('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[0];
@@ -500,6 +503,8 @@ function actionsClickHandler() {
 				}
 			} else {
 				selectAllButton.textContent = 'Select all';
+				completeSelectedButton.classList.add('inactive');
+				deleteSelectedButton.classList.add('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[0];
