@@ -1471,31 +1471,13 @@ tests({
 		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
-		var todoLi2 = todosUl.children[completedIndex];
-		var todoLi2CompleteButton = todoLi2.children[completedIndex];
-		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
+		var todoLi2 = todosUl.children[1];
 		var todoLi3 = todosUl.children[2];
-		var todoLi3CompleteButton = todoLi3.children[completedIndex];
-		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompleteButton.classList.contains('completed'), true);
-		eq(todo2.completed, true);
-		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
-		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
-		eq(todoLi3CompleteButton.classList.contains('completed'), false);
-		eq(todo3.completed, false);
-		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
-		eq(todo3.deleted, true);
 
 		var showAllButton = document.getElementsByName('showAll')[0];
 
@@ -1504,28 +1486,15 @@ tests({
 		// Re-set dom element variables because showAll click handler erases old todolist content.
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompleteButton = todoLi1.children[1];
-		todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		todoLi2 = todosUl.children[1];
-		todoLi2CompleteButton = todoLi2.children[1];
-		todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		todoLi3 = todosUl.children[2];
 
 		eq(todosUl.childElementCount, 2);
 
 		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todo1.deleted, false);
-
+		eq(todoLi1.id, todo1.id);
 		eq(todosUl.children[1], todoLi2);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompleteButton.classList.contains('completed'), true);
-		eq(todo2.completed, true);
-		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
-		eq(todo2.deleted, false);
-		
 		eq(todoLi3, undefined);
 	},
 	"The header actions bar should have an 'Active' button to show active (uncompleted) todos.": function() {
@@ -1550,52 +1519,28 @@ tests({
 		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1CompleteButton = todoLi1.children[1];
-		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		var todoLi2 = todosUl.children[1];
-		var todoLi2CompleteButton = todoLi2.children[1];
-		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		var todoLi3 = todosUl.children[2];
-		var todoLi3CompleteButton = todoLi3.children[1];
-		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompleteButton.classList.contains('completed'), true);
-		eq(todo2.completed, true);
-		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
-		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
-		eq(todoLi3CompleteButton.classList.contains('completed'), false);
-		eq(todo3.completed, false);
-		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
-		eq(todo3.deleted, true);
 
 		var showActiveButton = document.getElementsByName('showActive')[0];
 
-		showActiveButton.click();								// test 'active' filter
+		showActiveButton.click();									// test 'active' filter
 
-		// Re-set dom element variables because showActive click handler erases old todolist content.
+		// Re-set dom element variables because showAll click handler erases old todolist content.
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompleteButton = todoLi1.children[completedIndex];
-		todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		todoLi2 = todosUl.children[1];
-		todoLi3 = todosUl.children[deleteIndex];
+		todoLi3 = todosUl.children[2];
 
 		eq(todosUl.childElementCount, 1);
 
 		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todo1.deleted, false);
-
+		eq(todoLi1.id, todo1.id);
 		eq(todoLi2, undefined);
 		eq(todoLi3, undefined);
 	},
@@ -1621,49 +1566,26 @@ tests({
 		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		var todoLi2 = todosUl.children[1];
-		var todoLi2CompleteButton = todoLi2.children[completedIndex];
-		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		var todoLi3 = todosUl.children[2];
-		var todoLi3CompleteButton = todoLi3.children[1];
-		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompleteButton.classList.contains('completed'), true);
-		eq(todo2.completed, true);
-		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
-		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
-		eq(todoLi3CompleteButton.classList.contains('completed'), false);
-		eq(todo3.completed, false);
-		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
-		eq(todo3.deleted, true);
 
-		var showCompleteButton = document.getElementsByName('showCompleted')[0];
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
 
-		showCompleteButton.click();							// test 'completed' filter
+		showCompletedButton.click();									// test 'completed' filter
 
-		// Re-set dom element variables because showCompleted click handler erases old todolist content.
+		// Re-set dom element variables because showAll click handler erases old todolist content.
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompleteButton = todoLi1.children[completedIndex];
-		todoLi1DeletedButton = todoLi1.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 1);
 
 		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
-		eq(todo2.completed, true);
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todo2.deleted, false);
+		eq(todoLi1.id, todo2.id);
 	},
 	"The header actions bar should have a 'Deleted' button to show deleted todos.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -1687,51 +1609,28 @@ tests({
 		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 		var todoLi2 = todosUl.children[1];
-		var todoLi2CompleteButton = todoLi2.children[completedIndex];
-		var todoLi2DeletedButton = todoLi2.children[deleteIndex];
 		var todoLi3 = todosUl.children[2];
-		var todoLi3CompleteButton = todoLi3.children[completedIndex];
-		var todoLi3DeletedButton = todoLi3.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-		eq(todoLi1DeletedButton.classList.contains('deleted'), false);
-		eq(todo1.deleted, false);
 		eq(todoLi2.id, todo2.id);
-		eq(todoLi2CompleteButton.classList.contains('completed'), true);
-		eq(todo2.completed, true);
-		eq(todoLi2DeletedButton.classList.contains('deleted'), false);
-		eq(todo2.deleted, false);
 		eq(todoLi3.id, todo3.id);
-		eq(todoLi3CompleteButton.classList.contains('completed'), false);
-		eq(todo3.completed, false);
-		eq(todoLi3DeletedButton.classList.contains('deleted'), true);
-		eq(todo3.deleted, true);
 
 		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 
-		showDeletedButton.click();							// test 'deleted' filter
+		showDeletedButton.click();									// test 'deleted' filter
 
-		// Re-set dom element variables because showDeleted click handler erases old todolist content.
+		// Re-set dom element variables because showAll click handler erases old todolist content.
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompleteButton = todoLi1.children[completedIndex];
-		todoLi1DeletedButton = todoLi1.children[deleteIndex];
 
 		eq(todosUl.childElementCount, 1);
 
 		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo3.completed, false);
-		eq(todoLi1DeletedButton.classList.contains('deleted'), true);
-		eq(todo3.deleted, true);
+		eq(todoLi1.id, todo3.id);
 	},
-	"Section: Other actions bar buttons": function() {
+	"Section: Actions bar -- other buttons": function() {
 
 	},
 	"The header actions bar should have an addTodo button that adds a todo to the end of the list.": function() {
@@ -1778,7 +1677,7 @@ tests({
 	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
 		fail();
 	},
-	"Section: One/None/All button interactions": function() {
+	"Section: todoLi/actions bar button interactions": function() {
 	},
 	"If clicking 'selected' button makes all todos in a todoLiUl selected, parent 'selectChildren' button text should become 'Unselect children'.": function() {
 		fail();
