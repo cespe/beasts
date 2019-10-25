@@ -18,3 +18,7 @@
 .collapsed {
 	display: none;
 }
+
+.highlighted {
+	background-color: rgba(211, 211, 211, 0.5);
+}

@@ -213,6 +213,7 @@ function createTodoLi(todo) {
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
+	entry.classList.remove('highlighted');
 	if (todo.completed) {
 		entry.classList.add('struck');
 	}
@@ -351,6 +352,7 @@ function editHandler(event) {
 function todoClickHandler(event) {
 	if (event.target.nodeName === "BUTTON") {
 		var todoLi = event.target.parentElement;
+		var todoLiEntry = todoLi.children[entryIndex];
 		var todo = findTodo(todos, todoLi.id)
 		var todoArray = findArray(todos, todoLi.id);	// todos or a todo.children array
 
@@ -361,9 +363,11 @@ function todoClickHandler(event) {
 			var selectAllButton = document.getElementsByName('selectAll')[0];
 			if (todo.selected) {
 				todoLiSelectButton.textContent = 'Unselect';
+				todoLiEntry.classList.add('highlighted');
 				selectAllButton.classList.add('selected');
 			} else {
 				todoLiSelectButton.textContent = 'Select';
+				todoLiEntry.classList.remove('highlighted');
 				// TODO convert to array.find() to stop looping as soon as a match is found
 				var selectedCount = 0;
 				for (var i = 0; i < todos.length; i++) {
@@ -498,6 +502,8 @@ function actionsClickHandler() {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[0];
 					todoLiSelectButton.textContent = 'Unselect';
+					var todoLiEntry = todoLi.children[entryIndex];
+					todoLiEntry.classList.add('highlighted');
 					var todo = findTodo(todos, todoLi.id)
 					todo.selected = true;
 				}
@@ -509,6 +515,8 @@ function actionsClickHandler() {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[0];
 					todoLiSelectButton.textContent = 'Select';
+					var todoLiEntry = todoLi.children[entryIndex];
+					todoLiEntry.classList.remove('highlighted');
 					var todo = findTodo(todos, todoLi.id)
 					todo.selected = false;
 				}
@@ -537,6 +545,8 @@ function actionsClickHandler() {
 					var todoLiCompleteButton = todoLi.children[completedIndex];
 					if (todoLiSelectButton.textContent === 'Unselect') {
 						todoLiCompleteButton.textContent = 'Complete';
+						var todoLiEntry = todoLi.children[entryIndex];
+						todoLiEntry.classList.remove('struck');
 						var todo = findTodo(todos, todoLi.id);
 						todo.markCompleted(false);
 					}	
@@ -549,6 +559,8 @@ function actionsClickHandler() {
 					var todoLiCompleteButton = todoLi.children[completedIndex];
 					if (todoLiSelectButton.textContent === 'Unselect') {
 						todoLiCompleteButton.textContent = 'Uncomplete';
+						var todoLiEntry = todoLi.children[entryIndex];
+						todoLiEntry.classList.add('struck');
 						var todo = findTodo(todos, todoLi.id);
 						todo.completed = true;
 				
@@ -559,36 +571,35 @@ function actionsClickHandler() {
 		if (event.target.name === 'deleteSelected') {
 			var deleteSelectedButton = event.target;
 			var todosUl = todolist.children[0];
-			if (deleteSelectedButton.classList.contains('deleted')) {
-				deleteSelectedButton.classList.remove('deleted');
+			if (deleteSelectedButton.textContent === 'Undelete selected') {
 				deleteSelectedButton.textContent = 'Delete selected';
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
-					var todoLiSelectButton = todoLi.children[0];
-					var todoLiDeleteButton = todoLi.children[2];
-					if (todoLiSelectButton.classList.contains('selected')) {
-						todoLiDeleteButton.classList.remove('deleted');
+					var todoLiSelectButton = todoLi.children[selectedIndex];
+					var todoLiDeleteButton = todoLi.children[deleteIndex];
+					if (todoLiSelectButton.textContent === 'Unselect') {
+						todoLiDeleteButton.textContent = 'Delete';
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = false;
-						todoLi.classList.remove('hide');
-						todoLi.style.display = '';		// TODO replace with css on class 'hide'
+						var todoLiEntry = todoLi.children[entryIndex];
+						todoLiEntry.classList.remove('faded');
+						todoLi.classList.remove('removed');
 					}
 				}
 			} else {
-				deleteSelectedButton.classList.add('deleted')
-				deleteSelectedButton.textContent = 'Undelete';
-				var selectAllButton = document.getElementsByName('selectAll')[0];
-				selectAllButton.classList.remove('selected');
+				deleteSelectedButton.textContent = 'Undelete selected';
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
-					var todoLiSelectButton = todoLi.children[0];
-					var todoLiDeleteButton = todoLi.children[2];
-					if (todoLiSelectButton.classList.contains('selected')) {
-						todoLiDeleteButton.classList.add('deleted');
+					var todoLiSelectButton = todoLi.children[selectedIndex];
+					var todoLiDeleteButton = todoLi.children[deleteIndex];
+					if (todoLiSelectButton.textContent === 'Unselect') {
+						todoLiDeleteButton.textContent = 'Undelete';
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = true;
-						todoLi.classList.add('hide');
-						todoLi.style.display = 'none';	// TODO replace with css on class 'hide'
+						var todoLiEntry = todoLi.children[entryIndex];
+						todoLiEntry.classList.add('faded');
+						todoLi.classList.add('removed');
+	
 					}
 				}
 			}

@@ -297,4 +297,4 @@ Hide/display buttons -- active/inactive
 Strike-through/don't strike-through entry text -- normal/struck-through
 Display normal/deleted todo -- not faded/faded (50% translucent)
 Toggle button text and class
-
+Display unselected/selected todo -- background color -- highlighted/not highlighted
