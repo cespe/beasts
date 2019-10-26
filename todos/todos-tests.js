@@ -485,6 +485,17 @@ tests({
 	},
 	"Section: todoLi buttons": function() {
 	},
+	"Each todoLi should have a 'zoom in/out' button to filter the display to just that todoLi.": function() {
+		// Simplifies the UI: can remove selectChildren, which currently has no buttons to operate on the selection.
+		// Simplifies the filtered todo displays, which don't have to take child todos into account.
+		fail();
+	},
+	"When todoLi zoom button is clicked, other buttons should be hidden, class should toggle 'zoomed' and all other todoLis should toggle class 'unzoomed'.": function() {
+		fail();
+	},
+	"When a todoLi is zoomed in, the actions bar buttons should apply only to the todoLi's children.": function() {
+		fail();
+	},
 	"Each todo li should have a 'selected' button to toggle 'Selected/Unselected'.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
@@ -1677,7 +1688,7 @@ tests({
 	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
 		fail();
 	},
-	"Section: todoLi/actions bar button interactions": function() {
+	"Section: more button interactions": function() {
 	},
 	"If clicking 'selected' button makes all todos in a todoLiUl selected, parent 'selectChildren' button text should become 'Unselect children'.": function() {
 		fail();
@@ -1685,7 +1696,7 @@ tests({
 	"If clicking 'selected' button makes all todos in a todoLiUl unselected, parent 'selectChildren' button text should become 'Select children'.": function() {
 		fail();
 	},
-	"If clicking 'deleted' button removes the last todoLi in the <ul>, the app should adjust other buttons and todo.collapsed.": function() {
+	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
 	},
 	"When a top-level todo is selected, the 'selectAll' button class should be set to 'selected'.": function() {
@@ -1940,10 +1951,16 @@ tests({
 	"When editing, Backspace should delete the todo if the entry is empty.": function() {
 		fail();
 	},
+	"Section: more features": function() {
+
+	},
 	"There should be a way to move a todo up in the list, for example to the top of the list.": function() {
 		// An 'Add above' button? 'Shift-up/down' button? Drag to new position?
 		fail();
 	},
+	"There should be a 'find' input to filter the display according to keywords or entry text.": function() {
+		fail();
+	}, 
 	"Section: On startup": function() {
 
 	},
