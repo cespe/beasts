@@ -1401,3 +1401,39 @@
 		eq(todo3.deleted, false);
 	},
 
+	"If todo.selected is true for any todos on startup, 'completeSelected' and 'deleteSelected' class should be ''.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');	
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');	
+		todo2.markSelected(true);
+		insertTodo(todos, todo2);
+		startApp();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+
+		eq(selectAllButton.textContent, 'Unselect all');
+		eq(completeSelectedButton.classList.contains('inactive'), false);
+		eq(deleteSelectedButton.classList.contains('inactive'), false);
+
+	},
+	"If todo.selected is not true for any todos on startup, 'completeSelected' and 'deleteSelected' class should be 'inactive'.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');	
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');	
+		insertTodo(todos, todo2);
+		startApp();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(completeSelectedButton.classList.contains('inactive'), true);
+		eq(deleteSelectedButton.classList.contains('inactive'), true);
+
+	},
+
