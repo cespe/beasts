@@ -145,10 +145,8 @@ function createTodoLi(todo) {
 	completeButton.name = 'completed';
 	completeButton.type = 'button';
 	if (todo.completed) {
-//		completeButton.classList.add('completed');
 		completeButton.textContent = 'Uncomplete';
 	} else {
-//		completeButton.classList.remove('completed');
 		completeButton.textContent = 'Complete';
 	}
 	todoLi.appendChild(completeButton);
@@ -157,11 +155,9 @@ function createTodoLi(todo) {
 	deleteButton.name = 'deleted';
 	deleteButton.type = 'button';
 	if (todo.deleted) {
-		deleteButton.classList.add('deleted');
-		deleteButton.textContent = 'Undelete';	// should only be visible when todos are 
-												// filtered to show deleted todos
+		deleteButton.textContent = 'Undelete';
+		todoLi.classList.add('removed');		// hide deleted todos by default
 	} else {
-		deleteButton.classList.remove('deleted');
 		deleteButton.textContent = 'Delete';
 	}
 	todoLi.appendChild(deleteButton);
@@ -473,21 +469,86 @@ function todoClickHandler(event) {
 function actionsClickHandler() {
 	if (event.target.nodeName === "BUTTON") {		// TODO is this conditional needed?
 		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLiCount = todosUl.children.length;
 		if (event.target.name === "showAll") {
 			document.getElementById('todolist').innerHTML = '';
 			todolist.appendChild(createTodosUl(todos, 'all'));
 		}
 		if (event.target.name === "showActive") {
-			document.getElementById('todolist').innerHTML = '';
-			todolist.appendChild(createTodosUl(todos, 'active'));
+			var showActiveButton = event.target;
+			if (showActiveButton.textContent === '√ Active') {
+				showActiveButton.textContent = 'Active';
+				for (var i = 0; i < todoLiCount; i++) {
+					var todoLi = todosUl.children[i];
+					var entry = todoLi.children[entryIndex];
+					var struck = entry.classList.contains('struck');
+					var faded = entry.classList.contains('faded');
+					if (!struck && !faded) {
+						todoLi.classList.add('removed');
+					}
+				}
+			} else {
+				showActiveButton.textContent = '√ Active';
+				for (var i = 0; i < todoLiCount; i++) {
+					var todoLi = todosUl.children[i];
+					var entry = todoLi.children[entryIndex];
+					var struck = entry.classList.contains('struck');
+					var faded = entry.classList.contains('faded');
+					if (!struck && !faded) {
+						todoLi.classList.remove('removed');
+					}
+				}
+			}
 		}
 		if (event.target.name === "showCompleted") {
-			document.getElementById('todolist').innerHTML = '';
-			todolist.appendChild(createTodosUl(todos, 'completed'));
+			var showCompletedButton = event.target;
+			if (showCompletedButton.textContent === '√ Completed') {
+				showCompletedButton.textContent = 'Completed';
+				for (var i = 0; i < todoLiCount; i++) {
+					var todoLi = todosUl.children[i];
+					var entry = todoLi.children[entryIndex];
+					var struck = entry.classList.contains('struck');
+					if (struck) {
+						todoLi.classList.add('removed');
+					}
+				}
+			} else {
+				showCompletedButton.textContent = '√ Completed';
+				for (var i = 0; i < todoLiCount; i++) {
+					var todoLi = todosUl.children[i];
+					var entry = todoLi.children[entryIndex];
+					var struck = entry.classList.contains('struck');
+					var faded = entry.classList.contains('faded');
+					if (struck && !faded) {
+						todoLi.classList.remove('removed');
+					}
+				}
+			}
 		}
 		if (event.target.name === "showDeleted") {
-			document.getElementById('todolist').innerHTML = '';
-			todolist.appendChild(createTodosUl(todos, 'deleted'));
+			var showDeletedButton = event.target;
+			if (showDeletedButton.textContent === '√ Deleted') {
+				showDeletedButton.textContent = 'Deleted';
+				for (var i = 0; i < todoLiCount; i++) {
+					var todoLi = todosUl.children[i];
+					var entry = todoLi.children[entryIndex];
+					var faded = entry.classList.contains('faded');
+					if (faded) {
+						todoLi.classList.add('removed');
+					}
+				}
+			} else {
+				showDeletedButton.textContent = '√ Deleted';
+				for (var i = 0; i < todoLiCount; i++) {
+					var todoLi = todosUl.children[i];
+					var entry = todoLi.children[entryIndex];
+					var faded = entry.classList.contains('faded');
+					if (faded) {
+						todoLi.classList.remove('removed');
+					}
+				}
+			}
 		}
 		if (event.target.name === "selectAll") {
 			var selectAllButton = event.target;

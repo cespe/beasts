@@ -1508,104 +1508,115 @@ tests({
 		eq(todoLi2.id, todo2.id);
 		eq(todoLi3, undefined);
 	},
-	"The header actions bar should have an 'Active' button to show active (uncompleted) todos.": function() {
+	"The header actions bar should have a showActive button to toggle showing active todos.": function() {
+		// active todos are not completed and not deleted
 		var actionsDiv = document.getElementById('actions');
 		var showActiveButton = document.getElementsByName('showActive')[0];
 		eq(showActiveButton.nodeName, 'BUTTON');
-		eq(showActiveButton.innerText, 'Active');
+		eq(showActiveButton.innerText, '√ Active');
 		eq(actionsDiv.children[4], showActiveButton); 
 	},
-	"Clicking the 'Active' button should display active todos only.": function() {
+	"On startup, the showActive button text should be '√ Active' and todoLi class not 'removed' on active todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
-		todo1 = new Todo('Item 1 active');
+		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2 completed');
-		todo2.markCompleted(true);
-		insertTodo(todos, todo2);
-		todo3 = new Todo('Item 3 deleted');
-		todo3.markDeleted(true);
-		insertTodo(todos, todo3);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));			
-		var todosUl = todolist.children[0];
-		var todoLi1 = todosUl.children[0];
-		var todoLi2 = todosUl.children[1];
-		var todoLi3 = todosUl.children[2];
 
-		eq(todosUl.childElementCount, 3);						// base case, no filter
-		eq(todoLi1.id, todo1.id);
-		eq(todoLi2.id, todo2.id);
-		eq(todoLi3.id, todo3.id);
+		startApp();
+		
+		showActiveButton = document.getElementsByName('showActive')[0];
+		todolist = document.getElementById('todolist');
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
 
-		var showActiveButton = document.getElementsByName('showActive')[0];
-
-		showActiveButton.click();									// test 'active' filter
-
-		// Re-set dom element variables because showAll click handler erases old todolist content.
-		todosUl = todolist.children[0];
-		todoLi1 = todosUl.children[0];
-		todoLi2 = todosUl.children[1];
-		todoLi3 = todosUl.children[2];
-
-		eq(todosUl.childElementCount, 1);
-
-		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1.id, todo1.id);
-		eq(todoLi2, undefined);
-		eq(todoLi3, undefined);
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todoLi1.classList.contains('removed'), false);
 	},
-	"The header actions bar should have a 'Completed' button to show completed todos.": function() {
+	"Clicking the showActive button should toggle button text and set/unset todoLi class 'removed' on active todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item active');
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		showActiveButton = document.getElementsByName('showActive')[0];
+		todolist = document.getElementById('todolist');
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todoLi1.classList.contains('removed'), false);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, 'Active');
+		eq(todoLi1.classList.contains('removed'), true);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todoLi1.classList.contains('removed'), false);
+	},
+	"The header actions bar should have a showCompleted button to toggle showing completed todos.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var showCompleteButton = document.getElementsByName('showCompleted')[0];
 		eq(showCompleteButton.nodeName, 'BUTTON');
-		eq(showCompleteButton.innerText, 'Completed');
+		eq(showCompleteButton.innerText, '√ Completed');
 		eq(actionsDiv.children[5], showCompleteButton); 
 	},
-	"Clicking the 'Completed' button should display completed todos only.": function() {
+	"On startup, the showCompleted button text should be '√ Completed' and todoLi class not 'removed' on completed todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
-		todo1 = new Todo('Item 1 active');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2 completed');
-		todo2.markCompleted(true);
+		todo1 = new Todo('Item completed');
+		todo1.markCompleted(true);
 		insertTodo(todos, todo2);
-		todo3 = new Todo('Item 3 deleted');
-		todo3.markDeleted(true);
-		insertTodo(todos, todo3);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));			
-		var todosUl = todolist.children[0];
-		var todoLi1 = todosUl.children[0];
-		var todoLi2 = todosUl.children[1];
-		var todoLi3 = todosUl.children[2];
 
-		eq(todosUl.childElementCount, 3);						// base case, no filter
-		eq(todoLi1.id, todo1.id);
-		eq(todoLi2.id, todo2.id);
-		eq(todoLi3.id, todo3.id);
+		startApp();
+		
+		showCompletedButton = document.getElementsByName('showCompleted')[0];
+		todolist = document.getElementById('todolist');
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
 
-		var showCompletedButton = document.getElementsByName('showCompleted')[0];
-
-		showCompletedButton.click();									// test 'completed' filter
-
-		// Re-set dom element variables because showAll click handler erases old todolist content.
-		todosUl = todolist.children[0];
-		todoLi1 = todosUl.children[0];
-
-		eq(todosUl.childElementCount, 1);
-
-		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1.id, todo2.id);
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todoLi1.classList.contains('removed'), false);
 	},
-	"The header actions bar should have a 'Deleted' button to show deleted todos.": function() {
+	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'removed' on completed todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item completed');
+		todo1.markCompleted(true);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		showCompletedButton = document.getElementsByName('showCompleted')[0];
+		todolist = document.getElementById('todolist');
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todoLi1.classList.contains('removed'), false);
+
+		showCompletedButton.click();
+
+		eq(showCompletedButton.textContent, 'Completed');
+		eq(todoLi1.classList.contains('removed'), true);
+
+		showCompletedButton.click();
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todoLi1.classList.contains('removed'), false);
+	},
+	"The header actions bar should have a showDeleted button to toggle showing deleted todos.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		eq(showDeletedButton.nodeName, 'BUTTON');
 		eq(showDeletedButton.innerText, 'Deleted');
 		eq(actionsDiv.children[6], showDeletedButton); 
 	},
-	"Clicking the 'Deleted' button should display deleted todos only.": function() {
+	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'removed' on deleted todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
@@ -1616,30 +1627,73 @@ tests({
 		todo3 = new Todo('Item 3 deleted');
 		todo3.markDeleted(true);
 		insertTodo(todos, todo3);
+
+		startApp();
+
+		showDeletedButton = document.getElementsByName('showDeleted')[0];
+
+		eq(showDeletedButton.textContent, 'Deleted');
+
 		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));			
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi2 = todosUl.children[1];
 		var todoLi3 = todosUl.children[2];
 
-		eq(todosUl.childElementCount, 3);						// base case, no filter
 		eq(todoLi1.id, todo1.id);
 		eq(todoLi2.id, todo2.id);
 		eq(todoLi3.id, todo3.id);
 
-		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi2.classList.contains('removed'), false);
+		eq(todoLi3.classList.contains('removed'), true);
+	},
+	"Clicking the showDeleted button should toggle button text and set/unset todoLi class 'removed' on deleted todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1 active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2 completed');
+		todo2.markCompleted(true);
+		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3 deleted');
+		todo3.markDeleted(true);
+		insertTodo(todos, todo3);
 
-		showDeletedButton.click();									// test 'deleted' filter
+		startApp();
 
-		// Re-set dom element variables because showAll click handler erases old todolist content.
-		todosUl = todolist.children[0];
-		todoLi1 = todosUl.children[0];
+		showDeletedButton = document.getElementsByName('showDeleted')[0];
 
-		eq(todosUl.childElementCount, 1);
+		eq(showDeletedButton.textContent, 'Deleted');
 
-		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1.id, todo3.id);
+		var todolist = document.getElementById('todolist');
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		var todoLi2 = todosUl.children[1];
+		var todoLi3 = todosUl.children[2];
+
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(todoLi3.id, todo3.id);
+
+		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi2.classList.contains('removed'), false);
+		eq(todoLi3.classList.contains('removed'), true);
+
+		showDeletedButton.click();
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi2.classList.contains('removed'), false);
+		eq(todoLi3.classList.contains('removed'), false);
+
+		showDeletedButton.click();
+
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi2.classList.contains('removed'), false);
+		eq(todoLi3.classList.contains('removed'), true);
+
 	},
 	"Section: Actions bar -- other buttons": function() {
 

@@ -1,24 +1,30 @@
 .struck {
+	/* styles completed todos */
 	text-decoration: line-through;
 }
 
 .faded {
 	/* 50% translucent per MDN color page */
+	/* styles deleted todos */
 	color: rgba(0, 0, 0, 0.5);
 }
 
 .removed {
+	/* styles todos that are filtered out */
 	display: none;
 }
 
 .inactive {
+	/* styles inactive buttons */
 	display: none;
 }
 
 .collapsed {
+	/* styles collapsed child todos */
 	display: none;
 }
 
 .highlighted {
+	/* styles selected todos */
 	background-color: rgba(211, 211, 211, 0.5);
 }
