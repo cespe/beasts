@@ -298,3 +298,22 @@ Strike-through/don't strike-through entry text -- normal/struck-through
 Display normal/deleted todo -- not faded/faded (50% translucent)
 Toggle button text and class
 Display unselected/selected todo -- background color -- highlighted/not highlighted
+
+##Button interactions
+Works
+Select all --> Delete selected --> Undelete selected
+Doesn't work
+Select all --> Delete selected --> Add todo --> Unselect all
+	completeSelected and deleteSelected now hidden
+	Select all --> deleteSelected is wrongly Undelete selected and deleted todos are still selected
+
+How about narrowing the scope of Select and Select all?
+	Don't show todoLi Select button until Select all is clicked.
+	When Select all is clicked, hide everything not related to marking selected todos completed or deleted
+		Allow todoLi Select/Unselect
+		Allow completeSelected and deleteSelected
+		Disallow Add todo, Add sibling, Add child
+		Allow todoLi showChildren and selectChildren
+		Allow filters?
+
+	Apply the same rules to Select children
