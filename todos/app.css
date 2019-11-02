@@ -9,8 +9,18 @@
 	color: rgba(0, 0, 0, 0.5);
 }
 
-.removed {
-	/* styles todos that are filtered out */
+.active-removed {
+	/* styles active todos that are filtered out */
+	display: none;
+}
+
+.completed-removed {
+	/* styles completed todos that are filtered out */
+	display: none;
+}
+
+.deleted-removed {
+	/* styles deleted todos that are filtered out */
 	display: none;
 }
 

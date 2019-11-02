@@ -156,7 +156,7 @@ function createTodoLi(todo) {
 	deleteButton.type = 'button';
 	if (todo.deleted) {
 		deleteButton.textContent = 'Undelete';
-		todoLi.classList.add('removed');		// hide deleted todos by default
+		todoLi.classList.add('deleted-removed');		// hide deleted todos by default
 	} else {
 		deleteButton.textContent = 'Delete';
 	}
@@ -409,11 +409,11 @@ function todoClickHandler(event) {
 			if (todo.deleted) {
 				todoLiDeleteButton.textContent = 'Undelete';
 				todoLi.children[entryIndex].classList.add('faded');
-				todoLi.classList.add('removed');
+				todoLi.classList.add('deleted-removed');
 			} else {
 				todoLiDeleteButton.textContent = 'Delete';
 				todoLi.children[entryIndex].classList.remove('faded');
-				todoLi.classList.remove('removed');
+				todoLi.classList.remove('deleted-removed');
 			}
 		}
 		if (event.target.name === "addSibling") {
@@ -470,7 +470,11 @@ function actionsClickHandler() {
 	if (event.target.nodeName === "BUTTON") {		// TODO is this conditional needed?
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
-		var todoLiCount = todosUl.children.length;
+		// handle case (just for tests?) where todosUl is not defined
+		var todoLiCount = 0;
+		if (todosUl) {
+			todoLiCount = todosUl.children.length;	
+		}
 
 		if (event.target.name === "showActive") {
 			var showActiveButton = event.target;
@@ -482,7 +486,7 @@ function actionsClickHandler() {
 					var struck = entry.classList.contains('struck');
 					var faded = entry.classList.contains('faded');
 					if (!struck && !faded) {
-						todoLi.classList.add('removed');
+						todoLi.classList.add('active-removed');
 					}
 				}
 			} else {
@@ -493,7 +497,7 @@ function actionsClickHandler() {
 					var struck = entry.classList.contains('struck');
 					var faded = entry.classList.contains('faded');
 					if (!struck && !faded) {
-						todoLi.classList.remove('removed');
+						todoLi.classList.remove('active-removed');
 					}
 				}
 			}
@@ -507,7 +511,7 @@ function actionsClickHandler() {
 					var entry = todoLi.children[entryIndex];
 					var struck = entry.classList.contains('struck');
 					if (struck) {
-						todoLi.classList.add('removed');
+						todoLi.classList.add('completed-removed');
 					}
 				}
 			} else {
@@ -518,7 +522,7 @@ function actionsClickHandler() {
 					var struck = entry.classList.contains('struck');
 					var faded = entry.classList.contains('faded');
 					if (struck && !faded) {
-						todoLi.classList.remove('removed');
+						todoLi.classList.remove('completed-removed');
 					}
 				}
 			}
@@ -532,7 +536,7 @@ function actionsClickHandler() {
 					var entry = todoLi.children[entryIndex];
 					var faded = entry.classList.contains('faded');
 					if (faded) {
-						todoLi.classList.add('removed');
+						todoLi.classList.add('deleted-removed');
 					}
 				}
 			} else {
@@ -542,7 +546,7 @@ function actionsClickHandler() {
 					var entry = todoLi.children[entryIndex];
 					var faded = entry.classList.contains('faded');
 					if (faded) {
-						todoLi.classList.remove('removed');
+						todoLi.classList.remove('deleted-removed');
 					}
 				}
 			}

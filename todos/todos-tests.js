@@ -746,7 +746,7 @@ tests({
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todoLi1.children[entryIndex].classList.contains('faded'), false);
 	},
-	"Clicking 'deleted' button should also toggle its todoLi class 'removed'.": function() {
+	"Clicking 'deleted' button should also toggle its todoLi class 'deleted-removed'.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -756,15 +756,15 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
 
-		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
 
 		todoLi1DeletedButton.click();
 
-		eq(todoLi1.classList.contains('removed'), true);
+		eq(todoLi1.classList.contains('deleted-removed'), true);
 
 		todoLi1DeletedButton.click();
 
-		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
 	},
 	"Deleting a todo should not delete its children.": function() {
 		// The children are just along for the ride
@@ -1455,9 +1455,9 @@ tests({
 		var showActiveButton = document.getElementsByName('showActive')[0];
 		eq(showActiveButton.nodeName, 'BUTTON');
 		eq(showActiveButton.innerText, '√ Active');
-		eq(actionsDiv.children[4], showActiveButton); 
+		eq(actionsDiv.children[3], showActiveButton); 
 	},
-	"On startup, the showActive button text should be '√ Active' and todoLi class not 'removed' on active todos.": function() {
+	"On startup, the showActive button text should be '√ Active' and todoLi class not 'active-removed' on active todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item active');
@@ -1471,9 +1471,9 @@ tests({
 		todoLi1 = todoUl.children[0];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('active-removed'), false);
 	},
-	"Clicking the showActive button should toggle button text and set/unset todoLi class 'removed' on active todos.": function() {
+	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item active');
@@ -1487,26 +1487,26 @@ tests({
 		todoLi1 = todoUl.children[0];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('active-removed'), false);
 
 		showActiveButton.click();
 
 		eq(showActiveButton.textContent, 'Active');
-		eq(todoLi1.classList.contains('removed'), true);
+		eq(todoLi1.classList.contains('active-removed'), true);
 
 		showActiveButton.click();
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('active-removed'), false);
 	},
 	"The header actions bar should have a showCompleted button to toggle showing completed todos.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var showCompleteButton = document.getElementsByName('showCompleted')[0];
 		eq(showCompleteButton.nodeName, 'BUTTON');
 		eq(showCompleteButton.innerText, '√ Completed');
-		eq(actionsDiv.children[5], showCompleteButton); 
+		eq(actionsDiv.children[4], showCompleteButton); 
 	},
-	"On startup, the showCompleted button text should be '√ Completed' and todoLi class not 'removed' on completed todos.": function() {
+	"On startup, the showCompleted button text should be '√ Completed' and todoLi class not 'completed-removed' on completed todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item completed');
@@ -1521,9 +1521,9 @@ tests({
 		todoLi1 = todoUl.children[0];
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('completed-removed'), false);
 	},
-	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'removed' on completed todos.": function() {
+	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'completed-removed' on completed todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item completed');
@@ -1538,26 +1538,26 @@ tests({
 		todoLi1 = todoUl.children[0];
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('completed-removed'), false);
 
 		showCompletedButton.click();
 
 		eq(showCompletedButton.textContent, 'Completed');
-		eq(todoLi1.classList.contains('removed'), true);
+		eq(todoLi1.classList.contains('completed-removed'), true);
 
 		showCompletedButton.click();
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todoLi1.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('completed-removed'), false);
 	},
 	"The header actions bar should have a showDeleted button to toggle showing deleted todos.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		eq(showDeletedButton.nodeName, 'BUTTON');
 		eq(showDeletedButton.innerText, 'Deleted');
-		eq(actionsDiv.children[6], showDeletedButton); 
+		eq(actionsDiv.children[5], showDeletedButton); 
 	},
-	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'removed' on deleted todos.": function() {
+	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'deleted-removed' on deleted todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
@@ -1585,11 +1585,11 @@ tests({
 		eq(todoLi2.id, todo2.id);
 		eq(todoLi3.id, todo3.id);
 
-		eq(todoLi1.classList.contains('removed'), false);
-		eq(todoLi2.classList.contains('removed'), false);
-		eq(todoLi3.classList.contains('removed'), true);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi3.classList.contains('deleted-removed'), true);
 	},
-	"Clicking the showDeleted button should toggle button text and set/unset todoLi class 'removed' on deleted todos.": function() {
+	"Clicking the showDeleted button should toggle button text and set/unset todoLi class 'deleted-removed' on deleted todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
@@ -1617,23 +1617,23 @@ tests({
 		eq(todoLi2.id, todo2.id);
 		eq(todoLi3.id, todo3.id);
 
-		eq(todoLi1.classList.contains('removed'), false);
-		eq(todoLi2.classList.contains('removed'), false);
-		eq(todoLi3.classList.contains('removed'), true);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi3.classList.contains('deleted-removed'), true);
 
 		showDeletedButton.click();
 
 		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(todoLi1.classList.contains('removed'), false);
-		eq(todoLi2.classList.contains('removed'), false);
-		eq(todoLi3.classList.contains('removed'), false);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi3.classList.contains('deleted-removed'), false);
 
 		showDeletedButton.click();
 
 		eq(showDeletedButton.textContent, 'Deleted');
-		eq(todoLi1.classList.contains('removed'), false);
-		eq(todoLi2.classList.contains('removed'), false);
-		eq(todoLi3.classList.contains('removed'), true);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi3.classList.contains('deleted-removed'), true);
 
 	},
 	"Section: Actions bar -- other buttons": function() {
@@ -1645,10 +1645,9 @@ tests({
 		var addTodoButton = document.getElementsByName('addTodo')[0];
 		eq(addTodoButton.nodeName, 'BUTTON');
 		eq(addTodoButton.innerText, 'Add todo');
-		eq(actionsDiv.children[7], addTodoButton); 
+		eq(actionsDiv.children[6], addTodoButton); 
 		
-		todolist = document.getElementById('todolist');
-		todolist.innerHTML = '';
+		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 
 		addTodoButton.click();
@@ -1671,19 +1670,52 @@ tests({
 		var undeleteButton = document.getElementsByName('undelete')[0];
 		eq(undeleteButton.nodeName, 'BUTTON');
 		eq(undeleteButton.innerText, 'Undelete');
-		eq(actionsDiv.children[8], undeleteButton);
+		eq(actionsDiv.children[7], undeleteButton);
 	},
 	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var undoEditButton = document.getElementsByName('undoEdit')[0];
 		eq(undoEditButton.nodeName, 'BUTTON');
 		eq(undoEditButton.innerText, 'Undo edit');
-		eq(actionsDiv.children[9], undoEditButton);
+		eq(actionsDiv.children[8], undoEditButton);
 	},
 	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
 		fail();
 	},
 	"Section: more button interactions": function() {
+	},
+	"If showCompleted text is 'Completed', clicking a todoLi complete button should toggle todoLi class 'completed-removed'.": function() {
+		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+
+		eq(showCompletedButton.textContent, '√ Completed');
+
+		showCompletedButton.click();
+
+		eq(showCompletedButton.textContent, 'Completed');
+
+		todoLi1CompleteButton.click();
+
+		eq(todoLi1.classList.contains('completed-removed'), true);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
+
+		todoLi1CompleteButton.click();
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+
 	},
 	"If clicking 'selected' button makes all todos in a todoLiUl selected, parent 'selectChildren' button text should become 'Unselect children'.": function() {
 		fail();
