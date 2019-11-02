@@ -25,6 +25,7 @@ var TinyTest = {
                 //testAction.apply(this); 
 				testAction();  // already bound to TinyTest so apply(this) not needed
 				if (testName.startsWith('Section:')) {
+					numberOfTests--;
 					console.log('%c' + testName, "color: purple; font-weight: bold;");
 				} else {
 					successes++;
