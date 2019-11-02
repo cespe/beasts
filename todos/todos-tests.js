@@ -485,17 +485,6 @@ tests({
 	},
 	"Section: todoLi buttons": function() {
 	},
-	"Each todoLi should have a 'zoom in/out' button to filter the display to just that todoLi.": function() {
-		// Simplifies the UI: can remove selectChildren, which currently has no buttons to operate on the selection.
-		// Simplifies the filtered todo displays, which don't have to take child todos into account.
-		fail();
-	},
-	"When todoLi zoom button is clicked, other buttons should be hidden, class should toggle 'zoomed' and all other todoLis should toggle class 'unzoomed'.": function() {
-		fail();
-	},
-	"When a todoLi is zoomed in, the actions bar buttons should apply only to the todoLi's children.": function() {
-		fail();
-	},
 	"Each todo li should have a 'selected' button to toggle 'Selected/Unselected'.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
@@ -1460,54 +1449,6 @@ tests({
 },
 	"Section: Actions bar -- filters": function() {
 	},
-	"The header actions bar should have an 'All' button to show active and completed todos.": function() {
-		var actionsDiv = document.getElementById('actions');
-		var showAllButton = document.getElementsByName('showAll')[0];
-		eq(showAllButton.nodeName, 'BUTTON');
-		eq(showAllButton.innerText, 'All');
-		eq(actionsDiv.children[3], showAllButton); 
-	},
-	"Clicking the 'All' button should display active and completed todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1 active');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2 completed');
-		todo2.markCompleted(true);
-		insertTodo(todos, todo2);
-		todo3 = new Todo('Item 3 deleted');
-		todo3.markDeleted(true);
-		insertTodo(todos, todo3);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));			
-		var todosUl = todolist.children[0];
-		var todoLi1 = todosUl.children[0];
-		var todoLi2 = todosUl.children[1];
-		var todoLi3 = todosUl.children[2];
-
-		eq(todosUl.childElementCount, 3);						// base case, no filter
-		eq(todoLi1.id, todo1.id);
-		eq(todoLi2.id, todo2.id);
-		eq(todoLi3.id, todo3.id);
-
-		var showAllButton = document.getElementsByName('showAll')[0];
-
-		showAllButton.click();									// test 'all' filter
-
-		// Re-set dom element variables because showAll click handler erases old todolist content.
-		todosUl = todolist.children[0];
-		todoLi1 = todosUl.children[0];
-		todoLi2 = todosUl.children[1];
-		todoLi3 = todosUl.children[2];
-
-		eq(todosUl.childElementCount, 2);
-
-		eq(todosUl.children[0], todoLi1);
-		eq(todoLi1.id, todo1.id);
-		eq(todosUl.children[1], todoLi2);
-		eq(todoLi2.id, todo2.id);
-		eq(todoLi3, undefined);
-	},
 	"The header actions bar should have a showActive button to toggle showing active todos.": function() {
 		// active todos are not completed and not deleted
 		var actionsDiv = document.getElementById('actions');
@@ -1957,6 +1898,17 @@ tests({
 	"There should be a 'find' input to filter the display according to keywords or entry text.": function() {
 		fail();
 	}, 
+	"Each todoLi should have a 'zoom in/out' button to filter the display to just that todoLi.": function() {
+		// Simplifies the UI: can remove selectChildren, which currently has no buttons to operate on the selection.
+		// Simplifies the filtered todo displays, which don't have to take child todos into account.
+		fail();
+	},
+	"When todoLi zoom button is clicked, other buttons should be hidden, class should toggle 'zoomed' and all other todoLis should toggle class 'unzoomed'.": function() {
+		fail();
+	},
+	"When a todoLi is zoomed in, the actions bar buttons should apply only to the todoLi's children.": function() {
+		fail();
+	},
 	"Section: On startup": function() {
 
 	},
@@ -1996,5 +1948,4 @@ tests({
 		eq(todosUl.children.length, 1);
 		eq(todoLi1.children[entryIndex].textContent, '');
 	}
-
 });

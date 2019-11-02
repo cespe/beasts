@@ -471,10 +471,7 @@ function actionsClickHandler() {
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLiCount = todosUl.children.length;
-		if (event.target.name === "showAll") {
-			document.getElementById('todolist').innerHTML = '';
-			todolist.appendChild(createTodosUl(todos, 'all'));
-		}
+
 		if (event.target.name === "showActive") {
 			var showActiveButton = event.target;
 			if (showActiveButton.textContent === '√ Active') {

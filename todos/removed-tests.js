@@ -1436,4 +1436,81 @@
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 
 	},
+	"Clicking selectAll button should toggle class 'inactive' on and off for  'completeSelected' and 'deleteSelected' buttons.": function() {
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(completeSelectedButton.classList.contains('inactive'), true);
+		eq(deleteSelectedButton.classList.contains('inactive'), true);
+
+		selectAllButton.click();
+
+		eq(selectAllButton.textContent, 'Unselect all');
+		eq(completeSelectedButton.classList.contains('inactive'), false);
+		eq(deleteSelectedButton.classList.contains('inactive'), false);
+
+		selectAllButton.click();
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(completeSelectedButton.classList.contains('inactive'), true);
+		eq(deleteSelectedButton.classList.contains('inactive'), true);
+	},
+	"The header actions bar should have an 'All' button to show active and completed todos.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var showAllButton = document.getElementsByName('showAll')[0];
+		eq(showAllButton.nodeName, 'BUTTON');
+		eq(showAllButton.innerText, 'All');
+		eq(actionsDiv.children[3], showAllButton); 
+	},
+	"Clicking the 'All' button should display active and completed todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1 active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2 completed');
+		todo2.markCompleted(true);
+		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3 deleted');
+		todo3.markDeleted(true);
+		insertTodo(todos, todo3);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));			
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		var todoLi2 = todosUl.children[1];
+		var todoLi3 = todosUl.children[2];
+
+		eq(todosUl.childElementCount, 3);						// base case, no filter
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(todoLi3.id, todo3.id);
+
+		var showAllButton = document.getElementsByName('showAll')[0];
+
+		showAllButton.click();									// test 'all' filter
+
+		// Re-set dom element variables because showAll click handler erases old todolist content.
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi2 = todosUl.children[1];
+		todoLi3 = todosUl.children[2];
+
+		eq(todosUl.childElementCount, 2);
+
+		eq(todosUl.children[0], todoLi1);
+		eq(todoLi1.id, todo1.id);
+		eq(todosUl.children[1], todoLi2);
+		eq(todoLi2.id, todo2.id);
+		eq(todoLi3, undefined);
+	},
 
