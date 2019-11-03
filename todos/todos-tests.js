@@ -493,8 +493,9 @@ tests({
 		eq(todoLi.children[selectedIndex].nodeName, 'BUTTON');
 		eq(todoLi.children[selectedIndex].name, 'selected');
 	},
-	"When a todoLi is created, todo.selected should be set to false, 'selected' button text should be 'Select', and entry <p> class should remove 'highlighted'.": function() {
+	"When a todoLi is created, todo.selected should be set to false, 'selected' button text should be 'Select' and class 'inactive', and entry <p> class should remove 'highlighted'.": function() {
 		// Start with a clean slate
+		// Select button inactive/hidden until Select all is clicked
 		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		var todos = []
@@ -515,6 +516,8 @@ tests({
 		eq(todo2.selected, false);
 		eq(todoLi1SelectButton.textContent, 'Select');
 		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 	},
@@ -1218,7 +1221,7 @@ tests({
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 	},
-	"Clicking selectAll button should toggle button text, each todoLi selected button, each todo.selected, and each entry <p> class." : function() {
+	"Clicking selectAll button should toggle button text, each todoLi selected button text, each todo.selected, and each entry <p> class." : function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -1238,6 +1241,8 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 		eq(todoLi1SelectButton.textContent, 'Select');
 		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
@@ -1249,6 +1254,8 @@ tests({
 		eq(todoLi1SelectButton.textContent, 'Unselect');
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todoLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi1SelectButton.classList.contains('inactive'), false);
+		eq(todoLi2SelectButton.classList.contains('inactive'), false);
 		eq(todoLi2Entry.classList.contains('highlighted'), true);
 		eq(todo1.selected, true);
 		eq(todo2.selected, true);
@@ -1258,10 +1265,69 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 		eq(todoLi1SelectButton.textContent, 'Select');
 		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
+	},
+	"Clicking selectAll button should also toggle todoLi completed, deleted, addSibling, and addChild button classes 'inactive'.": function() {
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		var todoLi1SelectButton = todoLi1.children[selectedIndex];
+		var todoLi2SelectButton = todoLi2.children[selectedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+		var todoLi2DeleteButton = todoLi2.children[deleteIndex];
+		var todoLi1AddSiblingButton = todoLi1.children[addSiblingIndex];
+		var todoLi2AddSiblingButton = todoLi2.children[addSiblingIndex];
+		var todoLi1AddChildButton = todoLi1.children[addChildIndex];
+		var todoLi2AddChildButton = todoLi2.children[addChildIndex];
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(todoLi1CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi2CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi1DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi2DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
+		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
+		
+		selectAllButton.click();
+		
+		eq(selectAllButton.textContent, 'Unselect all');
+		eq(todoLi1CompleteButton.classList.contains('inactive'), true);
+		eq(todoLi2CompleteButton.classList.contains('inactive'), true);
+		eq(todoLi1DeleteButton.classList.contains('inactive'), true);
+		eq(todoLi2DeleteButton.classList.contains('inactive'), true);
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi1AddChildButton.classList.contains('inactive'), true);
+		eq(todoLi2AddChildButton.classList.contains('inactive'), true);
+
+		selectAllButton.click();
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(todoLi1CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi2CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi1DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi2DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
+		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	},
 	"Clicking completeSelected button should toggle button text and toggle todo.completed, todoLi completed button text, and entry <p> class for selected todos.": function() {
 		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
@@ -1684,8 +1750,7 @@ tests({
 	},
 	"Section: more button interactions": function() {
 	},
-	"If showCompleted text is 'Completed', clicking a todoLi complete button should toggle todoLi class 'completed-removed'.": function() {
-		fail();
+	"If showCompleted text is 'Completed', clicking a todoLi complete button should add todoLi class 'completed-removed'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1717,183 +1782,40 @@ tests({
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 
 	},
-	"If clicking 'selected' button makes all todos in a todoLiUl selected, parent 'selectChildren' button text should become 'Unselect children'.": function() {
-		fail();
-	},
-	"If clicking 'selected' button makes all todos in a todoLiUl unselected, parent 'selectChildren' button text should become 'Select children'.": function() {
-		fail();
+	"If showCompleted text is '√ Completed', clicking a todoLi complete button should remove todoLi class 'completed-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+
+		eq(showCompletedButton.textContent, '√ Completed');
+
+		todoLi1CompleteButton.click();
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
+
+		todoLi1CompleteButton.click();
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+
 	},
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
 	},
-	"When a top-level todo is selected, the 'selectAll' button class should be set to 'selected'.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
-		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		todoLi2 = todolist.children[0].children[1];
-		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-		var todoLi2SelectButton = todoLi2.children[selectedIndex];
-		var selectAllButton = document.getElementsByName('selectAll')[0];
-		selectAllButton.classList.remove('selected');
-
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todo1.selected, false);
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
-		eq(todo2.selected, false);
-		eq(selectAllButton.classList.contains('selected'), false);
-
-		todoLi1SelectButton.click();
-		
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
-		eq(todo1.selected, true);
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
-		eq(todo2.selected, false);
-		eq(selectAllButton.classList.contains('selected'), true);
-
-		todoLi2SelectButton.click();
-		
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
-		eq(todo1.selected, true);
-		eq(todoLi2SelectButton.classList.contains('selected'), true);
-		eq(todo2.selected, true);
-		eq(selectAllButton.classList.contains('selected'), true);
-	},
-	"Unselecting the last selected top-level todo should set 'selectAll' button class to ''.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
-		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		todoLi2 = todolist.children[0].children[1];
-		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-		var todoLi2SelectButton = todoLi2.children[selectedIndex];
-		var selectAllButton = document.getElementsByName('selectAll')[0];
-		selectAllButton.classList.remove('selected');
-
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todo1.selected, false);
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
-		eq(todo2.selected, false);
-		eq(selectAllButton.classList.contains('selected'), false);
-
-		todoLi1SelectButton.click();
-		
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
-		eq(todo1.selected, true);
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
-		eq(todo2.selected, false);
-		eq(selectAllButton.classList.contains('selected'), true);
-
-		todoLi2SelectButton.click();
-		
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
-		eq(todo1.selected, true);
-		eq(todoLi2SelectButton.classList.contains('selected'), true);
-		eq(todo2.selected, true);
-		eq(selectAllButton.classList.contains('selected'), true);
-
-		todoLi2SelectButton.click();
-		
-		eq(todoLi1SelectButton.classList.contains('selected'), true);
-		eq(todo1.selected, true);
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
-		eq(todo2.selected, false);
-		eq(selectAllButton.classList.contains('selected'), true);
-
-		todoLi1SelectButton.click();
-		
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todo1.selected, false);
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
-		eq(todo2.selected, false);
-		eq(selectAllButton.classList.contains('selected'), false);
-	},
-	"If clicking 'completed' button on a selected todo makes all selected todos completed, completeSelected button text should be set to 'Uncomplete selected'.": function() {
+	"If clicking a todoLi Unselect button makes all todos in the todoUl unselected, send click event to selectAll button.": function() {
 		fail();
-	},
-	"If clicking 'deleted' button on a selected todo makes all selected todos deleted, deleteSelected button text should be set to 'Undelete selected'.": function() {
-		fail();
-	},
-	"When an unselected todo is marked completed, the completeSelected button text should not change.": function() {
-		document.getElementById('todolist').innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
-		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		todoLi2 = todolist.children[0].children[1];
-		var todoLi1SelectButton = todoLi1.children[selectedIndex];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-		var todoLi2SelectButton = todoLi2.children[selectedIndex];
-		var todoLi2CompleteButton = todoLi2.children[completedIndex];
-
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todo1.selected, false);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
-		eq(todo2.selected, false);
-		eq(todoLi2CompleteButton.classList.contains('completed'), false);
-		eq(todo2.completed, false);
-
-		completeSelectedButton = document.getElementsByName('completeSelected')[0];
-		completeSelectedButton.classList.remove('completed');	// re-set to default
-
-		eq(completeSelectedButton.classList.contains('completed'), false);
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todo1.selected, false);
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
-		eq(todo1.completed, true);
-		eq(completeSelectedButton.classList.contains('completed'), false);
-
-		eq(todoLi2SelectButton.classList.contains('selected'), false);
-		eq(todo2.selected, false);
-		eq(todoLi2CompleteButton.classList.contains('completed'), false);
-		eq(todo2.completed, false);
-
-		todoLi2SelectButton.click();
-		completeSelectedButton.click();
-		
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todo1.selected, false);
-		eq(todoLi1CompleteButton.classList.contains('completed'), true);
-		eq(todo1.completed, true);
-
-		eq(todoLi2SelectButton.classList.contains('selected'), true);
-		eq(todo2.selected, true);
-		eq(todoLi2CompleteButton.classList.contains('completed'), true);
-		eq(todo2.completed, true);
-
-		eq(completeSelectedButton.classList.contains('completed'), true);
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1SelectButton.classList.contains('selected'), false);
-		eq(todo1.selected, false);
-		eq(todoLi1CompleteButton.classList.contains('completed'), false);
-		eq(todo1.completed, false);
-
-		eq(completeSelectedButton.classList.contains('completed'), true);
-	},
-	"If todo.selected is true for any displayed todos on filtering, 'selectAll' button text should be 'Unselect all'.": function() {
-		fail();
-	},
+	}, 
 	"Section: Keyboard shortcuts": function() {
 },
 	"The app should listen for keyup events when editing a todo.": function() {

@@ -139,6 +139,7 @@ function createTodoLi(todo) {
 	if (todo.selected) {
 		todo.selected = false;		// clean slate when todoLi's are created
 	}
+	selectedButton.classList.add('inactive');
 	todoLi.appendChild(selectedButton);
 	
 	var completeButton = document.createElement('button')
@@ -378,28 +379,31 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompleteButton = todoLi.children[completedIndex];
-//			todoLiCompleteButton.classList.toggle('completed');
 			todo.completed = !todo.completed;
-			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-			if (todo.selected) {
-				completeSelectedButton.classList.add('completed');
-			}
+//			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+//			if (todo.selected) {
+//				completeSelectedButton.classList.add('completed');
+//			}
 			if (!todo.completed) {
 				todoLiCompleteButton.textContent = 'Complete';
 				todoLi.children[entryIndex].classList.remove('struck');
 				// TODO convert to array.find() to stop looping as soon as a match is found
-				var count = 0;
-				for (var i = 0; i < todos.length; i++) {
-					if (todos[i].selected === true && todos[i].completed === true) {
-						count++;
-					}
-				}
-				if (count === 0) {
-					completeSelectedButton.classList.remove('completed');
-				}
+//				var count = 0;
+//				for (var i = 0; i < todos.length; i++) {
+//					if (todos[i].selected === true && todos[i].completed === true) {
+//						count++;
+//					}
+//				}
+//				if (count === 0) {
+//					completeSelectedButton.classList.remove('completed');
+//				}
+				todoLi.classList.remove('completed-removed');
 			} else {
 				todoLiCompleteButton.textContent = 'Uncomplete';
 				todoLi.children[entryIndex].classList.add('struck');
+				if (document.getElementsByName('showCompleted')[0].textContent === 'Completed') {
+					todoLi.classList.add('completed-removed');
+				}
 			}
 		}
 		if (event.target.name === "deleted") {
@@ -562,8 +566,17 @@ function actionsClickHandler() {
 				deleteSelectedButton.classList.remove('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
-					var todoLiSelectButton = todoLi.children[0];
+					var todoLiSelectButton = todoLi.children[selectedIndex];
+					var todoLiCompleteButton = todoLi.children[completedIndex];
+					var todoLiDeleteButton = todoLi.children[deleteIndex];
+					var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
+					var todoLiAddChildButton = todoLi.children[addChildIndex];
 					todoLiSelectButton.textContent = 'Unselect';
+					todoLiSelectButton.classList.remove('inactive');
+					todoLiCompleteButton.classList.add('inactive');
+					todoLiDeleteButton.classList.add('inactive');
+					todoLiAddSiblingButton.classList.add('inactive');
+					todoLiAddChildButton.classList.add('inactive');
 					var todoLiEntry = todoLi.children[entryIndex];
 					todoLiEntry.classList.add('highlighted');
 					var todo = findTodo(todos, todoLi.id)
@@ -575,8 +588,17 @@ function actionsClickHandler() {
 				deleteSelectedButton.classList.add('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
-					var todoLiSelectButton = todoLi.children[0];
+					var todoLiSelectButton = todoLi.children[selectedIndex];
+					var todoLiCompleteButton = todoLi.children[completedIndex];
+					var todoLiDeleteButton = todoLi.children[deleteIndex];
+					var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
+					var todoLiAddChildButton = todoLi.children[addChildIndex];
 					todoLiSelectButton.textContent = 'Select';
+					todoLiSelectButton.classList.add('inactive');
+					todoLiCompleteButton.classList.remove('inactive');
+					todoLiDeleteButton.classList.remove('inactive');
+					todoLiAddSiblingButton.classList.remove('inactive');
+					todoLiAddChildButton.classList.remove('inactive');
 					var todoLiEntry = todoLi.children[entryIndex];
 					todoLiEntry.classList.remove('highlighted');
 					var todo = findTodo(todos, todoLi.id)
@@ -686,12 +708,18 @@ function startApp() {
 	var selectAllButton = document.getElementsByName('selectAll')[0];
 	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+	var showActiveButton = document.getElementsByName('showActive')[0];
+	var showCompletedButton = document.getElementsByName('showCompleted')[0];
+	var showDeletedButton = document.getElementsByName('showDeleted')[0];
 	// set defaults on action bar buttons
 	selectAllButton.textContent = 'Select all';
 	completeSelectedButton.textContent = 'Complete selected';
 	deleteSelectedButton.textContent = 'Delete selected';
 	completeSelectedButton.classList.add('inactive');
 	deleteSelectedButton.classList.add('inactive');
+	showActiveButton.textContent = '√ Active';
+	showCompletedButton.textContent = '√ Completed';
+	showDeletedButton.textContent = 'Deleted';
 	if (todos.length === 0) {
 		todo1 = new Todo();
 		insertTodo(todos, todo1);
