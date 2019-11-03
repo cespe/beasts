@@ -1750,66 +1750,175 @@ tests({
 	},
 	"Section: more button interactions": function() {
 	},
-	"If showCompleted text is 'Completed', clicking a todoLi complete button should add todoLi class 'completed-removed'.": function() {
+	"If showCompleted button text is 'Completed', clicking a todoLi Complete button should add todoLi class 'completed-removed'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
 		startApp();
 		
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
+		eq(showCompletedButton.textContent, '√ Completed');
+
 		eq(todoLi1.classList.contains('completed-removed'), false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todo1.completed, false);
 
-		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		todoLi1CompleteButton.click();
+		
+		eq(todoLi1.classList.contains('completed-removed'), false);		// completed-removed not added because showCompleted is '√ Completed'
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
+		eq(todo1.completed, true);
 
-		eq(showCompletedButton.textContent, '√ Completed');
+		todoLi1CompleteButton.click();
+		
+		eq(todoLi1.classList.contains('completed-removed'), false);		// re-set 
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todo1.completed, false);
 
 		showCompletedButton.click();
 
 		eq(showCompletedButton.textContent, 'Completed');
 
 		todoLi1CompleteButton.click();
-
-		eq(todoLi1.classList.contains('completed-removed'), true);
+		
+		eq(todoLi1.classList.contains('completed-removed'), true);		// completed-removed added because showCompleted is 'Completed'
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1.classList.contains('completed-removed'), false);
-		eq(todoLi1CompleteButton.textContent, 'Complete');
-
+		eq(todo1.completed, true);
 	},
-	"If showCompleted text is '√ Completed', clicking a todoLi complete button should remove todoLi class 'completed-removed'.": function() {
+	"If showActive button text is 'Active', clicking a todoLi Uncomplete button should add todoLi class 'active-removed'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
 		startApp();
 		
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(showActiveButton.textContent, '√ Active');
+		
+		eq(todoLi1.classList.contains('active-removed'), false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todo1.completed, false);
 
-		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		todoLi1CompleteButton.click();
+
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
+		eq(todo1.completed, true);
+
+		showActiveButton.click();
 
 		eq(showCompletedButton.textContent, '√ Completed');
-
+		eq(showActiveButton.textContent, 'Active');
+		eq(todoLi1.classList.contains('active-removed'), false);
+		
 		todoLi1CompleteButton.click();
 
-		eq(todoLi1.classList.contains('completed-removed'), false);
-		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-
-		todoLi1CompleteButton.click();
-
-		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1.classList.contains('active-removed'), true);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-
+		eq(todo1.completed, false);
 	},
+	"If showDeleted button text is 'Deleted', clicking a todoLi Delete button should add todoLi class 'deleted-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todo1.deleted, false);
+
+		todoLi1DeleteButton.click();
+		
+		eq(todoLi1.classList.contains('deleted-removed'), true);		// deleted-removed added because showDeleted is 'Deleted'
+		eq(todoLi1DeleteButton.textContent, 'Undelete');
+		eq(todo1.deleted, true);
+	},
+	"If showDeleted button text is '√ Deleted', clicking a todoLi Delete button should not add todoLi class 'deleted-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todo1.deleted, false);
+
+		showDeletedButton.click();
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+
+		todoLi1DeleteButton.click();
+		
+		eq(todoLi1.classList.contains('deleted-removed'), false);		// deleted-removed not added because showDeleted is '√ Deleted'
+		eq(todoLi1DeleteButton.textContent, 'Undelete');
+		eq(todo1.deleted, true);
+	},
+	"If showActive button text is 'Active', clicking a todoLi Undelete button should add todoLi class 'active-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(showActiveButton.textContent, '√ Active');
+
+		showDeletedButton.click();
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+		
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todo1.deleted, false);
+
+		todoLi1DeleteButton.click();
+
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi1DeleteButton.textContent, 'Undelete');
+		eq(todo1.deleted, true);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, 'Active');
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(todoLi1.classList.contains('active-removed'), false);
+
+		
+		todoLi1DeleteButton.click();
+
+		eq(todoLi1.classList.contains('active-removed'), true);		// active-removed added because showActive is 'Active'
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todo1.deleted, false);
+	},
+
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
 	},

@@ -397,7 +397,10 @@ function todoClickHandler(event) {
 //				if (count === 0) {
 //					completeSelectedButton.classList.remove('completed');
 //				}
-				todoLi.classList.remove('completed-removed');
+//				todoLi.classList.remove('completed-removed');
+				if (document.getElementsByName('showActive')[0].textContent === 'Active') {
+					todoLi.classList.add('active-removed');
+				}
 			} else {
 				todoLiCompleteButton.textContent = 'Uncomplete';
 				todoLi.children[entryIndex].classList.add('struck');
@@ -413,11 +416,16 @@ function todoClickHandler(event) {
 			if (todo.deleted) {
 				todoLiDeleteButton.textContent = 'Undelete';
 				todoLi.children[entryIndex].classList.add('faded');
-				todoLi.classList.add('deleted-removed');
+				if (document.getElementsByName('showDeleted')[0].textContent === 'Deleted') {
+					todoLi.classList.add('deleted-removed');
+				}
 			} else {
 				todoLiDeleteButton.textContent = 'Delete';
 				todoLi.children[entryIndex].classList.remove('faded');
-				todoLi.classList.remove('deleted-removed');
+				if (document.getElementsByName('showActive')[0].textContent === 'Active') {
+					todoLi.classList.add('active-removed');
+				}
+//				todoLi.classList.remove('deleted-removed');
 			}
 		}
 		if (event.target.name === "addSibling") {

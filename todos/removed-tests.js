@@ -1673,4 +1673,32 @@
 
 		eq(completeSelectedButton.classList.contains('completed'), true);
 	},
+	"If showCompleted button text is '√ Completed', clicking a todoLi complete button should remove todoLi class 'completed-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+
+		eq(showCompletedButton.textContent, '√ Completed');
+
+		todoLi1CompleteButton.click();
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
+
+		todoLi1CompleteButton.click();
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+
+	},
 
