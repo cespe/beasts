@@ -1701,4 +1701,11 @@
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 
 	},
+	"The header actions bar should have an Undelete button to undo a deletion caused by clicking a todoLi Delete button.": function() {
+		var actionsDiv = document.getElementById('actions');
+		var undeleteButton = document.getElementsByName('undelete')[0];
+		eq(undeleteButton.nodeName, 'BUTTON');
+		eq(undeleteButton.innerText, 'Undelete');
+		eq(actionsDiv.children[7], undeleteButton);
+	},
 

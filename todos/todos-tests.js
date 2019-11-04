@@ -1329,6 +1329,34 @@ tests({
 		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
 		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	},
+	"selectAll button with text 'Select all' should only apply to displayed todos.": function() {
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		todo2.markDeleted(true);
+		insertTodo(todos, todo2);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi2DeleteButton = todoLi2.children[deleteIndex];
+
+		eq(todo1.selected, false);
+		eq(todo2.selected, false);
+		eq(todoLi1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
+
+		todoLi2DeleteButton.click();
+		selectAllButton.click();
+
+		eq(todo1.selected, true);
+		eq(todo2.selected, false);
+		eq(todoLi1.children[entryIndex].classList.contains('highlighted'), true);
+		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
+	},
 	"Clicking completeSelected button should toggle button text and toggle todo.completed, todoLi completed button text, and entry <p> class for selected todos.": function() {
 		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		document.getElementById('todolist').innerHTML = '';
@@ -1731,19 +1759,12 @@ tests({
 		eq(todos.length, 2);
 		eq(todoLi2.id, todos[1].id);
 	},
-	"The header actions bar should have an Undelete button to undo a deletion caused by clicking a todoLi Delete button.": function() {
-		var actionsDiv = document.getElementById('actions');
-		var undeleteButton = document.getElementsByName('undelete')[0];
-		eq(undeleteButton.nodeName, 'BUTTON');
-		eq(undeleteButton.innerText, 'Undelete');
-		eq(actionsDiv.children[7], undeleteButton);
-	},
 	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
 		var actionsDiv = document.getElementById('actions');
 		var undoEditButton = document.getElementsByName('undoEdit')[0];
 		eq(undoEditButton.nodeName, 'BUTTON');
 		eq(undoEditButton.innerText, 'Undo edit');
-		eq(actionsDiv.children[8], undoEditButton);
+		eq(actionsDiv.children[7], undoEditButton);
 	},
 	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
 		fail();
