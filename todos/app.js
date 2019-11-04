@@ -643,6 +643,9 @@ function actionsClickHandler() {
 						todoLiEntry.classList.remove('struck');
 						var todo = findTodo(todos, todoLi.id);
 						todo.markCompleted(false);
+						if (document.getElementsByName('showActive')[0].textContent === 'Active') {
+							todoLi.classList.add('active-removed');
+						}
 					}	
 				}
 			} else {

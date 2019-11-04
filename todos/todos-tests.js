@@ -1965,6 +1965,40 @@ tests({
 		eq(todoLi1.classList.contains('completed-removed'), true);
 		eq(todo1.completed, true);
 	},
+	"If showActive button text is 'Active', clicking an 'Uncomplete selected' button should add todoLi class 'active-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(showCompletedButton.textContent, '√ Completed');
+
+		selectAllButton.click();
+		completeSelectedButton.click();
+
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi1Entry.classList.contains('struck'), true);
+		eq(todo1.completed, true);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, 'Active');
+
+		completeSelectedButton.click();		// click 'Uncomplete selected'
+
+		eq(todoLi1.classList.contains('active-removed'), true);
+		eq(todoLi1Entry.classList.contains('struck'), false);
+		eq(todo1.completed, false);
+	},
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
 	},
