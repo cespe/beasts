@@ -657,7 +657,9 @@ function actionsClickHandler() {
 						todoLiEntry.classList.add('struck');
 						var todo = findTodo(todos, todoLi.id);
 						todo.completed = true;
-				
+						if (document.getElementsByName('showCompleted')[0].textContent === 'Completed') {
+							todoLi.classList.add('completed-removed');
+						}
 					}
 				}
 			}

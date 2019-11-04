@@ -1938,7 +1938,33 @@ tests({
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todo1.deleted, false);
 	},
+	"If showCompleted button text is 'Completed', clicking a 'Complete selected' button should add todoLi class 'completed-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		var todoLi1 = todolist.children[0].children[0];
 
+		eq(showCompletedButton.textContent, '√ Completed');
+
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todo1.completed, false);
+
+		showCompletedButton.click();
+
+		eq(showCompletedButton.textContent, 'Completed');
+
+		selectAllButton.click();
+		completeSelectedButton.click();
+
+		eq(todoLi1.classList.contains('completed-removed'), true);
+		eq(todo1.completed, true);
+	},
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
 	},
