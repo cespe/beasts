@@ -1336,7 +1336,6 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
-		todo2.markDeleted(true);
 		insertTodo(todos, todo2);
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));

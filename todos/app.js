@@ -397,7 +397,7 @@ function todoClickHandler(event) {
 //				if (count === 0) {
 //					completeSelectedButton.classList.remove('completed');
 //				}
-//				todoLi.classList.remove('completed-removed');
+				todoLi.classList.remove('completed-removed');
 				if (document.getElementsByName('showActive')[0].textContent === 'Active') {
 					todoLi.classList.add('active-removed');
 				}
@@ -425,7 +425,7 @@ function todoClickHandler(event) {
 				if (document.getElementsByName('showActive')[0].textContent === 'Active') {
 					todoLi.classList.add('active-removed');
 				}
-//				todoLi.classList.remove('deleted-removed');
+				todoLi.classList.remove('deleted-removed');
 			}
 		}
 		if (event.target.name === "addSibling") {
@@ -574,21 +574,23 @@ function actionsClickHandler() {
 				deleteSelectedButton.classList.remove('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
-					var todoLiSelectButton = todoLi.children[selectedIndex];
-					var todoLiCompleteButton = todoLi.children[completedIndex];
-					var todoLiDeleteButton = todoLi.children[deleteIndex];
-					var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
-					var todoLiAddChildButton = todoLi.children[addChildIndex];
-					todoLiSelectButton.textContent = 'Unselect';
-					todoLiSelectButton.classList.remove('inactive');
-					todoLiCompleteButton.classList.add('inactive');
-					todoLiDeleteButton.classList.add('inactive');
-					todoLiAddSiblingButton.classList.add('inactive');
-					todoLiAddChildButton.classList.add('inactive');
-					var todoLiEntry = todoLi.children[entryIndex];
-					todoLiEntry.classList.add('highlighted');
-					var todo = findTodo(todos, todoLi.id)
-					todo.selected = true;
+					if (todoLi.classList.length === 0) {
+						var todoLiSelectButton = todoLi.children[selectedIndex];
+						var todoLiCompleteButton = todoLi.children[completedIndex];
+						var todoLiDeleteButton = todoLi.children[deleteIndex];
+						var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
+						var todoLiAddChildButton = todoLi.children[addChildIndex];
+						todoLiSelectButton.textContent = 'Unselect';
+						todoLiSelectButton.classList.remove('inactive');
+						todoLiCompleteButton.classList.add('inactive');
+						todoLiDeleteButton.classList.add('inactive');
+						todoLiAddSiblingButton.classList.add('inactive');
+						todoLiAddChildButton.classList.add('inactive');
+						var todoLiEntry = todoLi.children[entryIndex];
+						todoLiEntry.classList.add('highlighted');
+						var todo = findTodo(todos, todoLi.id)
+						todo.selected = true;
+					}
 				}
 			} else {
 				selectAllButton.textContent = 'Select all';
