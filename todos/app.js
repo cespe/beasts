@@ -682,7 +682,10 @@ function actionsClickHandler() {
 						todo.deleted = false;
 						var todoLiEntry = todoLi.children[entryIndex];
 						todoLiEntry.classList.remove('faded');
-						todoLi.classList.remove('removed');
+						todoLi.classList.remove('deleted-removed');
+						if (document.getElementsByName('showActive')[0].textContent === 'Active') {
+							todoLi.classList.add('active-removed');
+						}
 					}
 				}
 			} else {
@@ -697,7 +700,9 @@ function actionsClickHandler() {
 						todo.deleted = true;
 						var todoLiEntry = todoLi.children[entryIndex];
 						todoLiEntry.classList.add('faded');
-						todoLi.classList.add('removed');
+						if (document.getElementsByName('showDeleted')[0].textContent === 'Deleted') {
+							todoLi.classList.add('deleted-removed');
+						}
 	
 					}
 				}
@@ -736,19 +741,23 @@ function startApp() {
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
 	if (todos.length === 0) {
-		todo1 = new Todo();
-		insertTodo(todos, todo1);
+		insertNewTodoLi(todos);
+	} else {
+		var todolist = document.getElementById('todolist');
+		todolist.innerHTML = '';
+		todolist.appendChild(createTodosUl(todos));
+	}
+}
+//		todo1 = new Todo();
+//		insertTodo(todos, todo1);
 //	} else {
 //		for (var i = 0; i < todos.length; i++) {
 //			if (todos[i].selected === true) {
 //				todos[i].selected = false;
 //			}
 //		}
-	}
-	var todolist = document.getElementById('todolist');
-	todolist.innerHTML = '';
-	todolist.appendChild(createTodosUl(todos));
-}
+//	}
+//}
 
 setUpEventListeners();
 

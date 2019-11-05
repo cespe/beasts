@@ -1938,7 +1938,7 @@ tests({
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todo1.deleted, false);
 	},
-	"If showCompleted button text is 'Completed', clicking a 'Complete selected' button should add todoLi class 'completed-removed'.": function() {
+	"If showCompleted button text is 'Completed', clicking 'Complete selected' button should add todoLi class 'completed-removed'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1965,7 +1965,7 @@ tests({
 		eq(todoLi1.classList.contains('completed-removed'), true);
 		eq(todo1.completed, true);
 	},
-	"If showActive button text is 'Active', clicking an 'Uncomplete selected' button should add todoLi class 'active-removed'.": function() {
+	"If showActive button text is 'Active', clicking 'Uncomplete selected' button should add todoLi class 'active-removed'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1998,6 +1998,68 @@ tests({
 		eq(todoLi1.classList.contains('active-removed'), true);
 		eq(todoLi1Entry.classList.contains('struck'), false);
 		eq(todo1.completed, false);
+	},
+	"If showDeleted button text is 'Deleted', clicking 'Delete selected' button should add todoLi class 'deleted-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		var todoLi1 = todolist.children[0].children[0];
+
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todo1.deleted, false);
+
+		selectAllButton.click();
+		deleteSelectedButton.click();
+
+		eq(todoLi1.classList.contains('deleted-removed'), true);
+		eq(todo1.deleted, true);
+	},
+	"If showActive button text is 'Active', clicking 'Undelete selected' button should add todoLi class 'active-removed'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		startApp();
+		
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		selectAllButton.click();
+		deleteSelectedButton.click();
+
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi1.classList.contains('deleted-removed'), true);
+		eq(todoLi1Entry.classList.contains('faded'), true);
+		eq(todo1.deleted, true);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, 'Active');
+
+		deleteSelectedButton.click();		// click 'Undelete selected'
+
+		eq(todoLi1.classList.contains('active-removed'), true);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi1Entry.classList.contains('faded'), false);
+		eq(todo1.deleted, false);
+	},
+	"If display becomes empty while selectAll button text is 'Select all', the button should become inactive.": function() {
+		fail();
 	},
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
@@ -2055,8 +2117,8 @@ tests({
 	"Section: On startup": function() {
 
 	},
-	"The app should set todo.selected to false on startup or when filtering todos.": function() {
-		// Startup or filtering should produce a clean slate with no selected todos.
+	"The app should set todo.selected to false on startup.": function() {
+		// Startup should produce a clean slate with no selected todos.
 		selectAllButton = document.getElementsByName('selectAll')[0];
 		todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
