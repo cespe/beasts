@@ -1438,7 +1438,7 @@ tests({
 		eq(todoLi3Entry.classList.contains('struck'), false);
 		eq(todo3.completed, false);
 	},
-	"Clicking the deleteSelected button should toggle its button text and each selected todoLi's <li> class, button text and todo.selected.": function() {
+	"Clicking the deleteSelected button should toggle its button text and toggle todo.deleted, todoLi deleted button text, and entry <p> class for selected todos.": function() {
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -1469,21 +1469,18 @@ tests({
 		eq(todo1.selected, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
-		eq(todoLi1.classList.contains('removed'), false);
 		eq(todoLi1Entry.classList.contains('faded'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todo2.selected, false);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
-		eq(todoLi2.classList.contains('removed'), false);
 		eq(todoLi2Entry.classList.contains('faded'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3DeleteButton.textContent, 'Delete');
 		eq(todoLi3Entry.classList.contains('highlighted'), false);
-		eq(todoLi3.classList.contains('removed'), false);
 		eq(todoLi3Entry.classList.contains('faded'), false);
 		eq(todo3.deleted, false);
 
@@ -1497,21 +1494,18 @@ tests({
 		eq(todo1.selected, true);
 		eq(todoLi1DeleteButton.textContent, 'Undelete');
 		eq(todoLi1Entry.classList.contains('highlighted'), true);
-		eq(todoLi1.classList.contains('removed'), true);
 		eq(todoLi1Entry.classList.contains('faded'), true);
 		eq(todo1.deleted, true);
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todo2.selected, true);
 		eq(todoLi2DeleteButton.textContent, 'Undelete');
 		eq(todoLi2Entry.classList.contains('highlighted'), true);
-		eq(todoLi2.classList.contains('removed'), true);
 		eq(todoLi2Entry.classList.contains('faded'), true);
 		eq(todo2.deleted, true);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3DeleteButton.textContent, 'Delete');
 		eq(todoLi3Entry.classList.contains('highlighted'), false);
-		eq(todoLi3.classList.contains('removed'), false);
 		eq(todoLi3Entry.classList.contains('faded'), false);
 		eq(todo3.deleted, false);
 
@@ -1522,21 +1516,18 @@ tests({
 		eq(todo1.selected, true);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todoLi1Entry.classList.contains('highlighted'), true);
-		eq(todoLi1Entry.classList.contains('removed'), false);
 		eq(todoLi1Entry.classList.contains('faded'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todo2.selected, true);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
 		eq(todoLi2Entry.classList.contains('highlighted'), true);
-		eq(todoLi2Entry.classList.contains('removed'), false);
 		eq(todoLi2Entry.classList.contains('faded'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3DeleteButton.textContent, 'Delete');
 		eq(todoLi3Entry.classList.contains('highlighted'), false);
-		eq(todoLi3Entry.classList.contains('removed'), false);
 		eq(todoLi3Entry.classList.contains('faded'), false);
 		eq(todo3.deleted, false);
 },
