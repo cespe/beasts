@@ -1329,6 +1329,27 @@ tests({
 		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
 		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	},
+	"Clicking selectAll button should toggle actions bar undoEdit and addTodo button class 'inactive'.": function() {
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var addTodoButton = document.getElementsByName('addTodo')[0];
+		var undoEditButton = document.getElementsByName('undoEdit')[0];
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(addTodoButton.classList.contains('inactive'), false);
+		eq(undoEditButton.classList.contains('inactive'), false);
+
+		selectAllButton.click();
+
+		eq(selectAllButton.textContent, 'Unselect all');
+		eq(addTodoButton.classList.contains('inactive'), true);
+		eq(undoEditButton.classList.contains('inactive'), true);
+
+		selectAllButton.click();
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(addTodoButton.classList.contains('inactive'), false);
+		eq(undoEditButton.classList.contains('inactive'), false);
+	},
 	"selectAll button with text 'Select all' should only apply to displayed todos.": function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		document.getElementById('todolist').innerHTML = '';

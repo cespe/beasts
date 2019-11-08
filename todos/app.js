@@ -567,11 +567,15 @@ function actionsClickHandler() {
 			var selectAllButton = event.target;
 			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 			var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+			var addTodoButton = document.getElementsByName('addTodo')[0];
+			var undoEditButton = document.getElementsByName('undoEdit')[0];
 			var todosUl = todolist.children[0];
 			if (selectAllButton.textContent === 'Select all') {
 				selectAllButton.textContent = 'Unselect all';
 				completeSelectedButton.classList.remove('inactive');
 				deleteSelectedButton.classList.remove('inactive');
+				addTodoButton.classList.add('inactive');
+				undoEditButton.classList.add('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					if (todoLi.classList.length === 0) {
@@ -596,6 +600,8 @@ function actionsClickHandler() {
 				selectAllButton.textContent = 'Select all';
 				completeSelectedButton.classList.add('inactive');
 				deleteSelectedButton.classList.add('inactive');
+				addTodoButton.classList.remove('inactive');
+				undoEditButton.classList.remove('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[selectedIndex];
