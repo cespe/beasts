@@ -1666,6 +1666,9 @@ tests({
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
+		todo1Child = new Todo('Item 1 child');
+		todo1Child.markDeleted(true);
+		todo1.addChild(todo1Child);
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2 completed');
 		todo2.markCompleted(true);
@@ -1683,14 +1686,17 @@ tests({
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
+		var todoLi1Child = todoLi1.children[todoLiUlIndex].children[0];
 		var todoLi2 = todosUl.children[1];
 		var todoLi3 = todosUl.children[2];
 
 		eq(todoLi1.id, todo1.id);
+		eq(todoLi1Child.id, todo1Child.id);
 		eq(todoLi2.id, todo2.id);
 		eq(todoLi3.id, todo3.id);
 
 		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi1Child.classList.contains('deleted-removed'), true);
 		eq(todoLi2.classList.contains('deleted-removed'), false);
 		eq(todoLi3.classList.contains('deleted-removed'), true);
 	},
@@ -1698,6 +1704,9 @@ tests({
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
+		todo1Child = new Todo('Item 1 child');
+		todo1Child.markDeleted(true);
+		todo1.addChild(todo1Child);
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2 completed');
 		todo2.markCompleted(true);
@@ -1715,21 +1724,26 @@ tests({
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
+		var todoLi1Child = todoLi1.children[todoLiUlIndex].children[0];
 		var todoLi2 = todosUl.children[1];
 		var todoLi3 = todosUl.children[2];
 
 		eq(todoLi1.id, todo1.id);
+		eq(todoLi1Child.id, todo1Child.id);
 		eq(todoLi2.id, todo2.id);
 		eq(todoLi3.id, todo3.id);
 
 		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi1Child.classList.contains('deleted-removed'), true);
 		eq(todoLi2.classList.contains('deleted-removed'), false);
 		eq(todoLi3.classList.contains('deleted-removed'), true);
 
+		debugger;
 		showDeletedButton.click();
 
 		eq(showDeletedButton.textContent, '√ Deleted');
 		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi1Child.classList.contains('deleted-removed'), false);
 		eq(todoLi2.classList.contains('deleted-removed'), false);
 		eq(todoLi3.classList.contains('deleted-removed'), false);
 
@@ -1737,6 +1751,7 @@ tests({
 
 		eq(showDeletedButton.textContent, 'Deleted');
 		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi1Child.classList.contains('deleted-removed'), true);
 		eq(todoLi2.classList.contains('deleted-removed'), false);
 		eq(todoLi3.classList.contains('deleted-removed'), true);
 

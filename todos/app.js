@@ -115,6 +115,7 @@ function findArray(array, id) {
 	}
 }
 
+
 /************************************* DOM manipulation ********************************/
 
 // index positions of todoLi.children[i]
@@ -313,6 +314,34 @@ function appendNewChildTodoLi(todoLi) {
 	}
 
 	newLi.children[entryIndex].focus();	// focus the entry <p>
+}
+
+function removeClassDeletedRemoved(todoUl) {
+	for (var i = 0; i < todoUl.children.length; i++) {
+		var todoLi = todoUl.children[i];
+		var entry = todoLi.children[entryIndex];
+		var todoLiUl = todoLi.children[todoLiUlIndex];
+		if (todoLiUl && todoLiUl.children.length > 0) {
+			removeClassDeletedRemoved(todoLiUl);
+		}
+		if (entry.classList.contains('faded')) {
+			todoLi.classList.remove('deleted-removed');
+		}
+	}
+}
+
+function addClassDeletedRemoved(todoUl) {
+	for (var i = 0; i < todoUl.children.length; i++) {
+		var todoLi = todoUl.children[i];
+		var entry = todoLi.children[entryIndex];
+		var todoLiUl = todoLi.children[todoLiUlIndex];
+		if (todoLiUl && todoLiUl.children.length > 0) {
+			addClassDeletedRemoved(todoLiUl);
+		}
+		if (entry.classList.contains('faded')) {
+			todoLi.classList.add('deleted-removed');
+		}
+	}
 }
 
 /************************************* Event handling ***********************************/
@@ -543,24 +572,26 @@ function actionsClickHandler() {
 			var showDeletedButton = event.target;
 			if (showDeletedButton.textContent === '√ Deleted') {
 				showDeletedButton.textContent = 'Deleted';
-				for (var i = 0; i < todoLiCount; i++) {
-					var todoLi = todosUl.children[i];
-					var entry = todoLi.children[entryIndex];
-					var faded = entry.classList.contains('faded');
-					if (faded) {
-						todoLi.classList.add('deleted-removed');
-					}
-				}
+				addClassDeletedRemoved(todosUl);
+//				for (var i = 0; i < todoLiCount; i++) {
+//					var todoLi = todosUl.children[i];
+//					var entry = todoLi.children[entryIndex];
+//					var faded = entry.classList.contains('faded');
+//					if (faded) {
+//						todoLi.classList.add('deleted-removed');
+//					}
+//				}
 			} else {
 				showDeletedButton.textContent = '√ Deleted';
-				for (var i = 0; i < todoLiCount; i++) {
-					var todoLi = todosUl.children[i];
-					var entry = todoLi.children[entryIndex];
-					var faded = entry.classList.contains('faded');
-					if (faded) {
-						todoLi.classList.remove('deleted-removed');
-					}
-				}
+				removeClassDeletedRemoved(todosUl);
+//				for (var i = 0; i < todoLiCount; i++) {
+//					var todoLi = todosUl.children[i];
+//					var entry = todoLi.children[entryIndex];
+//					var faded = entry.classList.contains('faded');
+//					if (faded) {
+//						todoLi.classList.remove('deleted-removed');
+//					}
+//				}
 			}
 		}
 		if (event.target.name === "selectAll") {
