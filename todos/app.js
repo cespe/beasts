@@ -344,6 +344,24 @@ function addClassDeletedRemoved(todoUl) {
 	}
 }
 
+function setTodoLiClass(todoUl, elementClass, action) {
+	for (var i = 0; i < todoUl.children.length; i++) {
+		var todoLi = todoUl.children[i];
+		var entry = todoLi.children[entryIndex];
+		var todoLiUl = todoLi.children[todoLiUlIndex];
+		if (todoLiUl && todoLiUl.children.length > 0) {
+			setTodoLiClass(todoLiUl, elementClass, action);
+		}
+		if (entry.classList.contains('faded') && elementClass === 'deleted-removed') {
+			if (action === 'add') {
+				todoLi.classList.add(elementClass);
+			} else {
+				todoLi.classList.remove(elementClass);
+			}
+		}
+	}
+}
+
 /************************************* Event handling ***********************************/
 
 //function keyUpHandler(event) {
@@ -572,7 +590,8 @@ function actionsClickHandler() {
 			var showDeletedButton = event.target;
 			if (showDeletedButton.textContent === '√ Deleted') {
 				showDeletedButton.textContent = 'Deleted';
-				addClassDeletedRemoved(todosUl);
+				setTodoLiClass(todosUl, 'deleted-removed', 'add');
+//				addClassDeletedRemoved(todosUl);
 //				for (var i = 0; i < todoLiCount; i++) {
 //					var todoLi = todosUl.children[i];
 //					var entry = todoLi.children[entryIndex];
@@ -583,7 +602,8 @@ function actionsClickHandler() {
 //				}
 			} else {
 				showDeletedButton.textContent = '√ Deleted';
-				removeClassDeletedRemoved(todosUl);
+				setTodoLiClass(todosUl, 'deleted-removed', 'remove');	// 'remove' not needed except for documentation
+//				removeClassDeletedRemoved(todosUl);
 //				for (var i = 0; i < todoLiCount; i++) {
 //					var todoLi = todosUl.children[i];
 //					var entry = todoLi.children[entryIndex];
