@@ -344,19 +344,35 @@ function addClassDeletedRemoved(todoUl) {
 	}
 }
 
-function setTodoLiClass(todoUl, elementClass, action) {
+function setTodoLiClass(todoUl, cssClass, action) {
 	for (var i = 0; i < todoUl.children.length; i++) {
 		var todoLi = todoUl.children[i];
-		var entry = todoLi.children[entryIndex];
 		var todoLiUl = todoLi.children[todoLiUlIndex];
 		if (todoLiUl && todoLiUl.children.length > 0) {
-			setTodoLiClass(todoLiUl, elementClass, action);
+			setTodoLiClass(todoLiUl, cssClass, action);
 		}
-		if (entry.classList.contains('faded') && elementClass === 'deleted-removed') {
+		var entry = todoLi.children[entryIndex];
+		var faded = entry.classList.contains('faded');
+		var struck = entry.classList.contains('struck');
+		if (cssClass === 'deleted-removed' && faded) {
 			if (action === 'add') {
-				todoLi.classList.add(elementClass);
+				todoLi.classList.add(cssClass);
 			} else {
-				todoLi.classList.remove(elementClass);
+				todoLi.classList.remove(cssClass);
+			}
+		}
+		if (cssClass === 'active-removed' && !struck && !faded) {
+			if (action === 'add') {
+				todoLi.classList.add('active-removed');
+			} else {
+				todoLi.classList.remove('active-removed');
+			}
+		}
+		if (cssClass === 'completed-removed' && struck) {
+			if (action === 'add') {
+				todoLi.classList.add('completed-removed');
+			} else {
+				todoLi.classList.remove('completed-removed');
 			}
 		}
 	}
@@ -539,51 +555,55 @@ function actionsClickHandler() {
 			var showActiveButton = event.target;
 			if (showActiveButton.textContent === '√ Active') {
 				showActiveButton.textContent = 'Active';
-				for (var i = 0; i < todoLiCount; i++) {
-					var todoLi = todosUl.children[i];
-					var entry = todoLi.children[entryIndex];
-					var struck = entry.classList.contains('struck');
-					var faded = entry.classList.contains('faded');
-					if (!struck && !faded) {
-						todoLi.classList.add('active-removed');
-					}
-				}
+				setTodoLiClass(todosUl, 'active-removed', 'add');
+//				for (var i = 0; i < todoLiCount; i++) {
+//					var todoLi = todosUl.children[i];
+//					var entry = todoLi.children[entryIndex];
+//					var struck = entry.classList.contains('struck');
+//					var faded = entry.classList.contains('faded');
+//					if (!struck && !faded) {
+//						todoLi.classList.add('active-removed');
+//					}
+//				}
 			} else {
 				showActiveButton.textContent = '√ Active';
-				for (var i = 0; i < todoLiCount; i++) {
-					var todoLi = todosUl.children[i];
-					var entry = todoLi.children[entryIndex];
-					var struck = entry.classList.contains('struck');
-					var faded = entry.classList.contains('faded');
-					if (!struck && !faded) {
-						todoLi.classList.remove('active-removed');
-					}
-				}
+				setTodoLiClass(todosUl, 'active-removed', 'remove');
+//				for (var i = 0; i < todoLiCount; i++) {
+//					var todoLi = todosUl.children[i];
+//					var entry = todoLi.children[entryIndex];
+//					var struck = entry.classList.contains('struck');
+//					var faded = entry.classList.contains('faded');
+//					if (!struck && !faded) {
+//						todoLi.classList.remove('active-removed');
+//					}
+//				}
 			}
 		}
 		if (event.target.name === "showCompleted") {
 			var showCompletedButton = event.target;
 			if (showCompletedButton.textContent === '√ Completed') {
 				showCompletedButton.textContent = 'Completed';
-				for (var i = 0; i < todoLiCount; i++) {
-					var todoLi = todosUl.children[i];
-					var entry = todoLi.children[entryIndex];
-					var struck = entry.classList.contains('struck');
-					if (struck) {
-						todoLi.classList.add('completed-removed');
-					}
-				}
+				setTodoLiClass(todosUl, 'completed-removed', 'add');
+//				for (var i = 0; i < todoLiCount; i++) {
+//					var todoLi = todosUl.children[i];
+//					var entry = todoLi.children[entryIndex];
+//					var struck = entry.classList.contains('struck');
+//					if (struck) {
+//						todoLi.classList.add('completed-removed');
+//					}
+//				}
 			} else {
 				showCompletedButton.textContent = '√ Completed';
-				for (var i = 0; i < todoLiCount; i++) {
-					var todoLi = todosUl.children[i];
-					var entry = todoLi.children[entryIndex];
-					var struck = entry.classList.contains('struck');
-					var faded = entry.classList.contains('faded');
-					if (struck && !faded) {
-						todoLi.classList.remove('completed-removed');
-					}
-				}
+				setTodoLiClass(todosUl, 'completed-removed', 'remove');
+//				for (var i = 0; i < todoLiCount; i++) {
+//					var todoLi = todosUl.children[i];
+//					var entry = todoLi.children[entryIndex];
+//					var struck = entry.classList.contains('struck');
+//					var faded = entry.classList.contains('faded');
+//					if (struck && !faded) {
+//						todoLi.classList.remove('completed-removed');
+//					}
+//				}
 			}
 		}
 		if (event.target.name === "showDeleted") {

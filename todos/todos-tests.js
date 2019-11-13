@@ -1583,6 +1583,11 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		todo2.markCompleted(true);
+		todo2Child = new Todo('Item 2 child');
+		todo2.addChild(todo2Child);
+		insertTodo(todos, todo2);
 
 		startApp();
 
@@ -1590,19 +1595,28 @@ tests({
 		todolist = document.getElementById('todolist');
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+		todoLi2ChildLi = todoLi2Ul.children[0];
 
 		eq(showActiveButton.textContent, '√ Active');
 		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi2.classList.contains('active-removed'), false);
+		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
 
 		showActiveButton.click();
 
 		eq(showActiveButton.textContent, 'Active');
 		eq(todoLi1.classList.contains('active-removed'), true);
+		eq(todoLi2.classList.contains('active-removed'), false);
+		eq(todoLi2ChildLi.classList.contains('active-removed'), true);
 
 		showActiveButton.click();
 
 		eq(showActiveButton.textContent, '√ Active');
 		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi2.classList.contains('active-removed'), false);
+		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
 	},
 	"The header actions bar should have a showCompleted button to toggle showing completed todos.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -1633,7 +1647,12 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item completed');
 		todo1.markCompleted(true);
+		todo2 = new Todo( 'Item 2');
+		todo2Child = new Todo('Item 2 child');
+		todo2Child.markCompleted(true);
+		todo2.addChild(todo2Child);
 		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
 
 		startApp();
 
@@ -1641,19 +1660,31 @@ tests({
 		todolist = document.getElementById('todolist');
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+		todoLi2Child = todoLi2Ul.children[0];
 
 		eq(showCompletedButton.textContent, '√ Completed');
 		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi2Child.classList.contains('completed-removed'), false);
+		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi2Child.children[entryIndex].classList.contains('struck'), true);
 
 		showCompletedButton.click();
 
 		eq(showCompletedButton.textContent, 'Completed');
 		eq(todoLi1.classList.contains('completed-removed'), true);
+		eq(todoLi2Child.classList.contains('completed-removed'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi2Child.children[entryIndex].classList.contains('struck'), true);
 
 		showCompletedButton.click();
 
 		eq(showCompletedButton.textContent, '√ Completed');
 		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi2Child.classList.contains('completed-removed'), false);
+		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi2Child.children[entryIndex].classList.contains('struck'), true);
 	},
 	"The header actions bar should have a showDeleted button to toggle showing deleted todos.": function() {
 		var actionsDiv = document.getElementById('actions');
@@ -1738,7 +1769,6 @@ tests({
 		eq(todoLi2.classList.contains('deleted-removed'), false);
 		eq(todoLi3.classList.contains('deleted-removed'), true);
 
-		debugger;
 		showDeletedButton.click();
 
 		eq(showDeletedButton.textContent, '√ Deleted');
