@@ -526,13 +526,17 @@ function todoClickHandler(event) {
 					todoLiSelectChildrenButton.textContent = 'Unselect children';
 					for (var i = 0; i < todo.children.length; i++) {
 						todo.children[i].selected = true;
-						todoLiUl.children[i].children[selectedIndex].textContent = 'Unselect';
+						childLi = todoLiUl.children[i];
+						childLi.children[selectedIndex].textContent = 'Unselect';
+						childLi.children[entryIndex].classList.add('highlighted');
 					}
 				} else {
 					todoLiSelectChildrenButton.textContent = 'Select children';
 					for (var i = 0; i < todo.children.length; i++) {
 						todo.children[i].selected = false;
-						todoLiUl.children[i].children[selectedIndex].textContent = 'Select';
+						childLi = todoLiUl.children[i];
+						childLi.children[selectedIndex].textContent = 'Select';
+						childLi.children[entryIndex].classList.remove('highlighted');
 					}
 					
 				}

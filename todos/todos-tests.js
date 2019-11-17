@@ -1089,7 +1089,7 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
 	},
-	"Clicking a selectChildren button should toggle button text and child todos' todo.selected and todoLi selected button text.": function() {
+	"Clicking a selectChildren button should toggle button text, child todos' todo.selected, todoLi selected button text, and todoLi entry <p> class.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1104,14 +1104,18 @@ tests({
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
 		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
 		var child1LiSelectButton = child1Li.children[selectedIndex];
+		var child1LiEntry = child1Li.children[entryIndex];
 		var child2Li = todoLi1.children[todoLiUlIndex].children[completedIndex];
 		var child2LiSelectButton = child2Li.children[selectedIndex];
+		var child2LiEntry = child2Li.children[entryIndex];
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
 		eq(child1.selected, false);
 		eq(child2.selected, false);
 		eq(child1LiSelectButton.textContent, 'Select');
 		eq(child2LiSelectButton.textContent, 'Select');
+		eq(child1LiEntry.classList.contains('highlighted'), false);
+		eq(child2LiEntry.classList.contains('highlighted'), false);
 
 		todoLi1SelectChildrenButton.click();
 
@@ -1120,6 +1124,8 @@ tests({
 		eq(child2.selected, true);
 		eq(child1LiSelectButton.textContent, 'Unselect');
 		eq(child2LiSelectButton.textContent, 'Unselect');
+		eq(child1LiEntry.classList.contains('highlighted'), true);
+		eq(child2LiEntry.classList.contains('highlighted'), true);
 
 		todoLi1SelectChildrenButton.click();
 
@@ -1128,6 +1134,8 @@ tests({
 		eq(child2.selected, false);
 		eq(child1LiSelectButton.textContent, 'Select');
 		eq(child2LiSelectButton.textContent, 'Select');
+		eq(child1LiEntry.classList.contains('highlighted'), false);
+		eq(child2LiEntry.classList.contains('highlighted'), false);
 	},
 	"Clicking an addChild button should activate showChildren and selectChildren buttons.": function() {
 		document.getElementById('todolist').innerHTML = '';
