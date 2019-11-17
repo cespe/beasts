@@ -520,10 +520,12 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "selectChildren") {
 			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
 			var todoLiUl = todoLi.children[todoLiUlIndex];
 			if (todoLiUl && todoLiUl.children.length > 0) {
 				if (todoLiSelectChildrenButton.textContent === 'Select children') {
 					todoLiSelectChildrenButton.textContent = 'Unselect children';
+					todoLiShowChildrenButton.classList.add('inactive');
 					for (var i = 0; i < todo.children.length; i++) {
 						todo.children[i].selected = true;
 						childLi = todoLiUl.children[i];
@@ -532,6 +534,7 @@ function todoClickHandler(event) {
 					}
 				} else {
 					todoLiSelectChildrenButton.textContent = 'Select children';
+					todoLiShowChildrenButton.classList.remove('inactive');
 					for (var i = 0; i < todo.children.length; i++) {
 						todo.children[i].selected = false;
 						childLi = todoLiUl.children[i];
