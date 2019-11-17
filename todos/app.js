@@ -531,6 +531,11 @@ function todoClickHandler(event) {
 						childLi = todoLiUl.children[i];
 						childLi.children[selectedIndex].textContent = 'Unselect';
 						childLi.children[entryIndex].classList.add('highlighted');
+						childLi.children[selectedIndex].classList.remove('inactive');
+						childLi.children[completedIndex].classList.add('inactive');
+						childLi.children[deleteIndex].classList.add('inactive');
+						childLi.children[addSiblingIndex].classList.add('inactive');
+						childLi.children[addChildIndex].classList.add('inactive');
 					}
 				} else {
 					todoLiSelectChildrenButton.textContent = 'Select children';
@@ -540,6 +545,11 @@ function todoClickHandler(event) {
 						childLi = todoLiUl.children[i];
 						childLi.children[selectedIndex].textContent = 'Select';
 						childLi.children[entryIndex].classList.remove('highlighted');
+						childLi.children[selectedIndex].classList.add('inactive');
+						childLi.children[completedIndex].classList.remove('inactive');
+						childLi.children[deleteIndex].classList.remove('inactive');
+						childLi.children[addSiblingIndex].classList.remove('inactive');
+						childLi.children[addChildIndex].classList.remove('inactive');
 					}
 					
 				}
