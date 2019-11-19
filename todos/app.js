@@ -126,8 +126,10 @@ var addSiblingIndex = 3;
 var addChildIndex = 4;
 var showChildrenIndex = 5;
 var selectChildrenIndex = 6;
-var entryIndex = 7;
-var todoLiUlIndex = 8;
+var entryIndex = 9;
+var todoLiUlIndex = 10;
+var completeSelectedChildrenIndex = 7;
+var deleteSelectedChildrenIndex = 8;
 
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
@@ -207,6 +209,20 @@ function createTodoLi(todo) {
 		}
 	}
 	todoLi.appendChild(selectChildrenButton);
+
+	var completeSelectedChildrenButton = document.createElement('button');
+	completeSelectedChildrenButton.name = 'completeSelectedChildren';
+	completeSelectedChildrenButton.type = 'button';
+	completeSelectedChildrenButton.textContent = 'Complete selected children';
+	completeSelectedChildrenButton.classList.add('inactive');
+	todoLi.appendChild(completeSelectedChildrenButton);
+
+	var deleteSelectedChildrenButton = document.createElement('button');
+	deleteSelectedChildrenButton.name = 'deleteSelectedChildren';
+	deleteSelectedChildrenButton.type = 'button';
+	deleteSelectedChildrenButton.textContent = 'Delete selected children';
+	deleteSelectedChildrenButton.classList.add('inactive');
+	todoLi.appendChild(deleteSelectedChildrenButton);
 
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
@@ -525,6 +541,8 @@ function todoClickHandler(event) {
 			var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
 			var todoLiAddChildButton = todoLi.children[addChildIndex];
 			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
+			var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
+			var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
 			var todoLiUl = todoLi.children[todoLiUlIndex];
 			if (todoLiUl && todoLiUl.children.length > 0) {
 				if (todoLiSelectChildrenButton.textContent === 'Select children') {
@@ -534,6 +552,8 @@ function todoClickHandler(event) {
 					todoLiAddSiblingButton.classList.add('inactive');
 					todoLiAddChildButton.classList.add('inactive');
 					todoLiShowChildrenButton.classList.add('inactive');
+					todoLiCompleteSelectedChildrenButton.classList.remove('inactive');
+					todoLiDeleteSelectedChildrenButton.classList.remove('inactive');
 					for (var i = 0; i < todo.children.length; i++) {
 						todo.children[i].selected = true;
 						childLi = todoLiUl.children[i];
@@ -548,6 +568,8 @@ function todoClickHandler(event) {
 				} else {
 					todoLiSelectChildrenButton.textContent = 'Select children';
 					todoLiShowChildrenButton.classList.remove('inactive');
+					todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+					todoLiDeleteSelectedChildrenButton.classList.add('inactive');
 					if (!todoLi.children[entryIndex].classList.contains('highlighted')) {
 						todoLiCompleteButton.classList.remove('inactive');
 						todoLiDeleteButton.classList.remove('inactive');
@@ -565,7 +587,44 @@ function todoClickHandler(event) {
 						childLi.children[addSiblingIndex].classList.remove('inactive');
 						childLi.children[addChildIndex].classList.remove('inactive');
 					}
-					
+				}
+			}
+		}
+		if (event.target.name === "completeSelectedChildren") {
+			var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
+			var todoLiUl = todoLi.children[todoLiUlIndex];
+			if (todoLiUl && todoLiUl.children.length > 0) {
+				var childCount = todoLiUl.children.length;
+				if (todoLiCompleteSelectedChildrenButton.textContent === 'Complete selected children') {
+					todoLiCompleteSelectedChildrenButton.textContent = 'Uncomplete selected children';
+					for (var i = 0; i < childCount; i++) {
+						var childLi = todoLiUl.children[i];	
+						if (childLi.children[entryIndex].classList.contains('highlighted')) {
+							childLi.children[completedIndex].textContent = 'Uncomplete';
+							childLi.children[entryIndex].classList.add('struck');
+							childLi.classList.remove('active-removed');		// is this needed?
+							var childTodo = findTodo(todos, childLi.id);
+							childTodo.markCompleted(true);
+							if (document.getElementsByName('showCompleted')[0].textContent === 'Completed') {
+								childLi.classList.add('completed-removed');
+							}
+						}
+					}
+				} else {
+					todoLiCompleteSelectedChildrenButton.textContent = 'Complete selected children';
+					for (var i = 0; i < childCount; i++) {
+						var childLi = todoLiUl.children[i];	
+						if (childLi.children[entryIndex].classList.contains('highlighted')) {
+							childLi.children[completedIndex].textContent = 'Complete';
+							childLi.children[entryIndex].classList.remove('struck');
+							childLi.classList.remove('completed-removed');		// is this needed?
+							var childTodo = findTodo(todos, childLi.id);
+							childTodo.markCompleted(false);
+							if (document.getElementsByName('showActive')[0].textContent === 'Active') {
+								childLi.classList.add('active-removed');
+							}
+						}
+					}
 				}
 			}
 		}
