@@ -383,12 +383,12 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		eq(todoLi1.childElementCount, 8);
+		eq(todoLi1.childElementCount, 10);
 		eq(todoLi1.children[entryIndex].textContent, 'Item 1');
 
 		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
 
-		eq(todoLi1.childElementCount, 9);
+		eq(todoLi1.childElementCount, 11);
 		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todoLi1Ul.nodeName, "UL");
@@ -401,7 +401,7 @@ tests({
 
 		appendNewChildTodoLi(todoLi1);			// case of second child added to existing UL
 
-		eq(todoLi1.childElementCount, 9);
+		eq(todoLi1.childElementCount, 11);
 		
 		var child1 = todo1.children[0];
 		var child1Li = todoLi1Ul.children[0];
@@ -879,12 +879,12 @@ tests({
 		todoLi1ChildButton = todoLi1.children[addChildIndex];
 
 		eq(todosUl.childElementCount, 1);
-		eq(todoLi1.childElementCount, 8);
+		eq(todoLi1.childElementCount, 10);
 
 		todoLi1ChildButton.click();
 
 		eq(todosUl.childElementCount, 1);
-		eq(todoLi1.childElementCount, 9);
+		eq(todoLi1.childElementCount, 11);
 		var todoLi1Ul = todoLi1.children[todoLiUlIndex]
 		var todoLi1Child1 = todoLi1Ul.children[0];
 		eq(todoLi1Child1.nodeName, 'LI');
@@ -1526,7 +1526,55 @@ tests({
 		eq(child2LiCompleteButton.textContent, 'Complete');
 	},
 	"Clicking a 'deleteSelectedChildren' button should toggle button text and toggle todo.deleted, todoLi entry class and 'deleted' button text on selected child todos.": function() {
-		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var todoLi1DeleteSelectedChildrenButton = todoLi1.children[deleteSelectedChildrenIndex];
+		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
+		var child1LiEntry = child1Li.children[entryIndex];
+		var child1LiDeleteButton = child1Li.children[deleteIndex];
+		var child2Li = todoLi1.children[todoLiUlIndex].children[1];
+		var child2LiEntry = child2Li.children[entryIndex];
+		var child2LiDeleteButton = child2Li.children[deleteIndex];
+
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
+		eq(child1LiEntry.classList.contains('faded'), false);
+		eq(child2LiEntry.classList.contains('faded'), false);
+		eq(child1.deleted, false);
+		eq(child2.deleted, false);
+		eq(child1LiDeleteButton.textContent, 'Delete');
+		eq(child2LiDeleteButton.textContent, 'Delete');
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), false);
+
+		todoLi1DeleteSelectedChildrenButton.click();
+
+		eq(child1LiEntry.classList.contains('faded'), true);
+		eq(child2LiEntry.classList.contains('faded'), true);
+		eq(child1.deleted, true);
+		eq(child2.deleted, true);
+		eq(child1LiDeleteButton.textContent, 'Undelete');
+		eq(child2LiDeleteButton.textContent, 'Undelete');
+
+		todoLi1DeleteSelectedChildrenButton.click();
+		
+		eq(child1LiEntry.classList.contains('faded'), false);
+		eq(child2LiEntry.classList.contains('faded'), false);
+		eq(child1.deleted, false);
+		eq(child2.deleted, false);
+		eq(child1LiDeleteButton.textContent, 'Delete');
+		eq(child2LiDeleteButton.textContent, 'Delete');
 	},
 	"Clicking an addChild button should activate showChildren and selectChildren buttons.": function() {
 		document.getElementById('todolist').innerHTML = '';
