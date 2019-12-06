@@ -1195,6 +1195,150 @@ tests({
 		eq(child1LiEntry.classList.contains('highlighted'), false);
 		eq(child2LiEntry.classList.contains('highlighted'), false);
 	},
+	"The selectChildren button should operate on displayed child todos only.": function() {
+		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		child2.markDeleted(true);
+		todo1.addChild(child2);
+		child3 = new Todo('Item 1 child 3');
+		todo1.addChild(child3);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
+		var child1LiSelectButton = child1Li.children[selectedIndex];
+		var child1LiEntry = child1Li.children[entryIndex];
+		var child2Li = todoLi1.children[todoLiUlIndex].children[1];
+		var child2LiSelectButton = child2Li.children[selectedIndex];
+		var child2LiEntry = child2Li.children[entryIndex];
+		var child3Li = todoLi1.children[todoLiUlIndex].children[2];
+		var child3LiSelectButton = child3Li.children[selectedIndex];
+		var child3LiEntry = child3Li.children[entryIndex];
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(child3.selected, false);
+		eq(child1LiSelectButton.textContent, 'Select');
+		eq(child2LiSelectButton.textContent, 'Select');
+		eq(child3LiSelectButton.textContent, 'Select');
+		eq(child1LiEntry.classList.contains('highlighted'), false);
+		eq(child2LiEntry.classList.contains('highlighted'), false);
+		eq(child3LiEntry.classList.contains('highlighted'), false);
+		eq(child2Li.classList.contains('deleted-removed'), true);		// not displayed so won't be selected
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(child1.selected, true);
+		eq(child2.selected, false);
+		eq(child3.selected, true);
+		eq(child1LiSelectButton.textContent, 'Unselect');
+		eq(child2LiSelectButton.textContent, 'Select');
+		eq(child3LiSelectButton.textContent, 'Unselect');
+		eq(child1LiEntry.classList.contains('highlighted'), true);
+		eq(child2LiEntry.classList.contains('highlighted'), false);
+		eq(child3LiEntry.classList.contains('highlighted'), true);
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(child3.selected, false);
+		eq(child1LiSelectButton.textContent, 'Select');
+		eq(child2LiSelectButton.textContent, 'Select');
+		eq(child3LiSelectButton.textContent, 'Select');
+		eq(child1LiEntry.classList.contains('highlighted'), false);
+		eq(child2LiEntry.classList.contains('highlighted'), false);
+		eq(child3LiEntry.classList.contains('highlighted'), false);
+	}, 
+	"The selectChildren button should operate recursively on displayed nested todos.": function() {
+		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		grandchild1 = new Todo('Item 1 child 1 child 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		child2.markDeleted(true);
+		todo1.addChild(child2);
+		child3 = new Todo('Item 1 child 3');
+		todo1.addChild(child3);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
+		var child1LiSelectButton = child1Li.children[selectedIndex];
+		var child1LiEntry = child1Li.children[entryIndex];
+		var grandchild1Li = child1Li.children[todoLiUlIndex].children[0];
+		var grandchild1LiSelectButton = grandchild1Li.children[selectedIndex];
+		var grandchild1LiEntry = grandchild1Li.children[entryIndex];
+		var child2Li = todoLi1.children[todoLiUlIndex].children[1];
+		var child2LiSelectButton = child2Li.children[selectedIndex];
+		var child2LiEntry = child2Li.children[entryIndex];
+		var child3Li = todoLi1.children[todoLiUlIndex].children[2];
+		var child3LiSelectButton = child3Li.children[selectedIndex];
+		var child3LiEntry = child3Li.children[entryIndex];
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(child1.selected, false);
+		eq(grandchild1.selected, false);
+		eq(child2.selected, false);
+		eq(child3.selected, false);
+		eq(child1LiSelectButton.textContent, 'Select');
+		eq(grandchild1LiSelectButton.textContent, 'Select');
+		eq(child2LiSelectButton.textContent, 'Select');
+		eq(child3LiSelectButton.textContent, 'Select');
+		eq(child1LiEntry.classList.contains('highlighted'), false);
+		eq(grandchild1LiEntry.classList.contains('highlighted'), false);
+		eq(child2LiEntry.classList.contains('highlighted'), false);
+		eq(child3LiEntry.classList.contains('highlighted'), false);
+		eq(child2Li.classList.contains('deleted-removed'), true);		// not displayed so won't be selected
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(child1.selected, true);
+		eq(grandchild1.selected, true);
+		eq(child2.selected, false);
+		eq(child3.selected, true);
+		eq(child1LiSelectButton.textContent, 'Unselect');
+		eq(grandchild1LiSelectButton.textContent, 'Unselect');
+		eq(child2LiSelectButton.textContent, 'Select');
+		eq(child3LiSelectButton.textContent, 'Unselect');
+		eq(child1LiEntry.classList.contains('highlighted'), true);
+		eq(grandchild1LiEntry.classList.contains('highlighted'), true);
+		eq(child2LiEntry.classList.contains('highlighted'), false);
+		eq(child3LiEntry.classList.contains('highlighted'), true);
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, false);
+		eq(child3.selected, false);
+		eq(child1LiSelectButton.textContent, 'Select');
+		eq(grandchild1LiSelectButton.textContent, 'Select');
+		eq(child2LiSelectButton.textContent, 'Select');
+		eq(child3LiSelectButton.textContent, 'Select');
+		eq(child1LiEntry.classList.contains('highlighted'), false);
+		eq(grandchild1LiEntry.classList.contains('highlighted'), false);
+		eq(child2LiEntry.classList.contains('highlighted'), false);
+		eq(child3LiEntry.classList.contains('highlighted'), false);
+	}, 
 	"Clicking a selectChildren button should toggle 'inactive' on complete, delete, addSibling, addChild and showChildren buttons.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -1884,6 +2028,104 @@ tests({
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
+	},
+	"Clicking selectAll button should operate on displayed todos only." : function() {
+		fail();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		todo2.markDeleted(true);
+		insertTodo(todos, todo2);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		var todoLi1SelectButton = todoLi1.children[selectedIndex];
+		var todoLi2SelectButton = todoLi2.children[selectedIndex];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+		var todoLi2Entry = todoLi2.children[entryIndex];
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.classList.contains('highlighted'), false);
+		eq(todoLi2Entry.classList.contains('highlighted'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), true);		// not displayed so won't be selected
+		eq(todo1.selected, false);
+		eq(todo2.selected, false);
+
+		selectAllButton.click();
+
+		eq(selectAllButton.textContent, 'Unselect all');
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi1SelectButton.classList.contains('inactive'), false);
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2Entry.classList.contains('highlighted'), false);
+		eq(todo1.selected, true);
+		eq(todo2.selected, false);
+
+		selectAllButton.click();
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.classList.contains('highlighted'), false);
+		eq(todoLi2Entry.classList.contains('highlighted'), false);
+		eq(todo1.selected, false);
+		eq(todo2.selected, false);
+	},
+	"Clicking selectAll button should operate recursively on displayed nested todos.": function() {
+		fail();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1child1 = new Todo('Item 1 child 1');
+		todo1child2 = new Todo('Item 1 child 2');
+		todo1.addChild(todo1child1);
+		todo1.addChild(todo1child2);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Child1 = todoLi1.children[todoLiUlIndex].children[0];
+		todoLi1Child2 = todoLi1.children[todoLiUlIndex].children[1];
+		todoLi1Child2DeleteButton = todoLi1Child2.children[deleteIndex];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi2DeleteButton = todoLi2.children[deleteIndex];
+
+		eq(todo1.selected, false);
+		eq(todo1child1.selected, false);
+		eq(todo1child2.selected, false);
+		eq(todo2.selected, false);
+		eq(todoLi1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child2.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
+
+		todoLi2DeleteButton.click();
+		todoLi1Child2DeleteButton.click();
+		selectAllButton.click();
+
+		eq(todo1.selected, true);
+		eq(todo1child1.selected, true);
+		eq(todo1child2.selected, false);
+		eq(todo2.selected, false);
+		eq(todoLi1.children[entryIndex].classList.contains('highlighted'), true);
+		eq(todoLi1Child1.children[entryIndex].classList.contains('highlighted'), true);
+		eq(todoLi1Child2.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
 	},
 	"Clicking selectAll button should also toggle todoLi completed, deleted, addSibling, and addChild button classes 'inactive'.": function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
