@@ -1196,7 +1196,6 @@ tests({
 		eq(child2LiEntry.classList.contains('highlighted'), false);
 	},
 	"The selectChildren button should operate on displayed child todos only.": function() {
-		fail();
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2030,7 +2029,6 @@ tests({
 		eq(todo2.selected, false);
 	},
 	"Clicking selectAll button should operate on displayed todos only." : function() {
-		fail();
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
