@@ -1260,7 +1260,6 @@ tests({
 		eq(child3LiEntry.classList.contains('highlighted'), false);
 	}, 
 	"The selectChildren button should operate recursively on displayed nested todos.": function() {
-		fail();
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
