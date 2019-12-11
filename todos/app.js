@@ -544,7 +544,7 @@ function todoClickHandler(event) {
 			var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
 			var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
 			var todoLiUl = todoLi.children[todoLiUlIndex];
-			if (todoLiUl && todoLiUl.children.length > 0) {
+			if (todoLiUl && todoLiUl.children.length > 0) {		// is this test necessary given that button was available to click?
 				if (todoLiSelectChildrenButton.textContent === 'Select children') {
 					todoLiSelectChildrenButton.textContent = 'Unselect children';
 					todoLiCompleteButton.classList.add('inactive');
@@ -557,22 +557,25 @@ function todoClickHandler(event) {
 					var childrenUncompletedCount = 0;
 					var childrenUndeletedCount = 0;
 					for (var i = 0; i < todo.children.length; i++) {
-						var childTodo = todo.children[i];
-						childTodo.selected = true;
-						if (childTodo.completed === false) {
-							childrenUncompletedCount++;
-						}
-						if (childTodo.deleted === false) {
-							childrenUndeletedCount++;
-						}
 						childLi = todoLiUl.children[i];
-						childLi.children[selectedIndex].textContent = 'Unselect';
-						childLi.children[entryIndex].classList.add('highlighted');
-						childLi.children[selectedIndex].classList.remove('inactive');
-						childLi.children[completedIndex].classList.add('inactive');
-						childLi.children[deleteIndex].classList.add('inactive');
-						childLi.children[addSiblingIndex].classList.add('inactive');
-						childLi.children[addChildIndex].classList.add('inactive');
+						if (childLi.classList.length === 0) { 
+							childLi.children[selectedIndex].textContent = 'Unselect';
+							childLi.children[entryIndex].classList.add('highlighted');
+							childLi.children[selectedIndex].classList.remove('inactive');
+							childLi.children[completedIndex].classList.add('inactive');
+							childLi.children[deleteIndex].classList.add('inactive');
+							childLi.children[addSiblingIndex].classList.add('inactive');
+							childLi.children[addChildIndex].classList.add('inactive');
+
+							var childTodo = todo.children[i];
+							childTodo.selected = true;
+							if (childTodo.completed === false) {
+								childrenUncompletedCount++;
+							}
+							if (childTodo.deleted === false) {
+								childrenUndeletedCount++;
+							}
+						}
 					}
 					if (childrenUncompletedCount === 0) {
 						todoLiCompleteSelectedChildrenButton.textContent = 'Uncomplete selected children';
@@ -745,7 +748,7 @@ function actionsClickHandler() {
 				var todosUndeletedCount = 0;
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
-					if (todoLi.classList.length === 0) {
+					if (todoLi.classList.length === 0) {	// true when todoLi is not hidden
 						var todoLiSelectButton = todoLi.children[selectedIndex];
 						var todoLiCompleteButton = todoLi.children[completedIndex];
 						var todoLiDeleteButton = todoLi.children[deleteIndex];
