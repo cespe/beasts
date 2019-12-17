@@ -1978,6 +1978,21 @@ tests({
 	},
 	"Clicking selectAll button should toggle button text, each todoLi selected button text, each todo.selected, and each entry <p> class." : function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		// set defaults on action bar buttons
+		selectAllButton.textContent = 'Select all';
+		completeSelectedButton.textContent = 'Complete selected';
+		deleteSelectedButton.textContent = 'Delete selected';
+		completeSelectedButton.classList.add('inactive');
+		deleteSelectedButton.classList.add('inactive');
+		showActiveButton.textContent = '√ Active';
+		showCompletedButton.textContent = '√ Completed';
+		showDeletedButton.textContent = 'Deleted';
+
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2081,7 +2096,6 @@ tests({
 		eq(todo2.selected, false);
 	},
 	"Clicking selectAll button should operate recursively on displayed nested todos.": function() {
-		fail();
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -2126,6 +2140,21 @@ tests({
 	},
 	"Clicking selectAll button should also toggle todoLi completed, deleted, addSibling, and addChild button classes 'inactive'.": function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		// set defaults on action bar buttons
+		selectAllButton.textContent = 'Select all';
+		completeSelectedButton.textContent = 'Complete selected';
+		deleteSelectedButton.textContent = 'Delete selected';
+		completeSelectedButton.classList.add('inactive');
+		deleteSelectedButton.classList.add('inactive');
+		showActiveButton.textContent = '√ Active';
+		showCompletedButton.textContent = '√ Completed';
+		showDeletedButton.textContent = 'Deleted';
+
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
