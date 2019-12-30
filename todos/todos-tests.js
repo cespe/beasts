@@ -2137,6 +2137,17 @@ tests({
 		eq(todoLi1Child1.children[entryIndex].classList.contains('highlighted'), true);
 		eq(todoLi1Child2.children[entryIndex].classList.contains('highlighted'), false);
 		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
+
+		selectAllButton.click();
+
+		eq(todo1.selected, false);
+		eq(todo1child1.selected, false);
+		eq(todo1child2.selected, false);
+		eq(todo2.selected, false);
+		eq(todoLi1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child2.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
 	},
 	"Clicking selectAll button should also toggle todoLi completed, deleted, addSibling, and addChild button classes 'inactive'.": function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
