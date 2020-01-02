@@ -805,7 +805,6 @@ function actionsClickHandler() {
 					} else {
 						deleteSelectedButton.textContent = 'Delete selected';
 					}
-					selectChildren(todoLi);
 				}
 			} else {
 				selectAllButton.textContent = 'Select all';
@@ -830,7 +829,6 @@ function actionsClickHandler() {
 					todoLiEntry.classList.remove('highlighted');
 					var todo = findTodo(todos, todoLi.id)
 					todo.selected = false;
-					selectChildren(todoLi);
 				}
 				if (deleteSelectedButton.classList.contains('deleted')) {
 					deleteSelectedButton.classList.remove('deleted');
