@@ -1259,7 +1259,7 @@ tests({
 		eq(child2LiEntry.classList.contains('highlighted'), false);
 		eq(child3LiEntry.classList.contains('highlighted'), false);
 	}, 
-	"The selectChildren button should operate recursively on displayed nested todos.": function() {
+	"The selectChildren button should operate on displayed nested todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1304,9 +1304,7 @@ tests({
 		eq(child2LiEntry.classList.contains('highlighted'), false);
 		eq(child3LiEntry.classList.contains('highlighted'), false);
 		eq(child2Li.classList.contains('deleted-removed'), true);		// not displayed so won't be selected
-
 		todoLi1SelectChildrenButton.click();
-
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
 		eq(child1.selected, true);
 		eq(grandchild1.selected, true);
@@ -1833,6 +1831,57 @@ tests({
 		eq(child1LiCompleteButton.textContent, 'Complete');
 		eq(child2LiCompleteButton.textContent, 'Complete');
 	},
+	"A completeSelectedChildren button should operate on selected nested todos.": function() {
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Item 1 grandchild 1');
+		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var todoLi1CompleteSelectedChildrenButton = todoLi1.children[completeSelectedChildrenIndex];
+		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
+		var child1LiEntry = child1Li.children[entryIndex];
+		var child1LiCompleteButton = child1Li.children[completedIndex];
+		var grandchild1Li = child1Li.children[todoLiUlIndex].children[0];
+		var grandchild1LiEntry = grandchild1Li.children[entryIndex];
+		var grandchild1LiCompleteButton = grandchild1Li.children[completedIndex];
+
+		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
+		eq(child1LiEntry.classList.contains('struck'), false);
+		eq(grandchild1LiEntry.classList.contains('struck'), false);
+		eq(child1.completed, false);
+		eq(grandchild1.completed, false);
+		eq(child1LiCompleteButton.textContent, 'Complete');
+		eq(grandchild1LiCompleteButton.textContent, 'Complete');
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), false);
+
+		todoLi1CompleteSelectedChildrenButton.click();
+
+		eq(child1LiEntry.classList.contains('struck'), true);
+		eq(grandchild1LiEntry.classList.contains('struck'), true);
+		eq(child1.completed, true);
+		eq(grandchild1.completed, true);
+		eq(child1LiCompleteButton.textContent, 'Uncomplete');
+		eq(grandchild1LiCompleteButton.textContent, 'Uncomplete');
+
+		todoLi1CompleteSelectedChildrenButton.click();
+		
+		eq(child1LiEntry.classList.contains('struck'), false);
+		eq(grandchild1LiEntry.classList.contains('struck'), false);
+		eq(child1.completed, false);
+		eq(grandchild1.completed, false);
+		eq(child1LiCompleteButton.textContent, 'Complete');
+		eq(grandchild1LiCompleteButton.textContent, 'Complete');
+	},
 	"Clicking a 'deleteSelectedChildren' button should toggle button text and toggle todo.deleted, todoLi entry class and 'deleted' button text on selected child todos.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -1883,6 +1932,9 @@ tests({
 		eq(child2.deleted, false);
 		eq(child1LiDeleteButton.textContent, 'Delete');
 		eq(child2LiDeleteButton.textContent, 'Delete');
+	},
+	"A deleteSelectedChildren button should operate on selected nested todos.": function() {
+		fail();	
 	},
 	"Clicking an addChild button should activate showChildren and selectChildren buttons.": function() {
 		document.getElementById('todolist').innerHTML = '';
@@ -2095,7 +2147,7 @@ tests({
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
 	},
-	"Clicking selectAll button should operate recursively on displayed nested todos.": function() {
+	"Clicking selectAll button should operate on displayed nested todos.": function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];

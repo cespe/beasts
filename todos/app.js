@@ -482,6 +482,51 @@ function selectChildren(todoLi) {
 	}
 }
 
+function completeSelectedChildren(todoLi) {
+	var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
+	var todoLiUl = todoLi.children[todoLiUlIndex];
+	if (todoLiUl && todoLiUl.children.length > 0) {
+		var childCount = todoLiUl.children.length;
+		for (var i = 0; i < childCount; i++) {
+			todoLi = todoLiUl.children[i];
+			todoLiUl = todoLi.children[todoLiUlIndex];
+			if (todoLiUl && todoLiUl.children.length > 0) {
+				completeSelectedChildren(todoLi);
+			}
+		}
+		if (todoLiCompleteSelectedChildrenButton.textContent === 'Complete selected children') {
+			todoLiCompleteSelectedChildrenButton.textContent = 'Uncomplete selected children';
+			for (var i = 0; i < childCount; i++) {
+				var childLi = todoLiUl.children[i];	
+				if (childLi.children[entryIndex].classList.contains('highlighted')) {
+					childLi.children[completedIndex].textContent = 'Uncomplete';
+					childLi.children[entryIndex].classList.add('struck');
+					childLi.classList.remove('active-removed');		// is this needed?
+					var childTodo = findTodo(todos, childLi.id);
+					childTodo.markCompleted(true);
+					if (document.getElementsByName('showCompleted')[0].textContent === 'Completed') {
+						childLi.classList.add('completed-removed');
+					}
+				}
+			}
+		} else {
+			todoLiCompleteSelectedChildrenButton.textContent = 'Complete selected children';
+			for (var i = 0; i < childCount; i++) {
+				var childLi = todoLiUl.children[i];	
+				if (childLi.children[entryIndex].classList.contains('highlighted')) {
+					childLi.children[completedIndex].textContent = 'Complete';
+					childLi.children[entryIndex].classList.remove('struck');
+					childLi.classList.remove('completed-removed');		// is this needed?
+					var childTodo = findTodo(todos, childLi.id);
+					childTodo.markCompleted(false);
+					if (document.getElementsByName('showActive')[0].textContent === 'Active') {
+						childLi.classList.add('active-removed');
+					}
+				}
+			}
+		}
+	}
+}
 
 /************************************* Event handling ***********************************/
 
@@ -627,42 +672,7 @@ function todoClickHandler(event) {
 			selectChildren(todoLi);
 		}
 		if (event.target.name === "completeSelectedChildren") {
-			var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
-			var todoLiUl = todoLi.children[todoLiUlIndex];
-			if (todoLiUl && todoLiUl.children.length > 0) {
-				var childCount = todoLiUl.children.length;
-				if (todoLiCompleteSelectedChildrenButton.textContent === 'Complete selected children') {
-					todoLiCompleteSelectedChildrenButton.textContent = 'Uncomplete selected children';
-					for (var i = 0; i < childCount; i++) {
-						var childLi = todoLiUl.children[i];	
-						if (childLi.children[entryIndex].classList.contains('highlighted')) {
-							childLi.children[completedIndex].textContent = 'Uncomplete';
-							childLi.children[entryIndex].classList.add('struck');
-							childLi.classList.remove('active-removed');		// is this needed?
-							var childTodo = findTodo(todos, childLi.id);
-							childTodo.markCompleted(true);
-							if (document.getElementsByName('showCompleted')[0].textContent === 'Completed') {
-								childLi.classList.add('completed-removed');
-							}
-						}
-					}
-				} else {
-					todoLiCompleteSelectedChildrenButton.textContent = 'Complete selected children';
-					for (var i = 0; i < childCount; i++) {
-						var childLi = todoLiUl.children[i];	
-						if (childLi.children[entryIndex].classList.contains('highlighted')) {
-							childLi.children[completedIndex].textContent = 'Complete';
-							childLi.children[entryIndex].classList.remove('struck');
-							childLi.classList.remove('completed-removed');		// is this needed?
-							var childTodo = findTodo(todos, childLi.id);
-							childTodo.markCompleted(false);
-							if (document.getElementsByName('showActive')[0].textContent === 'Active') {
-								childLi.classList.add('active-removed');
-							}
-						}
-					}
-				}
-			}
+			completeSelectedChildren(todoLi);
 		}
 		if (event.target.name === "deleteSelectedChildren") {
 			var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
