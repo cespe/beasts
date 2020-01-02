@@ -1938,6 +1938,69 @@ tests({
 	},
 	"A deleteSelectedChildren button should operate on selected nested todos.": function() {
 		fail();	
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Item 1 grandchild 1');
+		child1.addChild(grandchild1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var todoLi1DeleteSelectedChildrenButton = todoLi1.children[deleteSelectedChildrenIndex];
+		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
+		var child1LiEntry = child1Li.children[entryIndex];
+		var child1LiDeleteButton = child1Li.children[deleteIndex];
+		var grandchild1li = child1li.children[todoLiUlIndex].children[0];
+		var grandchild1LiEntry = grandchild1Li.children[entryIndex];
+		var grandchild1LiDeleteButton = grandchild1Li.children[deleteIndex];
+		var child2Li = todoLi1.children[todoLiUlIndex].children[1];
+		var child2LiEntry = child2Li.children[entryIndex];
+		var child2LiDeleteButton = child2Li.children[deleteIndex];
+
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
+		eq(child1LiEntry.classList.contains('faded'), false);
+		eq(grandchild1LiEntry.classList.contains('faded'), false);
+		eq(child2LiEntry.classList.contains('faded'), false);
+		eq(child1.deleted, false);
+		eq(grandchild1.deleted, false);
+		eq(child2.deleted, false);
+		eq(child1LiDeleteButton.textContent, 'Delete');
+		eq(child2LiDeleteButton.textContent, 'Delete');
+		eq(grandchild1LiDeleteButton.textContent, 'Delete');
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), false);
+
+		todoLi1DeleteSelectedChildrenButton.click();
+
+		eq(child1LiEntry.classList.contains('faded'), true);
+		eq(grandchild1LiEntry.classList.contains('faded'), true);
+		eq(child2LiEntry.classList.contains('faded'), true);
+		eq(child1.deleted, true);
+		eq(grandchild1.deleted, true);
+		eq(child2.deleted, true);
+		eq(child1LiDeleteButton.textContent, 'Undelete');
+		eq(grandchild1LiDeleteButton.textContent, 'Undelete');
+		eq(child2LiDeleteButton.textContent, 'Undelete');
+
+		todoLi1DeleteSelectedChildrenButton.click();
+		
+		eq(child1LiEntry.classList.contains('faded'), false);
+		eq(grandchild1LiEntry.classList.contains('faded'), false);
+		eq(child2LiEntry.classList.contains('faded'), false);
+		eq(child1.deleted, false);
+		eq(grandchild1.deleted, false);
+		eq(child2.deleted, false);
+		eq(child1LiDeleteButton.textContent, 'Delete');
+		eq(grandchild1LiDeleteButton.textContent, 'Delete');
+		eq(child2LiDeleteButton.textContent, 'Delete');
 	},
 	"Clicking an addChild button should activate showChildren and selectChildren buttons.": function() {
 		document.getElementById('todolist').innerHTML = '';
