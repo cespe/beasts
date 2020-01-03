@@ -1834,7 +1834,6 @@ tests({
 		eq(child2LiCompleteButton.textContent, 'Complete');
 	},
 	"A completeSelectedChildren button should operate on selected nested todos.": function() {
-		fail();
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
