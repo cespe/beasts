@@ -533,6 +533,57 @@ function completeSelectedChildren(todoLi) {
 	}
 }
 
+function deleteSelectedChildren(todoLi) {
+	var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
+	var todoLiUl = todoLi.children[todoLiUlIndex];
+	if (todoLiUl && todoLiUl.children.length > 0) {
+		var childCount = todoLiUl.children.length;
+		if (todoLiDeleteSelectedChildrenButton.textContent === 'Delete selected children') {
+			todoLiDeleteSelectedChildrenButton.textContent = 'Undelete selected children';
+			for (var i = 0; i < childCount; i++) {
+				var childLi = todoLiUl.children[i];	
+				// add recursion
+				var childLiUl = childLi.children[todoLiUlIndex];
+				if (childLiUl && childLiUl.children.length > 0) {
+					deleteSelectedChildren(childLi);
+				}
+				// recursion done
+				if (childLi.children[entryIndex].classList.contains('highlighted')) {
+					childLi.children[deleteIndex].textContent = 'Undelete';
+					childLi.children[entryIndex].classList.add('faded');
+					childLi.classList.remove('active-removed');		// is this needed?
+					var childTodo = findTodo(todos, childLi.id);
+					childTodo.markDeleted(true);
+					if (document.getElementsByName('showDeleted')[0].textContent === 'Deleted') {
+						childLi.classList.add('deleted-removed');
+					}
+				}
+			}
+		} else {
+			todoLiDeleteSelectedChildrenButton.textContent = 'Delete selected children';
+			for (var i = 0; i < childCount; i++) {
+				var childLi = todoLiUl.children[i];	
+				// add recursion
+				var childLiUl = childLi.children[todoLiUlIndex];
+				if (childLiUl && childLiUl.children.length > 0) {
+					deleteSelectedChildren(childLi);
+				}
+				// recursion done
+				if (childLi.children[entryIndex].classList.contains('highlighted')) {
+					childLi.children[deleteIndex].textContent = 'Delete';
+					childLi.children[entryIndex].classList.remove('faded');
+					childLi.classList.remove('deleted-removed');		// is this needed?
+					var childTodo = findTodo(todos, childLi.id);
+					childTodo.markDeleted(false);
+					if (document.getElementsByName('showActive')[0].textContent === 'Active') {
+						childLi.classList.add('active-removed');
+					}
+				}
+			}
+		}
+	}
+}
+
 /************************************* Event handling ***********************************/
 
 //function keyUpHandler(event) {
@@ -680,42 +731,7 @@ function todoClickHandler(event) {
 			completeSelectedChildren(todoLi);
 		}
 		if (event.target.name === "deleteSelectedChildren") {
-			var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
-			var todoLiUl = todoLi.children[todoLiUlIndex];
-			if (todoLiUl && todoLiUl.children.length > 0) {
-				var childCount = todoLiUl.children.length;
-				if (todoLiDeleteSelectedChildrenButton.textContent === 'Delete selected children') {
-					todoLiDeleteSelectedChildrenButton.textContent = 'Undelete selected children';
-					for (var i = 0; i < childCount; i++) {
-						var childLi = todoLiUl.children[i];	
-						if (childLi.children[entryIndex].classList.contains('highlighted')) {
-							childLi.children[deleteIndex].textContent = 'Undelete';
-							childLi.children[entryIndex].classList.add('faded');
-							childLi.classList.remove('active-removed');		// is this needed?
-							var childTodo = findTodo(todos, childLi.id);
-							childTodo.markDeleted(true);
-							if (document.getElementsByName('showDeleted')[0].textContent === 'Deleted') {
-								childLi.classList.add('deleted-removed');
-							}
-						}
-					}
-				} else {
-					todoLiDeleteSelectedChildrenButton.textContent = 'Delete selected children';
-					for (var i = 0; i < childCount; i++) {
-						var childLi = todoLiUl.children[i];	
-						if (childLi.children[entryIndex].classList.contains('highlighted')) {
-							childLi.children[deleteIndex].textContent = 'Delete';
-							childLi.children[entryIndex].classList.remove('faded');
-							childLi.classList.remove('deleted-removed');		// is this needed?
-							var childTodo = findTodo(todos, childLi.id);
-							childTodo.markDeleted(false);
-							if (document.getElementsByName('showActive')[0].textContent === 'Active') {
-								childLi.classList.add('active-removed');
-							}
-						}
-					}
-				}
-			}
+			deleteSelectedChildren(todoLi);
 		}
 	}
 }

@@ -1936,7 +1936,6 @@ tests({
 		eq(child2LiDeleteButton.textContent, 'Delete');
 	},
 	"A deleteSelectedChildren button should operate on selected nested todos.": function() {
-		fail();	
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1955,7 +1954,7 @@ tests({
 		var child1Li = todoLi1.children[todoLiUlIndex].children[0];
 		var child1LiEntry = child1Li.children[entryIndex];
 		var child1LiDeleteButton = child1Li.children[deleteIndex];
-		var grandchild1li = child1li.children[todoLiUlIndex].children[0];
+		var grandchild1Li = child1Li.children[todoLiUlIndex].children[0];
 		var grandchild1LiEntry = grandchild1Li.children[entryIndex];
 		var grandchild1LiDeleteButton = grandchild1Li.children[deleteIndex];
 		var child2Li = todoLi1.children[todoLiUlIndex].children[1];
