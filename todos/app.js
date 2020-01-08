@@ -885,7 +885,8 @@ function actionsClickHandler() {
 						if (document.getElementsByName('showActive')[0].textContent === 'Active') {
 							todoLi.classList.add('active-removed');
 						}
-					}	
+					}
+					completeSelectedChildren(todoLi);
 				}
 			} else {
 				completeSelectedButton.textContent = 'Uncomplete selected';
@@ -903,6 +904,7 @@ function actionsClickHandler() {
 							todoLi.classList.add('completed-removed');
 						}
 					}
+					completeSelectedChildren(todoLi);
 				}
 			}
 		}

@@ -2596,8 +2596,8 @@ tests({
 		todo3 = new Todo('Item 3');
 		child3 = new Todo('Item 3 child');
 		grandchild3 = new Todo('Item 3 grandchild');
-		child3.addChild(grandchild1);
-		todo3.addChild(child1);
+		child3.addChild(grandchild3);
+		todo3.addChild(child3);
 		insertTodo(todos, todo3);
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
@@ -2607,16 +2607,16 @@ tests({
 		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
 		var todoLi2Ul = todoLi2.children[todoLiUlIndex];
 		var todoLi3Ul = todoLi3.children[todoLiUlIndex];
-		var childLi1 = todoLi1Ul.children[0].children[0];
-		var childLi3 = todoLi3Ul.children[0].children[0];
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi3 = todoLi3Ul.children[0];
 		var childLi3Ul = childLi3.children[todoLiUlIndex];
-		var grandchildLi3 = childLi3Ul.children[0].children[0];
+		var grandchildLi3 = childLi3Ul.children[0];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
 		var childLi1SelectButton = childLi1.children[selectedIndex];
-		var childLi1CompletedButton = childLi1.children[completedIndex];
-		var childLi1DeletedButton = childLi1.children[deleteIndex];
+		var childLi1CompleteButton = childLi1.children[completedIndex];
+		var childLi1DeleteButton = childLi1.children[deleteIndex];
 		var todoLi2SelectButton = todoLi2.children[selectedIndex];
 		var todoLi2CompleteButton = todoLi2.children[completedIndex];
 		var todoLi2DeleteButton = todoLi2.children[deleteIndex];
@@ -2624,11 +2624,11 @@ tests({
 		var todoLi3CompleteButton = todoLi3.children[completedIndex];
 		var todoLi3DeleteButton = todoLi3.children[deleteIndex];
 		var childLi3SelectButton = childLi3.children[selectedIndex];
-		var childLi3CompletedButton = childLi3.children[completedIndex];
-		var childLi3DeletedButton = childLi3.children[deleteIndex];
+		var childLi3CompleteButton = childLi3.children[completedIndex];
+		var childLi3DeleteButton = childLi3.children[deleteIndex];
 		var grandchildLi3SelectButton = grandchildLi3.children[selectedIndex];
-		var grandchildLi3CompletedButton = grandchildLi3.children[completedIndex];
-		var grandchildLi3DeletedButton = grandchildLi3.children[deleteIndex];
+		var grandchildLi3CompleteButton = grandchildLi3.children[completedIndex];
+		var grandchildLi3DeleteButton = grandchildLi3.children[deleteIndex];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 		var todoLi2Entry = todoLi2.children[entryIndex];
 		var todoLi3Entry = todoLi3.children[entryIndex];
@@ -2676,7 +2676,7 @@ tests({
 		eq(grandchildLi3Entry.classList.contains('struck'), false);
 		eq(grandchild3.completed, false);
 
-		todoLi2deleteButton.click();
+		todoLi2DeleteButton.click();
 		selectAllButton.click();
 		todoLi1SelectButton.click();
 		completeSelectedButton.click();
