@@ -3308,6 +3308,15 @@ tests({
 		eq(undoEditButton.innerText, 'Undo edit');
 		eq(actionsDiv.children[7], undoEditButton);
 	},
+	"addTodoButton and undoEditButton should be set to default values on startup.": function() {
+		startApp();
+
+		var addTodoButton = document.getElementsByName('addTodo')[0];
+		var undoEditButton = document.getElementsByName('undoEdit')[0];
+
+		eq(addTodoButton.classList.contains('inactive'), false);
+		eq(undoEditButton.classList.contains('inactive'), true);
+	},
 	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
 		fail();
 	},

@@ -974,6 +974,7 @@ function startApp() {
 	var showActiveButton = document.getElementsByName('showActive')[0];
 	var showCompletedButton = document.getElementsByName('showCompleted')[0];
 	var showDeletedButton = document.getElementsByName('showDeleted')[0];
+	var addTodoButton = document.getElementsByName('addTodo')[0];
 	// set defaults on action bar buttons
 	selectAllButton.textContent = 'Select all';
 	completeSelectedButton.textContent = 'Complete selected';
@@ -983,6 +984,8 @@ function startApp() {
 	showActiveButton.textContent = '√ Active';
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
+	addTodoButton.textContent = 'Add todo';
+	addTodoButton.classList.remove('inactive');		// should add 'inactive' default to other buttons too
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
 	} else {
