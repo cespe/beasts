@@ -928,6 +928,7 @@ function actionsClickHandler() {
 							todoLi.classList.add('active-removed');
 						}
 					}
+					deleteSelectedChildren(todoLi);
 				}
 			} else {
 				deleteSelectedButton.textContent = 'Undelete selected';
@@ -946,6 +947,7 @@ function actionsClickHandler() {
 						}
 	
 					}
+					deleteSelectedChildren(todoLi);
 				}
 			}
 		}
