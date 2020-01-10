@@ -3610,7 +3610,7 @@ tests({
 		eq(todoLi1Entry.classList.contains('faded'), false);
 		eq(todo1.deleted, false);
 	},
-	"If display becomes empty while selectAll button text is 'Select all', the button should become inactive.": function() {
+	"When selectAllButton text is 'Select all', it should toggle inactive when no todos are displayed.": function() {
 		// Display can become empty through 1) click on todoLi delete or complete button
 		// depending on state of filters
 		// Also through 2) click on filter button
@@ -3626,8 +3626,12 @@ tests({
 		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
-		var todoLi1CompleteButton = todoLi1.children['completeIndex'];
-		var todoLi1DeleteButton = todoLi1.children['deleteIndex'];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
+		var todoLi2DeleteButton = todoLi2.children[deleteIndex];
+
+		// Case 1: toggling showActive
 
 		eq(showActiveButton.textContent, '√ Active');
 		eq(todoLi1.classList.contains('active-removed'), false);
@@ -3651,6 +3655,47 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 		eq(selectAllButton.classList.contains('inactive'), false);
 
+		// Case 2: toggling showCompleted
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi2.classList.contains('completed-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		todoLi1CompleteButton.click();
+
+		eq(todo1.completed, true);
+		eq(todo2.completed, false);
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi2.classList.contains('completed-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		todoLi2CompleteButton.click();
+
+		eq(todo1.completed, true);
+		eq(todo2.completed, true);
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi2.classList.contains('completed-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		showCompletedButton.click();	// filter out completed items, removes both items from display
+
+		eq(showCompletedButton.textContent, 'Completed');
+		eq(todoLi1.classList.contains('completed-removed'), true);
+		eq(todoLi2.classList.contains('completed-removed'), true);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), true);
+
+		showCompletedButton.click();	// restore display of completed items
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi2.classList.contains('completed-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
 	},
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
