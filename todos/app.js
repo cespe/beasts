@@ -602,6 +602,34 @@ function deleteSelectedChildren(todoLi) {
 //	}
 //}
 
+function todoLiDisplayed() {
+	// return true or false if any todoLi's are displayed
+	var showActiveButton = document.getElementsByName('showActive')[0];
+	var showCompletedButton = document.getElementsByName('showCompleted')[0];
+	var showDeletedButton = document.getElementsByName('showDeleted')[0];
+	// default setting
+	var activeShown = true;
+	var completedShown = true;
+	var deletedShown = false;
+	if (showActiveButton.textContent === 'Active') {
+		activeShown = false;
+	}
+	if (showCompletedButton.textContent === 'Completed') {
+		completedShown = false;
+	}
+	if (showDeletedButton.textContent === '√ Deleted') {
+		deletedShown = true;
+	}
+	for (var i = 0; i < todos.length; i++) {
+		if (todos[i].completed === false && todos[i].deleted === false) {
+			if (activeShown === true) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 function editHandler(event) {
 	if (event.target.nodeName === "P") {
 		var todoLi = event.target.parentElement;
@@ -738,6 +766,7 @@ function todoClickHandler(event) {
 
 function actionsClickHandler() {
 	if (event.target.nodeName === "BUTTON") {		// TODO is this conditional needed?
+		var selectAllButton = document.getElementsByName('selectAll')[0];
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		// handle case (just for tests?) where todosUl is not defined
@@ -751,9 +780,21 @@ function actionsClickHandler() {
 			if (showActiveButton.textContent === '√ Active') {
 				showActiveButton.textContent = 'Active';
 				setTodoLiClass(todosUl, 'active-removed', 'add');
+				// if no todoLis are displayed, set selectAllButton inactive
+				if (selectAllButton.textContent === 'Select all'); {
+					if (!todoLiDisplayed()) {
+						selectAllButton.classList.add('inactive');
+					}
+				}
+
 			} else {
 				showActiveButton.textContent = '√ Active';
 				setTodoLiClass(todosUl, 'active-removed', 'remove');
+				if (selectAllButton.textContent === 'Select all') {
+					if (todoLiDisplayed()) {
+						selectAllButton.classList.remove('inactive');
+					}
+				}
 			}
 		}
 		if (event.target.name === "showCompleted") {
@@ -977,6 +1018,7 @@ function startApp() {
 	var addTodoButton = document.getElementsByName('addTodo')[0];
 	// set defaults on action bar buttons
 	selectAllButton.textContent = 'Select all';
+	selectAllButton.classList.remove('inactive');
 	completeSelectedButton.textContent = 'Complete selected';
 	deleteSelectedButton.textContent = 'Delete selected';
 	completeSelectedButton.classList.add('inactive');

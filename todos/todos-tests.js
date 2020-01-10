@@ -3611,7 +3611,46 @@ tests({
 		eq(todo1.deleted, false);
 	},
 	"If display becomes empty while selectAll button text is 'Select all', the button should become inactive.": function() {
-		fail();
+		// Display can become empty through 1) click on todoLi delete or complete button
+		// depending on state of filters
+		// Also through 2) click on filter button
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		startApp();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi1CompleteButton = todoLi1.children['completeIndex'];
+		var todoLi1DeleteButton = todoLi1.children['deleteIndex'];
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi2.classList.contains('active-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		showActiveButton.click();	// filter out active items, removes both items from display
+
+		eq(showActiveButton.textContent, 'Active');
+		eq(todoLi1.classList.contains('active-removed'), true);
+		eq(todoLi2.classList.contains('active-removed'), true);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), true);
+
+		showActiveButton.click();	// restore both items to display
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi2.classList.contains('active-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
 	},
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
