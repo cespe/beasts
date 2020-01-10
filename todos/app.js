@@ -631,6 +631,11 @@ function todoLiDisplayed() {
 				return true;
 			}
 		}
+		if (todos[i].deleted) {
+			if (deletedShown) {
+				return true;
+			}
+		}
 	}
 	return false;
 }
@@ -829,9 +834,20 @@ function actionsClickHandler() {
 			if (showDeletedButton.textContent === '√ Deleted') {
 				showDeletedButton.textContent = 'Deleted';
 				setTodoLiClass(todosUl, 'deleted-removed', 'add');
+				// if no todoLis are displayed, set selectAllButton inactive
+				if (selectAllButton.textContent === 'Select all'); {
+					if (!todoLiDisplayed()) {
+						selectAllButton.classList.add('inactive');
+					}
+				}
 			} else {
 				showDeletedButton.textContent = '√ Deleted';
 				setTodoLiClass(todosUl, 'deleted-removed', 'remove');	// 'remove' not needed except for documentation
+				if (selectAllButton.textContent === 'Select all') {
+					if (todoLiDisplayed()) {
+						selectAllButton.classList.remove('inactive');
+					}
+				}
 			}
 		}
 		if (event.target.name === "selectAll") {

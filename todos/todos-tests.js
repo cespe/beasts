@@ -3696,6 +3696,56 @@ tests({
 		eq(todoLi2.classList.contains('completed-removed'), false);
 		eq(selectAllButton.textContent, 'Select all');
 		eq(selectAllButton.classList.contains('inactive'), false);
+
+		todoLi1CompleteButton.click();
+		todoLi2CompleteButton.click();
+
+		// Case 3: toggling showDeleted
+		debugger;
+		showDeletedButton.click();		// display deleted items
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		todoLi1DeleteButton.click();
+
+		eq(todo1.deleted, true);
+		eq(todo2.deleted, false);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		todoLi2DeleteButton.click();
+
+		eq(todo1.deleted, true);
+		eq(todo2.deleted, true);
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		showDeletedButton.click();	// filter out deleted items, removes both items from display
+
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(todoLi1.classList.contains('deleted-removed'), true);
+		eq(todoLi2.classList.contains('deleted-removed'), true);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), true);
+
+		showDeletedButton.click();	// restore display of deleted items
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(todoLi1.classList.contains('deleted-removed'), false);
+		eq(todoLi2.classList.contains('deleted-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		todoLi1DeleteButton.click();
+		todoLi2DeleteButton.click();
 	},
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
