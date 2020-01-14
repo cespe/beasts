@@ -621,7 +621,7 @@ function todoLiDisplayed() {
 		deletedShown = true;
 	}
 	
-	var notShown = 0;	// counter of todoLi's not displayed
+//	var notShown = 0;	// counter of todoLi's not displayed
 
 	for (var i = 0; i < todos.length; i++) {
 		if (todos[i].completed === false && todos[i].deleted === false) {
@@ -637,8 +637,6 @@ function todoLiDisplayed() {
 		if (todos[i].deleted) {
 			if (deletedShown) {
 				return true;
-			} else {
-				notShown++;
 			}
 		}
 	}
@@ -694,6 +692,7 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompleteButton = todoLi.children[completedIndex];
+			var selectAllButton = document.getElementsByName('selectAll')[0];
 			todo.completed = !todo.completed;
 //			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 //			if (todo.selected) {
@@ -721,6 +720,12 @@ function todoClickHandler(event) {
 				todoLi.children[entryIndex].classList.add('struck');
 				if (document.getElementsByName('showCompleted')[0].textContent === 'Completed') {
 					todoLi.classList.add('completed-removed');
+					// if no todoLis are displayed, set selectAllButton inactive
+					if (selectAllButton.textContent === 'Select all'); {
+						if (!todoLiDisplayed()) {
+							selectAllButton.classList.add('inactive');
+						}
+					}
 				}
 			}
 		}
