@@ -3779,6 +3779,43 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 		eq(selectAllButton.classList.contains('inactive'), true);
 
+		// reset to default for next case
+		showDeletedButton.click();
+		todoLi1DeleteButton.click();
+		todoLi2DeleteButton.click();
+		showDeletedButton.click();
+
+		// Case 5: completing last todoLi displayed while completed todos are filtered out
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todo1.completed, false);
+		eq(todo2.completed, false);
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(todoLi2.classList.contains('completed-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		showCompletedButton.click();
+		
+		todoLi1CompleteButton.click();
+
+		eq(showCompletedButton.textContent, 'Completed');
+		
+		eq(todo1.completed, true);
+		eq(todo2.completed, false);
+		eq(todoLi1.classList.contains('completed-removed'), true);
+		eq(todoLi2.classList.contains('completed-removed'), false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), false);
+
+		todoLi2CompleteButton.click();
+
+		eq(todo1.completed, true);
+		eq(todo2.completed, true);
+		eq(todoLi1.classList.contains('completed-removed'), true);
+		eq(todoLi2.classList.contains('completed-removed'), true);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.classList.contains('inactive'), true);
 	},
 	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
 		fail();
