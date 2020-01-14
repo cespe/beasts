@@ -584,26 +584,8 @@ function deleteSelectedChildren(todoLi) {
 	}
 }
 
-/************************************* Event handling ***********************************/
-
-//function keyUpHandler(event) {
-//	event.target.textContent = "triggered";
-//}
-
-//function changeHandler(event) {
-	// if the target is a todoLi it already has an id that is also in todos array
-	//	check if content has changed
-	//		if so, update todos todo.entry
-	// else ignore, other events will handle buttons, etc (?)
-//	var changeEvent = event;
-//	var todo = findTodo(todos, event.target.id);
-//	if (todo) {
-//		todo.entry = event.target.textContent
-//	}
-//}
-
-// return true if any todoLi's are displayed, else false
-function todoLiDisplayed() {
+// return true if any todoLi's are displayed in given todos array, else false
+function todoLiDisplayed(todosArray) {
 	var showActiveButton = document.getElementsByName('showActive')[0];
 	var showCompletedButton = document.getElementsByName('showCompleted')[0];
 	var showDeletedButton = document.getElementsByName('showDeleted')[0];
@@ -621,8 +603,6 @@ function todoLiDisplayed() {
 		deletedShown = true;
 	}
 	
-//	var notShown = 0;	// counter of todoLi's not displayed
-
 	for (var i = 0; i < todos.length; i++) {
 		if (todos[i].completed === false && todos[i].deleted === false) {
 			if (activeShown === true) {
@@ -640,11 +620,26 @@ function todoLiDisplayed() {
 			}
 		}
 	}
-//	if (todos.length - notShown > 0) {
-//		return true;
-//	}
 	return false;
 }
+
+/************************************* Event handling ***********************************/
+
+//function keyUpHandler(event) {
+//	event.target.textContent = "triggered";
+//}
+
+//function changeHandler(event) {
+	// if the target is a todoLi it already has an id that is also in todos array
+	//	check if content has changed
+	//		if so, update todos todo.entry
+	// else ignore, other events will handle buttons, etc (?)
+//	var changeEvent = event;
+//	var todo = findTodo(todos, event.target.id);
+//	if (todo) {
+//		todo.entry = event.target.textContent
+//	}
+//}
 
 function editHandler(event) {
 	if (event.target.nodeName === "P") {
@@ -722,7 +717,7 @@ function todoClickHandler(event) {
 					todoLi.classList.add('completed-removed');
 					// if no todoLis are displayed, set selectAllButton inactive
 					if (selectAllButton.textContent === 'Select all'); {
-						if (!todoLiDisplayed()) {
+						if (!todoLiDisplayed(todoArray)) {
 							selectAllButton.classList.add('inactive');
 						}
 					}
@@ -741,7 +736,7 @@ function todoClickHandler(event) {
 					todoLi.classList.add('deleted-removed');
 					// if no todoLis are displayed, set selectAllButton inactive
 					if (selectAllButton.textContent === 'Select all'); {
-						if (!todoLiDisplayed()) {
+						if (!todoLiDisplayed(todoArray)) {
 							selectAllButton.classList.add('inactive');
 						}
 					}
@@ -812,7 +807,7 @@ function actionsClickHandler() {
 				setTodoLiClass(todosUl, 'active-removed', 'add');
 				// if no todoLis are displayed, set selectAllButton inactive
 				if (selectAllButton.textContent === 'Select all'); {
-					if (!todoLiDisplayed()) {
+					if (!todoLiDisplayed(todos)) {
 						selectAllButton.classList.add('inactive');
 					}
 				}
@@ -821,7 +816,7 @@ function actionsClickHandler() {
 				showActiveButton.textContent = '√ Active';
 				setTodoLiClass(todosUl, 'active-removed', 'remove');
 				if (selectAllButton.textContent === 'Select all') {
-					if (todoLiDisplayed()) {
+					if (todoLiDisplayed(todos)) {
 						selectAllButton.classList.remove('inactive');
 					}
 				}
@@ -834,7 +829,7 @@ function actionsClickHandler() {
 				setTodoLiClass(todosUl, 'completed-removed', 'add');
 				// if no todoLis are displayed, set selectAllButton inactive
 				if (selectAllButton.textContent === 'Select all'); {
-					if (!todoLiDisplayed()) {
+					if (!todoLiDisplayed(todos)) {
 						selectAllButton.classList.add('inactive');
 					}
 				}
@@ -843,7 +838,7 @@ function actionsClickHandler() {
 				showCompletedButton.textContent = '√ Completed';
 				setTodoLiClass(todosUl, 'completed-removed', 'remove');
 				if (selectAllButton.textContent === 'Select all') {
-					if (todoLiDisplayed()) {
+					if (todoLiDisplayed(todos)) {
 						selectAllButton.classList.remove('inactive');
 					}
 				}
@@ -856,7 +851,7 @@ function actionsClickHandler() {
 				setTodoLiClass(todosUl, 'deleted-removed', 'add');
 				// if no todoLis are displayed, set selectAllButton inactive
 				if (selectAllButton.textContent === 'Select all'); {
-					if (!todoLiDisplayed()) {
+					if (!todoLiDisplayed(todos)) {
 						selectAllButton.classList.add('inactive');
 					}
 				}
@@ -864,7 +859,7 @@ function actionsClickHandler() {
 				showDeletedButton.textContent = '√ Deleted';
 				setTodoLiClass(todosUl, 'deleted-removed', 'remove');	// 'remove' not needed except for documentation
 				if (selectAllButton.textContent === 'Select all') {
-					if (todoLiDisplayed()) {
+					if (todoLiDisplayed(todos)) {
 						selectAllButton.classList.remove('inactive');
 					}
 				}
