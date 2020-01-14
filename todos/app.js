@@ -602,8 +602,8 @@ function deleteSelectedChildren(todoLi) {
 //	}
 //}
 
+// return true if any todoLi's are displayed, else false
 function todoLiDisplayed() {
-	// return true or false if any todoLi's are displayed
 	var showActiveButton = document.getElementsByName('showActive')[0];
 	var showCompletedButton = document.getElementsByName('showCompleted')[0];
 	var showDeletedButton = document.getElementsByName('showDeleted')[0];
@@ -620,6 +620,9 @@ function todoLiDisplayed() {
 	if (showDeletedButton.textContent === '√ Deleted') {
 		deletedShown = true;
 	}
+	
+	var notShown = 0;	// counter of todoLi's not displayed
+
 	for (var i = 0; i < todos.length; i++) {
 		if (todos[i].completed === false && todos[i].deleted === false) {
 			if (activeShown === true) {
@@ -634,9 +637,14 @@ function todoLiDisplayed() {
 		if (todos[i].deleted) {
 			if (deletedShown) {
 				return true;
+			} else {
+				notShown++;
 			}
 		}
 	}
+//	if (todos.length - notShown > 0) {
+//		return true;
+//	}
 	return false;
 }
 
@@ -718,6 +726,7 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "deleted") {
 			var todoLiDeleteButton = todoLi.children[deleteIndex];
+			var selectAllButton = document.getElementsByName('selectAll')[0];
 			todoLiDeleteButton.classList.toggle('deleted');
 			todo.deleted = !todo.deleted;
 			if (todo.deleted) {
@@ -725,6 +734,12 @@ function todoClickHandler(event) {
 				todoLi.children[entryIndex].classList.add('faded');
 				if (document.getElementsByName('showDeleted')[0].textContent === 'Deleted') {
 					todoLi.classList.add('deleted-removed');
+					// if no todoLis are displayed, set selectAllButton inactive
+					if (selectAllButton.textContent === 'Select all'); {
+						if (!todoLiDisplayed()) {
+							selectAllButton.classList.add('inactive');
+						}
+					}
 				}
 			} else {
 				todoLiDeleteButton.textContent = 'Delete';
