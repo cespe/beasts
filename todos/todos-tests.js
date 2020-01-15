@@ -3817,10 +3817,13 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 		eq(selectAllButton.classList.contains('inactive'), true);
 	},
-	"If clicking 'deleted' button removes the last todoLi in a todoUl, the app should adjust other buttons and todo.collapsed.": function() {
+	"When selectChildrenButton text is 'Select children', it should toggle inactive when no child todos are displayed.": function() {
 		fail();
 	},
-	"If clicking a todoLi Unselect button makes all todos in the todoUl unselected, send click event to selectAll button.": function() {
+	"A showChildrenButton should toggle inactive when no child todos are displayed.": function() {
+		fail();
+	},
+	"If clicking a todoLi Unselect button makes all todos in the todoUl unselected, a selectAll click event should be sent.": function() {
 		fail();
 	}, 
 	"Section: Keyboard shortcuts": function() {
