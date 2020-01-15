@@ -3818,7 +3818,228 @@ tests({
 		eq(selectAllButton.classList.contains('inactive'), true);
 	},
 	"When selectChildrenButton text is 'Select children', it should toggle inactive when no child todos are displayed.": function() {
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Child 1');
+		child2 = new Todo('Child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		startApp();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var showActiveButton = document.getElementsByName('showActive')[0];
+		var showCompletedButton = document.getElementsByName('showCompleted')[0];
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompletedButton = todoLi1.children[completedIndex];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi2 = todoLi1Ul.children[1];
+		var childLi1CompleteButton = childLi1.children[completedIndex];
+		var childLi1DeleteButton = childLi1.children[deleteIndex];
+		var childLi2CompleteButton = childLi2.children[completedIndex];
+		var childLi2DeleteButton = childLi2.children[deleteIndex];
+
+		// Case 1: toggling showActive
+
+		todoLi1CompletedButton.click();		// todoLi1 will still be displayed when √ Active toggled off
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(childLi1.classList.contains('active-removed'), false);
+		eq(childLi2.classList.contains('active-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		showActiveButton.click();	// filter out active items, removes both children from display
+
+		eq(showActiveButton.textContent, 'Active');
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(childLi1.classList.contains('active-removed'), true);
+		eq(childLi2.classList.contains('active-removed'), true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+
+		showActiveButton.click();	// restore both children to display
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(childLi1.classList.contains('active-removed'), false);
+		eq(childLi2.classList.contains('active-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		
+		todoLi1CompletedButton.click();		// restore starting default for next case
+
+		// Case 2: toggling showCompleted
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todoLi1.classList.contains('completed-removed'), false);
+		eq(childLi1.classList.contains('completed-removed'), false);
+		eq(childLi2.classList.contains('completed-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		childLi1CompleteButton.click();
+
+		eq(child1.completed, true);
+		eq(child2.completed, false);
+		eq(childLi1.classList.contains('completed-removed'), false);
+		eq(childLi2.classList.contains('completed-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		childLi2CompleteButton.click();
+
+		eq(child1.completed, true);
+		eq(child2.completed, true);
+		eq(childLi1.classList.contains('completed-removed'), false);
+		eq(childLi2.classList.contains('completed-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		showCompletedButton.click();	// filter out completed items, removes both children from display
+
+		eq(showCompletedButton.textContent, 'Completed');
+		eq(childLi1.classList.contains('completed-removed'), true);
+		eq(childLi2.classList.contains('completed-removed'), true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+
+		showCompletedButton.click();	// restore display of completed items
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(childLi1.classList.contains('completed-removed'), false);
+		eq(childLi2.classList.contains('completed-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		// reset to default for next case
+		childLi1CompleteButton.click();
+		childLi2CompleteButton.click();
+
+		// Case 3: toggling showDeleted
+
+		showDeletedButton.click();		// display deleted items to start test case
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(child1.deleted, false);
+		eq(child2.deleted, false);
+		eq(childLi1.classList.contains('deleted-removed'), false);
+		eq(childLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		childLi1DeleteButton.click();
+
+		eq(child1.deleted, true);
+		eq(todo2.deleted, false);
+		eq(childLi1.classList.contains('deleted-removed'), false);
+		eq(childLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		childLi2DeleteButton.click();
+
+		eq(child1.deleted, true);
+		eq(todo2.deleted, true);
+		eq(childLi1.classList.contains('deleted-removed'), false);
+		eq(childLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		showDeletedButton.click();	// filter out deleted items, removes both children from display
+
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(childLi1.classList.contains('deleted-removed'), true);
+		eq(childLi2.classList.contains('deleted-removed'), true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+
+		showDeletedButton.click();	// restore display of deleted items
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(childLi1.classList.contains('deleted-removed'), false);
+		eq(childLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		// reset to default for next case
+		childLi1DeleteButton.click();
+		childLi2DeleteButton.click();
+		showDeletedButton.click();
+
+		// Case 4: deleting last childLi displayed while deleted todos are filtered out
+
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(child1.deleted, false);
+		eq(child2.deleted, false);
+		eq(childLi1.classList.contains('deleted-removed'), false);
+		eq(childLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		childLi1DeleteButton.click();
+
+		eq(child1.deleted, true);
+		eq(todo2.deleted, false);
+		eq(childLi1.classList.contains('deleted-removed'), true);
+		eq(childLi2.classList.contains('deleted-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		childLi2DeleteButton.click();
+
+		eq(child1.deleted, true);
+		eq(todo2.deleted, true);
+		eq(childLi1.classList.contains('deleted-removed'), true);
+		eq(childLi2.classList.contains('deleted-removed'), true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+
+		// reset to default for next case
+		showDeletedButton.click();
+		childLi1DeleteButton.click();
+		childLi2DeleteButton.click();
+		showDeletedButton.click();
+
+		// Case 5: completing last childLi displayed while completed todos are filtered out
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(child1.completed, false);
+		eq(child2.completed, false);
+		eq(childLi1.classList.contains('completed-removed'), false);
+		eq(childLi2.classList.contains('completed-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		showCompletedButton.click();
+		
+		eq(showCompletedButton.textContent, 'Completed'); // filter out completed items
+		
+		childLi1CompleteButton.click();
+
+		eq(child1.completed, true);
+		eq(child2.completed, false);
+		eq(childLi1.classList.contains('completed-removed'), true);
+		eq(childLi2.classList.contains('completed-removed'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+
+		childLi2CompleteButton.click();
+
+		eq(child1.completed, true);
+		eq(child2.completed, true);
+		eq(childLi1.classList.contains('completed-removed'), true);
+		eq(childLi2.classList.contains('completed-removed'), true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+
+		// reset to default
+		showCompletedClick();
+		childLi1CompleteButton.click();
+		childLi2CompleteButton.click();
 	},
 	"A showChildrenButton should toggle inactive when no child todos are displayed.": function() {
 		fail();
