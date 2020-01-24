@@ -722,6 +722,7 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 					todoLiSelectChildrenButton.classList.add('inactive');
 				} else {
 					todoLiSelectChildrenButton.classList.remove('inactive');
+					handleFilterCase(todo.children);	// recurse for nested grandchildren
 				}
 			}
 		}
