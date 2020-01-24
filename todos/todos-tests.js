@@ -122,6 +122,28 @@ tests({
 		var result = findTodo(todos, grandchild1.id);
 		eq(result, grandchild1);
 	},
+	"The app should have a way to return the parent of a todo when given its id.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+		
+		var result = findParent(todos, todo2.id);
+		eq(result, undefined);
+		var result = findParent(todos, child1.id);
+		eq(result, todo1);
+		var result = findParent(todos, child2.id);
+		eq(result, todo1);
+		var result = findParent(todos, grandchild1.id);
+		eq(result, child1);
+	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
 		todos = []
 		var todo1 = new Todo('Item 1');
@@ -3943,7 +3965,7 @@ tests({
 		childLi2DeleteButton.click();
 
 		eq(child1.deleted, true);
-		eq(todo2.deleted, true);
+		eq(child2.deleted, true);
 		eq(childLi1.classList.contains('deleted-removed'), false);
 		eq(childLi2.classList.contains('deleted-removed'), false);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
@@ -3983,7 +4005,7 @@ tests({
 		childLi1DeleteButton.click();
 
 		eq(child1.deleted, true);
-		eq(todo2.deleted, false);
+		eq(child2.deleted, false);
 		eq(childLi1.classList.contains('deleted-removed'), true);
 		eq(childLi2.classList.contains('deleted-removed'), false);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
@@ -3992,7 +4014,7 @@ tests({
 		childLi2DeleteButton.click();
 
 		eq(child1.deleted, true);
-		eq(todo2.deleted, true);
+		eq(child2.deleted, true);
 		eq(childLi1.classList.contains('deleted-removed'), true);
 		eq(childLi2.classList.contains('deleted-removed'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
@@ -4037,7 +4059,7 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
 
 		// reset to default
-		showCompletedClick();
+		showCompletedButton.click();
 		childLi1CompleteButton.click();
 		childLi2CompleteButton.click();
 	},
