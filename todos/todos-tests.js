@@ -122,6 +122,28 @@ tests({
 		var result = findTodo(todos, grandchild1.id);
 		eq(result, grandchild1);
 	},
+	"The app should have a way to return the array holding a todo when given its id.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+
+		var result = findArray(todos, todo2.id);
+		eq(result, todos);
+		var result = findArray(todos, child1.id);
+		eq(result, todo1.children);
+		var result = findArray(todos, child2.id);
+		eq(result, todo1.children);
+		var result = findArray(todos, grandchild1.id);
+		eq(result, child1.children);
+	},
 	"The app should have a way to return the parent of a todo when given its id.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
