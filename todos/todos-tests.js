@@ -1,4 +1,4 @@
-// Beasts 8. Nested todos
+// Beasts 8. Nested todos 
 // Protect properties of todo object in a closure?
 // todo should be created with a Constructor?
 // resolve addTodo vs insertTodo
