@@ -701,12 +701,15 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 		if (parentTodo) {
 			var todoLi = document.getElementById(parentTodo.id);
 			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
 			var childTodosArray = parentTodo.children;
 			for (var i = 0; i < childTodosArray.length; i++) {
 				if (!todosDisplayed(childTodosArray)) {
 					todoLiSelectChildrenButton.classList.add('inactive');
+					todoLiShowChildrenButton.classList.add('inactive');
 				} else {
 					todoLiSelectChildrenButton.classList.remove('inactive');
+					todoLiShowChildrenButton.classList.remove('inactive');
 				}
 			}
 		}
@@ -718,10 +721,13 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 			if (todo.children && todo.children.length > 0) {
 				var todoLi = document.getElementById(todo.id);
 				var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+				var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
 				if (!todosDisplayed(todo.children)) {
 					todoLiSelectChildrenButton.classList.add('inactive');
+					todoLiShowChildrenButton.classList.add('inactive');
 				} else {
 					todoLiSelectChildrenButton.classList.remove('inactive');
+					todoLiShowChildrenButton.classList.remove('inactive');
 					handleFilterCase(todo.children);	// recurse for nested grandchildren
 				}
 			}
