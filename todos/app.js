@@ -427,7 +427,9 @@ function selectChildren(todoLi) {
 	var todoLiUl = todoLi.children[todoLiUlIndex];
 	var todoLiEntry = todoLi.children[entryIndex];
 	var todo = findTodo(todos, todoLi.id)
-	if (todoLiUl && todoLiUl.children.length > 0) {
+	// Only operate on children that 1) exist and 2) are displayed
+	// todoLiUl classlist.length === 1 when children are hidden
+	if (todoLiUl && todoLiUl.children.length > 0 && todoLiUl.classList.length === 0) {
 		for (var i = 0; i < todoLiUl.children.length; i++) {
 			todoLi = todoLiUl.children[i];
 			todoLiUl == todoLi.children[todoLiUlIndex];

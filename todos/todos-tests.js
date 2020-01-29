@@ -2490,6 +2490,7 @@ tests({
 	"selectAll button should also select/unselect displayed nested todos.": function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
+		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2503,11 +2504,14 @@ tests({
 		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
+		todoLi1HideChildrenButton = todoLi1.children[showChildrenIndex];
 		todoLi1Child1 = todoLi1.children[todoLiUlIndex].children[0];
 		todoLi1Child2 = todoLi1.children[todoLiUlIndex].children[1];
 		todoLi1Child2DeleteButton = todoLi1Child2.children[deleteIndex];
 		todoLi2 = todolist.children[0].children[1];
 		todoLi2DeleteButton = todoLi2.children[deleteIndex];
+
+		// Case 1: todos hidden by filter settings
 
 		eq(todo1.selected, false);
 		eq(todo1child1.selected, false);
@@ -2530,6 +2534,46 @@ tests({
 		eq(todoLi1Child1.children[entryIndex].classList.contains('highlighted'), true);
 		eq(todoLi1Child2.children[entryIndex].classList.contains('highlighted'), false);
 		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
+
+		selectAllButton.click();
+
+		eq(todo1.selected, false);
+		eq(todo1child1.selected, false);
+		eq(todo1child2.selected, false);
+		eq(todo2.selected, false);
+		eq(todoLi1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child2.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
+
+		// Restore defaults
+		showDeletedButton.click();
+		todoLi2DeleteButton.click();
+		todoLi1Child2DeleteButton.click();
+		showDeletedButton.click();
+
+		// Case 2: todos hidden by collapsed ul's
+
+		eq(todo1.selected, false);
+		eq(todo1child1.selected, false);
+		eq(todo1child2.selected, false);
+		eq(todo2.selected, false);
+		eq(todoLi1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child2.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
+
+		todoLi1HideChildrenButton.click();
+		selectAllButton.click();
+
+		eq(todo1.selected, true);
+		eq(todo1child1.selected, false);
+		eq(todo1child2.selected, false);
+		eq(todo2.selected, true);
+		eq(todoLi1.children[entryIndex].classList.contains('highlighted'), true);
+		eq(todoLi1Child1.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi1Child2.children[entryIndex].classList.contains('highlighted'), false);
+		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), true);
 
 		selectAllButton.click();
 
