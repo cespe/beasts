@@ -4679,7 +4679,10 @@ tests({
 		childLi1CompleteButton.click();
 		childLi2CompleteButton.click();
 	},
-	"If clicking a todoLi Unselect button makes all todos in the todoUl unselected, a selectAll click event should be sent.": function() {
+	"If all of a parent's child todos become unselected, the parent todoLi should receive a selectChildren event to toggle buttons.": function() {
+		fail();
+	},
+	"If all todos become unselected, a selectAll click event should be sent to toggle buttons.": function() {
 		fail();
 	}, 
 	"Section: Keyboard shortcuts": function() {
