@@ -4680,7 +4680,61 @@ tests({
 		childLi2CompleteButton.click();
 	},
 	"If all of a parent's child todos become unselected, the parent todoLi should receive a selectChildren event to toggle buttons.": function() {
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Child 1');
+		child2 = new Todo('Child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		startApp();
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi2 = todoLi1Ul.children[1];
+		var childLi1SelectButton = childLi1.children[selectedIndex];
+		var childLi2SelectButton = childLi2.children[selectedIndex];
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(childLi1SelectButton.classList.contains('inactive'), true);
+		eq(childLi2SelectButton.classList.contains('inactive'), true);
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		// TODO add more tests to exercise selectChildren event button toggling
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(childLi1SelectButton.classList.contains('inactive'), false);
+		eq(childLi2SelectButton.classList.contains('inactive'), false);
+		eq(childLi1SelectButton.textContent, 'Unselect');
+		eq(childLi2SelectButton.textContent, 'Unselect');
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+
+		childLi1SelectButton.click();
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(child1.selected, false);
+		eq(child2.selected, true);
+		eq(childLi1SelectButton.classList.contains('inactive'), false);
+		eq(childLi2SelectButton.classList.contains('inactive'), false);
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.textContent, 'Unselect');
+
+		childLi2SelectButton.click();
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(childLi1SelectButton.classList.contains('inactive'), false);
+		eq(childLi2SelectButton.classList.contains('inactive'), false);
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+
 	},
 	"If all todos become unselected, a selectAll click event should be sent to toggle buttons.": function() {
 		fail();
