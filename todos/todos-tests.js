@@ -4680,7 +4680,6 @@ tests({
 		childLi2CompleteButton.click();
 	},
 	"If all todos become unselected, the app should toggle buttons as when receiving a selectAll click event.": function() {
-		fail();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);

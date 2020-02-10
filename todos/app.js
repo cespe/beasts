@@ -751,16 +751,61 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 	toggleButtons(todo);	// run recursive function
 }
 
-function toggleSelectAllButtons() {
-	var selectAllButton = document.getElementsByName('selectAll')[0];
+//function toggleSelectAllButtons() {
+//	var selectAllButton = document.getElementsByName('selectAll')[0];
+//	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+//	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+//	var addTodoButton = document.getElementsByName('addTodo')[0];
+//	selectAllButton.textContent = 'Select all';
+//	completeSelectedButton.classList.add('inactive');
+//	deleteSelectedButton.classList.add('inactive');
+//	addTodoButton.classList.remove('inactive');
+//}
+
+function unselectAll(selectAllButton) {
 	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 	var addTodoButton = document.getElementsByName('addTodo')[0];
+	var undoEditButton = document.getElementsByName('undoEdit')[0];
+	var todosUl = todolist.children[0];
 	selectAllButton.textContent = 'Select all';
 	completeSelectedButton.classList.add('inactive');
 	deleteSelectedButton.classList.add('inactive');
 	addTodoButton.classList.remove('inactive');
+	undoEditButton.classList.remove('inactive');
+	for (var i = 0; i < todosUl.children.length; i++) {
+		var todoLi = todosUl.children[i];
+		var todoLiSelectButton = todoLi.children[selectedIndex];
+		var todoLiCompleteButton = todoLi.children[completedIndex];
+		var todoLiDeleteButton = todoLi.children[deleteIndex];
+		var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
+		var todoLiAddChildButton = todoLi.children[addChildIndex];
+		todoLiSelectButton.textContent = 'Select';
+		todoLiSelectButton.classList.add('inactive');
+		todoLiCompleteButton.classList.remove('inactive');
+		todoLiDeleteButton.classList.remove('inactive');
+		todoLiAddSiblingButton.classList.remove('inactive');
+		todoLiAddChildButton.classList.remove('inactive');
+		var todoLiEntry = todoLi.children[entryIndex];
+		todoLiEntry.classList.remove('highlighted');
+		var todo = findTodo(todos, todoLi.id)
+		todo.selected = false;
+		selectChildren(todoLi);
+		}
+	if (deleteSelectedButton.classList.contains('deleted')) {
+		deleteSelectedButton.classList.remove('deleted');
+		deleteSelectedButton.textContent = 'Delete selected';
+		// remove selected from selected and deleted todos
+		for (var i = 0; i < todos.length; i++) {
+			if (todos[i].selected && todos[i].deleted) {
+				todos[i].selected = false;
+			}
+		}
+		document.getElementById('todolist').innerHTML = '';
+		todolist.appendChild(createTodosUl(todos, 'selected'));
+	}
 }
+
 
 /************************************* Event handling ***********************************/
 
@@ -821,7 +866,7 @@ function todoClickHandler(event) {
 					}
 				}
 				if (selectedCount === 0) {
-					toggleSelectAllButtons();
+//					toggleSelectAllButtons();
 //					selectAllButton.classList.remove('selected');
 				}
 				// Toggle parent's selectChildren-related buttons if no other children are selected
@@ -1087,42 +1132,7 @@ function actionsClickHandler() {
 					selectChildren(todoLi);
 				}
 			} else {
-				selectAllButton.textContent = 'Select all';
-				completeSelectedButton.classList.add('inactive');
-				deleteSelectedButton.classList.add('inactive');
-				addTodoButton.classList.remove('inactive');
-				undoEditButton.classList.remove('inactive');
-				for (var i = 0; i < todosUl.children.length; i++) {
-					var todoLi = todosUl.children[i];
-					var todoLiSelectButton = todoLi.children[selectedIndex];
-					var todoLiCompleteButton = todoLi.children[completedIndex];
-					var todoLiDeleteButton = todoLi.children[deleteIndex];
-					var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
-					var todoLiAddChildButton = todoLi.children[addChildIndex];
-					todoLiSelectButton.textContent = 'Select';
-					todoLiSelectButton.classList.add('inactive');
-					todoLiCompleteButton.classList.remove('inactive');
-					todoLiDeleteButton.classList.remove('inactive');
-					todoLiAddSiblingButton.classList.remove('inactive');
-					todoLiAddChildButton.classList.remove('inactive');
-					var todoLiEntry = todoLi.children[entryIndex];
-					todoLiEntry.classList.remove('highlighted');
-					var todo = findTodo(todos, todoLi.id)
-					todo.selected = false;
-					selectChildren(todoLi);
-				}
-				if (deleteSelectedButton.classList.contains('deleted')) {
-					deleteSelectedButton.classList.remove('deleted');
-					deleteSelectedButton.textContent = 'Delete selected';
-					// remove selected from selected and deleted todos
-					for (var i = 0; i < todos.length; i++) {
-						if (todos[i].selected && todos[i].deleted) {
-							todos[i].selected = false;
-						}
-					}
-					document.getElementById('todolist').innerHTML = '';
-					todolist.appendChild(createTodosUl(todos, 'selected'));
-				}
+				unselectAll(selectAllButton);
 			}
 		}
 		if (event.target.name === 'completeSelected') {
