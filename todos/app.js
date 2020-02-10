@@ -136,6 +136,18 @@ function findParent(array, id) {
 	}
 }
 
+// Return true if any todos, including nested todos, are selected
+function anySelectedTodos(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.selected) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			return anySelectedTodos(todo.children);
+		}
+	}
+}
 
 /************************************* DOM manipulation ********************************/
 
@@ -739,6 +751,17 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 	toggleButtons(todo);	// run recursive function
 }
 
+function toggleSelectAllButtons() {
+	var selectAllButton = document.getElementsByName('selectAll')[0];
+	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+	var addTodoButton = document.getElementsByName('addTodo')[0];
+	selectAllButton.textContent = 'Select all';
+	completeSelectedButton.classList.add('inactive');
+	deleteSelectedButton.classList.add('inactive');
+	addTodoButton.classList.remove('inactive');
+}
+
 /************************************* Event handling ***********************************/
 
 //function keyUpHandler(event) {
@@ -785,10 +808,11 @@ function todoClickHandler(event) {
 			if (todo.selected) {
 				todoLiSelectButton.textContent = 'Unselect';
 				todoLiEntry.classList.add('highlighted');
-				selectAllButton.classList.add('selected');
+//				selectAllButton.classList.add('selected');
 			} else {
 				todoLiSelectButton.textContent = 'Select';
 				todoLiEntry.classList.remove('highlighted');
+				// Toggle selectAll-related buttons if no todos are selected
 				// TODO convert to array.find() to stop looping as soon as a match is found
 				var selectedCount = 0;
 				for (var i = 0; i < todos.length; i++) {
@@ -797,8 +821,25 @@ function todoClickHandler(event) {
 					}
 				}
 				if (selectedCount === 0) {
-					selectAllButton.classList.remove('selected');
+					toggleSelectAllButtons();
+//					selectAllButton.classList.remove('selected');
 				}
+				// Toggle parent's selectChildren-related buttons if no other children are selected
+//				var parentTodo = findParent(todos, todo.id);
+//				if (parentTodo) {
+//					var selectedChildrenCount = 0;
+//					// TODO convert to array.find() to stop looping as soon as a match is found
+//					for (var i = 0; i < parentTodo.children.length; i++) {
+//						if (parentTodo.children[i].selected === true) {
+//							selectedChildrenCount++;
+//						}
+//					}
+//					if (selectedChildrenCount === 0) {
+//						var parentTodoLi = document.getElementById(parentTodo.id);
+//						selectChildren(parentTodoLi);
+//					}
+//				}
+
 			}
 		}
 		if (event.target.name === "completed") {
