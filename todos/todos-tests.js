@@ -4680,6 +4680,7 @@ tests({
 		childLi2CompleteButton.click();
 	},
 	"If all todos become unselected, the app should toggle buttons as when receiving a selectAll click event.": function() {
+		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -4689,7 +4690,8 @@ tests({
 		todo1.addChild(child2);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		startApp();
+		todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
@@ -4708,17 +4710,17 @@ tests({
 
 		var childLi1 = todoLi1Ul.children[0];
 		var childLi1SelectButton = childLi1.children[selectedIndex];
-		var childLi1CompleteButton = todoLi1.children[completedIndex];
-		var childLi1DeleteButton = todoLi1.children[deleteIndex];
-		var childLi1AddSiblingButton = todoLi1.children[addSiblingIndex];
-		var childLi1AddChildButton = todoLi1.children[addChildIndex];
+		var childLi1CompleteButton = childLi1.children[completedIndex];
+		var childLi1DeleteButton = childLi1.children[deleteIndex];
+		var childLi1AddSiblingButton = childLi1.children[addSiblingIndex];
+		var childLi1AddChildButton = childLi1.children[addChildIndex];
 
 		var childLi2 = todoLi1Ul.children[1];
 		var childLi2SelectButton = childLi2.children[selectedIndex];
-		var childLi2CompleteButton = todoLi1.children[completedIndex];
-		var childLi2DeleteButton = todoLi1.children[deleteIndex];
-		var childLi2AddSiblingButton = todoLi1.children[addSiblingIndex];
-		var childLi2AddChildButton = todoLi1.children[addChildIndex];
+		var childLi2CompleteButton = childLi2.children[completedIndex];
+		var childLi2DeleteButton = childLi2.children[deleteIndex];
+		var childLi2AddSiblingButton = childLi2.children[addSiblingIndex];
+		var childLi2AddChildButton = childLi2.children[addChildIndex];
 
 		var todoLi2 = todolist.children[0].children[1];
 		var todoLi2SelectButton = todoLi2.children[selectedIndex];
@@ -4847,15 +4849,15 @@ tests({
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todoLi2SelectButton.classList.contains('inactive'), false);
 		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
-		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
-		eq(todoLi2CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi2CompleteButton.classList.contains('inactive'), true);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
-		eq(todoLi2DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi2DeleteButton.classList.contains('inactive'), true);
 		eq(todoLi2AddSiblingButton.textContent, 'Add sibling');
-		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), true);
 		eq(todoLi2AddChildButton.textContent, 'Add child');
-		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
+		eq(todoLi2AddChildButton.classList.contains('inactive'), true);
 
 		todoLi1SelectChildrenButton.click();		// Unselect Item 1 children
 
@@ -4913,7 +4915,7 @@ tests({
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todoLi2SelectButton.classList.contains('inactive'), false);
 		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
-		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
 		eq(todoLi2CompleteButton.classList.contains('inactive'), true);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
@@ -4980,7 +4982,7 @@ tests({
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todoLi2SelectButton.classList.contains('inactive'), false);
 		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
-		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
 		eq(todoLi2CompleteButton.classList.contains('inactive'), true);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
@@ -5044,8 +5046,9 @@ tests({
 
 		eq(todo2.selected, false);
 		eq(todoLi2SelectButton.textContent, 'Select');
-		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
 		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi2SelectChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
 		eq(todoLi2CompleteButton.classList.contains('inactive'), false);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
