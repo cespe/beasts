@@ -4690,64 +4690,370 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 		startApp();
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+		var todoLi1AddSiblingButton = todoLi1.children[addSiblingIndex];
+		var todoLi1AddChildButton = todoLi1.children[addChildIndex];
+		var todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var todoLi1CompleteSelectedChildrenButton = todoLi1.children[completeSelectedChildrenIndex];
+		var todoLi1DeleteSelectedChildrenButton = todoLi1.children[deleteSelectedChildrenIndex];
 		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+
 		var childLi1 = todoLi1Ul.children[0];
-		var childLi2 = todoLi1Ul.children[1];
 		var childLi1SelectButton = childLi1.children[selectedIndex];
+		var childLi1CompleteButton = todoLi1.children[completedIndex];
+		var childLi1DeleteButton = todoLi1.children[deleteIndex];
+		var childLi1AddSiblingButton = todoLi1.children[addSiblingIndex];
+		var childLi1AddChildButton = todoLi1.children[addChildIndex];
+
+		var childLi2 = todoLi1Ul.children[1];
 		var childLi2SelectButton = childLi2.children[selectedIndex];
+		var childLi2CompleteButton = todoLi1.children[completedIndex];
+		var childLi2DeleteButton = todoLi1.children[deleteIndex];
+		var childLi2AddSiblingButton = todoLi1.children[addSiblingIndex];
+		var childLi2AddChildButton = todoLi1.children[addChildIndex];
+
 		var todoLi2 = todolist.children[0].children[1];
 		var todoLi2SelectButton = todoLi2.children[selectedIndex];
 		var todoLi2SelectChildrenButton = todoLi2.children[selectChildrenIndex];
+		var todoLi2CompleteButton = todoLi2.children[completedIndex];
+		var todoLi2DeleteButton = todoLi2.children[deleteIndex];
+		var todoLi2AddSiblingButton = todoLi2.children[addSiblingIndex];
+		var todoLi2AddChildButton = todoLi2.children[addChildIndex];
+
+		eq(selectAllButton.textContent, "Select all");
+		eq(completeSelectedButton.textContent, "Complete selected");
+		eq(completeSelectedButton.classList.contains('inactive'), true);
+		eq(deleteSelectedButton.textContent, "Delete selected");
+		eq(deleteSelectedButton.classList.contains('inactive'), true);
 
 		eq(todo1.selected, false);
-		eq(todoLi1SelectButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectButton.textContent, 'Select');
-		eq(child1.selected, false);
-		eq(child2.selected, false);
-		eq(childLi1SelectButton.classList.contains('inactive'), true);
-		eq(childLi2SelectButton.classList.contains('inactive'), true);
-		eq(childLi1SelectButton.textContent, 'Select');
-		eq(childLi2SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.classList.contains('inactive'), true);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todoLi1CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi1AddChildButton.textContent, 'Add child');
+		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(todo1.selected, false);
-		eq(todoLi1SelectButton.classList.contains('inactive'), true);
-		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 
-		// TODO add more tests to exercise selectChildren event button toggling
+		eq(child1.selected, false);
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.classList.contains('inactive'), true);
+		eq(childLi1CompleteButton.textContent, 'Complete');
+		eq(childLi1CompleteButton.classList.contains('inactive'), false);
+		eq(childLi1DeleteButton.textContent, 'Delete');
+		eq(childLi1DeleteButton.classList.contains('inactive'), false);
+		eq(childLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi1AddChildButton.textContent, 'Add child');
+		eq(childLi1AddChildButton.classList.contains('inactive'), false);
 
-		todoLi1SelectChildrenButton.click();
+		eq(child2.selected, false);
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.classList.contains('inactive'), true);
+		eq(childLi2CompleteButton.textContent, 'Complete');
+		eq(childLi2CompleteButton.classList.contains('inactive'), false);
+		eq(childLi2DeleteButton.textContent, 'Delete');
+		eq(childLi2DeleteButton.classList.contains('inactive'), false);
+		eq(childLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi2AddChildButton.textContent, 'Add child');
+		eq(childLi2AddChildButton.classList.contains('inactive'), false);
+
+		eq(todo2.selected, false);
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2CompleteButton.textContent, 'Complete');
+		eq(todoLi2CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi2DeleteButton.textContent, 'Delete');
+		eq(todoLi2DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi2AddChildButton.textContent, 'Add child');
+		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
+
+		selectAllButton.click();
+		
+		eq(selectAllButton.textContent, "Unselect all");
+		eq(completeSelectedButton.textContent, "Complete selected");
+		eq(completeSelectedButton.classList.contains('inactive'), false);
+		eq(deleteSelectedButton.textContent, "Delete selected");
+		eq(deleteSelectedButton.classList.contains('inactive'), false);
+
+		eq(todo1.selected, true);
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi1SelectButton.classList.contains('inactive'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todoLi1CompleteButton.classList.contains('inactive'), true);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1DeleteButton.classList.contains('inactive'), true);
+		eq(todoLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi1AddChildButton.textContent, 'Add child');
+		eq(todoLi1AddChildButton.classList.contains('inactive'), true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), false);
 
 		eq(child1.selected, true);
-		eq(child2.selected, true);
-		eq(childLi1SelectButton.classList.contains('inactive'), false);
-		eq(childLi2SelectButton.classList.contains('inactive'), false);
 		eq(childLi1SelectButton.textContent, 'Unselect');
-		eq(childLi2SelectButton.textContent, 'Unselect');
-		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(childLi1SelectButton.classList.contains('inactive'), false);
+		eq(childLi1CompleteButton.textContent, 'Complete');
+		eq(childLi1CompleteButton.classList.contains('inactive'), true);
+		eq(childLi1DeleteButton.textContent, 'Delete');
+		eq(childLi1DeleteButton.classList.contains('inactive'), true);
+		eq(childLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi1AddSiblingButton.classList.contains('inactive'), true);
+		eq(childLi1AddChildButton.textContent, 'Add child');
+		eq(childLi1AddChildButton.classList.contains('inactive'), true);
 
-		childLi1SelectButton.click();
-
-		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
-		eq(child1.selected, false);
 		eq(child2.selected, true);
-		eq(childLi1SelectButton.classList.contains('inactive'), false);
-		eq(childLi2SelectButton.classList.contains('inactive'), false);
-		eq(childLi1SelectButton.textContent, 'Select');
 		eq(childLi2SelectButton.textContent, 'Unselect');
+		eq(childLi2SelectButton.classList.contains('inactive'), false);
+		eq(childLi2CompleteButton.textContent, 'Complete');
+		eq(childLi2CompleteButton.classList.contains('inactive'), true);
+		eq(childLi2DeleteButton.textContent, 'Delete');
+		eq(childLi2DeleteButton.classList.contains('inactive'), true);
+		eq(childLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi2AddSiblingButton.classList.contains('inactive'), true);
+		eq(childLi2AddChildButton.textContent, 'Add child');
+		eq(childLi2AddChildButton.classList.contains('inactive'), true);
 
-		childLi2SelectButton.click();
+		eq(todo2.selected, true);
+		eq(todoLi2SelectButton.textContent, 'Unselect');
+		eq(todoLi2SelectButton.classList.contains('inactive'), false);
+		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2CompleteButton.textContent, 'Complete');
+		eq(todoLi2CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi2DeleteButton.textContent, 'Delete');
+		eq(todoLi2DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi2AddChildButton.textContent, 'Add child');
+		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
+
+		todoLi1SelectChildrenButton.click();		// Unselect Item 1 children
+
+		eq(selectAllButton.textContent, "Unselect all");
+		eq(completeSelectedButton.textContent, "Complete selected");
+		eq(completeSelectedButton.classList.contains('inactive'), false);
+		eq(deleteSelectedButton.textContent, "Delete selected");
+		eq(deleteSelectedButton.classList.contains('inactive'), false);
+
+		eq(todo1.selected, true);
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi1SelectButton.classList.contains('inactive'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todoLi1CompleteButton.classList.contains('inactive'), true);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1DeleteButton.classList.contains('inactive'), true);
+		eq(todoLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi1AddChildButton.textContent, 'Add child');
+		eq(todoLi1AddChildButton.classList.contains('inactive'), true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 
 		eq(child1.selected, false);
-		eq(child2.selected, false);
-		eq(childLi1SelectButton.classList.contains('inactive'), false);
-		eq(childLi2SelectButton.classList.contains('inactive'), false);
 		eq(childLi1SelectButton.textContent, 'Select');
-		eq(childLi2SelectButton.textContent, 'Select');
-		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(childLi1SelectButton.classList.contains('inactive'), true);
+		eq(childLi1CompleteButton.textContent, 'Complete');
+		eq(childLi1CompleteButton.classList.contains('inactive'), false);
+		eq(childLi1DeleteButton.textContent, 'Delete');
+		eq(childLi1DeleteButton.classList.contains('inactive'), false);
+		eq(childLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi1AddChildButton.textContent, 'Add child');
+		eq(childLi1AddChildButton.classList.contains('inactive'), false);
 
+		eq(child2.selected, false);
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.classList.contains('inactive'), true);
+		eq(childLi2CompleteButton.textContent, 'Complete');
+		eq(childLi2CompleteButton.classList.contains('inactive'), false);
+		eq(childLi2DeleteButton.textContent, 'Delete');
+		eq(childLi2DeleteButton.classList.contains('inactive'), false);
+		eq(childLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi2AddChildButton.textContent, 'Add child');
+		eq(childLi2AddChildButton.classList.contains('inactive'), false);
+
+		eq(todo2.selected, true);
+		eq(todoLi2SelectButton.textContent, 'Unselect');
+		eq(todoLi2SelectButton.classList.contains('inactive'), false);
+		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2CompleteButton.textContent, 'Complete');
+		eq(todoLi2CompleteButton.classList.contains('inactive'), true);
+		eq(todoLi2DeleteButton.textContent, 'Delete');
+		eq(todoLi2DeleteButton.classList.contains('inactive'), true);
+		eq(todoLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi2AddChildButton.textContent, 'Add child');
+		eq(todoLi2AddChildButton.classList.contains('inactive'), true);
+
+
+		todoLi2SelectButton.click();
+
+		eq(selectAllButton.textContent, "Unselect all");
+		eq(completeSelectedButton.textContent, "Complete selected");
+		eq(completeSelectedButton.classList.contains('inactive'), false);
+		eq(deleteSelectedButton.textContent, "Delete selected");
+		eq(deleteSelectedButton.classList.contains('inactive'), false);
+
+		eq(todo1.selected, true);
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi1SelectButton.classList.contains('inactive'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todoLi1CompleteButton.classList.contains('inactive'), true);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1DeleteButton.classList.contains('inactive'), true);
+		eq(todoLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi1AddChildButton.textContent, 'Add child');
+		eq(todoLi1AddChildButton.classList.contains('inactive'), true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
+
+		eq(child1.selected, false);
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.classList.contains('inactive'), true);
+		eq(childLi1CompleteButton.textContent, 'Complete');
+		eq(childLi1CompleteButton.classList.contains('inactive'), false);
+		eq(childLi1DeleteButton.textContent, 'Delete');
+		eq(childLi1DeleteButton.classList.contains('inactive'), false);
+		eq(childLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi1AddChildButton.textContent, 'Add child');
+		eq(childLi1AddChildButton.classList.contains('inactive'), false);
+
+		eq(child2.selected, false);
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.classList.contains('inactive'), true);
+		eq(childLi2CompleteButton.textContent, 'Complete');
+		eq(childLi2CompleteButton.classList.contains('inactive'), false);
+		eq(childLi2DeleteButton.textContent, 'Delete');
+		eq(childLi2DeleteButton.classList.contains('inactive'), false);
+		eq(childLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi2AddChildButton.textContent, 'Add child');
+		eq(childLi2AddChildButton.classList.contains('inactive'), false);
+
+		eq(todo2.selected, false);
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi2SelectButton.classList.contains('inactive'), false);
+		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2CompleteButton.textContent, 'Complete');
+		eq(todoLi2CompleteButton.classList.contains('inactive'), true);
+		eq(todoLi2DeleteButton.textContent, 'Delete');
+		eq(todoLi2DeleteButton.classList.contains('inactive'), true);
+		eq(todoLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi2AddChildButton.textContent, 'Add child');
+		eq(todoLi2AddChildButton.classList.contains('inactive'), true);
+
+		todoLi1SelectButton.click();
+
+		eq(selectAllButton.textContent, "Select all");
+		eq(completeSelectedButton.textContent, "Complete selected");
+		eq(completeSelectedButton.classList.contains('inactive'), true);
+		eq(deleteSelectedButton.textContent, "Delete selected");
+		eq(deleteSelectedButton.classList.contains('inactive'), true);
+
+		eq(todo1.selected, false);
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.classList.contains('inactive'), true);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todoLi1CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi1AddChildButton.textContent, 'Add child');
+		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
+		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
+
+		eq(child1.selected, false);
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.classList.contains('inactive'), true);
+		eq(childLi1CompleteButton.textContent, 'Complete');
+		eq(childLi1CompleteButton.classList.contains('inactive'), false);
+		eq(childLi1DeleteButton.textContent, 'Delete');
+		eq(childLi1DeleteButton.classList.contains('inactive'), false);
+		eq(childLi1AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi1AddChildButton.textContent, 'Add child');
+		eq(childLi1AddChildButton.classList.contains('inactive'), false);
+
+		eq(child2.selected, false);
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.classList.contains('inactive'), true);
+		eq(childLi2CompleteButton.textContent, 'Complete');
+		eq(childLi2CompleteButton.classList.contains('inactive'), false);
+		eq(childLi2DeleteButton.textContent, 'Delete');
+		eq(childLi2DeleteButton.classList.contains('inactive'), false);
+		eq(childLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(childLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi2AddChildButton.textContent, 'Add child');
+		eq(childLi2AddChildButton.classList.contains('inactive'), false);
+
+		eq(todo2.selected, false);
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(todoLi2SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi2SelectButton.classList.contains('inactive'), true);
+		eq(todoLi2CompleteButton.textContent, 'Complete');
+		eq(todoLi2CompleteButton.classList.contains('inactive'), false);
+		eq(todoLi2DeleteButton.textContent, 'Delete');
+		eq(todoLi2DeleteButton.classList.contains('inactive'), false);
+		eq(todoLi2AddSiblingButton.textContent, 'Add sibling');
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi2AddChildButton.textContent, 'Add child');
+		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	}, 
 	"If all of a parent's child todos become unselected, the parent todoLi should toggle buttons as when receiving a selectChildren event.": function() {
 		fail();
