@@ -2695,6 +2695,7 @@ tests({
 		var childLi1DeleteButton = childLi1.children[deleteIndex];
 		var childLi1AddSiblingButton = childLi1.children[addSiblingIndex];
 		var childLi1AddChildButton = childLi1.children[addChildIndex];
+		var childLi1Entry = childLi1.children[entryIndex];
 
 		eq(selectAllButton.textContent, 'Select all');
 		eq(todoLi1SelectButton.textContent, 'Select');
@@ -2713,6 +2714,7 @@ tests({
 		eq(childLi1DeleteButton.classList.contains('inactive'), false);
 		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
 		eq(childLi1AddChildButton.classList.contains('inactive'), false);
+		eq(childLi1Entry.classList.contains('highlighted'), false);
 		
 		selectAllButton.click();
 		
@@ -2733,6 +2735,7 @@ tests({
 		eq(childLi1DeleteButton.classList.contains('inactive'), true);
 		eq(childLi1AddSiblingButton.classList.contains('inactive'), true);
 		eq(childLi1AddChildButton.classList.contains('inactive'), true);
+		eq(childLi1Entry.classList.contains('highlighted'), true);
 
 		todoLi1SelectChildrenButton.click();	// Unselect children
 		
@@ -2752,6 +2755,7 @@ tests({
 		eq(childLi1DeleteButton.classList.contains('inactive'), true);
 		eq(childLi1AddSiblingButton.classList.contains('inactive'), true);
 		eq(childLi1AddChildButton.classList.contains('inactive'), true);
+		eq(childLi1Entry.classList.contains('highlighted'), false);
 
 		todoLi1SelectChildrenButton.click();	// Reselect children
 		
@@ -2771,6 +2775,7 @@ tests({
 		eq(childLi1DeleteButton.classList.contains('inactive'), true);
 		eq(childLi1AddSiblingButton.classList.contains('inactive'), true);
 		eq(childLi1AddChildButton.classList.contains('inactive'), true);
+		eq(childLi1Entry.classList.contains('highlighted'), true);
 	},
 	"Clicking completeSelected button should toggle button text and toggle todo.completed, todoLi completed button text, and entry <p> class for selected todos.": function() {
 		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
