@@ -151,6 +151,9 @@ function anySelectedTodos(array) {
 
 /************************************* DOM manipulation ********************************/
 
+// Fixed page elements
+var selectAllButton = document.getElementsByName('selectAll')[0];
+
 // index positions of todoLi.children[i]
 var selectedIndex = 0;
 var completedIndex = 1;
@@ -456,8 +459,13 @@ function selectChildren(todoLi) {
 			todoLiAddSiblingButton.classList.add('inactive');
 			todoLiAddChildButton.classList.add('inactive');
 			todoLiShowChildrenButton.classList.add('inactive');
-			todoLiCompleteSelectedChildrenButton.classList.remove('inactive');
-			todoLiDeleteSelectedChildrenButton.classList.remove('inactive');
+			if (selectAllButton.textContent === 'Unselect all') {
+				todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+			} else {
+				todoLiCompleteSelectedChildrenButton.classList.remove('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.remove('inactive');
+			}
 			var childrenUncompletedCount = 0;
 			var childrenUndeletedCount = 0;
 			for (var i = 0; i < todo.children.length; i++) {
@@ -493,25 +501,48 @@ function selectChildren(todoLi) {
 			}
 		} else {
 			todoLiSelectChildrenButton.textContent = 'Select children';
-			todoLiShowChildrenButton.classList.remove('inactive');
-			todoLiCompleteSelectedChildrenButton.classList.add('inactive');
-			todoLiDeleteSelectedChildrenButton.classList.add('inactive');
-			if (!todoLiEntry.classList.contains('highlighted')) {
-				todoLiCompleteButton.classList.remove('inactive');
-				todoLiDeleteButton.classList.remove('inactive');
-				todoLiAddSiblingButton.classList.remove('inactive');
-				todoLiAddChildButton.classList.remove('inactive');
-			}
-			for (var i = 0; i < todo.children.length; i++) {
-				todo.children[i].selected = false;
-				childLi = todoLiUl.children[i];
-				childLi.children[selectedIndex].textContent = 'Select';
-				childLi.children[entryIndex].classList.remove('highlighted');
-				childLi.children[selectedIndex].classList.add('inactive');
-				childLi.children[completedIndex].classList.remove('inactive');
-				childLi.children[deleteIndex].classList.remove('inactive');
-				childLi.children[addSiblingIndex].classList.remove('inactive');
-				childLi.children[addChildIndex].classList.remove('inactive');
+			if (selectAllButton.textContent === 'Unselect all') {
+				todoLiShowChildrenButton.classList.add('inactive');
+				todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+				if (!todoLiEntry.classList.contains('highlighted')) {
+					todoLiCompleteButton.classList.remove('inactive');
+					todoLiDeleteButton.classList.remove('inactive');
+					todoLiAddSiblingButton.classList.remove('inactive');
+					todoLiAddChildButton.classList.remove('inactive');
+				}
+				for (var i = 0; i < todo.children.length; i++) {
+					todo.children[i].selected = false;
+					childLi = todoLiUl.children[i];
+					childLi.children[selectedIndex].textContent = 'Select';
+					childLi.children[entryIndex].classList.remove('highlighted');
+					childLi.children[selectedIndex].classList.remove('inactive');
+					childLi.children[completedIndex].classList.add('inactive');
+					childLi.children[deleteIndex].classList.add('inactive');
+					childLi.children[addSiblingIndex].classList.add('inactive');
+					childLi.children[addChildIndex].classList.add('inactive');
+				}
+			} else {	// selectAllButton text === 'Select all'
+				todoLiShowChildrenButton.classList.remove('inactive');
+				todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+				if (!todoLiEntry.classList.contains('highlighted')) {
+					todoLiCompleteButton.classList.remove('inactive');
+					todoLiDeleteButton.classList.remove('inactive');
+					todoLiAddSiblingButton.classList.remove('inactive');
+					todoLiAddChildButton.classList.remove('inactive');
+				}
+				for (var i = 0; i < todo.children.length; i++) {
+					todo.children[i].selected = false;
+					childLi = todoLiUl.children[i];
+					childLi.children[selectedIndex].textContent = 'Select';
+					childLi.children[entryIndex].classList.remove('highlighted');
+					childLi.children[selectedIndex].classList.add('inactive');
+					childLi.children[completedIndex].classList.remove('inactive');
+					childLi.children[deleteIndex].classList.remove('inactive');
+					childLi.children[addSiblingIndex].classList.remove('inactive');
+					childLi.children[addChildIndex].classList.remove('inactive');
+				}
 			}
 		}
 	}
