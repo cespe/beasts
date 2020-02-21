@@ -1381,6 +1381,19 @@ tests({
 		eq(child2LiEntry.classList.contains('highlighted'), false);
 		eq(child3LiEntry.classList.contains('highlighted'), false);
 	}, 
+	"A clicked selectChildren button should behave like selectAll for nested todos.": function() {
+		// If click is on 'Select children' and Select button is inactive, then this is the parent level
+		//		Set selectChildrenButton to 'Unselect children' and make Complete/Delete selected children buttons active
+		//		and hide other buttons
+		//		Select each nested child todo but don't make Complete/Delete selected children buttons active
+		//
+		// Else if click is on 'Unselect children' and Select button is inactive, this is still the parent level
+		//		Return buttons to normal with all children unselected
+		//
+		// If select button is active, then the todo is not top level and selectChildren should hide all but select and selectChildren
+		// for nested todos
+		fail();
+	},
 	"Clicking a selectChildren button should toggle 'inactive' on complete, delete, addSibling, addChild and showChildren buttons.": function() {
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
