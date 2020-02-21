@@ -144,7 +144,10 @@ function anySelectedTodos(array) {
 			return true;
 		}
 		if (todo.children.length > 0) {
-			return anySelectedTodos(todo.children);
+			var todoSelected = anySelectedTodos(todo.children);
+			if (todoSelected) {
+				return true;
+			} 
 		}
 	}
 }
@@ -153,6 +156,10 @@ function anySelectedTodos(array) {
 
 // Fixed page elements
 var selectAllButton = document.getElementsByName('selectAll')[0];
+var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+var addTodoButton = document.getElementsByName('addTodo')[0];
+var undoEditButton = document.getElementsByName('undoEdit')[0];
 
 // index positions of todoLi.children[i]
 var selectedIndex = 0;
@@ -639,6 +646,53 @@ function selectAllChildren(todoLi) {
 	}
 }
 
+// called from unselectAll
+function unselectAllChildren(todoLi) {
+	var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+	var todoLiCompleteButton = todoLi.children[completedIndex];
+	var todoLiDeleteButton = todoLi.children[deleteIndex];
+	var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
+	var todoLiAddChildButton = todoLi.children[addChildIndex];
+	var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
+	var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
+	var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
+	var todoLiUl = todoLi.children[todoLiUlIndex];
+	var todoLiEntry = todoLi.children[entryIndex];
+	var todo = findTodo(todos, todoLi.id)
+	// Only operate on children that 1) exist and 2) are displayed
+	// todoLiUl classlist.length === 1 when children are hidden
+	if (todoLiUl && todoLiUl.children.length > 0 && todoLiUl.classList.length === 0) {
+		for (var i = 0; i < todoLiUl.children.length; i++) {
+			todoLi = todoLiUl.children[i];
+			todoLiUl == todoLi.children[todoLiUlIndex];
+			if (todoLiUl && todoLiUl.children.length > 0) {
+				unselectAllChildren(todoLi);
+			}
+		}
+		todoLiSelectChildrenButton.textContent = 'Select children';
+		todoLiShowChildrenButton.classList.remove('inactive');
+		todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+		todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+		if (!todoLiEntry.classList.contains('highlighted')) {
+			todoLiCompleteButton.classList.remove('inactive');
+			todoLiDeleteButton.classList.remove('inactive');
+			todoLiAddSiblingButton.classList.remove('inactive');
+			todoLiAddChildButton.classList.remove('inactive');
+		}
+		for (var i = 0; i < todo.children.length; i++) {
+			todo.children[i].selected = false;
+			childLi = todoLiUl.children[i];
+			childLi.children[selectedIndex].textContent = 'Select';
+			childLi.children[entryIndex].classList.remove('highlighted');
+			childLi.children[selectedIndex].classList.add('inactive');
+			childLi.children[completedIndex].classList.remove('inactive');
+			childLi.children[deleteIndex].classList.remove('inactive');
+			childLi.children[addSiblingIndex].classList.remove('inactive');
+			childLi.children[addChildIndex].classList.remove('inactive');
+		}
+	}
+}
+
 function completeSelectedChildren(todoLi) {
 	var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
 	var todoLiUl = todoLi.children[todoLiUlIndex];
@@ -884,11 +938,7 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 //	addTodoButton.classList.remove('inactive');
 //}
 
-function unselectAll(selectAllButton) {
-	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-	var addTodoButton = document.getElementsByName('addTodo')[0];
-	var undoEditButton = document.getElementsByName('undoEdit')[0];
+function unselectAll() {
 	var todosUl = todolist.children[0];
 	selectAllButton.textContent = 'Select all';
 	completeSelectedButton.classList.add('inactive');
@@ -912,7 +962,7 @@ function unselectAll(selectAllButton) {
 		todoLiEntry.classList.remove('highlighted');
 		var todo = findTodo(todos, todoLi.id)
 		todo.selected = false;
-		selectChildren(todoLi);
+		unselectAllChildren(todoLi);
 		}
 	if (deleteSelectedButton.classList.contains('deleted')) {
 		deleteSelectedButton.classList.remove('deleted');
@@ -971,14 +1021,14 @@ function todoClickHandler(event) {
 			var todoLiSelectButton = todoLi.children[selectedIndex];
 //			todoLiSelectButton.classList.toggle('selected');
 			todo.selected = !todo.selected;
-			var selectAllButton = document.getElementsByName('selectAll')[0];
+//			var selectAllButton = document.getElementsByName('selectAll')[0];
 			if (todo.selected) {
 				todoLiSelectButton.textContent = 'Unselect';
 				todoLiEntry.classList.add('highlighted');
 //				selectAllButton.classList.add('selected');
 			} else {
 				if (!anySelectedTodos(todos)) {
-					unselectAll(selectAllButton);
+					unselectAll();
 				} else {
 					todoLiSelectButton.textContent = 'Select';
 					todoLiEntry.classList.remove('highlighted');
@@ -1282,7 +1332,7 @@ function actionsClickHandler() {
 					todoLiEntry.classList.remove('highlighted');
 					var todo = findTodo(todos, todoLi.id)
 					todo.selected = false;
-					selectChildren(todoLi);
+					unselectAllChildren(todoLi);
 				}
 				if (deleteSelectedButton.classList.contains('deleted')) {
 					deleteSelectedButton.classList.remove('deleted');
