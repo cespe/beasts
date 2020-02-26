@@ -1618,6 +1618,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Undelete selected children');
 	},
 	"If todoLi is selected, clicking 'Unselect children' button should not remove 'inactive' on complete, delete, addSibling, addChild buttons.": function() {
+		fail();		// not a good test
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1640,6 +1641,7 @@ tests({
 		todoLi1SelectedButton.classList.remove('inactive');
 
 		todoLi1SelectedButton.click();
+
 		todoLi1CompleteButton.classList.add('inactive');
 		todoLi1DeleteButton.classList.add('inactive');
 		todoLi1AddSiblingButton.classList.add('inactive');
@@ -5772,7 +5774,8 @@ tests({
 		eq(childLi2AddChildButton.textContent, 'Add child');
 		eq(childLi2AddChildButton.classList.contains('inactive'), true);
 
-		todoLi1SelectChildrenButton.click();
+		debugger;
+		todoLi1SelectChildrenButton.click();	// return children and grandchild to normal
 
 		eq(todo1.selected, false);
 		eq(todoLi1SelectButton.textContent, 'Select');
