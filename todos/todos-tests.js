@@ -5774,7 +5774,6 @@ tests({
 		eq(childLi2AddChildButton.textContent, 'Add child');
 		eq(childLi2AddChildButton.classList.contains('inactive'), true);
 
-		debugger;
 		todoLi1SelectChildrenButton.click();	// return children and grandchild to normal
 
 		eq(todo1.selected, false);

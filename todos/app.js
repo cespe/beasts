@@ -437,6 +437,228 @@ function setTodoLiClass(todoUl, cssClass, action) {
 	}
 }
 
+function altSelectChildren(todoLi) {
+	// Root case: clickedTodoLi is root (not already selected and controlled by a higher level). Select button inactive.
+	// Branch case: clickedTodoLi is branch (already selected and controlled by a higher level). Select button active.
+	//       Higher level could be selectAll or a higher-level todoLi
+	//
+	// Root has completeSelectedChildren and deleteSelectedChildren buttons active. Branches do not.
+	//
+	// If root 'Unselect children' is clicked, the todoLi and all children return to normal.
+	// If branch 'Unselect children' is clicked, the todoLi and all children stay in selection mode.
+
+	var clickedTodoLi = todoLi;
+	var clickedTodoLiSelectButton = todoLi.children[selectedIndex];
+	var clickedTodoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+	var clickedTodoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
+	var clickedTodoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
+	var childrenUncompletedCount = 0;
+	var childrenUndeletedCount = 0;
+
+	function selectChildrenFromRoot(todoLi) {
+		var todoLiSelectButton = todoLi.children[selectedIndex];
+		var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+		var todoLiCompleteButton = todoLi.children[completedIndex];
+		var todoLiDeleteButton = todoLi.children[deleteIndex];
+		var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
+		var todoLiAddChildButton = todoLi.children[addChildIndex];
+		var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
+		var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
+		var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
+		var todoLiUl = todoLi.children[todoLiUlIndex];
+		var todoLiEntry = todoLi.children[entryIndex];
+		var todo = findTodo(todos, todoLi.id)
+		// Only operate on children that 1) exist and 2) are displayed
+		// todoLiUl classlist.length === 1 when children are hidden
+		if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
+			for (var i = 0; i < todo.children.length; i++) {
+				childLi = todoLiUl.children[i];
+				if (childLi.classList.length === 0) {
+					selectChildrenFromRoot(childLi);
+				}
+//				childLiUl = childLi.children[todoLiUlIndex];
+//				if (childLiUl && childLiUl.children.length > 0) {
+//					selectChildrenFromRoot(childLi);
+//				}
+			}
+		}
+		if (clickedTodoLiSelectChildrenButton.textContent === 'Select children') {		// Root 'Select children' clicked
+			todoLiCompleteButton.classList.add('inactive');
+			todoLiDeleteButton.classList.add('inactive');
+			todoLiAddSiblingButton.classList.add('inactive');
+			todoLiAddChildButton.classList.add('inactive');
+			todoLiShowChildrenButton.classList.add('inactive');
+			if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
+				todoLiSelectChildrenButton.textContent = 'Unselect children';
+				// todoLiSelectChildrenButton.classList.remove('inactive');
+				for (var i = 0; i < todo.children.length; i++) {
+					var childTodo = todo.children[i];
+					if (childTodo.completed === false) {
+						childrenUncompletedCount++;
+					}
+					if (childTodo.deleted === false) {
+						childrenUndeletedCount++;
+					}
+				}
+			}
+			if (todoLi === clickedTodoLi) {
+				// Special handling for the root todoLi
+				todoLiCompleteSelectedChildrenButton.classList.remove('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.remove('inactive');
+			} else {
+				todoLiSelectButton.textContent = 'Unselect';
+				todoLiSelectButton.classList.remove('inactive');
+				todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+				todoLiEntry.classList.add('highlighted');
+				todo.selected = true;
+		
+			}
+
+		} else {	// Root 'Unselect children' clicked
+			todoLiCompleteButton.classList.remove('inactive');
+			todoLiDeleteButton.classList.remove('inactive');
+			todoLiAddSiblingButton.classList.remove('inactive');
+			todoLiAddChildButton.classList.remove('inactive');
+
+			if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
+				todoLiSelectChildrenButton.textContent = 'Select children';
+				todoLiShowChildrenButton.classList.remove('inactive');
+				for (var i = 0; i < todo.children.length; i++) {
+					var childTodo = todo.children[i];
+					if (childTodo.completed === false) {
+						childrenUncompletedCount++;
+					}
+					if (childTodo.deleted === false) {
+						childrenUndeletedCount++;
+					}
+				}
+
+			}
+
+			if (todoLi === clickedTodoLi) {
+				// Special handling for the root todoLi
+				todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+
+			} else {
+				todoLiSelectButton.textContent = 'Select';
+				todoLiSelectButton.classList.add('inactive');
+				todoLiEntry.classList.remove('highlighted');
+				todo.selected = false;
+
+			}
+		}
+	}
+
+	function selectChildrenFromBranch(todoLi) {
+		var todoLiSelectButton = todoLi.children[selectedIndex];
+		var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+		var todoLiCompleteButton = todoLi.children[completedIndex];
+		var todoLiDeleteButton = todoLi.children[deleteIndex];
+		var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
+		var todoLiAddChildButton = todoLi.children[addChildIndex];
+		var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
+		var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
+		var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
+		var todoLiUl = todoLi.children[todoLiUlIndex];
+		var todoLiEntry = todoLi.children[entryIndex];
+		var todo = findTodo(todos, todoLi.id)
+		// Only operate on children that 1) exist and 2) are displayed
+		// todoLiUl classlist.length === 1 when children are hidden
+		if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
+			for (var i = 0; i < todo.children.length; i++) {
+				childLi = todoLiUl.children[i];
+				if (childLi.classList.length === 0) {
+					selectChildrenFromBranch(childLi);	// only process children that are not hidden
+				}
+			}
+		}
+		if (clickedTodoLiSelectChildrenButton.textContent === 'Select children') {		// Branch 'Select children' clicked
+			todoLiCompleteButton.classList.add('inactive');
+			todoLiDeleteButton.classList.add('inactive');
+			todoLiAddSiblingButton.classList.add('inactive');
+			todoLiAddChildButton.classList.add('inactive');
+			todoLiShowChildrenButton.classList.add('inactive');
+			if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
+				todoLiSelectChildrenButton.textContent = 'Unselect children';
+				// todoLiSelectChildrenButton.classList.remove('inactive');
+				for (var i = 0; i < todo.children.length; i++) {
+					var childTodo = todo.children[i];
+					if (childTodo.completed === false) {
+						childrenUncompletedCount++;
+					}
+					if (childTodo.deleted === false) {
+						childrenUndeletedCount++;
+					}
+				}
+			}
+			if (todoLi === clickedTodoLi) {
+				// Special handling for the branch todoLi
+				// TODO buttons already hidden so these are unneeded(?)
+				todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+			} else {
+				todoLiSelectButton.textContent = 'Unselect';
+				todoLiSelectButton.classList.remove('inactive');
+				todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+				todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+				todoLiEntry.classList.add('highlighted');
+				todo.selected = true;
+		
+			}
+
+		} else {	// Branch 'Unselect children' clicked
+
+			if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
+				todoLiSelectChildrenButton.textContent = 'Select children';
+				for (var i = 0; i < todo.children.length; i++) {
+					var childTodo = todo.children[i];
+					if (childTodo.completed === false) {
+						childrenUncompletedCount++;
+					}
+					if (childTodo.deleted === false) {
+						childrenUndeletedCount++;
+					}
+				}
+			}
+
+			if (todoLi === clickedTodoLi) {
+				// Special handling for the root todoLi
+				//todoLiCompleteSelectedChildrenButton.classList.add('inactive');
+				//todoLiDeleteSelectedChildrenButton.classList.add('inactive');
+
+			} else {
+				todoLiSelectButton.textContent = 'Select';
+				//todoLiSelectButton.classList.add('inactive');
+				todoLiEntry.classList.remove('highlighted');
+				todo.selected = false;
+
+			}
+		}
+	}
+
+	if (clickedTodoLiSelectButton.classList.contains('inactive')) {
+		// root button clicked
+		selectChildrenFromRoot(todoLi);
+	} else {
+		// branch button clicked
+		selectChildrenFromBranch(todoLi);
+	}
+
+	if (childrenUncompletedCount === 0) {
+		clickedTodoLiCompleteSelectedChildrenButton.textContent = 'Uncomplete selected children';
+	} else {
+		clickedTodoLiCompleteSelectedChildrenButton.textContent = 'Complete selected children';
+	}
+	if (childrenUndeletedCount === 0) {
+		clickedTodoLiDeleteSelectedChildrenButton.textContent = 'Undelete selected children';
+	} else {
+		clickedTodoLiDeleteSelectedChildrenButton.textContent = 'Delete selected children';
+	}
+
+}
+
 function selectChildrenFromRoot(todoLi) {
 	var todoLiSelectButton = todoLi.children[selectedIndex];
 	var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
@@ -460,7 +682,7 @@ function selectChildrenFromRoot(todoLi) {
 				selectChildrenFromRoot(childLi);
 			}
 		}
-		if (todoLiSelectChildrenButton.textContent === 'Select children') {
+		if (todoLiSelectChildrenButton.textContent === 'Select children') {		// 'Select children' clicked
 			todoLiSelectChildrenButton.textContent = 'Unselect children';
 			todoLiCompleteButton.classList.add('inactive');
 			todoLiDeleteButton.classList.add('inactive');
@@ -503,7 +725,7 @@ function selectChildrenFromRoot(todoLi) {
 			} else {
 				todoLiDeleteSelectedChildrenButton.textContent = 'Delete selected children';
 			}
-		} else {
+		} else {	// 'Unselect children' clicked
 			todoLiSelectChildrenButton.textContent = 'Select children';
 			if (selectAllButton.textContent === 'Unselect all') {
 				todoLiShowChildrenButton.classList.add('inactive');
@@ -1371,25 +1593,26 @@ function todoClickHandler(event) {
 			}
 		}
 		if (event.target.name === "selectChildren") {
-			var todoLiSelectButton = todoLi.children[selectedIndex];
-			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
-			var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
-			var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
-			if (todoLiSelectChildrenButton.textContent === 'Select children') {
-				if (todoLiSelectButton.classList.contains('inactive')) {
-						selectChildrenFromRoot(todoLi);
-						todoLiCompleteSelectedChildrenButton.classList.remove('inactive');
-						todoLiDeleteSelectedChildrenButton.classList.remove('inactive');
-				} else {
-					selectChildrenFromBranch(todoLi);
-				}
-			} else {	// selectChildrenButton text is 'Unselect children'
-				if (todoLiSelectButton.classList.contains('inactive')) {
-					selectChildrenFromRoot(todoLi);
-				} else {
-					selectChildrenFromBranch(todoLi);
-				}
-			}
+			altSelectChildren(todoLi);
+//			var todoLiSelectButton = todoLi.children[selectedIndex];
+//			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+//			var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
+//			var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
+//			if (todoLiSelectChildrenButton.textContent === 'Select children') {
+//				if (todoLiSelectButton.classList.contains('inactive')) {
+//						selectChildrenFromRoot(todoLi);
+//						todoLiCompleteSelectedChildrenButton.classList.remove('inactive');
+//						todoLiDeleteSelectedChildrenButton.classList.remove('inactive');
+//				} else {
+//					selectChildrenFromBranch(todoLi);
+//				}
+//			} else {	// selectChildrenButton text is 'Unselect children'
+//				if (todoLiSelectButton.classList.contains('inactive')) {
+//					selectChildrenFromRoot(todoLi);
+//				} else {
+//					selectChildrenFromBranch(todoLi);
+//				}
+//			}
 		}
 		if (event.target.name === "completeSelectedChildren") {
 			completeSelectedChildren(todoLi);
