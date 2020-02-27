@@ -5900,7 +5900,7 @@ tests({
 		eq(childLi2SelectButton.textContent, 'Unselect');
 		eq(childLi2SelectButton.classList.contains('inactive'), false);
 
-		grandchildLi1SelectButton.click();
+		grandchildLi1SelectButton.click();	// unselect
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
 		eq(child1.selected, true);
@@ -5917,7 +5917,58 @@ tests({
 		eq(childLi2SelectButton.textContent, 'Unselect');
 		eq(childLi2SelectButton.classList.contains('inactive'), false);
 
-		grandchildLi2SelectButton.click();
+		grandchildLi2SelectButton.click();	// both grandchildren now unselected
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(child1.selected, true);
+		eq(childLi1SelectButton.textContent, 'Unselect');
+		eq(childLi1SelectButton.classList.contains('inactive'), false);
+		eq(childLi1SelectChildrenButton.textContent, 'Select children');
+		eq(grandchild1.selected, false);
+		eq(grandchildLi1SelectButton.textContent, 'Select');
+		eq(grandchildLi1SelectButton.classList.contains('inactive'), false);
+		eq(grandchild2.selected, false);
+		eq(grandchildLi2SelectButton.textContent, 'Select');
+		eq(grandchildLi2SelectButton.classList.contains('inactive'), false);
+		eq(child2.selected, true);
+		eq(childLi2SelectButton.textContent, 'Unselect');
+		eq(childLi2SelectButton.classList.contains('inactive'), false);
+
+		grandchildLi1SelectButton.click();	// re-select
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(child1.selected, true);
+		eq(childLi1SelectButton.textContent, 'Unselect');
+		eq(childLi1SelectButton.classList.contains('inactive'), false);
+		eq(childLi1SelectChildrenButton.textContent, 'Select children');
+		eq(grandchild1.selected, true);
+		eq(grandchildLi1SelectButton.textContent, 'Unselect');
+		eq(grandchildLi1SelectButton.classList.contains('inactive'), false);
+		eq(grandchild2.selected, false);
+		eq(grandchildLi2SelectButton.textContent, 'Select');
+		eq(grandchildLi2SelectButton.classList.contains('inactive'), false);
+		eq(child2.selected, true);
+		eq(childLi2SelectButton.textContent, 'Unselect');
+		eq(childLi2SelectButton.classList.contains('inactive'), false);
+
+		grandchildLi2SelectButton.click();	// re-select, now both grandchildren are selected
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(child1.selected, true);
+		eq(childLi1SelectButton.textContent, 'Unselect');
+		eq(childLi1SelectButton.classList.contains('inactive'), false);
+		eq(childLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(grandchild1.selected, true);
+		eq(grandchildLi1SelectButton.textContent, 'Unselect');
+		eq(grandchildLi1SelectButton.classList.contains('inactive'), false);
+		eq(grandchild2.selected, true);
+		eq(grandchildLi2SelectButton.textContent, 'Unselect');
+		eq(grandchildLi2SelectButton.classList.contains('inactive'), false);
+		eq(child2.selected, true);
+		eq(childLi2SelectButton.textContent, 'Unselect');
+		eq(childLi2SelectButton.classList.contains('inactive'), false);
+
+		childLi1SelectChildrenButton.click();	// unselect grandchildren for final case
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
 		eq(child1.selected, true);
