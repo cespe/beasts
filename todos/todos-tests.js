@@ -5844,7 +5844,7 @@ tests({
 		eq(childLi2AddChildButton.textContent, 'Add child');
 		eq(childLi2AddChildButton.classList.contains('inactive'), false);
 	},
-	"If all of a parent's child todos become selected or unselected, the parent todoLi should toggle buttons as if receiving a selectChildren event.": function() {
+	"If all of a parent's nested todos become selected or unselected, the parent todoLi should toggle buttons as if receiving a selectChildren event.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
