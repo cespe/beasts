@@ -115,25 +115,37 @@ function findArray(array, id) {
 	}
 }
 
-// Return the todo which is the parent of the todo with the given id 
-function findParent(array, id) {
-	for (var i = 0; i < array.length; i++) {
-		var parent = array[i];
-		if (parent.children.length > 0) {
-			for (var i = 0; i < parent.children.length; i++) {
-				var child = parent.children[i];
-				if (child.id === id) {
-					return parent;
+// Return the parent of todo or return undefined
+function findParent(childTodo) {
+
+	// helper function to do the actual nested search
+	function recurseForParent(potentialParent, childTodo) {
+		if (potentialParent.children.length > 0) {
+			for (var i = 0; i < potentialParent.children.length; i++) {
+				var child = potentialParent.children[i];
+				if (child.id === childTodo.id) {
+					return potentialParent;
 				}
 				if (child.children.length > 0) {
-					var match = findParent(parent.children, id);
+					var match = recurseForParent(child, childTodo);
 					if (match) {
 						return match;
 					}
 				}
-			}	
-		}	
+			}
+		}
 	}
+
+	// top-level todos don't have parents, check that first
+	for (var i = 0; i < todos.length; i++) {
+		if (childTodo.id === todos[i].id) {
+			return undefined;
+		}
+	}
+	// todo has a parent, recurse through todos to find it
+	var parent = recurseForParent(todos[0], childTodo);
+
+	return parent;
 }
 
 // Return true if any todos, including nested todos, are selected
@@ -1317,7 +1329,7 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 	}
 
 	function handleTodoLiCase(todo) {
-		var parentTodo = findParent(todos, todo.id);
+		var parentTodo = findParent(todo);
 		if (parentTodo) {
 			var todoLi = document.getElementById(parentTodo.id);
 			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
@@ -1449,19 +1461,20 @@ function todoClickHandler(event) {
 
 		if (event.target.name === "selected") {
 			var todoLiSelectButton = todoLi.children[selectedIndex];
-//			todoLiSelectButton.classList.toggle('selected');
+			var parentTodo = findParent(todo);
 			todo.selected = !todo.selected;
-//			var selectAllButton = document.getElementsByName('selectAll')[0];
 			if (todo.selected) {
 				todoLiSelectButton.textContent = 'Unselect';
 				todoLiEntry.classList.add('highlighted');
-//				selectAllButton.classList.add('selected');
+				
+//				if all children in branch are now selected, set parent selectChildren button to Unselect children
 			} else {
 				if (!anySelectedTodos(todos)) {
 					unselectAll();
 				} else {
 					todoLiSelectButton.textContent = 'Select';
 					todoLiEntry.classList.remove('highlighted');
+					// if all children in branch are now unselected, set parent selectChildren button to Select children
 			
 				}
 			}

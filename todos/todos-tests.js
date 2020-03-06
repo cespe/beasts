@@ -144,7 +144,7 @@ tests({
 		var result = findArray(todos, grandchild1.id);
 		eq(result, child1.children);
 	},
-	"The app should have a way to return the parent of a todo when given its id.": function() {
+	"The app should have a way to return the parent of a given todo.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -157,13 +157,15 @@ tests({
 		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
 		child1.addChild(grandchild1);
 		
-		var result = findParent(todos, todo2.id);
+		var result = findParent(todo1);
 		eq(result, undefined);
-		var result = findParent(todos, child1.id);
+		var result = findParent(todo2);
+		eq(result, undefined);
+		var result = findParent(child1);
 		eq(result, todo1);
-		var result = findParent(todos, child2.id);
+		var result = findParent(child2);
 		eq(result, todo1);
-		var result = findParent(todos, grandchild1.id);
+		var result = findParent(grandchild1);
 		eq(result, child1);
 	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
@@ -2780,6 +2782,8 @@ tests({
 		eq(childLi1Entry.classList.contains('highlighted'), true);
 	},
 	"Clicking completeSelected button should toggle button text and toggle todo.completed, todoLi completed button text, and entry <p> class for selected todos.": function() {
+		var selectAllButton = document.getElementsByName('selectAll')[0];
+		selectAllButton.textContent = 'Select all';
 		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -2821,8 +2825,8 @@ tests({
 		eq(todoLi3Entry.classList.contains('struck'), false);
 		eq(todo3.completed, false);
 
-		todoLi1SelectButton.click();
-		todoLi2SelectButton.click();
+		selectAllButton.click();
+		todoLi3SelectButton.click();	// unselect
 		completeSelectedButton.click();
 
 		eq(completeSelectedButton.textContent, 'Uncomplete selected');
@@ -5840,7 +5844,7 @@ tests({
 		eq(childLi2AddChildButton.textContent, 'Add child');
 		eq(childLi2AddChildButton.classList.contains('inactive'), false);
 	},
-	"If all of a parent's child todos become unselected, the parent todoLi should toggle buttons as if receiving a selectChildren event.": function() {
+	"If all of a parent's child todos become selected or unselected, the parent todoLi should toggle buttons as if receiving a selectChildren event.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
