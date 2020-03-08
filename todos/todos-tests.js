@@ -156,6 +156,10 @@ tests({
 		todo1.addChild(child2);
 		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
 		child1.addChild(grandchild1);
+		item2Child1 = new Todo('Item 2 child 1');
+		grandchild2 = new Todo('Item 2 child 1 grandchild 1');
+		todo2.addChild(item2Child1);
+		item2Child1.addChild(grandchild2);
 		
 		var result = findParent(todo1);
 		eq(result, undefined);
@@ -167,6 +171,13 @@ tests({
 		eq(result, todo1);
 		var result = findParent(grandchild1);
 		eq(result, child1);
+		var result = findParent(item2Child1);
+		eq(result, todo2);
+		var result = findParent(grandchild2);
+		eq(result, item2Child1);
+	},
+	"The app should have a way to determine if nested todos are selected.": function() {
+		fail();
 	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
 		todos = []

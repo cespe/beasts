@@ -118,32 +118,29 @@ function findArray(array, id) {
 // Return the parent of todo or return undefined
 function findParent(childTodo) {
 
+	var parent = undefined;
+
 	// helper function to do the actual nested search
 	function recurseForParent(potentialParent, childTodo) {
 		if (potentialParent.children.length > 0) {
 			for (var i = 0; i < potentialParent.children.length; i++) {
 				var child = potentialParent.children[i];
 				if (child.id === childTodo.id) {
-					return potentialParent;
+					parent = potentialParent;
 				}
 				if (child.children.length > 0) {
 					var match = recurseForParent(child, childTodo);
 					if (match) {
-						return match;
+						parent = match;
 					}
 				}
 			}
 		}
 	}
 
-	// top-level todos don't have parents, check that first
 	for (var i = 0; i < todos.length; i++) {
-		if (childTodo.id === todos[i].id) {
-			return undefined;
-		}
+		recurseForParent(todos[i], childTodo);
 	}
-	// todo has a parent, recurse through todos to find it
-	var parent = recurseForParent(todos[0], childTodo);
 
 	return parent;
 }
