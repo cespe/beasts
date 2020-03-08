@@ -177,6 +177,11 @@ tests({
 		eq(result, item2Child1);
 	},
 	"The app should have a way to determine if nested todos are selected.": function() {
+		// Test anySelectedTodos function
+		fail();
+	},
+	"The app should have a way to determine if nested todos are unselected.": function() {
+		// Test anyUnselectedTodos function
 		fail();
 	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
