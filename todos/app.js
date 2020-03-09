@@ -188,32 +188,22 @@ var addTodoButton = document.getElementsByName('addTodo')[0];
 var undoEditButton = document.getElementsByName('undoEdit')[0];
 
 // index positions of todoLi.children[i]
-var selectedIndex = 0;
-var completedIndex = 1;
-var deleteIndex = 2;
-var addSiblingIndex = 3;
-var addChildIndex = 4;
-var showChildrenIndex = 5;
+var completedIndex = 0;
+var deleteIndex = 1;
+var addSiblingIndex = 2;
+var addChildIndex = 3;
+var selectedIndex = 4;
+var entryIndex = 5;
 var selectChildrenIndex = 6;
-var entryIndex = 9;
+var showChildrenIndex = 7;
+var completeSelectedChildrenIndex = 8;
+var deleteSelectedChildrenIndex = 9;
 var todoLiUlIndex = 10;
-var completeSelectedChildrenIndex = 7;
-var deleteSelectedChildrenIndex = 8;
 
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
 
-	var selectedButton = document.createElement('button')
-	selectedButton.name = 'selected';
-	selectedButton.type = 'button';	// to distinguish from a submit or reset button
-	selectedButton.textContent = 'Select';
-	if (todo.selected) {
-		todo.selected = false;		// clean slate when todoLi's are created
-	}
-	selectedButton.classList.add('inactive');
-	todoLi.appendChild(selectedButton);
-	
 	var completeButton = document.createElement('button')
 	completeButton.name = 'completed';
 	completeButton.type = 'button';
@@ -247,18 +237,27 @@ function createTodoLi(todo) {
 	childButton.textContent = 'Add child';
 	todoLi.appendChild(childButton);
 
-	var showChildrenButton = document.createElement('button');
-	showChildrenButton.name = 'showChildren';
-	showChildrenButton.type = 'button';
-	if (todo.collapsed) {
-		showChildrenButton.textContent = 'Show children';
-	} else {
-		showChildrenButton.textContent = 'Hide children';
+	var selectedButton = document.createElement('button')
+	selectedButton.name = 'selected';
+	selectedButton.type = 'button';	// to distinguish from a submit or reset button
+	selectedButton.textContent = 'Select';
+	if (todo.selected) {
+		todo.selected = false;		// clean slate when todoLi's are created
 	}
-	if (todo.children.length === 0) {
-		showChildrenButton.classList.add('inactive');
+	selectedButton.classList.add('inactive');
+	todoLi.appendChild(selectedButton);
+
+	var entry = document.createElement('p');
+	entry.contentEditable = true;
+	entry.textContent = todo.entry;
+	entry.classList.remove('highlighted');
+	if (todo.completed) {
+		entry.classList.add('struck');
 	}
-	todoLi.appendChild(showChildrenButton);
+	if (todo.deleted) {
+		entry.classList.add('faded');
+	}
+	todoLi.appendChild(entry);
 
 	var selectChildrenButton = document.createElement('button');
 	selectChildrenButton.name = 'selectChildren';
@@ -279,6 +278,19 @@ function createTodoLi(todo) {
 	}
 	todoLi.appendChild(selectChildrenButton);
 
+	var showChildrenButton = document.createElement('button');
+	showChildrenButton.name = 'showChildren';
+	showChildrenButton.type = 'button';
+	if (todo.collapsed) {
+		showChildrenButton.textContent = 'Show children';
+	} else {
+		showChildrenButton.textContent = 'Hide children';
+	}
+	if (todo.children.length === 0) {
+		showChildrenButton.classList.add('inactive');
+	}
+	todoLi.appendChild(showChildrenButton);
+
 	var completeSelectedChildrenButton = document.createElement('button');
 	completeSelectedChildrenButton.name = 'completeSelectedChildren';
 	completeSelectedChildrenButton.type = 'button';
@@ -293,17 +305,6 @@ function createTodoLi(todo) {
 	deleteSelectedChildrenButton.classList.add('inactive');
 	todoLi.appendChild(deleteSelectedChildrenButton);
 
-	var entry = document.createElement('p');
-	entry.contentEditable = true;
-	entry.textContent = todo.entry;
-	entry.classList.remove('highlighted');
-	if (todo.completed) {
-		entry.classList.add('struck');
-	}
-	if (todo.deleted) {
-		entry.classList.add('faded');
-	}
-	todoLi.appendChild(entry);
 	return todoLi;
 }
 

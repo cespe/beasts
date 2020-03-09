@@ -648,8 +648,8 @@ tests({
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
-		eq(todoLi.children[1].nodeName, 'BUTTON');
-		eq(todoLi.children[1].name, 'completed');
+		eq(todoLi.children[completedIndex].nodeName, 'BUTTON');
+		eq(todoLi.children[completedIndex].name, 'completed');
 	},
 	"When a todoLi is created, if todo.completed is false, button should be 'Complete' and entry <p> class should be ''.": function() {
 		var todolist = document.getElementById('todolist');

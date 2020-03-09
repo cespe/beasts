@@ -38,3 +38,6 @@
 	/* styles selected todos */
 	background-color: rgba(211, 211, 211, 0.5);
 }
+li > ul {
+	margin-top: 1em;
+}
