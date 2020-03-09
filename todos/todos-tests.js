@@ -6039,8 +6039,12 @@ tests({
 		eq(childLi2SelectButton.textContent, 'Select');
 		eq(childLi2SelectButton.classList.contains('inactive'), true);
 	},
+	"If showActive button is 'Active', addTodo button and todoLi addSibling and addChild buttons should be inactive.": function() {
+		// Because by definition a new todo is active
+		fail();
+	},
 	"Section: Keyboard shortcuts": function() {
-},
+	},
 	"The app should listen for keyup events when editing a todo.": function() {
 		fail();
 		document.getElementById('todolist').innerHTML = '';
