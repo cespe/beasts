@@ -6165,6 +6165,12 @@ tests({
 	"Section: more features": function() {
 
 	},
+	"Todos should be read from and written to local storage.": function() {
+		fail();
+	},
+	"Todos in local storage should be synchronized with remote storage.": function() {
+		fail();
+	},
 	"There should be a way to show nested filtered todos when parents are hidden.": function() {
 		// E.g. currently, if only the Completed filter is checked (√ Completed), then completed todos that are children
 		// of active or deleted todos will not be shown. There should be a way to find all the completed todos and
