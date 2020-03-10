@@ -6148,7 +6148,11 @@ tests({
 		testEvent.key = "x";
 		todoLi1.dispatchEvent(testEvent);
 	},
-	"When editing, Return should be a shortcut for Add Sibling todo.": function() {
+	"When editing, Return should be a shortcut for Add Sibling.": function() {
+		// Limit a todo to one line.
+		fail();
+	},
+	"When editing, Shift-Return should be a shortcut for Add Child.": function() {
 		// Limit a todo to one line.
 		fail();
 	},
