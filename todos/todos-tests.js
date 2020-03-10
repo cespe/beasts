@@ -1636,6 +1636,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Undelete selected children');
 	},
 	"If todoLi is selected, clicking 'Unselect children' button should not remove 'inactive' on complete, delete, addSibling, addChild buttons.": function() {
+		// Tests the case where the todoLi is not the root of selected children.
 		fail();		// not a good test
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -6169,6 +6170,9 @@ tests({
 		fail();
 	},
 	"Todos in local storage should be synchronized with remote storage.": function() {
+		fail();
+	},
+	"There should be a way to purge selected deleted todos from the todos array and from storage.": function() {
 		fail();
 	},
 	"There should be a way to show nested filtered todos when parents are hidden.": function() {
