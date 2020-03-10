@@ -1365,8 +1365,17 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 	function handleFilterCase(todosArray) {
 		for (var i = 0; i < todosArray.length; i++) {
 			var todo = todosArray[i];
+			var todoLi = document.getElementById(todo.id);
+			var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
+			var todoLiAddChildButton = todoLi.children[addChildIndex];
+			if (!activeShown) {
+				todoLiAddSiblingButton.classList.add('inactive');
+				todoLiAddChildButton.classList.add('inactive');
+			} else {
+				todoLiAddSiblingButton.classList.remove('inactive');
+				todoLiAddChildButton.classList.remove('inactive');
+			}
 			if (todo.children && todo.children.length > 0) {
-				var todoLi = document.getElementById(todo.id);
 				var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
 				var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
 				if (!todosDisplayed(todo.children)) {
@@ -1635,6 +1644,7 @@ function todoClickHandler(event) {
 function actionsClickHandler() {
 	if (event.target.nodeName === "BUTTON") {		// TODO is this conditional needed?
 		var selectAllButton = document.getElementsByName('selectAll')[0];
+		var addTodoButton = document.getElementsByName('addTodo')[0];
 		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		// handle case (just for tests?) where todosUl is not defined
@@ -1647,6 +1657,7 @@ function actionsClickHandler() {
 			var showActiveButton = event.target;
 			if (showActiveButton.textContent === '√ Active') {
 				showActiveButton.textContent = 'Active';
+				addTodoButton.classList.add('inactive');	// disallow new todos when actives are hidden
 				setTodoLiClass(todosUl, 'active-removed', 'add');
 				// if no todoLis are displayed, set selectAllButton inactive
 				if (selectAllButton.textContent === 'Select all'); {
@@ -1658,6 +1669,7 @@ function actionsClickHandler() {
 
 			} else {
 				showActiveButton.textContent = '√ Active';
+				addTodoButton.classList.remove('inactive');
 				setTodoLiClass(todosUl, 'active-removed', 'remove');
 				if (selectAllButton.textContent === 'Select all') {
 					if (todoLiDisplayed(todos)) {

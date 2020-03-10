@@ -6041,7 +6041,96 @@ tests({
 	},
 	"If showActive button is 'Active', addTodo button and todoLi addSibling and addChild buttons should be inactive.": function() {
 		// Because by definition a new todo is active
-		fail();
+		document.getElementById('todolist').innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Child 1');
+		child2 = new Todo('Child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Grandchild 1');
+		grandchild2 = new Todo('Grandchild 2');
+		child1.addChild(grandchild1);
+		child1.addChild(grandchild2);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		startApp();		// sets up Actions bar buttons
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1AddSiblingButton = todoLi1.children[addSiblingIndex];
+		var todoLi1AddChildButton = todoLi1.children[addChildIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1AddSiblingButton = childLi1.children[addSiblingIndex];
+		var childLi1AddChildButton = childLi1.children[addChildIndex];
+		var childLi1Ul = childLi1.children[todoLiUlIndex];
+		var grandchildLi1 = childLi1Ul.children[0];
+		var grandchildLi1AddSiblingButton = grandchildLi1.children[addSiblingIndex];
+		var grandchildLi1AddChildButton = grandchildLi1.children[addChildIndex];
+		var grandchildLi2 = childLi1Ul.children[1];
+		var grandchildLi2AddSiblingButton = grandchildLi2.children[addSiblingIndex];
+		var grandchildLi2AddChildButton = grandchildLi2.children[addChildIndex];
+		var childLi2 = todoLi1Ul.children[1];
+		var childLi2AddSiblingButton = childLi2.children[addSiblingIndex];
+		var childLi2AddChildButton = childLi2.children[addChildIndex];
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi2AddSiblingButton = todoLi2.children[addSiblingIndex];
+		var todoLi2AddChildButton = todoLi2.children[addChildIndex];
+
+		eq(showActiveButton.textContent, '√ Active');
+
+		eq(addTodoButton.classList.contains('inactive'), false);
+
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
+		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi1AddChildButton.classList.contains('inactive'), false);
+		eq(grandchildLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(grandchildLi1AddChildButton.classList.contains('inactive'), false);
+		eq(grandchildLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(grandchildLi2AddChildButton.classList.contains('inactive'), false);
+		eq(childLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi2AddChildButton.classList.contains('inactive'), false);
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
+
+		selectAllButton.click();
+		completeSelectedButton.click();
+		selectAllButton.click();
+
+		showActiveButton.click();
+
+		eq(addTodoButton.classList.contains('inactive'), true);
+
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi1AddChildButton.classList.contains('inactive'), true);
+		eq(childLi1AddSiblingButton.classList.contains('inactive'), true);
+		eq(childLi1AddChildButton.classList.contains('inactive'), true);
+		eq(grandchildLi1AddSiblingButton.classList.contains('inactive'), true);
+		eq(grandchildLi1AddChildButton.classList.contains('inactive'), true);
+		eq(grandchildLi2AddSiblingButton.classList.contains('inactive'), true);
+		eq(grandchildLi2AddChildButton.classList.contains('inactive'), true);
+		eq(childLi2AddSiblingButton.classList.contains('inactive'), true);
+		eq(childLi2AddChildButton.classList.contains('inactive'), true);
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), true);
+		eq(todoLi2AddChildButton.classList.contains('inactive'), true);
+
+		showActiveButton.click();
+
+		eq(addTodoButton.classList.contains('inactive'), false);
+
+		eq(todoLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
+		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi1AddChildButton.classList.contains('inactive'), false);
+		eq(grandchildLi1AddSiblingButton.classList.contains('inactive'), false);
+		eq(grandchildLi1AddChildButton.classList.contains('inactive'), false);
+		eq(grandchildLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(grandchildLi2AddChildButton.classList.contains('inactive'), false);
+		eq(childLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(childLi2AddChildButton.classList.contains('inactive'), false);
+		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
+		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	},
 	"Section: Keyboard shortcuts": function() {
 	},
@@ -6066,11 +6155,17 @@ tests({
 	"When editing, Esc should be a shortcut for Undo Edit.": function() {
 		fail();
 	},
-	"When editing, Backspace should delete the todo if the entry is empty.": function() {
+	"When editing, Backspace should expunge the todo if the entry is empty.": function() {
 		fail();
 	},
 	"Section: more features": function() {
 
+	},
+	"There should be a way to show nested filtered todos when parents are hidden.": function() {
+		// E.g. currently, if only the Completed filter is checked (√ Completed), then completed todos that are children
+		// of active or deleted todos will not be shown. There should be a way to find all the completed todos and
+		// show them in a special display that indicates nesting but does not show parents that are filtered out.
+		fail();	
 	},
 	"There should be a way to move a todo up in the list, for example to the top of the list.": function() {
 		// An 'Add above' button? 'Shift-up/down' button? Drag to new position?
