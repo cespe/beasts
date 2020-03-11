@@ -3619,26 +3619,62 @@ tests({
 		eq(addTodoButton.classList.contains('inactive'), false);
 		eq(undoEditButton.classList.contains('inactive'), true);
 	},
-	"undoEditButton should become active when a todo is edited and inactive when the edit is completed.": function() {
+	"undoEditButton should become active when a todo is edited.": function() {
+		fail();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		debugger;
 		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 
 		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLiEntry.textContent, 'Item 1');
+		eq(todoLi1Entry.textContent, 'Item 1');
 
-		// Case 1: edit completed by clicking undoEdit
+		// Case 1: edit started with a key event
 
-		// append a '1' with a synthetic key event
+		// TODO code to append a '1' with a synthetic key event
 
 		eq(undoEditButton.classList.contains('inactive'), false);
-		eq(todoLiEntry.textContent, 'Item 11');
+		eq(todoLi1Entry.textContent, 'Item 11');
+
+		addTodoButton.click();
+
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi2Entry = todoLi2.children[entryIndex];
+		
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi2Entry.textContent, '');
+
+		// Case 2: edit started with a paste event
+
+		// TODO code to paste 'Item 2' with a synthetic paste event
+
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi2Entry.textContent, 'Item 2');
+	},
+	"undoEditButton should become inactive when the edit is completed.": function() {
+		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
+
+		// Case 1: edit completed with undoEditButton click
+
+		// TODO code to append a '1' with a synthetic key event
+
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
 
 		undoEditButton.click();
 
@@ -3647,17 +3683,17 @@ tests({
 
 		// Case 2: edit completed when entry loses focus
 
-		// append a '1' with a synthetic key event
+		// TODO code to append a '1' with a synthetic key event
 
 		eq(undoEditButton.classList.contains('inactive'), false);
-		eq(todoLiEntry.textContent, 'Item 11');
+		eq(todoLi1Entry.textContent, 'Item 11');
 
 		addTodoButton.click();	// edit over as entry loses focus
 
 		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLiEntry.textContent, 'Item 11');
+		eq(todoLi1Entry.textContent, 'Item 11');
 	},
-	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
+	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton inactive.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -3669,18 +3705,18 @@ tests({
 		var todoLi1Entry = todoLi1.children[entryIndex];
 
 		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLiEntry.textContent, 'Item 1');
+		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// append a '1' with a synthetic key event
 		eq(undoEditButton.classList.contains('inactive'), false);
-		eq(todoLiEntry.textContent, 'Item 11');
+		eq(todoLi1Entry.textContent, 'Item 11');
 
 		undoEditButton.click();
 
 		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLiEntry.textContent, 'Item 1');
+		eq(todoLi1Entry.textContent, 'Item 1');
 
-		// entry should still have focus
+		// TODO should entry still have focus?
 	},
 	"Section: more button interactions": function() {
 	},
