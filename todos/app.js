@@ -1463,8 +1463,18 @@ function unselectAll() {
 //	}
 //}
 
+// Used in todolist.addEventListener('input', inputHandler);
+function inputHandler(event) {
+	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
+		// target is a todo entry
+		undoEditButton.classList.remove('inactive');
+	}
+}
+
+// Used in todolist.addEventListener('focusout', editHandler);
 function editHandler(event) {
-	if (event.target.nodeName === "P") {
+	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
+		// target is a todo entry
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id);
 		// Is this conditional necessary?
@@ -1473,6 +1483,7 @@ function editHandler(event) {
 				todo.update(event.target.textContent);
 			}
 		}
+		undoEditButton.classList.add('inactive');
 	}
 }
 
@@ -1915,6 +1926,7 @@ function setUpEventListeners() {
 	todolist.addEventListener('click', todoClickHandler);
 	var actions = document.getElementById('actions');
 	actions.addEventListener('click', actionsClickHandler);
+	todolist.addEventListener('input', inputHandler);
 //	todolist.addEventListener('change', changeHandler);
 //	todolist.addEventListener('keyup', keyUpHandler);
 }
@@ -1927,6 +1939,7 @@ function startApp() {
 	var showCompletedButton = document.getElementsByName('showCompleted')[0];
 	var showDeletedButton = document.getElementsByName('showDeleted')[0];
 	var addTodoButton = document.getElementsByName('addTodo')[0];
+	var undoEditButton = document.getElementsByName('undoEdit')[0];
 	// set defaults on action bar buttons
 	selectAllButton.textContent = 'Select all';
 	selectAllButton.classList.remove('inactive');
@@ -1938,7 +1951,8 @@ function startApp() {
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
 	addTodoButton.textContent = 'Add todo';
-	addTodoButton.classList.remove('inactive');		// should add 'inactive' default to other buttons too
+	addTodoButton.classList.remove('inactive');		// TODO should add 'inactive' default to other buttons too
+	undoEditButton.classList.add('inactive');
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
 	} else {

@@ -3620,7 +3620,7 @@ tests({
 		eq(undoEditButton.classList.contains('inactive'), true);
 	},
 	"undoEditButton should become active when a todo is edited.": function() {
-		fail();
+		fail();		// app code works, TODO need to figure out synthetic events
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -3633,9 +3633,9 @@ tests({
 		eq(undoEditButton.classList.contains('inactive'), true);
 		eq(todoLi1Entry.textContent, 'Item 1');
 
-		// Case 1: edit started with a key event
-
-		// TODO code to append a '1' with a synthetic key event
+		// simulate keyboard input
+		// TODO code to append a '1' with a synthetic key event to trigger the input event
+//		todoLi1Entry.textContent = 'Item 11';	// doesn't trigger an input event so doesn't signal an edit
 
 		eq(undoEditButton.classList.contains('inactive'), false);
 		eq(todoLi1Entry.textContent, 'Item 11');
@@ -3648,14 +3648,14 @@ tests({
 		eq(undoEditButton.classList.contains('inactive'), true);
 		eq(todoLi2Entry.textContent, '');
 
-		// Case 2: edit started with a paste event
-
-		// TODO code to paste 'Item 2' with a synthetic paste event
+		// simulate pasted input
+		// TODO code to paste 'Item 2' with a synthetic paste event to trigger the input event
+//		todoLi2Entry.textContent = 'Item 2';	// doesn't trigger an input event so doesn't signal an edit
 
 		eq(undoEditButton.classList.contains('inactive'), false);
 		eq(todoLi2Entry.textContent, 'Item 2');
 	},
-	"undoEditButton should become inactive when the edit is completed.": function() {
+	"undoEditButton should become inactive when an edit is completed.": function() {
 		fail();
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -3694,11 +3694,11 @@ tests({
 		eq(todoLi1Entry.textContent, 'Item 11');
 	},
 	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton inactive.": function() {
+		fail();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		debugger;
 		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
