@@ -3619,8 +3619,68 @@ tests({
 		eq(addTodoButton.classList.contains('inactive'), false);
 		eq(undoEditButton.classList.contains('inactive'), true);
 	},
+	"undoEditButton should become active when a todo is edited and inactive when the edit is completed.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		debugger;
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLiEntry.textContent, 'Item 1');
+
+		// Case 1: edit completed by clicking undoEdit
+
+		// append a '1' with a synthetic key event
+
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLiEntry.textContent, 'Item 11');
+
+		undoEditButton.click();
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLiEntry.textContent, 'Item 1');
+
+		// Case 2: edit completed when entry loses focus
+
+		// append a '1' with a synthetic key event
+
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLiEntry.textContent, 'Item 11');
+
+		addTodoButton.click();	// edit over as entry loses focus
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLiEntry.textContent, 'Item 11');
+	},
 	"Clicking 'Undo edit' button should revert text of todo being edited to old version.": function() {
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		debugger;
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLiEntry.textContent, 'Item 1');
+
+		// append a '1' with a synthetic key event
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLiEntry.textContent, 'Item 11');
+
+		undoEditButton.click();
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLiEntry.textContent, 'Item 1');
+
+		// entry should still have focus
 	},
 	"Section: more button interactions": function() {
 	},
