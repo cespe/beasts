@@ -541,8 +541,15 @@ tests({
 		var todoLi1 = todosUl.children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 		todoLi1Entry.textContent = "test";			// simulate edit
+
 		insertNewTodoLi(todos, todoLi1.id);		// todoLi1 loses focus, firing focusout event
 
+		var todoLi2 = todosUl.children[1];
+		var todoLi2Entry = todoLi2.children[entryIndex];
+
+		eq(todoLi2Entry.textContent, '');
+		eq(document.activeElement, todoLi2Entry);
+		eq(document.hasFocus(), true);
 		eq(todos[0].entry, "test");				// state after edit
 	},
 	"Section: todoLi buttons": function() {
