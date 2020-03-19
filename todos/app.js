@@ -1464,6 +1464,7 @@ function unselectAll() {
 //}
 
 // Used in todolist.addEventListener('input', inputHandler);
+// input event fires when the value of <textarea> changes
 function inputHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
