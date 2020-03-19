@@ -3702,7 +3702,6 @@ tests({
 //		eq(todoLi1Entry.textContent, 'Item 11');
 	},
 	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton inactive.": function() {
-		fail();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -3715,7 +3714,10 @@ tests({
 		eq(undoEditButton.classList.contains('inactive'), true);
 		eq(todoLi1Entry.textContent, 'Item 1');
 
-		// append a '1' with a synthetic key event
+		// Activate undoEditButton programmatically in lieu of firing an input event
+		undoEditButton.classList.remove('inactive');
+		todoLi1Entry.textContent = 'Item 11';
+
 		eq(undoEditButton.classList.contains('inactive'), false);
 		eq(todoLi1Entry.textContent, 'Item 11');
 
