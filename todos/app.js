@@ -187,6 +187,11 @@ var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 var addTodoButton = document.getElementsByName('addTodo')[0];
 var undoEditButton = document.getElementsByName('undoEdit')[0];
 
+// Global variables for todo entry being edited
+var entryJustEdited = undefined;
+var todoJustEdited = undefined;
+var originalEntry = undefined;
+
 // index positions of todoLi.children[i]
 var completedIndex = 0;
 var deleteIndex = 1;
@@ -1447,9 +1452,8 @@ function unselectAll() {
 
 /************************************* Event handling ***********************************/
 
-//function keyUpHandler(event) {
-//	event.target.textContent = "triggered";
-//}
+function keyUpHandler(event) {
+}
 
 //function changeHandler(event) {
 	// if the target is a todoLi it already has an id that is also in todos array
@@ -1469,6 +1473,12 @@ function inputHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
 		undoEditButton.classList.remove('inactive');
+		var todoLi = event.target.parentElement;
+		var todo = findTodo(todos, todoLi.id);
+		var todoLiEntry = todoLi.children[entryIndex];
+		// set up variables for undoEdit
+		entryJustEdited = todoLiEntry;
+		todoJustEdited = todo;
 	}
 }
 
@@ -1481,10 +1491,11 @@ function editHandler(event) {
 		// Is this conditional necessary?
 		if (todo) {
 			if (todo.entry !== event.target.textContent) {
+				originalEntry = todo.entry;				// save to allow undoEdit
 				todo.update(event.target.textContent);
 			}
 		}
-		undoEditButton.classList.add('inactive');
+//		undoEditButton.classList.add('inactive');
 	}
 }
 
@@ -1918,6 +1929,11 @@ function actionsClickHandler() {
 		if (event.target.name === 'addTodo') {
 			insertNewTodoLi(todos);
 		}
+		if (event.target.name === 'undoEdit') {
+			todoJustEdited.entry = originalEntry;
+			entryJustEdited.textContent = originalEntry;
+			undoEditButton.classList.add('inactive');
+		}
 	}
 }
 
@@ -1929,7 +1945,7 @@ function setUpEventListeners() {
 	actions.addEventListener('click', actionsClickHandler);
 	todolist.addEventListener('input', inputHandler);
 //	todolist.addEventListener('change', changeHandler);
-//	todolist.addEventListener('keyup', keyUpHandler);
+	todolist.addEventListener('keyup', keyUpHandler);
 }
 
 function startApp() {
