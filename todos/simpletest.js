@@ -27,8 +27,7 @@ var TinyTest = {
 				if (testName.startsWith('Section:')) {
 					numberOfTests--;
 					console.log('%c' + testName, "color: purple; font-weight: bold;");
-				}
-				if (testName.startsWith('Test manually:')) {
+				} else if (testName.startsWith('Test manually:')) {
 					numberOfTests--;
 					console.log('%c' + testName, "color: blue;"); 
 				} else {
