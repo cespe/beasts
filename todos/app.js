@@ -1457,7 +1457,7 @@ function keyDownHandler(event) {
 		// target is a todo entry
 		if (event.key === "Enter") {
 			event.preventDefault();		// Prevents an unwanted return character from being added to the entry
-										// Calling event.preventDefault() on keyUP event is too late to do the job
+										// Calling event.preventDefault() on keyUp event is too late to do the job
 		}
 	}
 }
@@ -1465,14 +1465,13 @@ function keyDownHandler(event) {
 function keyUpHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
-		console.log(event);
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id);
 		var todoArray = findArray(todos, todo.id);
 		if (event.key === "Enter") {
 			if (event.shiftKey) {
 				// Shift-return appends a new child todo
-				// these five lines are taken from addChild event handler
+				// these five lines are from addChild event handler
 				appendNewChildTodoLi(todoLi)
 				todo.collapsed = false;
 				todoLi.children[todoLiUlIndex].classList.remove('collapsed');
@@ -1485,18 +1484,6 @@ function keyUpHandler(event) {
 		}
 	}
 }
-
-//function changeHandler(event) {
-	// if the target is a todoLi it already has an id that is also in todos array
-	//	check if content has changed
-	//		if so, update todos todo.entry
-	// else ignore, other events will handle buttons, etc (?)
-//	var changeEvent = event;
-//	var todo = findTodo(todos, event.target.id);
-//	if (todo) {
-//		todo.entry = event.target.textContent
-//	}
-//}
 
 // Used in todolist.addEventListener('input', inputHandler);
 // input event fires when the value of <textarea> changes
@@ -1971,12 +1958,11 @@ function actionsClickHandler() {
 
 function setUpEventListeners() {
 	var todolist = document.getElementById('todolist');
-	todolist.addEventListener('focusout', editHandler);
+	todolist.addEventListener('focusout', editHandler);		// using focusout event instead of change event
 	todolist.addEventListener('click', todoClickHandler);
 	var actions = document.getElementById('actions');
 	actions.addEventListener('click', actionsClickHandler);
 	todolist.addEventListener('input', inputHandler);
-//	todolist.addEventListener('change', changeHandler);
 	todolist.addEventListener('keydown', keyDownHandler);
 	todolist.addEventListener('keyup', keyUpHandler);
 }
