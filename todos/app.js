@@ -1465,13 +1465,14 @@ function keyDownHandler(event) {
 function keyUpHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
+		console.log(event);
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id);
 		var todoArray = findArray(todos, todo.id);
 		if (event.key === "Enter") {
 			if (event.shiftKey) {
 				// Shift-return appends a new child todo
-				// these five lines are from addChild event handler
+				// these five lines lifted from addChild event handler
 				appendNewChildTodoLi(todoLi)
 				todo.collapsed = false;
 				todoLi.children[todoLiUlIndex].classList.remove('collapsed');
@@ -1481,6 +1482,12 @@ function keyUpHandler(event) {
 				// Return inserts a new sibling todo
 				insertNewTodoLi(todoArray, todo.id);
 			}
+		} else if (event.key === "Escape") {
+			// these four lines lifted from undoEdit event handler
+			var undoEditButton = document.getElementsByName('undoEdit')[0];
+			todoJustEdited.entry = originalEntry;
+			entryJustEdited.textContent = originalEntry;
+			undoEditButton.classList.add('inactive');	// TODO global variable not found here, requiring local var: why?
 		}
 	}
 }

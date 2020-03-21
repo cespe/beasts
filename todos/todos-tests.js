@@ -6289,6 +6289,7 @@ tests({
 	"Test manually: When editing, Esc should be a shortcut for Undo Edit.": function() {
 	},
 	"Test manually: When editing, Backspace should expunge the todo if the entry is empty.": function() {
+		// Mimics behavior of workflowy
 	},
 	"Section: more features": function() {
 
@@ -6299,7 +6300,7 @@ tests({
 	"Todos in local storage should be synchronized with remote storage.": function() {
 		fail();
 	},
-	"There should be a way to purge selected deleted todos from the todos array and from storage.": function() {
+	"There should be a way to expunge selected deleted todos from the todos array and from storage.": function() {
 		fail();
 	},
 	"There should be a way to show nested filtered todos when parents are hidden.": function() {
