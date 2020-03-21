@@ -1452,7 +1452,38 @@ function unselectAll() {
 
 /************************************* Event handling ***********************************/
 
+function keyDownHandler(event) {
+	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
+		// target is a todo entry
+		if (event.key === "Enter") {
+			event.preventDefault();		// Prevents an unwanted return character from being added to the entry
+										// Calling event.preventDefault() on keyUP event is too late to do the job
+		}
+	}
+}
+
 function keyUpHandler(event) {
+	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
+		// target is a todo entry
+		console.log(event);
+		var todoLi = event.target.parentElement;
+		var todo = findTodo(todos, todoLi.id);
+		var todoArray = findArray(todos, todo.id);
+		if (event.key === "Enter") {
+			if (event.shiftKey) {
+				// Shift-return appends a new child todo
+				// these five lines are taken from addChild event handler
+				appendNewChildTodoLi(todoLi)
+				todo.collapsed = false;
+				todoLi.children[todoLiUlIndex].classList.remove('collapsed');
+				todoLi.children[showChildrenIndex].classList.remove('inactive');
+				todoLi.children[selectChildrenIndex].classList.remove('inactive');
+			} else {
+				// Return inserts a new sibling todo
+				insertNewTodoLi(todoArray, todo.id);
+			}
+		}
+	}
 }
 
 //function changeHandler(event) {
@@ -1930,9 +1961,10 @@ function actionsClickHandler() {
 			insertNewTodoLi(todos);
 		}
 		if (event.target.name === 'undoEdit') {
+			var undoEditButton = document.getElementsByName('undoEdit')[0];
 			todoJustEdited.entry = originalEntry;
 			entryJustEdited.textContent = originalEntry;
-			undoEditButton.classList.add('inactive');
+			undoEditButton.classList.add('inactive');	// TODO global variable not found here, requiring local var: why?
 		}
 	}
 }
@@ -1945,6 +1977,7 @@ function setUpEventListeners() {
 	actions.addEventListener('click', actionsClickHandler);
 	todolist.addEventListener('input', inputHandler);
 //	todolist.addEventListener('change', changeHandler);
+	todolist.addEventListener('keydown', keyDownHandler);
 	todolist.addEventListener('keyup', keyUpHandler);
 }
 
