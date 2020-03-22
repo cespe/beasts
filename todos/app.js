@@ -469,6 +469,7 @@ function setTodoLiClass(todoUl, cssClass, action) {
 	}
 }
 
+
 function altSelectChildren(todoLi) {
 	// Root case: clickedTodoLi is root (not already selected and controlled by a higher level). Select button inactive.
 	// Branch case: clickedTodoLi is branch (already selected and controlled by a higher level). Select button active.
@@ -1465,7 +1466,6 @@ function keyDownHandler(event) {
 function keyUpHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
-		console.log(event);
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id);
 		var todoArray = findArray(todos, todo.id);

@@ -6288,9 +6288,6 @@ tests({
 	},
 	"Test manually: When editing, Esc should be a shortcut for Undo Edit.": function() {
 	},
-	"Test manually: When editing, Backspace should expunge the todo if the entry is empty.": function() {
-		// Mimics behavior of workflowy
-	},
 	"Section: more features": function() {
 
 	},
