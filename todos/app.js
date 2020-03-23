@@ -1520,7 +1520,7 @@ function editHandler(event) {
 				todo.update(event.target.textContent);
 			}
 		}
-//		undoEditButton.classList.add('inactive');
+		undoEditButton.classList.add('inactive');
 	}
 }
 
@@ -1786,7 +1786,7 @@ function actionsClickHandler() {
 				completeSelectedButton.classList.remove('inactive');
 				deleteSelectedButton.classList.remove('inactive');
 				addTodoButton.classList.add('inactive');
-				undoEditButton.classList.add('inactive');
+				//undoEditButton.classList.add('inactive');
 				var todosUncompletedCount = 0;
 				var todosUndeletedCount = 0;
 				for (var i = 0; i < todosUl.children.length; i++) {
@@ -1832,7 +1832,7 @@ function actionsClickHandler() {
 				completeSelectedButton.classList.add('inactive');
 				deleteSelectedButton.classList.add('inactive');
 				addTodoButton.classList.remove('inactive');
-				undoEditButton.classList.remove('inactive');
+				//undoEditButton.classList.remove('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[selectedIndex];

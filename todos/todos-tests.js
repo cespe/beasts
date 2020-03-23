@@ -2152,6 +2152,9 @@ tests({
 		eq(deleteSelectedButton.innerText, 'Delete selected');
 		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
+	"The header actions bar should have a 'Purge selected deleted todos' button to expunge selected deleted todos.": function() {
+		fail();
+	},
 	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
 		startApp();
 		var selectAllButton = document.getElementsByName('selectAll')[0];
@@ -3730,6 +3733,12 @@ tests({
 		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// TODO should entry still have focus?
+	},
+	"purgeSelectedDeletedButton should be active only when showDeletedButton text is '√ Deleted' and at least one todo is selected.": function() {
+		fail();
+	},
+	"Clicking the purgeSelectedDeletedButton should remove selected deleted todos from storage and display.": function() {
+		fail();
 	},
 	"Section: more button interactions": function() {
 	},
@@ -6301,9 +6310,6 @@ tests({
 		future();
 	},
 	"Todos in local storage should be synchronized with remote storage.": function() {
-		future();
-	},
-	"There should be a way to expunge selected deleted todos from the todos array and from storage.": function() {
 		future();
 	},
 	"There should be a way to show nested filtered todos when parents are hidden.": function() {
