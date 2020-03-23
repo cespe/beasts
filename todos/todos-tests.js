@@ -2157,7 +2157,7 @@ tests({
 		var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
 		eq(purgeSelectedDeletedButton.innerText, 'Purge selected deleted todos');
-		eq(actionsDiv.children[purgeSelectedDeletedIndex], purgeSelectedDeletedButton); 
+		eq(actionsDiv.children[6], purgeSelectedDeletedButton); 
 
 	},
 	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
@@ -3598,7 +3598,7 @@ tests({
 		var addTodoButton = document.getElementsByName('addTodo')[0];
 		eq(addTodoButton.nodeName, 'BUTTON');
 		eq(addTodoButton.innerText, 'Add todo');
-		eq(actionsDiv.children[6], addTodoButton); 
+		eq(actionsDiv.children[7], addTodoButton); 
 		
 		document.getElementById('todolist').innerHTML = '';
 		todos = [];
@@ -3623,7 +3623,7 @@ tests({
 		var undoEditButton = document.getElementsByName('undoEdit')[0];
 		eq(undoEditButton.nodeName, 'BUTTON');
 		eq(undoEditButton.innerText, 'Undo edit');
-		eq(actionsDiv.children[7], undoEditButton);
+		eq(actionsDiv.children[8], undoEditButton);
 	},
 	"addTodoButton and undoEditButton should be set to default values on startup.": function() {
 		startApp();
