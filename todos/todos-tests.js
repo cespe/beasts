@@ -3626,105 +3626,108 @@ tests({
 		eq(addTodoButton.classList.contains('inactive'), false);
 		eq(undoEditButton.classList.contains('inactive'), true);
 	},
-	"Test manually: undoEditButton should become active when a todo is edited.": function() {
+	"undoEditButton should become active when a todo is edited.": function() {
+		manual();
 		// app code works, TODO need to figure out synthetic events
-//		todos = [];
-//		todo1 = new Todo('Item 1');
-//		insertTodo(todos, todo1);
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
 
-//		startApp();
+		startApp();
 
-//		var todoLi1 = todolist.children[0].children[0];
-//		var todoLi1Entry = todoLi1.children[entryIndex];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
 
-//		eq(undoEditButton.classList.contains('inactive'), true);
-//		eq(todoLi1Entry.textContent, 'Item 1');
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// simulate input
-//		todoLi1Entry.textContent = 'Item 11';	// doesn't trigger an input event so doesn't signal an edit
-//		var testEvent = new Event('input');
-//		todoLi1Entry.dispatchEvent(testEvent);	// doesn't trigger app event handler
+		todoLi1Entry.textContent = 'Item 11';	// doesn't trigger an input event so doesn't signal an edit
+		var testEvent = new Event('input');
+		todoLi1Entry.dispatchEvent(testEvent);	// doesn't trigger app event handler
 
-//		eq(undoEditButton.classList.contains('inactive'), false);
-//		eq(todoLi1Entry.textContent, 'Item 11');
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
 
-//		addTodoButton.click();
+		addTodoButton.click();
 
-//		var todoLi2 = todolist.children[0].children[1];
-//		var todoLi2Entry = todoLi2.children[entryIndex];
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi2Entry = todoLi2.children[entryIndex];
 		
-//		eq(undoEditButton.classList.contains('inactive'), true);
-//		eq(todoLi2Entry.textContent, '');
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi2Entry.textContent, '');
 
 		// simulate pasted input
 		// Code to paste 'Item 2' with a synthetic paste event to trigger the input event
-//		todoLi2Entry.textContent = 'Item 2';	// doesn't trigger an input event so doesn't signal an edit
+		todoLi2Entry.textContent = 'Item 2';	// doesn't trigger an input event so doesn't signal an edit
 
-//		eq(undoEditButton.classList.contains('inactive'), false);
-//		eq(todoLi2Entry.textContent, 'Item 2');
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi2Entry.textContent, 'Item 2');
 	},
-	"Test manually: undoEditButton should become inactive when an edit is completed.": function() {
+	"undoEditButton should become inactive when an edit is completed.": function() {
+		manual();
 		// app code works, TODO need to figure out synthetic events
-//		todos = [];
-//		todo1 = new Todo('Item 1');
-//		insertTodo(todos, todo1);
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
 
-//		startApp();
+		startApp();
 
-//		var todoLi1 = todolist.children[0].children[0];
-//		var todoLi1Entry = todoLi1.children[entryIndex];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
 
-//		eq(undoEditButton.classList.contains('inactive'), true);
-//		eq(todoLi1Entry.textContent, 'Item 1');
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// Case 1: edit completed with undoEditButton click
 
 		// TODO code to append a '1' with a synthetic key event
 
-//		eq(undoEditButton.classList.contains('inactive'), false);
-//		eq(todoLi1Entry.textContent, 'Item 11');
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
 
-//		undoEditButton.click();
+		undoEditButton.click();
 
-//		eq(undoEditButton.classList.contains('inactive'), true);
-//		eq(todoLiEntry.textContent, 'Item 1');
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLiEntry.textContent, 'Item 1');
 
 		// Case 2: edit completed when entry loses focus
 
 		// TODO code to append a '1' with a synthetic key event
 
-//		eq(undoEditButton.classList.contains('inactive'), false);
-//		eq(todoLi1Entry.textContent, 'Item 11');
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
 
-//		addTodoButton.click();	// edit over as entry loses focus
+		addTodoButton.click();	// edit over as entry loses focus
 
-//		eq(undoEditButton.classList.contains('inactive'), true);
-//		eq(todoLi1Entry.textContent, 'Item 11');
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 11');
 	},
-	"Test manually: Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton inactive.": function() {
-//		todos = [];
-//		todo1 = new Todo('Item 1');
-//		insertTodo(todos, todo1);
+	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton inactive.": function() {
+		manual();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
 
-//		startApp();
+		startApp();
 
-//		var todoLi1 = todolist.children[0].children[0];
-//		var todoLi1Entry = todoLi1.children[entryIndex];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
 
-//		eq(undoEditButton.classList.contains('inactive'), true);
-//		eq(todoLi1Entry.textContent, 'Item 1');
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// TODO need to trigger an input event here
 		// Activate undoEditButton programmatically in lieu of firing an input event
-//		todoLi1Entry.textContent = 'Item 11';
+		todoLi1Entry.textContent = 'Item 11';
 
-//		eq(undoEditButton.classList.contains('inactive'), false);
-//		eq(todoLi1Entry.textContent, 'Item 11');
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
 
-//		undoEditButton.click();
+		undoEditButton.click();
 
-//		eq(undoEditButton.classList.contains('inactive'), true);
-//		eq(todoLi1Entry.textContent, 'Item 1');
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// TODO should entry still have focus?
 	},
@@ -6241,88 +6244,91 @@ tests({
 	},
 	"Section: Keyboard shortcuts": function() {
 	},
-	"Test manually: When editing, Return should be a shortcut for Add Sibling.": function() {
+	"When editing, Return should be a shortcut for Add Sibling.": function() {
 		// Limit a todo to one line.
-//		var todolist = document.getElementById('todolist');
-//		todolist.innerHTML = '';
-//		todos = [];
-//		startApp();		// Initiate app with a blank focused todo
-//		var todosUl = todolist.children[0];
-//		var todoLi1 = todosUl.children[0];
-//		var todoLi1Entry = todoLi1.children[entryIndex];
+		manual();
+		var todolist = document.getElementById('todolist');
+		todolist.innerHTML = '';
+		todos = [];
+		startApp();		// Initiate app with a blank focused todo
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
 
-//		var activeElement = document.activeElement;
-//		var activeElementFocused = document.hasFocus();
+		var activeElement = document.activeElement;
+		var activeElementFocused = document.hasFocus();
 
-//		eq(todosUl.children.length, 1);
-//		eq(todoLi1Entry, activeElement);
-//		eq(activeElementFocused, true);
+		eq(todosUl.children.length, 1);
+		eq(todoLi1Entry, activeElement);
+		eq(activeElementFocused, true);
 
 		// keyup and keydown event properties are Read Only, so use KeyboardEvent constructor, which instantiates the properties
 		// charCode is deprecated and isn't set in a normal Chrome keydown/keyup event
 		// keyCode and which are deprecated but they are set in a normal Chrome keydown/keyup event
-//		var returnKeyProperties = {
-//			"key"		: "Enter",
-//			"code"		: "Enter",
-//			"keyCode"	: 13,
-//			"which"		: 13
-//		}
-//		testKeyDown = new KeyboardEvent('keydown', returnKeyProperties);
+		var returnKeyProperties = {
+			"key"		: "Enter",
+			"code"		: "Enter",
+			"keyCode"	: 13,
+			"which"		: 13
+		}
+		testKeyDown = new KeyboardEvent('keydown', returnKeyProperties);
 
-//		testKeyUp= new KeyboardEvent('keyup', returnKeyProperties);
+		testKeyUp= new KeyboardEvent('keyup', returnKeyProperties);
 
-//		todoLi1Entry.dispatchEvent(testKeyDown);
-//		todoLi1Entry.dispatchEvent(testKeyUp);
+		todoLi1Entry.dispatchEvent(testKeyDown);
+		todoLi1Entry.dispatchEvent(testKeyUp);
 
 		// the right events are dispatched, but it doesn't trigger the app code
-//		eq(todosUl.children.length, 2);	// fails, still only one todoLi
+		eq(todosUl.children.length, 2);	// fails, still only one todoLi
 
-//		var todoLi2 = todosUl.children[1];
-//		var todoLi2Entry = todoLi2.children[entryIndex];
+		var todoLi2 = todosUl.children[1];
+		var todoLi2Entry = todoLi2.children[entryIndex];
 
-//		eq(todoLi2Entry, activeElement);
-//		eq(todoLi2Entry, focusedElement);
+		eq(todoLi2Entry, activeElement);
+		eq(todoLi2Entry, focusedElement);
 	},
-	"Test manually: When editing, Shift-Return should be a shortcut for Add Child.": function() {
+	"When editing, Shift-Return should be a shortcut for Add Child.": function() {
 		// Limit a todo to one line.
+		manual();
 	},
-	"Test manually: When editing, Esc should be a shortcut for Undo Edit.": function() {
+	"When editing, Esc should be a shortcut for Undo Edit.": function() {
+		manual();
 	},
 	"Section: more features": function() {
 
 	},
 	"Todos should be read from and written to local storage.": function() {
-		fail();
+		future();
 	},
 	"Todos in local storage should be synchronized with remote storage.": function() {
-		fail();
+		future();
 	},
 	"There should be a way to expunge selected deleted todos from the todos array and from storage.": function() {
-		fail();
+		future();
 	},
 	"There should be a way to show nested filtered todos when parents are hidden.": function() {
 		// E.g. currently, if only the Completed filter is checked (√ Completed), then completed todos that are children
 		// of active or deleted todos will not be shown. There should be a way to find all the completed todos and
 		// show them in a special display that indicates nesting but does not show parents that are filtered out.
-		fail();	
+		future();	
 	},
 	"There should be a way to move a todo up in the list, for example to the top of the list.": function() {
 		// An 'Add above' button? 'Shift-up/down' button? Drag to new position?
-		fail();
+		future();
 	},
 	"There should be a 'find' input to filter the display according to keywords or entry text.": function() {
-		fail();
+		future();
 	}, 
 	"Each todoLi should have a 'zoom in/out' button to filter the display to just that todoLi.": function() {
 		// Simplifies the UI: can remove selectChildren, which currently has no buttons to operate on the selection.
 		// Simplifies the filtered todo displays, which don't have to take child todos into account.
-		fail();
+		future();
 	},
 	"When todoLi zoom button is clicked, other buttons should be hidden, class should toggle 'zoomed' and all other todoLis should toggle class 'unzoomed'.": function() {
-		fail();
+		future();
 	},
 	"When a todoLi is zoomed in, the actions bar buttons should apply only to the todoLi's children.": function() {
-		fail();
+		future();
 	},
 	"Section: On startup": function() {
 

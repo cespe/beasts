@@ -10,12 +10,14 @@ var TinyTest = {
 		// counters for statistics
         var failures = 0;
 		var successes = 0;
+		var unautomated = 0;
+		var unimplemented = 0;
 		var numberOfTests = 0;
 		function pluralize(number, word) {
 			if (number === 1) {
-				return " " + word + ", ";
+				return " " + word;
 			} else {
-				return " " + word + "s, ";
+				return " " + word + "s";
 			}
 		}
         for (var testName in tests) {
@@ -27,26 +29,30 @@ var TinyTest = {
 				if (testName.startsWith('Section:')) {
 					numberOfTests--;
 					console.log('%c' + testName, "color: purple; font-weight: bold;");
-				} else if (testName.startsWith('Test manually:')) {
-					numberOfTests--;
-					console.log('%c' + testName, "color: blue;"); 
 				} else {
 					successes++;
 					console.log(testName + '%c Test passed.', "color: green;");
 				}
             } catch (e) {
-                failures++;
-				console.groupCollapsed(testName + ' %c' +  e, "color: red;");
-                console.error(e.stack);
-				console.groupEnd();
-            }
+				if (e.message === 'manual') {
+					unautomated++;
+					console.log(testName + '%c Not automated, test manually.', "color: blue;");
+				} else if (e.message === 'future') {
+					unimplemented++;
+					console.log(testName + '%c Not implemented.', "color: orange;");
+				} else {
+					failures++;
+					console.groupCollapsed(testName + ' %c' +  e, "color: red;");
+					console.error(e.stack);
+					console.groupEnd();
+				}
+			}
         }
         setTimeout(function() { // Give document a chance to complete
             if (window.document && document.body) {
 				var aside = document.getElementById("simpletest");
 				aside.style.backgroundColor =  (failures == 0 ? '#99ff99' : '#ff9999');
-				aside.innerText = "Ran " + numberOfTests + pluralize(numberOfTests, "test")
-									+ successes + " passing and " + failures + " failing."
+				aside.innerText = "Ran " + numberOfTests + pluralize(numberOfTests, "test") + ". " + successes + " passed and " + failures + " failed. " + unautomated + " are not automated and " + unimplemented + " are not implemented."
             }
         }, 0);
     },
@@ -54,6 +60,14 @@ var TinyTest = {
     fail: function(msg) {
         throw new Error('fail(): ' + msg);
     },
+
+	manual: function(msg) {
+		throw new Error('manual');
+	},
+
+	future: function(msg) {
+		throw new Error('future');
+	},
 
     assert: function(value, msg) {
         if (!value) {
@@ -76,6 +90,8 @@ var TinyTest = {
 };
 
 var fail               = TinyTest.fail.bind(TinyTest),
+	manual			   = TinyTest.manual.bind(TinyTest),
+	future			   = TinyTest.future.bind(TinyTest),
     assert             = TinyTest.assert.bind(TinyTest),
     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
     eq                 = TinyTest.assertStrictEquals.bind(TinyTest), // alias for assertEquals in original, changed here to Strict
