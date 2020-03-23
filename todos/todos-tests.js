@@ -2165,12 +2165,14 @@ tests({
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+		var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 
 		eq(selectAllButton.textContent, 'Select all');
 		eq(completeSelectedButton.textContent, 'Complete selected');
 		eq(completeSelectedButton.classList.contains('inactive'), true);
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
 	},
 	"Clicking selectAll button should toggle button text, each todoLi selected button text, each todo.selected, and each entry <p> class." : function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
@@ -2474,26 +2476,27 @@ tests({
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 		eq(deleteSelectedButton.textContent, 'Undelete selected');
 	},
-	"Clicking selectAll button should toggle actions bar undoEdit and addTodo button class 'inactive'.": function() {
+	"Clicking selectAll button should toggle actions bar addTodo button class 'inactive'.": function() {
+		// Removed undoEdit test because that button is now controlled by editHandler
 		var selectAllButton = document.getElementsByName('selectAll')[0];
 		var addTodoButton = document.getElementsByName('addTodo')[0];
-		var undoEditButton = document.getElementsByName('undoEdit')[0];
+//		var undoEditButton = document.getElementsByName('undoEdit')[0];
 
 		eq(selectAllButton.textContent, 'Select all');
 		eq(addTodoButton.classList.contains('inactive'), false);
-		eq(undoEditButton.classList.contains('inactive'), false);
+//		eq(undoEditButton.classList.contains('inactive'), false);
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Unselect all');
 		eq(addTodoButton.classList.contains('inactive'), true);
-		eq(undoEditButton.classList.contains('inactive'), true);
+//		eq(undoEditButton.classList.contains('inactive'), true);
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Select all');
 		eq(addTodoButton.classList.contains('inactive'), false);
-		eq(undoEditButton.classList.contains('inactive'), false);
+//		eq(undoEditButton.classList.contains('inactive'), false);
 	},
 	"selectAll button with text 'Select all' should only apply to displayed todos.": function() {
 		var selectAllButton = document.getElementsByName('selectAll')[0];
@@ -3740,7 +3743,87 @@ tests({
 		// TODO should entry still have focus?
 	},
 	"purgeSelectedDeletedButton should be active only when showDeletedButton text is '√ Deleted' and at least one todo is selected.": function() {
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children[selectedIndex];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+		var todoLi1AddChildButton = todoLi1.children[addChildIndex];
+
+		eq(todo1.selected, false);
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+
+		selectAllButton.click();
+
+		eq(todo1.selected, true);
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+
+		showDeletedButton.click();
+
+		eq(todo1.selected, true);
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+
+		deleteSelectedButton.click();
+
+		eq(todo1.selected, true);
+		eq(todo1.deleted, true);
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
+
+		deleteSelectedButton.click();
+
+		eq(todo1.selected, true);
+		eq(todo1.deleted, false);
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+
+		selectAllButton.click();
+
+		eq(todo1.selected, false);
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+
+		// Case: nested todos
+
+		todoLi1AddChildButton.click();
+
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1AddChildButton = childLi1.children[addChildIndex];
+		var childLi1SelectChildrenButton = childLi1.children[selectChildrenIndex];
+
+		childLi1AddChildButton.click();
+
+		var childLi1Ul = childLi1.children[todoLiUlIndex];
+		var grandchildLi1 = childLi1Ul.children[0];
+		var grandchild1 = findTodo(todos, grandchildLi1.id);
+		var grandchildLi1DeleteButton = grandchildLi1.children[deleteIndex];
+
+		eq(grandchild1.selected, false);
+		eq(grandchild1.deleted, false)
+		eq(showDeletedButton.textContent, '√ Deleted');
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+
+		grandchildLi1DeleteButton.click();
+
+		eq(grandchild1.deleted, true);
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+
+		childLi1SelectChildrenButton.click();
+
+		eq(grandchild1.deleted, true);
+		eq(grandchild1.selected, true);
+		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
+		
+
+
 	},
 	"Clicking the purgeSelectedDeletedButton should remove selected deleted todos from storage and display.": function() {
 		fail();

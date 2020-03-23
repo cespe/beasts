@@ -184,6 +184,7 @@ function anyUnselectedTodos(array) {
 var selectAllButton = document.getElementsByName('selectAll')[0];
 var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 var addTodoButton = document.getElementsByName('addTodo')[0];
 var undoEditButton = document.getElementsByName('undoEdit')[0];
 
@@ -1981,6 +1982,7 @@ function startApp() {
 	var showActiveButton = document.getElementsByName('showActive')[0];
 	var showCompletedButton = document.getElementsByName('showCompleted')[0];
 	var showDeletedButton = document.getElementsByName('showDeleted')[0];
+	var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 	var addTodoButton = document.getElementsByName('addTodo')[0];
 	var undoEditButton = document.getElementsByName('undoEdit')[0];
 	// set defaults on action bar buttons
@@ -1990,6 +1992,7 @@ function startApp() {
 	deleteSelectedButton.textContent = 'Delete selected';
 	completeSelectedButton.classList.add('inactive');
 	deleteSelectedButton.classList.add('inactive');
+	purgeSelectedDeletedButton.classList.add('inactive');
 	showActiveButton.textContent = '√ Active';
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
@@ -2004,16 +2007,6 @@ function startApp() {
 		todolist.appendChild(createTodosUl(todos));
 	}
 }
-//		todo1 = new Todo();
-//		insertTodo(todos, todo1);
-//	} else {
-//		for (var i = 0; i < todos.length; i++) {
-//			if (todos[i].selected === true) {
-//				todos[i].selected = false;
-//			}
-//		}
-//	}
-//}
 
 setUpEventListeners();
 
