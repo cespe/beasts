@@ -2153,7 +2153,12 @@ tests({
 		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
 	"The header actions bar should have a 'Purge selected deleted todos' button to expunge selected deleted todos.": function() {
-		fail();
+		var actionsDiv = document.getElementById('actions');
+		var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
+		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
+		eq(purgeSelectedDeletedButton.innerText, 'Purge selected deleted todos');
+		eq(actionsDiv.children[purgeSelectedDeletedIndex], purgeSelectedDeletedButton); 
+
 	},
 	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
 		startApp();
