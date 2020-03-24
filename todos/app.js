@@ -177,6 +177,21 @@ function anyUnselectedTodos(array) {
 	}
 }
 
+// Return true if any todos, including nested todos, are deleted
+function anyDeletedTodos(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.deleted) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			var todoDeleted = anyDeletedTodos(todo.children);
+			if (todoDeleted) {
+				return true;
+			} 
+		}
+	}
+}
 
 /************************************* DOM manipulation ********************************/
 
@@ -1451,6 +1466,15 @@ function unselectAll() {
 	}
 }
 
+function togglePurgeSelectedDeletedTodos() {
+	if (showDeleted.textContent === '√ Deleted') {
+		if (anySelectedTodos(todos) && anyDeletedTodos(todos)) {
+			purgeSelectedDeletedButton.classList.remove('inactive');
+		}
+	} else {
+		purgeSelectedDeletedButton.classList.add('inactive');
+	}
+}
 
 /************************************* Event handling ***********************************/
 
@@ -1539,6 +1563,9 @@ function todoClickHandler(event) {
 			if (todo.selected) {	// Select button was clicked, todo now selected
 				todoLiSelectButton.textContent = 'Unselect';
 				todoLiEntry.classList.add('highlighted');
+				if (showDeletedButton.textContent === '√ Deleted') {
+					purgeSelectedDeletedButton.classList.remove('inactive');
+				}
 				// if all children in branch are now selected, set parent selectChildren button to Unselect children
 				if (parentTodo && !anyUnselectedTodos(parentTodo.children)) {
 					var parentTodoLi = document.getElementById(parentTodo.id);
@@ -1548,6 +1575,7 @@ function todoClickHandler(event) {
 			} else {	// Unselect button was clicked, todo is now unselected
 				if (!anySelectedTodos(todos)) {
 					unselectAll();
+					purgeSelectedDeletedButton.classList.add('inactive');
 				} else {
 					todoLiSelectButton.textContent = 'Select';
 					todoLiEntry.classList.remove('highlighted');
