@@ -178,6 +178,7 @@ function anyUnselectedTodos(array) {
 }
 
 // Return true if any todos, including nested todos, are deleted
+// TODO this function might be orphaned
 function anyDeletedTodos(array) {
 	for (var i = 0; i < array.length; i++) {
 		var todo = array[i];
@@ -187,6 +188,22 @@ function anyDeletedTodos(array) {
 		if (todo.children.length > 0) {
 			var todoDeleted = anyDeletedTodos(todo.children);
 			if (todoDeleted) {
+				return true;
+			} 
+		}
+	}
+}
+
+// Return true if any todos, including nested todos, are both deleted and selected
+function anySelectedDeletedTodos(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.deleted && todo.selected) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			var todoSelectedDeleted = anySelectedDeletedTodos(todo.children);
+			if (todoSelectedDeleted) {
 				return true;
 			} 
 		}
@@ -1467,10 +1484,8 @@ function unselectAll() {
 }
 
 function togglePurgeSelectedDeletedTodos() {
-	if (showDeleted.textContent === '√ Deleted') {
-		if (anySelectedTodos(todos) && anyDeletedTodos(todos)) {
-			purgeSelectedDeletedButton.classList.remove('inactive');
-		}
+	if (showDeletedButton.textContent === '√ Deleted' && anySelectedDeletedTodos(todos)) {
+		purgeSelectedDeletedButton.classList.remove('inactive');
 	} else {
 		purgeSelectedDeletedButton.classList.add('inactive');
 	}
@@ -1563,9 +1578,6 @@ function todoClickHandler(event) {
 			if (todo.selected) {	// Select button was clicked, todo now selected
 				todoLiSelectButton.textContent = 'Unselect';
 				todoLiEntry.classList.add('highlighted');
-				if (showDeletedButton.textContent === '√ Deleted') {
-					purgeSelectedDeletedButton.classList.remove('inactive');
-				}
 				// if all children in branch are now selected, set parent selectChildren button to Unselect children
 				if (parentTodo && !anyUnselectedTodos(parentTodo.children)) {
 					var parentTodoLi = document.getElementById(parentTodo.id);
@@ -1588,6 +1600,7 @@ function todoClickHandler(event) {
 			
 				}
 			}
+			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompleteButton = todoLi.children[completedIndex];
@@ -1689,6 +1702,7 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "selectChildren") {
 			altSelectChildren(todoLi);
+			togglePurgeSelectedDeletedTodos();
 //			var todoLiSelectButton = todoLi.children[selectedIndex];
 //			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
 //			var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
@@ -1714,6 +1728,7 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "deleteSelectedChildren") {
 			deleteSelectedChildren(todoLi);
+			togglePurgeSelectedDeletedTodos();
 		}
 	}
 }
@@ -1802,6 +1817,7 @@ function actionsClickHandler() {
 					toggleDisplayDependentTodoLiButtons();
 				}
 			}
+			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === "selectAll") {
 			var selectAllButton = event.target;
@@ -1815,7 +1831,7 @@ function actionsClickHandler() {
 				completeSelectedButton.classList.remove('inactive');
 				deleteSelectedButton.classList.remove('inactive');
 				addTodoButton.classList.add('inactive');
-				//undoEditButton.classList.add('inactive');
+				undoEditButton.classList.add('inactive');
 				var todosUncompletedCount = 0;
 				var todosUndeletedCount = 0;
 				for (var i = 0; i < todosUl.children.length; i++) {
@@ -1895,6 +1911,7 @@ function actionsClickHandler() {
 					todolist.appendChild(createTodosUl(todos, 'selected'));
 				}
 			}
+			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === 'completeSelected') {
 			var completeSelectedButton = event.target;
@@ -1979,6 +1996,7 @@ function actionsClickHandler() {
 					deleteSelectedChildren(todoLi);
 				}
 			}
+			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === 'addTodo') {
 			insertNewTodoLi(todos);
