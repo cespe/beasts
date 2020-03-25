@@ -1449,7 +1449,7 @@ function unselectAll() {
 	completeSelectedButton.classList.add('inactive');
 	deleteSelectedButton.classList.add('inactive');
 	addTodoButton.classList.remove('inactive');
-	undoEditButton.classList.remove('inactive');
+//	undoEditButton.classList.remove('inactive');
 	for (var i = 0; i < todosUl.children.length; i++) {
 		var todoLi = todosUl.children[i];
 		var todoLiSelectButton = todoLi.children[selectedIndex];
@@ -1587,7 +1587,6 @@ function todoClickHandler(event) {
 			} else {	// Unselect button was clicked, todo is now unselected
 				if (!anySelectedTodos(todos)) {
 					unselectAll();
-					purgeSelectedDeletedButton.classList.add('inactive');
 				} else {
 					todoLiSelectButton.textContent = 'Select';
 					todoLiEntry.classList.remove('highlighted');
