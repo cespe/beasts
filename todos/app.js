@@ -210,12 +210,27 @@ function anySelectedDeletedTodos(array) {
 	}
 }
 
+function purgeSelectedDeletedTodos(array) {
+	var counter = array.length;
+	for (var i = counter - 1; i >= 0; i--) {
+		var todo = array[i];
+		if (todo.deleted && todo.selected) {
+			deleteTodo(array, todo);
+		} else if (todo.children.length > 0) {
+			purgeSelectedDeletedTodos(todo.children);
+		}
+	}
+	startApp();
+}
 /************************************* DOM manipulation ********************************/
 
 // Fixed page elements
 var selectAllButton = document.getElementsByName('selectAll')[0];
 var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+var showActiveButton = document.getElementsByName('showActive')[0];
+var showCompletedButton = document.getElementsByName('showCompleted')[0];
+var showDeletedButton = document.getElementsByName('showDeleted')[0];
 var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 var addTodoButton = document.getElementsByName('addTodo')[0];
 var undoEditButton = document.getElementsByName('undoEdit')[0];
@@ -1491,6 +1506,7 @@ function togglePurgeSelectedDeletedTodos() {
 	}
 }
 
+
 /************************************* Event handling ***********************************/
 
 function keyDownHandler(event) {
@@ -1997,6 +2013,9 @@ function actionsClickHandler() {
 			}
 			togglePurgeSelectedDeletedTodos();
 		}
+		if (event.target.name === 'purgeSelectedDeleted') {
+			purgeSelectedDeletedTodos(todos);
+		}
 		if (event.target.name === 'addTodo') {
 			insertNewTodoLi(todos);
 		}
@@ -2021,15 +2040,15 @@ function setUpEventListeners() {
 }
 
 function startApp() {
-	var selectAllButton = document.getElementsByName('selectAll')[0];
-	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-	var showActiveButton = document.getElementsByName('showActive')[0];
-	var showCompletedButton = document.getElementsByName('showCompleted')[0];
-	var showDeletedButton = document.getElementsByName('showDeleted')[0];
-	var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
-	var addTodoButton = document.getElementsByName('addTodo')[0];
-	var undoEditButton = document.getElementsByName('undoEdit')[0];
+//	var selectAllButton = document.getElementsByName('selectAll')[0];
+//	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
+//	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
+//	var showActiveButton = document.getElementsByName('showActive')[0];
+//	var showCompletedButton = document.getElementsByName('showCompleted')[0];
+//	var showDeletedButton = document.getElementsByName('showDeleted')[0];
+//	var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
+//	var addTodoButton = document.getElementsByName('addTodo')[0];
+//	var undoEditButton = document.getElementsByName('undoEdit')[0];
 	// set defaults on action bar buttons
 	selectAllButton.textContent = 'Select all';
 	selectAllButton.classList.remove('inactive');
@@ -2041,16 +2060,22 @@ function startApp() {
 	showActiveButton.textContent = '√ Active';
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
-	addTodoButton.textContent = 'Add todo';
+//	addTodoButton.textContent = 'Add todo';
 	addTodoButton.classList.remove('inactive');		// TODO should add 'inactive' default to other buttons too
 	undoEditButton.classList.add('inactive');
+	var todolist = document.getElementById('todolist');
+	todolist.innerHTML = '';
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
-	} else {
-		var todolist = document.getElementById('todolist');
-		todolist.innerHTML = '';
-		todolist.appendChild(createTodosUl(todos));
 	}
+	todolist.appendChild(createTodosUl(todos));
+//	if (todos.length === 0) {
+//		insertNewTodoLi(todos);
+//	} else {
+//		var todolist = document.getElementById('todolist');
+//		todolist.innerHTML = '';
+//		todolist.appendChild(createTodosUl(todos));
+//	}
 }
 
 setUpEventListeners();

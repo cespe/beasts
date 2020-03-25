@@ -4046,7 +4046,34 @@ tests({
 		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
 	},
 	"Clicking the purgeSelectedDeletedButton should remove selected deleted todos from storage and display.": function() {
-		fail();
+		// TODO disallow purging selected deleted todos that have undeleted nested todos
+
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo3);
+
+		startApp();
+
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi2SelectButton = todoLi2.children[selectedIndex];
+		eq(todos.length, 3);
+		eq(todolist.children[0].children.length, 3);
+
+		showDeletedButton.click();
+		selectAllButton.click();
+		todoLi2SelectButton.click();
+		deleteSelectedButton.click();
+
+		purgeSelectedDeletedButton.click();
+
+		eq(todos.length, 1);
+		eq(todolist.children[0].children.length, 1);
 	},
 	"Section: more button interactions": function() {
 	},
