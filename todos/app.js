@@ -225,6 +225,7 @@ function purgeSelectedDeletedTodos(array) {
 /************************************* DOM manipulation ********************************/
 
 // Fixed page elements
+var actions = document.getElementById('actions');
 var selectAllButton = document.getElementsByName('selectAll')[0];
 var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
@@ -234,6 +235,8 @@ var showDeletedButton = document.getElementsByName('showDeleted')[0];
 var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 var addTodoButton = document.getElementsByName('addTodo')[0];
 var undoEditButton = document.getElementsByName('undoEdit')[0];
+
+var todolist = document.getElementById('todolist');
 
 // Global variables for todo entry being edited
 var entryJustEdited = undefined;
@@ -1308,9 +1311,6 @@ function deleteSelectedChildren(todoLi) {
 
 // return true if any todoLi's are displayed in given todos array, else false
 function todoLiDisplayed(todosArray) {
-//	var showActiveButton = document.getElementsByName('showActive')[0];
-//	var showCompletedButton = document.getElementsByName('showCompleted')[0];
-//	var showDeletedButton = document.getElementsByName('showDeleted')[0];
 	// default setting
 	var activeShown = true;
 	var completedShown = true;
@@ -1349,9 +1349,6 @@ function todoLiDisplayed(todosArray) {
 // Reactivate if children are put back on display
 function toggleDisplayDependentTodoLiButtons(todo) {
 	// Set up filter buttons that control display
-//	var showActiveButton = document.getElementsByName('showActive')[0];
-//	var showCompletedButton = document.getElementsByName('showCompleted')[0];
-//	var showDeletedButton = document.getElementsByName('showDeleted')[0];
 	
 	// Default filter settings
 	var activeShown = true;
@@ -1447,17 +1444,6 @@ function toggleDisplayDependentTodoLiButtons(todo) {
 	toggleButtons(todo);	// run recursive function
 }
 
-//function toggleSelectAllButtons() {
-//	var selectAllButton = document.getElementsByName('selectAll')[0];
-//	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-//	var addTodoButton = document.getElementsByName('addTodo')[0];
-//	selectAllButton.textContent = 'Select all';
-//	completeSelectedButton.classList.add('inactive');
-//	deleteSelectedButton.classList.add('inactive');
-//	addTodoButton.classList.remove('inactive');
-//}
-
 function unselectAll() {
 	var todosUl = todolist.children[0];
 	selectAllButton.textContent = 'Select all';
@@ -1539,8 +1525,7 @@ function keyUpHandler(event) {
 				insertNewTodoLi(todoArray, todo.id);
 			}
 		} else if (event.key === "Escape") {
-			// these four lines lifted from undoEdit event handler
-//			var undoEditButton = document.getElementsByName('undoEdit')[0];
+			// these three lines lifted from undoEdit event handler
 			todoJustEdited.entry = originalEntry;
 			entryJustEdited.textContent = originalEntry;
 			undoEditButton.classList.add('inactive');
@@ -1619,12 +1604,7 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "completed") {
 			var todoLiCompleteButton = todoLi.children[completedIndex];
-			var selectAllButton = document.getElementsByName('selectAll')[0];
 			todo.completed = !todo.completed;
-//			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//			if (todo.selected) {
-//				completeSelectedButton.classList.add('completed');
-//			}
 			if (!todo.completed) {
 				todoLiCompleteButton.textContent = 'Complete';
 				todoLi.children[entryIndex].classList.remove('struck');
@@ -1661,7 +1641,6 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "deleted") {
 			var todoLiDeleteButton = todoLi.children[deleteIndex];
-			var selectAllButton = document.getElementsByName('selectAll')[0];
 			todoLiDeleteButton.classList.toggle('deleted');
 			todo.deleted = !todo.deleted;
 			if (todo.deleted) {
@@ -1750,9 +1729,6 @@ function todoClickHandler(event) {
 
 function actionsClickHandler() {
 	if (event.target.nodeName === "BUTTON") {		// TODO is this conditional needed?
-		var selectAllButton = document.getElementsByName('selectAll')[0];
-		var addTodoButton = document.getElementsByName('addTodo')[0];
-		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		// handle case (just for tests?) where todosUl is not defined
 		var todoLiCount = 0;
@@ -1836,10 +1812,10 @@ function actionsClickHandler() {
 		}
 		if (event.target.name === "selectAll") {
 //			var selectAllButton = event.target;
+			// These two variable definitions are needed because the global variables are hidden by
+			// display: none when they are inactive, so that undefined local variables are created.
 			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 			var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-//			var addTodoButton = document.getElementsByName('addTodo')[0];
-			var undoEditButton = document.getElementsByName('undoEdit')[0];
 			var todosUl = todolist.children[0];
 			if (selectAllButton.textContent === 'Select all') {
 				selectAllButton.textContent = 'Unselect all';
@@ -1921,7 +1897,7 @@ function actionsClickHandler() {
 							todos[i].selected = false;
 						}
 					}
-					// TODO what do these two lines do?
+					// Re-create 
 					document.getElementById('todolist').innerHTML = '';
 					todolist.appendChild(createTodosUl(todos, 'selected'));
 				}
@@ -1961,7 +1937,7 @@ function actionsClickHandler() {
 						todoLiEntry.classList.add('struck');
 						var todo = findTodo(todos, todoLi.id);
 						todo.completed = true;
-						if (document.getElementsByName('showCompleted')[0].textContent === 'Completed') {
+						if (showCompletedButton.textContent === 'Completed') {
 							todoLi.classList.add('completed-removed');
 						}
 					}
@@ -1985,7 +1961,7 @@ function actionsClickHandler() {
 						var todoLiEntry = todoLi.children[entryIndex];
 						todoLiEntry.classList.remove('faded');
 						todoLi.classList.remove('deleted-removed');
-						if (document.getElementsByName('showActive')[0].textContent === 'Active') {
+						if (showActiveButton.textContent === 'Active') {
 							todoLi.classList.add('active-removed');
 						}
 					}
@@ -2003,7 +1979,7 @@ function actionsClickHandler() {
 						todo.deleted = true;
 						var todoLiEntry = todoLi.children[entryIndex];
 						todoLiEntry.classList.add('faded');
-						if (document.getElementsByName('showDeleted')[0].textContent === 'Deleted') {
+						if (showDeletedButton.textContent === 'Deleted') {
 							todoLi.classList.add('deleted-removed');
 						}
 	
@@ -2020,19 +1996,16 @@ function actionsClickHandler() {
 			insertNewTodoLi(todos);
 		}
 		if (event.target.name === 'undoEdit') {
-			var undoEditButton = document.getElementsByName('undoEdit')[0];
 			todoJustEdited.entry = originalEntry;
 			entryJustEdited.textContent = originalEntry;
-			undoEditButton.classList.add('inactive');	// TODO global variable not found here, requiring local var: why?
+			undoEditButton.classList.add('inactive');
 		}
 	}
 }
 
 function setUpEventListeners() {
-	var todolist = document.getElementById('todolist');
 	todolist.addEventListener('focusout', editHandler);		// using focusout event instead of change event
 	todolist.addEventListener('click', todoClickHandler);
-	var actions = document.getElementById('actions');
 	actions.addEventListener('click', actionsClickHandler);
 	todolist.addEventListener('input', inputHandler);
 	todolist.addEventListener('keydown', keyDownHandler);
@@ -2040,42 +2013,25 @@ function setUpEventListeners() {
 }
 
 function startApp() {
-//	var selectAllButton = document.getElementsByName('selectAll')[0];
-//	var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//	var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-//	var showActiveButton = document.getElementsByName('showActive')[0];
-//	var showCompletedButton = document.getElementsByName('showCompleted')[0];
-//	var showDeletedButton = document.getElementsByName('showDeleted')[0];
-//	var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
-//	var addTodoButton = document.getElementsByName('addTodo')[0];
-//	var undoEditButton = document.getElementsByName('undoEdit')[0];
 	// set defaults on action bar buttons
 	selectAllButton.textContent = 'Select all';
 	selectAllButton.classList.remove('inactive');
 	completeSelectedButton.textContent = 'Complete selected';
-	deleteSelectedButton.textContent = 'Delete selected';
 	completeSelectedButton.classList.add('inactive');
+	deleteSelectedButton.textContent = 'Delete selected';
 	deleteSelectedButton.classList.add('inactive');
 	purgeSelectedDeletedButton.classList.add('inactive');
 	showActiveButton.textContent = '√ Active';
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
-//	addTodoButton.textContent = 'Add todo';
-	addTodoButton.classList.remove('inactive');		// TODO should add 'inactive' default to other buttons too
+	addTodoButton.classList.remove('inactive');	
 	undoEditButton.classList.add('inactive');
-	var todolist = document.getElementById('todolist');
 	todolist.innerHTML = '';
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
+	} else {
+		todolist.appendChild(createTodosUl(todos));
 	}
-	todolist.appendChild(createTodosUl(todos));
-//	if (todos.length === 0) {
-//		insertNewTodoLi(todos);
-//	} else {
-//		var todolist = document.getElementById('todolist');
-//		todolist.innerHTML = '';
-//		todolist.appendChild(createTodosUl(todos));
-//	}
 }
 
 setUpEventListeners();

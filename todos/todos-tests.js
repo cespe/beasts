@@ -327,7 +327,7 @@ tests({
 		eq(result.children.item(1).children[entryIndex].textContent, 'Item 2');
 	},
 	"When loaded, the app should display todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -335,7 +335,7 @@ tests({
 		insertTodo(todos, todo2);
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
+		todolist.appendChild(createTodosUl(todos));
 		
 		var todo1Li = document.getElementById(todo1.id);
 		var todo1LiEntry = todo1Li.children[entryIndex].textContent;
@@ -350,7 +350,7 @@ tests({
 		eq(todo3LiEntry, 'Item 3');
 	},
 	"When loaded, the app should also display nested todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -363,8 +363,8 @@ tests({
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
 		
-		var todolist = createTodosUl(todos);
-		document.getElementById('todolist').appendChild(todolist);
+		var todosUl = createTodosUl(todos);
+		todolist.appendChild(todosUl);
 
 		var todo1Li = document.getElementById(todo1.id);
 		var todo1LiEntry = todo1Li.children[entryIndex].textContent;
@@ -388,7 +388,7 @@ tests({
 		eq(todo3LiEntry, 'Item 3');
 	},
 	"The app should have a way to insert the first todoLi into an empty todos list.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 
 		insertNewTodoLi(todos);
@@ -396,17 +396,16 @@ tests({
 		eq(todos.length, 1);
 		eq(todos[0].entry, '');
 
-		todosUl = document.getElementById('todolist').children[0];
+		todosUl = todolist.children[0];
 		eq(todosUl.childElementCount, 1);
 		eq(todosUl.children[0].children[entryIndex].textContent, '');
 	},
 	"The app should have a way to insert a new sibling todo after a given todo.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
-		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
@@ -436,12 +435,11 @@ tests({
 		eq(todos[2], todo2);
 	},
 	"The app should have a way to nest a new child todo under a given todo.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
-		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
@@ -477,12 +475,11 @@ tests({
 		eq(child2Li.nodeName, "LI");
 	},
 	"A todoLi should allow for editing its todo entry.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
-		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
@@ -493,12 +490,11 @@ tests({
 	},
 	"An empty todo should be created in editing mode for text entry.": function() {
 		// Devtools must be closed for this test to pass.
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		document.getElementById('todolist').appendChild(createTodosUl(todos));
-		var todolist = document.getElementById('todolist');
+		todolist.appendChild(createTodosUl(todos));
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
@@ -532,11 +528,10 @@ tests({
 	},
 	"When editing, losing focus on the todoLi should save the revised entry.": function() {
 		// Devtools must be closed for this test to pass.
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		insertNewTodoLi(todos);
 		eq(todos[0].entry, "");					// state before edit
-		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
@@ -565,7 +560,6 @@ tests({
 	"When a todoLi is created, todo.selected should be set to false, 'selected' button text should be 'Select' and class 'inactive', and entry <p> class should remove 'highlighted'.": function() {
 		// Start with a clean slate
 		// Select button is inactive/hidden until Select all is clicked
-		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		var todos = []
 		todo1 = new Todo('Item 1');
@@ -591,11 +585,10 @@ tests({
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 	},
 	"Clicking a 'selected' button should toggle button text, toggle todo.selected, and entry <p> class 'highlighted.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
@@ -618,7 +611,7 @@ tests({
 		eq(todo1.selected, false);
 	},
 	"Selecting a todo should not select its children.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -626,7 +619,6 @@ tests({
 		var child2 = new Todo('child 2');
 		todo1.addChild(child1);
 		todo1.addChild(child2);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -659,7 +651,6 @@ tests({
 		eq(todoLi.children[completedIndex].name, 'completed');
 	},
 	"When a todoLi is created, if todo.completed is false, button should be 'Complete' and entry <p> class should be ''.": function() {
-		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		var todos = [];
 		todo1 = new Todo('Item 1');
@@ -673,7 +664,6 @@ tests({
 		eq(todoLi1.children[entryIndex].classList.length, 0);
 	},
 	"If todo.completed is true, button text should be 'Uncomplete' and entry <p> class should be 'struck'.": function () {
-		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		var todos = [];
 		todo1 = new Todo('Item 1');
@@ -688,7 +678,6 @@ tests({
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
 	},
 	"Clicking a 'completed' button should toggle button text, todo.completed, and entry <p> class.": function() {
-		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -700,6 +689,7 @@ tests({
 		eq(todo1.completed, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.length, 0);
+
 		todoLi1CompleteButton.click();
 
 		eq(todo1.completed, true);
@@ -714,7 +704,7 @@ tests({
 	},
 	"Marking a todo completed should not mark its children completed.": function() {
 		// because then marking uncompleted could incorrectly reverse some child values
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -722,7 +712,6 @@ tests({
 		var child2 = new Todo('child 2');
 		todo1.addChild(child1);
 		todo1.addChild(child2);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -764,7 +753,6 @@ tests({
 		eq(todoLi.children[deleteIndex].name, 'deleted');
 	},
 	"When a todoLi is created, if todo.deleted is false, button should be 'Delete' and entry <p> class not 'faded'.": function() {
-		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -778,7 +766,6 @@ tests({
 		eq(todoLi1.children[entryIndex].classList.length, 0);
 	},
 	"When a todoLi is created, if todo.deleted is true, button should be 'Undelete' and entry <p> class 'faded'.": function() {
-		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -793,7 +780,6 @@ tests({
 		eq(todoLi1.children[entryIndex].classList.contains('faded'), true);
 	},
 	"Clicking a 'deleted' button should toggle button text, todo.deleted, entry <p> class.": function() {
-		var todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -819,11 +805,10 @@ tests({
 		eq(todoLi1.children[entryIndex].classList.contains('faded'), false);
 	},
 	"Clicking 'deleted' button should also toggle its todoLi class 'deleted-removed'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
@@ -840,7 +825,7 @@ tests({
 	},
 	"Deleting a todo should not delete its children.": function() {
 		// The children are just along for the ride
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -848,7 +833,6 @@ tests({
 		var child2 = new Todo('child 2');
 		todo1.addChild(child1);
 		todo1.addChild(child2);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -873,11 +857,10 @@ tests({
 		eq(child2.deleted, false);
 	},
 	"Each todo li should have an 'addSibling' button to add a sibling todo after it.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
@@ -888,13 +871,12 @@ tests({
 		eq(todoLi1AddSibling.textContent, 'Add sibling');
 	},
 	"Clicking an 'addSibling' button should create a new sibling todo in and todoLi nested at the same level.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -922,11 +904,10 @@ tests({
 		eq(todo1.children[1].id, todoLi1Child2.id);
 	},
 	"Each todo li should have an 'addChild' button to add a child todo underneath it.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
@@ -937,11 +918,10 @@ tests({
 		eq(todoLi1AddChild.textContent, 'Add child');
 	},
 	"Clicking an 'addChild' button should create a new nested child todo and todoLi.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -963,11 +943,10 @@ tests({
 
 	},
 	"Clicking an addChild button should set todo.collapsed false and expand nested todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -987,11 +966,10 @@ tests({
 		eq(todoLi1.children[todoLiUlIndex].classList.contains('collapsed'), false);
 	}, 
 	"Each todoLi should have a showChildren button to expand/collapse nested todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
@@ -1001,11 +979,10 @@ tests({
 		eq(todoLi1ShowChildren.name, 'showChildren');
 	},
 	"If a todo has no children, todoLi should be created with showChildren button class 'inactive'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
@@ -1014,14 +991,13 @@ tests({
 		eq(todoLi1ShowChildren.classList.contains('inactive'), true);
 	},
 	"If a todo has children and todo.collapsed is true, todoLi should be created with todoLiUl class 'collapsed' and showChildren button text 'Show children'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCollapsed(true);
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1032,13 +1008,12 @@ tests({
 		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
 },
 	"If a todo has children and todo.collapsed is false, todoLi should be created with todoLiUl class '' and showChildren button text 'Hide children'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1049,11 +1024,10 @@ tests({
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 },
 	"Clicking a showChildren button should toggle button text and todoLiUl class.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1085,11 +1059,10 @@ tests({
 		eq(todoLi1Ul.classList.contains('collapsed'), false);
 	},
 	"Each todo should have a 'selectChildren' button to select all of its children.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
@@ -1099,11 +1072,10 @@ tests({
 		eq(todoLi1SelectChildrenButton.name, 'selectChildren');
 	},
 	"If a todo has no child todos, its todoLi should be created with selectChildren button class 'inactive'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
@@ -1112,14 +1084,13 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
 	},
 	"If todo.collapsed is true, its todoLi should be created with selectChildren button class 'inactive'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCollapsed(true);
 		child1 = new Todo('Child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 
 		todoLi1 = todolist.children[0].children[0];
@@ -1128,14 +1099,13 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
 	},
 	"If all todo children have todo.selected = true, todoLi should be created with selectChildren button text 'Unselect children'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		child1.markSelected(true);
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1144,13 +1114,12 @@ tests({
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
 	},
 	"Otherwise, todoLi should be created with selectChildren button text 'Select children'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1159,13 +1128,12 @@ tests({
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
 	},
 	"Each todoLi should have a 'completeSelectedChildren' button to complete/uncomplete selected child todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1174,13 +1142,12 @@ tests({
 		eq(todoLi1.children[completeSelectedChildrenIndex].name, 'completeSelectedChildren');
 	},
 	"Each todoLi should be created with completeSelectedChildren button class 'inactive'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1188,13 +1155,12 @@ tests({
 		eq(todoLi1.children[completeSelectedChildrenIndex].classList.contains('inactive'), true);
 	},
 	"Each todoLi should have a 'deleteSelectedChildren' button to delete/undelete selected child todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1203,13 +1169,12 @@ tests({
 		eq(todoLi1.children[deleteSelectedChildrenIndex].name, 'deleteSelectedChildren');
 	},
 	"Each todoLi should be created with deleteSelectedChildren button class 'inactive'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1217,7 +1182,7 @@ tests({
 		eq(todoLi1.children[deleteSelectedChildrenIndex].classList.contains('inactive'), true);
 	},
 	"Clicking a selectChildren button should toggle button text, child todos' todo.selected, todoLi selected button text, and todoLi entry <p> class.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1225,7 +1190,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1265,7 +1229,7 @@ tests({
 		eq(child2LiEntry.classList.contains('highlighted'), false);
 	},
 	"The selectChildren button should operate on displayed child todos only.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1276,7 +1240,6 @@ tests({
 		child3 = new Todo('Item 1 child 3');
 		todo1.addChild(child3);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1329,7 +1292,7 @@ tests({
 		eq(child3LiEntry.classList.contains('highlighted'), false);
 	}, 
 	"The selectChildren button should operate recursively on displayed nested todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1342,7 +1305,6 @@ tests({
 		child3 = new Todo('Item 1 child 3');
 		todo1.addChild(child3);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1407,7 +1369,7 @@ tests({
 		eq(child3LiEntry.classList.contains('highlighted'), false);
 	}, 
 	"Clicking a selectChildren button should toggle 'inactive' on complete, delete, addSibling, addChild and showChildren buttons.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1415,7 +1377,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1448,7 +1409,7 @@ tests({
 		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
 	},
 	"Clicking a selectChildren button should toggle 'inactive' on completeSelectedChildren and deleteSelectedChildren buttons.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1456,7 +1417,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1477,7 +1437,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 	},
 	"If selectChildren button text is 'Select children', clicking it should set completeSelectedChildren button text to 'Complete selected children' if all children are not marked completed.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1486,7 +1446,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1518,7 +1477,7 @@ tests({
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
 	},
 	"If selectChildren button text is 'Select children', clicking it should set completeSelectedChildren button text to 'Uncomplete selected children' if all children are marked completed.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1528,7 +1487,6 @@ tests({
 		child2.markCompleted(true);
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1560,7 +1518,7 @@ tests({
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Uncomplete selected children');
 	},
 	"If selectChildren button text is 'Select children', clicking it should set deleteSelectedChildren button text to 'Delete selected children' if all children are not marked deleted.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1569,7 +1527,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1601,7 +1558,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
 	},
 	"If selectChildren button text is 'Select children', clicking it should set deleteSelectedChildren button text to 'Undelete selected children' if all children are marked deleted.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1611,7 +1568,6 @@ tests({
 		child2.markDeleted(true);
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1645,7 +1601,7 @@ tests({
 	"If todoLi is selected, clicking 'Unselect children' button should not remove 'inactive' on complete, delete, addSibling, addChild buttons.": function() {
 		// Tests the case where the todoLi is not the root of selected children.
 		fail();		// not a good test
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1653,7 +1609,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectedButton = todoLi1.children[selectedIndex];
@@ -1700,7 +1655,7 @@ tests({
 		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
 	},
 	"Clicking a selectChildren button should toggle 'inactive' on all childLi select buttons.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1708,7 +1663,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1731,7 +1685,7 @@ tests({
 		eq(child2LiSelectButton.classList.contains('inactive'), true);
 	},
 	"Clicking a selectChildren button should toggle 'inactive' on all childLi complete buttons.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1739,7 +1693,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1762,7 +1715,7 @@ tests({
 		eq(child2LiCompleteButton.classList.contains('inactive'), false);
 	},
 	"Clicking a selectChildren button should toggle 'inactive' on all childLi delete buttons.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1770,7 +1723,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1793,7 +1745,7 @@ tests({
 		eq(child2LiDeleteButton.classList.contains('inactive'), false);
 	},
 	"Clicking a selectChildren button should toggle 'inactive' on all childLi addSibling buttons.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1801,7 +1753,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1824,7 +1775,7 @@ tests({
 		eq(child2LiAddSiblingButton.classList.contains('inactive'), false);
 	},
 	"Clicking a selectChildren button should toggle 'inactive' on all childLi addChild buttons.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1832,7 +1783,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1855,7 +1805,7 @@ tests({
 		eq(child2LiAddChildButton.classList.contains('inactive'), false);
 	},
 	"Clicking a 'completeSelectedChildren' button should toggle button text and toggle todo.completed, todoLi entry class and 'completed' button text on selected child todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1863,7 +1813,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1906,7 +1855,7 @@ tests({
 		eq(child2LiCompleteButton.textContent, 'Complete');
 	},
 	"A completeSelectedChildren button should operate on selected nested todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1914,7 +1863,6 @@ tests({
 		grandchild1 = new Todo('Item 1 grandchild 1');
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -1957,7 +1905,7 @@ tests({
 		eq(grandchild1LiCompleteButton.textContent, 'Complete');
 	},
 	"Clicking a 'deleteSelectedChildren' button should toggle button text and toggle todo.deleted, todoLi entry class and 'deleted' button text on selected child todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1965,7 +1913,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -2008,7 +1955,7 @@ tests({
 		eq(child2LiDeleteButton.textContent, 'Delete');
 	},
 	"A deleteSelectedChildren button should operate on selected nested todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -2018,7 +1965,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -2073,11 +2019,10 @@ tests({
 		eq(child2LiDeleteButton.textContent, 'Delete');
 	},
 	"Clicking an addChild button should activate showChildren and selectChildren buttons.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2094,13 +2039,12 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
 	}, 
 	"When showChildren button is clicked, selectChildren button class should toggle 'inactive'.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2133,28 +2077,24 @@ tests({
 	},
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
 		var actionsDiv = document.getElementById('actions');
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.innerText, 'Select all');
 		eq(actionsDiv.children[0], selectAllButton); 
 	},
 	"The header actions bar should have a 'Complete selected' button to mark selected todos completed.": function() {
 		var actionsDiv = document.getElementById('actions');
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		eq(completeSelectedButton.nodeName, 'BUTTON');
 		eq(completeSelectedButton.innerText, 'Complete selected');
 		eq(actionsDiv.children[1], completeSelectedButton); 
 	},
 	"The header actions bar should have a 'Delete selected' button to delete selected todos.": function() {
 		var actionsDiv = document.getElementById('actions');
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		eq(deleteSelectedButton.nodeName, 'BUTTON');
 		eq(deleteSelectedButton.innerText, 'Delete selected');
 		eq(actionsDiv.children[2], deleteSelectedButton); 
 	},
 	"The header actions bar should have a 'Purge selected deleted todos' button to expunge selected deleted todos.": function() {
 		var actionsDiv = document.getElementById('actions');
-//		var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
 		eq(purgeSelectedDeletedButton.innerText, 'Purge selected deleted todos');
 		eq(actionsDiv.children[6], purgeSelectedDeletedButton); 
@@ -2162,10 +2102,6 @@ tests({
 	},
 	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
 		startApp();
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-//		var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 
 		eq(selectAllButton.textContent, 'Select all');
 		eq(completeSelectedButton.textContent, 'Complete selected');
@@ -2175,13 +2111,8 @@ tests({
 		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
 	},
 	"Clicking selectAll button should toggle button text, each todoLi selected button text, each todo.selected, and each entry <p> class." : function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-//		var showActiveButton = document.getElementsByName('showActive')[0];
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		// set defaults on action bar buttons
+		debugger;
 		selectAllButton.textContent = 'Select all';
 		completeSelectedButton.textContent = 'Complete selected';
 		deleteSelectedButton.textContent = 'Delete selected';
@@ -2191,13 +2122,12 @@ tests({
 		showCompletedButton.textContent = '√ Completed';
 		showDeletedButton.textContent = 'Deleted';
 
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -2241,12 +2171,6 @@ tests({
 		eq(todo2.selected, false);
 	},
 	"Clicking selectAll button should also toggle todoLi completed, deleted, addSibling, and addChild button classes 'inactive'.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-//		var showActiveButton = document.getElementsByName('showActive')[0];
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		// set defaults on action bar buttons
 		selectAllButton.textContent = 'Select all';
 		completeSelectedButton.textContent = 'Complete selected';
@@ -2257,13 +2181,12 @@ tests({
 		showCompletedButton.textContent = '√ Completed';
 		showDeletedButton.textContent = 'Deleted';
 
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -2313,16 +2236,13 @@ tests({
 		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	},
 	"If selectAll button text is 'Select all', clicking it should set completeSelected button text to 'Complete selected' if all todos are not marked completed.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCompleted(true);
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -2352,9 +2272,7 @@ tests({
 		eq(completeSelectedButton.textContent, 'Complete selected');
 	},
 	"If selectAll button text is 'Select all', clicking it should set completeSelected button text to 'Uncomplete selected' if all todos are marked completed.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCompleted(true);
@@ -2362,7 +2280,6 @@ tests({
 		todo2 = new Todo('Item 2');
 		todo2.markCompleted(true);
 		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -2392,19 +2309,16 @@ tests({
 		eq(completeSelectedButton.textContent, 'Uncomplete selected');
 	},
 	"If selectAll button text is 'Select all', clicking it should set deleteSelected button text to 'Delete selected' if all todos are not marked deleted.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		deleteSelectedButton.textContent = 'Delete selected';
 		deleteSelectedButton.classList.add('inactive');
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markDeleted(true);
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -2434,12 +2348,10 @@ tests({
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 	},
 	"If selectAll button text is 'Select all', clicking it should set deleteSelected button text to 'Undelete selected' if all todos are marked deleted.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		deleteSelectedButton.textContent = 'Delete selected';
 		deleteSelectedButton.classList.add('inactive');
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markDeleted(true);
@@ -2447,7 +2359,6 @@ tests({
 		todo2 = new Todo('Item 2');
 		todo2.markDeleted(true);
 		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -2478,9 +2389,6 @@ tests({
 	},
 	"Clicking selectAll button should toggle actions bar addTodo button class 'inactive'.": function() {
 		// Removed undoEdit test because that button is now controlled by editHandler
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var addTodoButton = document.getElementsByName('addTodo')[0];
-//		var undoEditButton = document.getElementsByName('undoEdit')[0];
 
 		eq(selectAllButton.textContent, 'Select all');
 		eq(addTodoButton.classList.contains('inactive'), false);
@@ -2499,15 +2407,13 @@ tests({
 //		eq(undoEditButton.classList.contains('inactive'), false);
 	},
 	"selectAll button with text 'Select all' should only apply to displayed todos.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -2527,10 +2433,8 @@ tests({
 		eq(todoLi2.children[entryIndex].classList.contains('highlighted'), false);
 	},
 	"selectAll button should also select/unselect displayed nested todos.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1child1 = new Todo('Item 1 child 1');
@@ -2540,7 +2444,6 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1HideChildrenButton = todoLi1.children[showChildrenIndex];
@@ -2627,16 +2530,14 @@ tests({
 	},
 	"If a todoLi has children displayed, clicking selectAll button should remove todoLi selectChildren button class 'inactive' and add completeSelectedChildren and deleteSelectedChildren button classes 'inactive'.": function() {
 		// Test and document the different behavior of selectChildren when selectAll has been clicked.
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
 
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		child1 = new Todo('Child 1');
 		todo1.addChild(child1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		childLi1 = todoLi1.children[todoLiUlIndex].children[0];
@@ -2711,16 +2612,15 @@ tests({
 	},
 	"If selectAll button text is 'Unselect all', then todoLi selectChildren button should only toggle childLi's select button and highlighted text.": function() {
 		// Test and document different behavior of selectChildren when selectAll has been clicked.
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
+
 		selectAllButton.textContent = 'Select all';
 
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		child1 = new Todo('Child 1');
 		todo1.addChild(child1);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		childLi1 = todoLi1.children[todoLiUlIndex].children[0];
@@ -2817,10 +2717,8 @@ tests({
 		eq(childLi1Entry.classList.contains('highlighted'), true);
 	},
 	"Clicking completeSelected button should toggle button text and toggle todo.completed, todoLi completed button text, and entry <p> class for selected todos.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -2828,7 +2726,6 @@ tests({
 		insertTodo(todos, todo2);
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -2901,11 +2798,9 @@ tests({
 		eq(todo3.completed, false);
 	},
 	"The completeSelected button should also complete/uncomplete nested selected todos.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 		completeSelectedButton.textContent = 'Complete selected';
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child');
@@ -2919,7 +2814,6 @@ tests({
 		child3.addChild(grandchild3);
 		todo3.addChild(child3);
 		insertTodo(todos, todo3);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -3083,8 +2977,7 @@ tests({
 		eq(grandchild3.completed, false);
 	},
 	"Clicking the deleteSelected button should toggle its button text and toggle todo.deleted, todoLi deleted button text, and entry <p> class for selected todos.": function() {
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -3092,7 +2985,6 @@ tests({
 		insertTodo(todos, todo2);
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -3176,11 +3068,9 @@ tests({
 		eq(todo3.deleted, false);
 },
 	"The deleteSelected button should also delete/undelete nested selected todos.": function() {
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
 		selectAllButton.textContent = 'Select all';
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 		deleteSelectedButton.textContent = 'Delete selected';
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child');
@@ -3194,7 +3084,6 @@ tests({
 		child3.addChild(grandchild3);
 		todo3.addChild(child3);
 		insertTodo(todos, todo3);
-		var todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -3363,21 +3252,18 @@ tests({
 	"The header actions bar should have a showActive button to toggle showing active todos.": function() {
 		// active todos are not completed and not deleted
 		var actionsDiv = document.getElementById('actions');
-//		var showActiveButton = document.getElementsByName('showActive')[0];
 		eq(showActiveButton.nodeName, 'BUTTON');
 		eq(showActiveButton.innerText, '√ Active');
 		eq(actionsDiv.children[3], showActiveButton); 
 	},
 	"On startup, the showActive button text should be '√ Active' and todoLi class not 'active-removed' on active todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
 
 		startApp();
 		
-//		showActiveButton = document.getElementsByName('showActive')[0];
-		todolist = document.getElementById('todolist');
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
 
@@ -3385,7 +3271,7 @@ tests({
 		eq(todoLi1.classList.contains('active-removed'), false);
 	},
 	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
@@ -3397,8 +3283,6 @@ tests({
 
 		startApp();
 
-//		showActiveButton = document.getElementsByName('showActive')[0];
-		todolist = document.getElementById('todolist');
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
 		todoLi2 = todoUl.children[1];
@@ -3426,13 +3310,12 @@ tests({
 	},
 	"The header actions bar should have a showCompleted button to toggle showing completed todos.": function() {
 		var actionsDiv = document.getElementById('actions');
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
 		eq(showCompletedButton.nodeName, 'BUTTON');
 		eq(showCompletedButton.innerText, '√ Completed');
 		eq(actionsDiv.children[4], showCompletedButton); 
 	},
 	"On startup, the showCompleted button text should be '√ Completed' and todoLi class not 'completed-removed' on completed todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item completed');
 		todo1.markCompleted(true);
@@ -3440,8 +3323,6 @@ tests({
 
 		startApp();
 		
-//		showCompletedButton = document.getElementsByName('showCompleted')[0];
-		todolist = document.getElementById('todolist');
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
 
@@ -3449,7 +3330,7 @@ tests({
 		eq(todoLi1.classList.contains('completed-removed'), false);
 	},
 	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'completed-removed' on completed todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item completed');
 		todo1.markCompleted(true);
@@ -3462,8 +3343,6 @@ tests({
 
 		startApp();
 
-//		showCompletedButton = document.getElementsByName('showCompleted')[0];
-		todolist = document.getElementById('todolist');
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
 		todoLi2 = todoUl.children[1];
@@ -3494,13 +3373,12 @@ tests({
 	},
 	"The header actions bar should have a showDeleted button to toggle showing deleted todos.": function() {
 		var actionsDiv = document.getElementById('actions');
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		eq(showDeletedButton.nodeName, 'BUTTON');
 		eq(showDeletedButton.innerText, 'Deleted');
 		eq(actionsDiv.children[5], showDeletedButton); 
 	},
 	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'deleted-removed' on deleted todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
 		todo1Child = new Todo('Item 1 child');
@@ -3516,11 +3394,8 @@ tests({
 
 		startApp();
 
-//		showDeletedButton = document.getElementsByName('showDeleted')[0];
-
 		eq(showDeletedButton.textContent, 'Deleted');
 
-		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi1Child = todoLi1.children[todoLiUlIndex].children[0];
@@ -3538,7 +3413,7 @@ tests({
 		eq(todoLi3.classList.contains('deleted-removed'), true);
 	},
 	"Clicking the showDeleted button should toggle button text and set/unset todoLi class 'deleted-removed' on deleted todos.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
 		todo1Child = new Todo('Item 1 child');
@@ -3554,11 +3429,8 @@ tests({
 
 		startApp();
 
-//		showDeletedButton = document.getElementsByName('showDeleted')[0];
-
 		eq(showDeletedButton.textContent, 'Deleted');
 
-		var todolist = document.getElementById('todolist');
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi1Child = todoLi1.children[todoLiUlIndex].children[0];
@@ -3598,12 +3470,11 @@ tests({
 	"The header actions bar should have an addTodo button that adds a todo to the end of the list.": function() {
 		// In case filtering the list results in no displayed todos
 		var actionsDiv = document.getElementById('actions');
-//		var addTodoButton = document.getElementsByName('addTodo')[0];
 		eq(addTodoButton.nodeName, 'BUTTON');
 		eq(addTodoButton.innerText, 'Add todo');
 		eq(actionsDiv.children[7], addTodoButton); 
 		
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 
 		addTodoButton.click();
@@ -3623,16 +3494,12 @@ tests({
 	},
 	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
 		var actionsDiv = document.getElementById('actions');
-//		var undoEditButton = document.getElementsByName('undoEdit')[0];
 		eq(undoEditButton.nodeName, 'BUTTON');
 		eq(undoEditButton.innerText, 'Undo edit');
 		eq(actionsDiv.children[8], undoEditButton);
 	},
 	"addTodoButton and undoEditButton should be set to default values on startup.": function() {
 		startApp();
-
-//		var addTodoButton = document.getElementsByName('addTodo')[0];
-//		var undoEditButton = document.getElementsByName('undoEdit')[0];
 
 		eq(addTodoButton.classList.contains('inactive'), false);
 		eq(undoEditButton.classList.contains('inactive'), true);
@@ -4084,7 +3951,6 @@ tests({
 		
 		startApp();
 		
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
@@ -4123,8 +3989,6 @@ tests({
 		
 		startApp();
 		
-//		var showActiveButton = document.getElementsByName('showActive')[0];
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
@@ -4160,7 +4024,6 @@ tests({
 		
 		startApp();
 		
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
 
@@ -4183,7 +4046,6 @@ tests({
 		
 		startApp();
 		
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
 
@@ -4210,8 +4072,6 @@ tests({
 		
 		startApp();
 		
-//		var showActiveButton = document.getElementsByName('showActive')[0];
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
 
@@ -4252,9 +4112,6 @@ tests({
 		
 		startApp();
 		
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 
 		eq(showCompletedButton.textContent, '√ Completed');
@@ -4279,10 +4136,6 @@ tests({
 		
 		startApp();
 		
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//		var showActiveButton = document.getElementsByName('showActive')[0];
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 
@@ -4313,9 +4166,6 @@ tests({
 		
 		startApp();
 		
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 
 		eq(showDeletedButton.textContent, 'Deleted');
@@ -4336,10 +4186,6 @@ tests({
 		
 		startApp();
 		
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
-//		var showActiveButton = document.getElementsByName('showActive')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 
@@ -4375,10 +4221,6 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 		startApp();
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var showActiveButton = document.getElementsByName('showActive')[0];
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
@@ -4585,10 +4427,6 @@ tests({
 		child1.addChild(grandchild1);
 		child1.addChild(grandchild2);
 		startApp();
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var showActiveButton = document.getElementsByName('showActive')[0];
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
@@ -4972,10 +4810,6 @@ tests({
 		child1.addChild(grandchild1);
 		child1.addChild(grandchild2);
 		startApp();
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var showActiveButton = document.getElementsByName('showActive')[0];
-//		var showCompletedButton = document.getElementsByName('showCompleted')[0];
-//		var showDeletedButton = document.getElementsByName('showDeleted')[0];
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 		var todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
@@ -5347,7 +5181,7 @@ tests({
 		childLi2CompleteButton.click();
 	},
 	"If all todos become unselected, the app should toggle buttons as if receiving a selectAll click event.": function() {
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -5357,11 +5191,7 @@ tests({
 		todo1.addChild(child2);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		todolist = document.getElementById('todolist');
 		todolist.appendChild(createTodosUl(todos));
-//		var selectAllButton = document.getElementsByName('selectAll')[0];
-//		var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-//		var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
@@ -6010,8 +5840,7 @@ tests({
 		todo1.addChild(child1);
 		child1.addChild(grandchild1);
 		todo1.addChild(child2);
-		todolist = document.getElementById('todolist');
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todolist.appendChild(createTodosUl(todos));
 
 		var todoLi1 = todolist.children[0].children[0];
@@ -6495,7 +6324,7 @@ tests({
 	},
 	"If showActive button is 'Active', addTodo button and todoLi addSibling and addChild buttons should be inactive.": function() {
 		// Because by definition a new todo is active
-		document.getElementById('todolist').innerHTML = '';
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -6591,8 +6420,7 @@ tests({
 	"When editing, Return should be a shortcut for Add Sibling.": function() {
 		// Limit a todo to one line.
 		manual();
-		var todolist = document.getElementById('todolist');
-		todolist.innerHTML = '';
+		godolist.innerHTML = '';
 		todos = [];
 		startApp();		// Initiate app with a blank focused todo
 		var todosUl = todolist.children[0];
@@ -6676,8 +6504,6 @@ tests({
 	},
 	"The app should set todo.selected to false on startup.": function() {
 		// Startup should produce a clean slate with no selected todos.
-//		selectAllButton = document.getElementsByName('selectAll')[0];
-		todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -6699,7 +6525,6 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 	},
 	"If todos array is empty at startup, the app should create a new empty todo.": function() {
-		todolist = document.getElementById('todolist');
 		todolist.innerHTML = '';
 		todos = [];
 		startApp();
