@@ -169,7 +169,7 @@ function anyUnselectedTodos(array) {
 			return true;
 		}
 		if (todo.children.length > 0) {
-			var todoSelected = anySelectedTodos(todo.children);
+			var todoSelected = anyUnselectedTodos(todo.children);
 			if (!todoSelected) {
 				return true;
 			}
@@ -225,7 +225,7 @@ function purgeSelectedDeletedTodos(array) {
 /************************************* DOM manipulation ********************************/
 
 // Fixed page elements
-var actions = document.getElementById('actions');
+var actionsBar = document.getElementById('actions');
 var selectAllButton = document.getElementsByName('selectAll')[0];
 var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
@@ -1811,9 +1811,10 @@ function actionsClickHandler() {
 			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === "selectAll") {
-//			var selectAllButton = event.target;
 			// These two variable definitions are needed because the global variables are hidden by
-			// display: none when they are inactive, so that undefined local variables are created.
+			// local variables created for some reason when the button is clicked.
+			// One hypothesis that it has to do with display: none on these two elements doesn't seem
+			// to be the reason. TODO Figure out why.
 			var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 			var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 			var todosUl = todolist.children[0];
@@ -2006,7 +2007,7 @@ function actionsClickHandler() {
 function setUpEventListeners() {
 	todolist.addEventListener('focusout', editHandler);		// using focusout event instead of change event
 	todolist.addEventListener('click', todoClickHandler);
-	actions.addEventListener('click', actionsClickHandler);
+	actionsBar.addEventListener('click', actionsClickHandler);
 	todolist.addEventListener('input', inputHandler);
 	todolist.addEventListener('keydown', keyDownHandler);
 	todolist.addEventListener('keyup', keyUpHandler);

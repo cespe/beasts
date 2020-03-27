@@ -1,8 +1,5 @@
 // Beasts 8. Nested todos 
 // Protect properties of todo object in a closure?
-// todo should be created with a Constructor?
-// resolve addTodo vs insertTodo
-// resolve todo.addChild vs insertTodo or todo.insertChild
 
 tests({
 	"The app should have a 'todos' array for storing todos.": function() {
@@ -2071,33 +2068,28 @@ tests({
 	"Section: Actions bar -- Selection": function() {
 	},
 	"The app should have a header section with an actions bar to hold action buttons.": function() {
-		var actionsDiv = document.getElementById('actions');
-		eq(actionsDiv.nodeName, 'DIV');
-		eq(actionsDiv.parentElement.nodeName, 'HEADER');
+		eq(actionsBar.nodeName, 'DIV');
+		eq(actionsBar.parentElement.nodeName, 'HEADER');
 	},
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
-		var actionsDiv = document.getElementById('actions');
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.innerText, 'Select all');
-		eq(actionsDiv.children[0], selectAllButton); 
+		eq(selectAllButton.parentElement, actionsBar);
 	},
 	"The header actions bar should have a 'Complete selected' button to mark selected todos completed.": function() {
-		var actionsDiv = document.getElementById('actions');
 		eq(completeSelectedButton.nodeName, 'BUTTON');
 		eq(completeSelectedButton.innerText, 'Complete selected');
-		eq(actionsDiv.children[1], completeSelectedButton); 
+		eq(completeSelectedButton.parentElement, actionsBar);
 	},
 	"The header actions bar should have a 'Delete selected' button to delete selected todos.": function() {
-		var actionsDiv = document.getElementById('actions');
 		eq(deleteSelectedButton.nodeName, 'BUTTON');
 		eq(deleteSelectedButton.innerText, 'Delete selected');
-		eq(actionsDiv.children[2], deleteSelectedButton); 
+		eq(deleteSelectedButton.parentElement, actionsBar);
 	},
 	"The header actions bar should have a 'Purge selected deleted todos' button to expunge selected deleted todos.": function() {
-		var actionsDiv = document.getElementById('actions');
 		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
 		eq(purgeSelectedDeletedButton.innerText, 'Purge selected deleted todos');
-		eq(actionsDiv.children[6], purgeSelectedDeletedButton); 
+		eq(purgeSelectedDeletedButton.parentElement, actionsBar);
 
 	},
 	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
@@ -2111,26 +2103,16 @@ tests({
 		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
 	},
 	"Clicking selectAll button should toggle button text, each todoLi selected button text, each todo.selected, and each entry <p> class." : function() {
-		// set defaults on action bar buttons
-		debugger;
-		selectAllButton.textContent = 'Select all';
-		completeSelectedButton.textContent = 'Complete selected';
-		deleteSelectedButton.textContent = 'Delete selected';
-		completeSelectedButton.classList.add('inactive');
-		deleteSelectedButton.classList.add('inactive');
-		showActiveButton.textContent = '√ Active';
-		showCompletedButton.textContent = '√ Completed';
-		showDeletedButton.textContent = 'Deleted';
-
-		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		todolist.appendChild(createTodosUl(todos));
-		todoLi1 = todolist.children[0].children[0];
-		todoLi2 = todolist.children[0].children[1];
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi2 = todolist.children[0].children[1];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
 		var todoLi2SelectButton = todoLi2.children[selectedIndex];
 		var todoLi1Entry = todoLi1.children[entryIndex];
@@ -2171,23 +2153,14 @@ tests({
 		eq(todo2.selected, false);
 	},
 	"Clicking selectAll button should also toggle todoLi completed, deleted, addSibling, and addChild button classes 'inactive'.": function() {
-		// set defaults on action bar buttons
-		selectAllButton.textContent = 'Select all';
-		completeSelectedButton.textContent = 'Complete selected';
-		deleteSelectedButton.textContent = 'Delete selected';
-		completeSelectedButton.classList.add('inactive');
-		deleteSelectedButton.classList.add('inactive');
-		showActiveButton.textContent = '√ Active';
-		showCompletedButton.textContent = '√ Completed';
-		showDeletedButton.textContent = 'Deleted';
-
-		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		todolist.appendChild(createTodosUl(todos));
+
+		startApp();
+
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
 		var todoLi1SelectButton = todoLi1.children[selectedIndex];
@@ -3251,10 +3224,9 @@ tests({
 	},
 	"The header actions bar should have a showActive button to toggle showing active todos.": function() {
 		// active todos are not completed and not deleted
-		var actionsDiv = document.getElementById('actions');
 		eq(showActiveButton.nodeName, 'BUTTON');
 		eq(showActiveButton.innerText, '√ Active');
-		eq(actionsDiv.children[3], showActiveButton); 
+		eq(showActiveButton.parentElement, actionsBar);
 	},
 	"On startup, the showActive button text should be '√ Active' and todoLi class not 'active-removed' on active todos.": function() {
 		todolist.innerHTML = '';
@@ -3309,10 +3281,9 @@ tests({
 		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
 	},
 	"The header actions bar should have a showCompleted button to toggle showing completed todos.": function() {
-		var actionsDiv = document.getElementById('actions');
 		eq(showCompletedButton.nodeName, 'BUTTON');
 		eq(showCompletedButton.innerText, '√ Completed');
-		eq(actionsDiv.children[4], showCompletedButton); 
+		eq(showCompletedButton.parentElement, actionsBar);
 	},
 	"On startup, the showCompleted button text should be '√ Completed' and todoLi class not 'completed-removed' on completed todos.": function() {
 		todolist.innerHTML = '';
@@ -3372,10 +3343,9 @@ tests({
 		eq(todoLi2Child.children[entryIndex].classList.contains('struck'), true);
 	},
 	"The header actions bar should have a showDeleted button to toggle showing deleted todos.": function() {
-		var actionsDiv = document.getElementById('actions');
 		eq(showDeletedButton.nodeName, 'BUTTON');
 		eq(showDeletedButton.innerText, 'Deleted');
-		eq(actionsDiv.children[5], showDeletedButton); 
+		eq(showDeletedButton.parentElement, actionsBar);
 	},
 	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'deleted-removed' on deleted todos.": function() {
 		todolist.innerHTML = '';
@@ -3469,10 +3439,9 @@ tests({
 	},
 	"The header actions bar should have an addTodo button that adds a todo to the end of the list.": function() {
 		// In case filtering the list results in no displayed todos
-		var actionsDiv = document.getElementById('actions');
 		eq(addTodoButton.nodeName, 'BUTTON');
 		eq(addTodoButton.innerText, 'Add todo');
-		eq(actionsDiv.children[7], addTodoButton); 
+		eq(addTodoButton.parentElement, actionsBar);
 		
 		todolist.innerHTML = '';
 		todos = [];
@@ -3493,10 +3462,9 @@ tests({
 		eq(todoLi2.id, todos[1].id);
 	},
 	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
-		var actionsDiv = document.getElementById('actions');
 		eq(undoEditButton.nodeName, 'BUTTON');
 		eq(undoEditButton.innerText, 'Undo edit');
-		eq(actionsDiv.children[8], undoEditButton);
+		eq(undoEditButton.parentElement, actionsBar);
 	},
 	"addTodoButton and undoEditButton should be set to default values on startup.": function() {
 		startApp();
