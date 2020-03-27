@@ -2361,23 +2361,18 @@ tests({
 		eq(deleteSelectedButton.textContent, 'Undelete selected');
 	},
 	"Clicking selectAll button should toggle actions bar addTodo button class 'inactive'.": function() {
-		// Removed undoEdit test because that button is now controlled by editHandler
-
 		eq(selectAllButton.textContent, 'Select all');
 		eq(addTodoButton.classList.contains('inactive'), false);
-//		eq(undoEditButton.classList.contains('inactive'), false);
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Unselect all');
 		eq(addTodoButton.classList.contains('inactive'), true);
-//		eq(undoEditButton.classList.contains('inactive'), true);
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Select all');
 		eq(addTodoButton.classList.contains('inactive'), false);
-//		eq(undoEditButton.classList.contains('inactive'), false);
 	},
 	"selectAll button with text 'Select all' should only apply to displayed todos.": function() {
 		selectAllButton.textContent = 'Select all';
