@@ -234,14 +234,11 @@ var showCompletedButton = document.getElementsByName('showCompleted')[0];
 var showDeletedButton = document.getElementsByName('showDeleted')[0];
 var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
 var addTodoButton = document.getElementsByName('addTodo')[0];
-var undoEditButton = document.getElementsByName('undoEdit')[0];
 
 var todolist = document.getElementById('todolist');
 
-// Global variables for todo entry being edited
-var entryJustEdited = undefined;
-var todoJustEdited = undefined;
-var originalEntry = undefined;
+// Global variable for todo entry being edited
+var originalEntry = 'original';
 
 // index positions of todoLi.children[i]
 var completedIndex = 0;
@@ -249,12 +246,13 @@ var deleteIndex = 1;
 var addSiblingIndex = 2;
 var addChildIndex = 3;
 var selectedIndex = 4;
-var entryIndex = 5;
-var selectChildrenIndex = 6;
-var showChildrenIndex = 7;
-var completeSelectedChildrenIndex = 8;
-var deleteSelectedChildrenIndex = 9;
-var todoLiUlIndex = 10;
+var undoEditIndex = 5;
+var entryIndex = 6;
+var selectChildrenIndex = 7;
+var showChildrenIndex = 8;
+var completeSelectedChildrenIndex = 9;
+var deleteSelectedChildrenIndex = 10;
+var todoLiUlIndex = 11;
 
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
@@ -302,6 +300,13 @@ function createTodoLi(todo) {
 	}
 	selectedButton.classList.add('inactive');
 	todoLi.appendChild(selectedButton);
+
+	var undoEditButton = document.createElement('button')
+	undoEditButton.name = 'undoEdit';
+	undoEditButton.type = 'button';
+	undoEditButton.textContent = 'Undo edit';
+	undoEditButton.classList.add('inactive');
+	todoLi.appendChild(undoEditButton);
 
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
@@ -1514,7 +1519,7 @@ function keyUpHandler(event) {
 		if (event.key === "Enter") {
 			if (event.shiftKey) {
 				// Shift-return appends a new child todo
-				// these five lines lifted from addChild event handler
+				// these lines lifted from addChild event handler, TODO consolidate
 				appendNewChildTodoLi(todoLi)
 				todo.collapsed = false;
 				todoLi.children[todoLiUlIndex].classList.remove('collapsed');
@@ -1525,10 +1530,12 @@ function keyUpHandler(event) {
 				insertNewTodoLi(todoArray, todo.id);
 			}
 		} else if (event.key === "Escape") {
-			// these three lines lifted from undoEdit event handler
-			todoJustEdited.entry = originalEntry;
-			entryJustEdited.textContent = originalEntry;
-			undoEditButton.classList.add('inactive');
+			// these lines lifted from undoEdit event handler, TODO consolidate
+			todo.entry = originalEntry
+			var todoLiEntry = todoLi.children[entryIndex];
+			todoLiEntry.textContent = originalEntry
+			var todoLiUndoEditButton = todoLi.children[undoEditIndex];
+			todoLiUndoEditButton.classList.add('inactive');
 		}
 	}
 }
@@ -1538,13 +1545,14 @@ function keyUpHandler(event) {
 function inputHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
-		undoEditButton.classList.remove('inactive');
 		var todoLi = event.target.parentElement;
-		var todo = findTodo(todos, todoLi.id);
+		var todoLiUndoEditButton = todoLi.children[undoEditIndex];
 		var todoLiEntry = todoLi.children[entryIndex];
+		var todo = findTodo(todos, todoLi.id);
 		// set up variables for undoEdit
-		entryJustEdited = todoLiEntry;
-		todoJustEdited = todo;
+//		entryJustEdited = todoLiEntry;
+//		todoJustEdited = todo;
+		todoLiUndoEditButton.classList.remove('inactive');
 	}
 }
 
@@ -1554,14 +1562,15 @@ function editHandler(event) {
 		// target is a todo entry
 		var todoLi = event.target.parentElement;
 		var todo = findTodo(todos, todoLi.id);
-		// Is this conditional necessary?
+		// TODO Is this conditional necessary?
 		if (todo) {
 			if (todo.entry !== event.target.textContent) {
 				originalEntry = todo.entry;				// save to allow undoEdit
 				todo.update(event.target.textContent);
 			}
 		}
-		undoEditButton.classList.add('inactive');
+		var todoLiUndoEditButton = todoLi.children[undoEditIndex];
+		todoLiUndoEditButton.classList.add('inactive');
 	}
 }
 
@@ -1677,6 +1686,12 @@ function todoClickHandler(event) {
 			todoLi.children[showChildrenIndex].classList.remove('inactive');
 			todoLi.children[selectChildrenIndex].classList.remove('inactive');
 		}
+		if (event.target.name === "undoEdit") {
+			todo.entry = originalEntry;
+			todoLiEntry.textContent = originalEntry;
+			var todoLiUndoEditButton = todoLi.children[undoEditIndex];
+			todoLiUndoEditButton.classList.add('inactive');
+		}
 		if (event.target.name === "showChildren") {
 			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
 			var todoLiUl = todoLi.children[todoLiUlIndex];
@@ -1697,25 +1712,6 @@ function todoClickHandler(event) {
 		if (event.target.name === "selectChildren") {
 			altSelectChildren(todoLi);
 			togglePurgeSelectedDeletedTodos();
-//			var todoLiSelectButton = todoLi.children[selectedIndex];
-//			var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
-//			var todoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
-//			var todoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
-//			if (todoLiSelectChildrenButton.textContent === 'Select children') {
-//				if (todoLiSelectButton.classList.contains('inactive')) {
-//						selectChildrenFromRoot(todoLi);
-//						todoLiCompleteSelectedChildrenButton.classList.remove('inactive');
-//						todoLiDeleteSelectedChildrenButton.classList.remove('inactive');
-//				} else {
-//					selectChildrenFromBranch(todoLi);
-//				}
-//			} else {	// selectChildrenButton text is 'Unselect children'
-//				if (todoLiSelectButton.classList.contains('inactive')) {
-//					selectChildrenFromRoot(todoLi);
-//				} else {
-//					selectChildrenFromBranch(todoLi);
-//				}
-//			}
 		}
 		if (event.target.name === "completeSelectedChildren") {
 			completeSelectedChildren(todoLi);
@@ -1823,7 +1819,6 @@ function actionsClickHandler() {
 				completeSelectedButton.classList.remove('inactive');
 				deleteSelectedButton.classList.remove('inactive');
 				addTodoButton.classList.add('inactive');
-				undoEditButton.classList.add('inactive');
 				var todosUncompletedCount = 0;
 				var todosUndeletedCount = 0;
 				for (var i = 0; i < todosUl.children.length; i++) {
@@ -1834,12 +1829,14 @@ function actionsClickHandler() {
 						var todoLiDeleteButton = todoLi.children[deleteIndex];
 						var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
 						var todoLiAddChildButton = todoLi.children[addChildIndex];
+//						var todoLiUndoEditButton = todoLi.children[undoEditIndex];
 						todoLiSelectButton.textContent = 'Unselect';
 						todoLiSelectButton.classList.remove('inactive');
 						todoLiCompleteButton.classList.add('inactive');
 						todoLiDeleteButton.classList.add('inactive');
 						todoLiAddSiblingButton.classList.add('inactive');
 						todoLiAddChildButton.classList.add('inactive');
+//						todoLiUndoEditButton.classList.add('inactive');
 						var todoLiEntry = todoLi.children[entryIndex];
 						todoLiEntry.classList.add('highlighted');
 						var todo = findTodo(todos, todoLi.id)
@@ -1869,7 +1866,6 @@ function actionsClickHandler() {
 				completeSelectedButton.classList.add('inactive');
 				deleteSelectedButton.classList.add('inactive');
 				addTodoButton.classList.remove('inactive');
-				//undoEditButton.classList.remove('inactive');
 				for (var i = 0; i < todosUl.children.length; i++) {
 					var todoLi = todosUl.children[i];
 					var todoLiSelectButton = todoLi.children[selectedIndex];
@@ -1877,12 +1873,14 @@ function actionsClickHandler() {
 					var todoLiDeleteButton = todoLi.children[deleteIndex];
 					var todoLiAddSiblingButton = todoLi.children[addSiblingIndex];
 					var todoLiAddChildButton = todoLi.children[addChildIndex];
+//					var todoLiUndoEditButton = todoLi.children[undoEditIndex];
 					todoLiSelectButton.textContent = 'Select';
 					todoLiSelectButton.classList.add('inactive');
 					todoLiCompleteButton.classList.remove('inactive');
 					todoLiDeleteButton.classList.remove('inactive');
 					todoLiAddSiblingButton.classList.remove('inactive');
 					todoLiAddChildButton.classList.remove('inactive');
+//					todoLiUndoEditButton.classList.remove('inactive');
 					var todoLiEntry = todoLi.children[entryIndex];
 					todoLiEntry.classList.remove('highlighted');
 					var todo = findTodo(todos, todoLi.id)
@@ -1996,11 +1994,6 @@ function actionsClickHandler() {
 		if (event.target.name === 'addTodo') {
 			insertNewTodoLi(todos);
 		}
-		if (event.target.name === 'undoEdit') {
-			todoJustEdited.entry = originalEntry;
-			entryJustEdited.textContent = originalEntry;
-			undoEditButton.classList.add('inactive');
-		}
 	}
 }
 
@@ -2026,7 +2019,6 @@ function startApp() {
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
 	addTodoButton.classList.remove('inactive');	
-	undoEditButton.classList.add('inactive');
 	todolist.innerHTML = '';
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);

@@ -288,8 +288,8 @@ tests({
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
-		eq(todoLi.children[entryIndex].textContent, 'Item 1');	
 
+		eq(todoLi.children[entryIndex].textContent, 'Item 1');	
 	},
 	"Each todo li should have an id equal to todo.id.": function() {
 		todos = [];
@@ -440,12 +440,12 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		eq(todoLi1.childElementCount, 10);
+		eq(todoLi1.childElementCount, 11);
 		eq(todoLi1.children[entryIndex].textContent, 'Item 1');
 
 		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
 
-		eq(todoLi1.childElementCount, 11);
+		eq(todoLi1.childElementCount, 12);
 		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todoLi1Ul.nodeName, "UL");
@@ -458,7 +458,7 @@ tests({
 
 		appendNewChildTodoLi(todoLi1);			// case of second child added to existing UL
 
-		eq(todoLi1.childElementCount, 11);
+		eq(todoLi1.childElementCount, 12);
 		
 		var child1 = todo1.children[0];
 		var child1Li = todoLi1Ul.children[0];
@@ -925,12 +925,12 @@ tests({
 		todoLi1ChildButton = todoLi1.children[addChildIndex];
 
 		eq(todosUl.childElementCount, 1);
-		eq(todoLi1.childElementCount, 10);
+		eq(todoLi1.childElementCount, 11);
 
 		todoLi1ChildButton.click();
 
 		eq(todosUl.childElementCount, 1);
-		eq(todoLi1.childElementCount, 11);
+		eq(todoLi1.childElementCount, 12);
 		var todoLi1Ul = todoLi1.children[todoLiUlIndex]
 		var todoLi1Child1 = todoLi1Ul.children[0];
 		eq(todoLi1Child1.nodeName, 'LI');
@@ -961,7 +961,128 @@ tests({
 
 		eq(todo1.collapsed, false);
 		eq(todoLi1.children[todoLiUlIndex].classList.contains('collapsed'), false);
-	}, 
+	},
+	"Each todo li should have an 'undoEdit' button to revert changes to the entry.": function() {
+		todolist.innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todolist.appendChild(createTodosUl(todos));
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1UndoEditButton = todoLi1.children[undoEditIndex];
+
+		eq(todoLi1UndoEditButton.nodeName, 'BUTTON');
+		eq(todoLi1UndoEditButton.name, 'undoEdit');
+		eq(todoLi1UndoEditButton.textContent, 'Undo edit');
+	},
+	"undoEditButton should become active when a todoLi entry is edited.": function() {
+		manual();
+		// app code works, TODO need to figure out synthetic events
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1UndoEditButton = todoLi.children[undoEditIndex];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(todoLi1UndoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
+
+		// simulate input
+		todoLi1Entry.textContent = 'Item 11';	// doesn't trigger an input event so doesn't signal an edit
+		var testEvent = new Event('input');
+		todoLi1Entry.dispatchEvent(testEvent);	// doesn't trigger app event handler
+
+		eq(todoLi1UndoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
+
+		addTodoButton.click();
+
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi2UndoEditButton = todoLi2.children[undoEditIndex];
+		var todoLi2Entry = todoLi2.children[entryIndex];
+		
+		eq(todoLi1UndoEditButton.classList.contains('inactive'), true);
+		eq(todoLi2Entry.textContent, '');
+
+		// simulate pasted input
+		// Code to paste 'Item 2' with a synthetic paste event to trigger the input event
+		todoLi2Entry.textContent = 'Item 2';	// doesn't trigger an input event so doesn't signal an edit
+
+		eq(todoLi2UndoEditButton.classList.contains('inactive'), false);
+		eq(todoLi2Entry.textContent, 'Item 2');
+	},
+	"undoEditButton should become inactive when an edit is completed.": function() {
+		manual();
+		// app code works, TODO need to figure out synthetic events
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
+
+		// Case 1: edit completed with undoEditButton click
+
+		// TODO code to append a '1' with a synthetic key event
+
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
+
+		undoEditButton.click();
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLiEntry.textContent, 'Item 1');
+
+		// Case 2: edit completed when entry loses focus
+
+		// TODO code to append a '1' with a synthetic key event
+
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
+
+		addTodoButton.click();	// edit over as entry loses focus
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 11');
+	},
+	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton inactive.": function() {
+		manual();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
+
+		// TODO need to trigger an input event here
+		// Activate undoEditButton programmatically in lieu of firing an input event
+		todoLi1Entry.textContent = 'Item 11';
+
+		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1Entry.textContent, 'Item 11');
+
+		undoEditButton.click();
+
+		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1Entry.textContent, 'Item 1');
+
+		// TODO should entry still have focus?
+	},
 	"Each todoLi should have a showChildren button to expand/collapse nested todos.": function() {
 		todolist.innerHTML = '';
 		todos = [];
@@ -3456,121 +3577,10 @@ tests({
 		eq(todos.length, 2);
 		eq(todoLi2.id, todos[1].id);
 	},
-	"The header actions bar should have an 'Undo edit' button to revert todo text changes.": function() {
-		eq(undoEditButton.nodeName, 'BUTTON');
-		eq(undoEditButton.innerText, 'Undo edit');
-		eq(undoEditButton.parentElement, actionsBar);
-	},
-	"addTodoButton and undoEditButton should be set to default values on startup.": function() {
+	"The addTodoButton should be inactive by default on startup.": function() {
 		startApp();
 
 		eq(addTodoButton.classList.contains('inactive'), false);
-		eq(undoEditButton.classList.contains('inactive'), true);
-	},
-	"undoEditButton should become active when a todo is edited.": function() {
-		manual();
-		// app code works, TODO need to figure out synthetic events
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-
-		startApp();
-
-		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1Entry = todoLi1.children[entryIndex];
-
-		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLi1Entry.textContent, 'Item 1');
-
-		// simulate input
-		todoLi1Entry.textContent = 'Item 11';	// doesn't trigger an input event so doesn't signal an edit
-		var testEvent = new Event('input');
-		todoLi1Entry.dispatchEvent(testEvent);	// doesn't trigger app event handler
-
-		eq(undoEditButton.classList.contains('inactive'), false);
-		eq(todoLi1Entry.textContent, 'Item 11');
-
-		addTodoButton.click();
-
-		var todoLi2 = todolist.children[0].children[1];
-		var todoLi2Entry = todoLi2.children[entryIndex];
-		
-		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLi2Entry.textContent, '');
-
-		// simulate pasted input
-		// Code to paste 'Item 2' with a synthetic paste event to trigger the input event
-		todoLi2Entry.textContent = 'Item 2';	// doesn't trigger an input event so doesn't signal an edit
-
-		eq(undoEditButton.classList.contains('inactive'), false);
-		eq(todoLi2Entry.textContent, 'Item 2');
-	},
-	"undoEditButton should become inactive when an edit is completed.": function() {
-		manual();
-		// app code works, TODO need to figure out synthetic events
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-
-		startApp();
-
-		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1Entry = todoLi1.children[entryIndex];
-
-		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLi1Entry.textContent, 'Item 1');
-
-		// Case 1: edit completed with undoEditButton click
-
-		// TODO code to append a '1' with a synthetic key event
-
-		eq(undoEditButton.classList.contains('inactive'), false);
-		eq(todoLi1Entry.textContent, 'Item 11');
-
-		undoEditButton.click();
-
-		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLiEntry.textContent, 'Item 1');
-
-		// Case 2: edit completed when entry loses focus
-
-		// TODO code to append a '1' with a synthetic key event
-
-		eq(undoEditButton.classList.contains('inactive'), false);
-		eq(todoLi1Entry.textContent, 'Item 11');
-
-		addTodoButton.click();	// edit over as entry loses focus
-
-		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLi1Entry.textContent, 'Item 11');
-	},
-	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton inactive.": function() {
-		manual();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-
-		startApp();
-
-		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1Entry = todoLi1.children[entryIndex];
-
-		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLi1Entry.textContent, 'Item 1');
-
-		// TODO need to trigger an input event here
-		// Activate undoEditButton programmatically in lieu of firing an input event
-		todoLi1Entry.textContent = 'Item 11';
-
-		eq(undoEditButton.classList.contains('inactive'), false);
-		eq(todoLi1Entry.textContent, 'Item 11');
-
-		undoEditButton.click();
-
-		eq(undoEditButton.classList.contains('inactive'), true);
-		eq(todoLi1Entry.textContent, 'Item 1');
-
-		// TODO should entry still have focus?
 	},
 	"purgeSelectedDeletedButton should be active only when showDeletedButton text is '√ Deleted' and at least one todo is selected.": function() {
 		todos = [];
