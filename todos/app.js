@@ -237,8 +237,9 @@ var addTodoButton = document.getElementsByName('addTodo')[0];
 
 var todolist = document.getElementById('todolist');
 
-// Global variable for todo entry being edited
-var originalEntry = 'original';
+// Global variables for todo entry being edited
+var originalEntry = undefined;		// entry to be restored by undoEdit	
+var oldUndoEditButton = undefined;	// button to deactivate from last todoLi to be edited
 
 // index positions of todoLi.children[i]
 var completedIndex = 0;
@@ -1552,7 +1553,12 @@ function inputHandler(event) {
 		// set up variables for undoEdit
 //		entryJustEdited = todoLiEntry;
 //		todoJustEdited = todo;
+		originalEntry = todo.entry;
+		if (oldUndoEditButton) {
+			oldUndoEditButton.classList.add('inactive');	// only want one undoEditButton at a time
+		}
 		todoLiUndoEditButton.classList.remove('inactive');
+		oldUndoEditButton = todoLiUndoEditButton;
 	}
 }
 
@@ -1561,16 +1567,17 @@ function editHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
 		var todoLi = event.target.parentElement;
+		var editedEntry = event.target.textContent;
 		var todo = findTodo(todos, todoLi.id);
 		// TODO Is this conditional necessary?
-		if (todo) {
-			if (todo.entry !== event.target.textContent) {
-				originalEntry = todo.entry;				// save to allow undoEdit
-				todo.update(event.target.textContent);
-			}
+//		if (todo) {
+		if (todo.entry !== editedEntry) {
+//			originalEntry = todo.entry;				// save to allow undoEdit
+			todo.update(editedEntry);
 		}
-		var todoLiUndoEditButton = todoLi.children[undoEditIndex];
-		todoLiUndoEditButton.classList.add('inactive');
+//		}
+//		var todoLiUndoEditButton = todoLi.children[undoEditIndex];
+//		todoLiUndoEditButton.classList.add('inactive');
 	}
 }
 
