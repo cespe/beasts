@@ -97,91 +97,8 @@ tests({
 		newTodo.markCollapsed(false);
 		eq(newTodo.collapsed, false);
 	},
-	"The app should have a way to return a todo when given its id.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
-		insertTodo(todos, todo2);
-		child1 = new Todo('Item 1 child 1');
-		todo1.addChild(child1);
-		child2 = new Todo('Item 1 child 2');
-		todo1.addChild(child2);
-		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
-		child1.addChild(grandchild1);
-
-		var result = findTodo(todos, todo2.id);
-		eq(result, todo2);
-		var result = findTodo(todos, child1.id);
-		eq(result, child1);
-		var result = findTodo(todos, child2.id);
-		eq(result, child2);
-		var result = findTodo(todos, grandchild1.id);
-		eq(result, grandchild1);
-	},
-	"The app should have a way to return the array holding a todo when given its id.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
-		insertTodo(todos, todo2);
-		child1 = new Todo('Item 1 child 1');
-		todo1.addChild(child1);
-		child2 = new Todo('Item 1 child 2');
-		todo1.addChild(child2);
-		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
-		child1.addChild(grandchild1);
-
-		var result = findArray(todos, todo2.id);
-		eq(result, todos);
-		var result = findArray(todos, child1.id);
-		eq(result, todo1.children);
-		var result = findArray(todos, child2.id);
-		eq(result, todo1.children);
-		var result = findArray(todos, grandchild1.id);
-		eq(result, child1.children);
-	},
-	"The app should have a way to return the parent of a given todo.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
-		insertTodo(todos, todo2);
-		child1 = new Todo('Item 1 child 1');
-		todo1.addChild(child1);
-		child2 = new Todo('Item 1 child 2');
-		todo1.addChild(child2);
-		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
-		child1.addChild(grandchild1);
-		item2Child1 = new Todo('Item 2 child 1');
-		grandchild2 = new Todo('Item 2 child 1 grandchild 1');
-		todo2.addChild(item2Child1);
-		item2Child1.addChild(grandchild2);
-		
-		var result = findParent(todo1);
-		eq(result, undefined);
-		var result = findParent(todo2);
-		eq(result, undefined);
-		var result = findParent(child1);
-		eq(result, todo1);
-		var result = findParent(child2);
-		eq(result, todo1);
-		var result = findParent(grandchild1);
-		eq(result, child1);
-		var result = findParent(item2Child1);
-		eq(result, todo2);
-		var result = findParent(grandchild2);
-		eq(result, item2Child1);
-	},
-	"The app should have a way to determine if nested todos are selected.": function() {
-		// Test anySelectedTodos function
-		fail();
-	},
-	"The app should have a way to determine if nested todos are unselected.": function() {
-		// Test anyUnselectedTodos function
-		fail();
-	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
+		// Test insertTodo(array, todoToInsert, todoBeforeInsertionPoint)
 		todos = []
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -282,6 +199,93 @@ tests({
 		eq(todo1.children[0], child1);
 		eq(todo1.children[1], child3);
 
+	},
+	"The app should have a way to return a todo when given its id.": function() {
+		// Test findTodo(array, id)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+
+		var result = findTodo(todos, todo2.id);
+		eq(result, todo2);
+		var result = findTodo(todos, child1.id);
+		eq(result, child1);
+		var result = findTodo(todos, child2.id);
+		eq(result, child2);
+		var result = findTodo(todos, grandchild1.id);
+		eq(result, grandchild1);
+	},
+	"The app should have a way to return the array holding a todo when given its id.": function() {
+		// Test findArray(array, id)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+
+		var result = findArray(todos, todo2.id);
+		eq(result, todos);
+		var result = findArray(todos, child1.id);
+		eq(result, todo1.children);
+		var result = findArray(todos, child2.id);
+		eq(result, todo1.children);
+		var result = findArray(todos, grandchild1.id);
+		eq(result, child1.children);
+	},
+	"The app should have a way to return the parent of a given todo.": function() {
+		// Test findParent(childTodo)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+		item2Child1 = new Todo('Item 2 child 1');
+		grandchild2 = new Todo('Item 2 child 1 grandchild 1');
+		todo2.addChild(item2Child1);
+		item2Child1.addChild(grandchild2);
+		
+		var result = findParent(todo1);
+		eq(result, undefined);
+		var result = findParent(todo2);
+		eq(result, undefined);
+		var result = findParent(child1);
+		eq(result, todo1);
+		var result = findParent(child2);
+		eq(result, todo1);
+		var result = findParent(grandchild1);
+		eq(result, child1);
+		var result = findParent(item2Child1);
+		eq(result, todo2);
+		var result = findParent(grandchild2);
+		eq(result, item2Child1);
+	},
+	"The app should have a way to determine if nested todos are selected.": function() {
+		// Test anySelectedTodos function
+		fail();
+	},
+	"The app should have a way to determine if nested todos are unselected.": function() {
+		// Test anyUnselectedTodos function
+		fail();
 	},
 	"The app should have a way to build an li element from a todo entry.": function() {
 		todos = [];
