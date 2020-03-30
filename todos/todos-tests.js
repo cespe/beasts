@@ -279,12 +279,67 @@ tests({
 		var result = findParent(grandchild2);
 		eq(result, item2Child1);
 	},
-	"The app should have a way to determine if nested todos are selected.": function() {
-		// Test anySelectedTodos function
-		fail();
+	"The app should have a way to determine if any todos, including nested todos, are selected.": function() {
+		// Test anySelectedTodos(array)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		todo2Child1 = new Todo('Item 2 child 1');
+		todo2Grandchild1 = new Todo('Item 2 child 1 grandchild 1');
+		todo2.addChild(todo2Child1);
+		todo2Child1.addChild(todo2Grandchild1);
+		
+		eq(anySelectedTodos(todos), false);
+		todo1.selected = true;
+		eq(anySelectedTodos(todos), true);
+		todo1.selected = false;
+		eq(anySelectedTodos(todos), false);
+
+		child1.selected = true;
+		eq(anySelectedTodos(todos), true);
+		child1.selected = false;
+		eq(anySelectedTodos(todos), false);
+
+		child2.selected = true;
+		eq(anySelectedTodos(todos), true);
+		child2.selected = false;
+		eq(anySelectedTodos(todos), false);
+
+		grandchild1.selected = true;
+		eq(anySelectedTodos(todos), true);
+		grandchild1.selected = false;
+		eq(anySelectedTodos(todos), false);
+
+		todo2.selected = true;
+		eq(anySelectedTodos(todos), true);
+		todo2.selected = false;
+		eq(anySelectedTodos(todos), false);
+
+		todo2Child1.selected = true;
+		eq(anySelectedTodos(todos), true);
+		todo2Child1.selected = false;
+		eq(anySelectedTodos(todos), false);
+
+		todo2Grandchild1.selected = true;
+		eq(anySelectedTodos(todos), true);
+		todo2Grandchild1.selected = false;
+		eq(anySelectedTodos(todos), false);
+
+		todo2Grandchild1.selected = true;
+		eq(anySelectedTodos(todo2.children), true);
+		todo2Grandchild1.selected = false;
+		eq(anySelectedTodos(todo2.children), false);
 	},
-	"The app should have a way to determine if nested todos are unselected.": function() {
-		// Test anyUnselectedTodos function
+	"The app should have a way to determine if any todos, including nested todos, are unselected.": function() {
+		// Test anyUnselectedTodos(array)
 		fail();
 	},
 	"The app should have a way to build an li element from a todo entry.": function() {

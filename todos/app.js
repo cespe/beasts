@@ -159,6 +159,7 @@ function anySelectedTodos(array) {
 			} 
 		}
 	}
+	return false;
 }
 
 // Return true if any todos, including nested todos, are unselected
