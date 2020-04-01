@@ -170,12 +170,13 @@ function anyUnselectedTodos(array) {
 			return true;
 		}
 		if (todo.children.length > 0) {
-			var todoSelected = anyUnselectedTodos(todo.children);
-			if (!todoSelected) {
+			var unselected = anyUnselectedTodos(todo.children);
+			if (unselected) {
 				return true;
 			}
 		}
 	}
+	return false;
 }
 
 // Return true if any todos, including nested todos, are deleted
@@ -536,13 +537,17 @@ function altSelectChildren(todoLi) {
 	// Root has completeSelectedChildren and deleteSelectedChildren buttons active. Branches do not.
 	//
 	// If root 'Unselect children' is clicked, the todoLi and all children return to normal.
-	// If branch 'Unselect children' is clicked, the todoLi and all children stay in selection mode.
+	// If branch 'Unselect children' is clicked, the todoLi and all children stay in selection mode
+	// TODO unless it makes all the root children unselected, in which case root children return to normal.
 
 	var clickedTodoLi = todoLi;
+	var clickedTodo = findTodo(todos, clickedTodoLi.id);
 	var clickedTodoLiSelectButton = todoLi.children[selectedIndex];
 	var clickedTodoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
+	// TODO Are these two declarations premature? Only needed for root. 
 	var clickedTodoLiCompleteSelectedChildrenButton = todoLi.children[completeSelectedChildrenIndex];
 	var clickedTodoLiDeleteSelectedChildrenButton = todoLi.children[deleteSelectedChildrenIndex];
+	//
 	var childrenUncompletedCount = 0;
 	var childrenUndeletedCount = 0;
 
@@ -660,8 +665,8 @@ function altSelectChildren(todoLi) {
 		if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
 			for (var i = 0; i < todo.children.length; i++) {
 				childLi = todoLiUl.children[i];
-				if (childLi.classList.length === 0) {
-					selectChildrenFromBranch(childLi);	// only process children that are not hidden
+				if (childLi.classList.length === 0) {	// only process children that are not hidden
+					selectChildrenFromBranch(childLi);
 				}
 			}
 		}
@@ -701,10 +706,11 @@ function altSelectChildren(todoLi) {
 
 		} else {	// Branch 'Unselect children' clicked
 
-			if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
-				todoLiSelectChildrenButton.textContent = 'Select children';
+			if (todo.children.length > 0 && todoLiUl.classList.length === 0) {	// Conditional necessary? Yes because
+				todoLiSelectChildrenButton.textContent = 'Select children';		// it acts on nested todoLis.
 				for (var i = 0; i < todo.children.length; i++) {
 					var childTodo = todo.children[i];
+					// TODO these are not necessary for branch are they?
 					if (childTodo.completed === false) {
 						childrenUncompletedCount++;
 					}
@@ -715,7 +721,7 @@ function altSelectChildren(todoLi) {
 			}
 
 			if (todoLi === clickedTodoLi) {
-				// Special handling for the root todoLi
+				// Special handling for the clicked todoLi TODO remove conditional
 				//todoLiCompleteSelectedChildrenButton.classList.add('inactive');
 				//todoLiDeleteSelectedChildrenButton.classList.add('inactive');
 
@@ -735,6 +741,21 @@ function altSelectChildren(todoLi) {
 	} else {
 		// branch button clicked
 		selectChildrenFromBranch(todoLi);
+		// Get root todoLi to toggle its selectChildrenButton if necessary
+		var rootTodo = findSelectChildrenRootTodo(clickedTodo);
+		if (rootTodo) {
+			if (!anySelectedTodos(rootTodo.children)) {
+				// restore all normal buttons under rootTodoLi
+				var rootTodoLi = document.getElementById(rootTodo.id);
+				unselectAllChildren(rootTodoLi);
+			}	
+		} else {
+			// root button is selectAll
+			if (!anySelectedTodos(todos)) {
+				// restore all normal buttons
+				unselectAll();
+			}
+		}
 	}
 
 	if (childrenUncompletedCount === 0) {
@@ -747,7 +768,22 @@ function altSelectChildren(todoLi) {
 	} else {
 		clickedTodoLiDeleteSelectedChildrenButton.textContent = 'Delete selected children';
 	}
+	togglePurgeSelectedDeletedTodos();
+}
 
+function findSelectChildrenRootTodo(todoLi) {
+	var parent = findParent(todoLi);
+	if (parent) {
+		var parentTodoLi = document.getElementById(parent.id);
+		var parentTodoLiSelectButton = parentTodoLi.children[selectedIndex];
+		if (parentTodoLiSelectButton.classList.contains('inactive')) {
+			return parent;
+		} else {
+			findSelectChildrenRootTodoLi(parent);
+		}
+	} else {
+		return undefined;
+	}
 }
 
 function selectChildrenFromRoot(todoLi) {
@@ -1869,7 +1905,7 @@ function actionsClickHandler() {
 					selectAllChildren(todoLi);		// recursively select displayed nested todos	
 				}
 			} else {
-//				unselectAll(selectAllButton);
+//				unselectAll();	// TODO performs same function as code below...
 				selectAllButton.textContent = 'Select all';
 				completeSelectedButton.classList.add('inactive');
 				deleteSelectedButton.classList.add('inactive');

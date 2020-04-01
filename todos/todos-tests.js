@@ -340,7 +340,71 @@ tests({
 	},
 	"The app should have a way to determine if any todos, including nested todos, are unselected.": function() {
 		// Test anyUnselectedTodos(array)
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		todo2Child1 = new Todo('Item 2 child 1');
+		todo2Grandchild1 = new Todo('Item 2 child 1 grandchild 1');
+		todo2.addChild(todo2Child1);
+		todo2Child1.addChild(todo2Grandchild1);
+		
+		todo1.selected = true;
+		child1.selected = true;
+		child2.selected = true;
+		grandchild1.selected = true;
+		todo2.selected = true;
+		todo2Child1.selected = true;
+		todo2Grandchild1.selected = true;
+
+		eq(anyUnselectedTodos(todos), false);
+		
+		todo1.selected = false;
+		eq(anyUnselectedTodos(todos), true);
+		todo1.selected = true;
+		eq(anyUnselectedTodos(todos), false);
+
+		child1.selected = false;
+		eq(anyUnselectedTodos(todos), true);
+		child1.selected = true;
+		eq(anyUnselectedTodos(todos), false);
+
+		child2.selected = false;
+		eq(anyUnselectedTodos(todos), true);
+		child2.selected = true;
+		eq(anyUnselectedTodos(todos), false);
+
+		grandchild1.selected = false;
+		eq(anyUnselectedTodos(todos), true);
+		grandchild1.selected = true;
+		eq(anyUnselectedTodos(todos), false);
+
+		todo2.selected = false;
+		eq(anyUnselectedTodos(todos), true);
+		todo2.selected = true;
+		eq(anyUnselectedTodos(todos), false);
+
+		todo2Child1.selected = false;
+		eq(anyUnselectedTodos(todos), true);
+		todo2Child1.selected = true;
+		eq(anyUnselectedTodos(todos), false);
+
+		todo2Grandchild1.selected = false;
+		eq(anyUnselectedTodos(todos), true);
+		todo2Grandchild1.selected = true;
+		eq(anyUnselectedTodos(todos), false);
+
+		todo2Grandchild1.selected = false;
+		eq(anyUnselectedTodos(todo2.children), true);
+		todo2Grandchild1.selected = true;
+		eq(anyUnselectedTodos(todo2.children), false);
 	},
 	"The app should have a way to build an li element from a todo entry.": function() {
 		todos = [];
@@ -6303,7 +6367,7 @@ tests({
 		eq(childLi2SelectButton.textContent, 'Unselect');
 		eq(childLi2SelectButton.classList.contains('inactive'), false);
 
-		childLi1SelectChildrenButton.click();	// unselect grandchildren for final case
+		childLi1SelectChildrenButton.click();	// unselect grandchildren for next case
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
 		eq(child1.selected, true);
@@ -6353,6 +6417,33 @@ tests({
 		eq(child2.selected, false);
 		eq(childLi2SelectButton.textContent, 'Select');
 		eq(childLi2SelectButton.classList.contains('inactive'), true);
+
+		// All todos unselected for next case
+
+		todoLi1SelectChildrenButton.click();
+
+		childLi1SelectButton.click();
+
+		childLi2SelectButton.click();
+
+		debugger;
+		childLi1SelectChildrenButton.click();
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(child1.selected, false);
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.classList.contains('inactive'), true);
+		eq(childLi1SelectChildrenButton.textContent, 'Select children');
+		eq(grandchild1.selected, false);
+		eq(grandchildLi1SelectButton.textContent, 'Select');
+		eq(grandchildLi1SelectButton.classList.contains('inactive'), true);
+		eq(grandchild2.selected, false);
+		eq(grandchildLi2SelectButton.textContent, 'Select');
+		eq(grandchildLi2SelectButton.classList.contains('inactive'), true);
+		eq(child2.selected, false);
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.classList.contains('inactive'), true);
+
 	},
 	"If showActive button is 'Active', addTodo button and todoLi addSibling and addChild buttons should be inactive.": function() {
 		// Because by definition a new todo is active
