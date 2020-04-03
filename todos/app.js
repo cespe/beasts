@@ -779,7 +779,7 @@ function findSelectChildrenRootTodo(todoLi) {
 		if (parentTodoLiSelectButton.classList.contains('inactive')) {
 			return parent;
 		} else {
-			findSelectChildrenRootTodoLi(parent);
+			findSelectChildrenRootTodo(parent);
 		}
 	} else {
 		return undefined;
@@ -1606,15 +1606,11 @@ function editHandler(event) {
 		var todoLi = event.target.parentElement;
 		var editedEntry = event.target.textContent;
 		var todo = findTodo(todos, todoLi.id);
-		// TODO Is this conditional necessary?
-//		if (todo) {
-		if (todo.entry !== editedEntry) {
-//			originalEntry = todo.entry;				// save to allow undoEdit
-			todo.update(editedEntry);
+		if (todo) {											// TODO Is this conditional necessary?
+			if (todo.entry !== editedEntry) {
+				todo.update(editedEntry);
+			}
 		}
-//		}
-//		var todoLiUndoEditButton = todoLi.children[undoEditIndex];
-//		todoLiUndoEditButton.classList.add('inactive');
 	}
 }
 
