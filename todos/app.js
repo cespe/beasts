@@ -584,9 +584,8 @@ function altSelectChildren(todoLi) {
 			todoLiAddSiblingButton.classList.add('inactive');
 			todoLiAddChildButton.classList.add('inactive');
 			todoLiShowChildrenButton.classList.add('inactive');
-			if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
+			if (todo.children.length > 0) {
 				todoLiSelectChildrenButton.textContent = 'Unselect children';
-				// todoLiSelectChildrenButton.classList.remove('inactive');
 				for (var i = 0; i < todo.children.length; i++) {
 					var childTodo = todo.children[i];
 					if (childTodo.completed === false) {
@@ -617,19 +616,21 @@ function altSelectChildren(todoLi) {
 			todoLiAddSiblingButton.classList.remove('inactive');
 			todoLiAddChildButton.classList.remove('inactive');
 
-			if (todo.children.length > 0 && todoLiUl.classList.length === 0) {
+			if (todo.children.length > 0) {
 				todoLiSelectChildrenButton.textContent = 'Select children';
 				todoLiShowChildrenButton.classList.remove('inactive');
-				for (var i = 0; i < todo.children.length; i++) {
-					var childTodo = todo.children[i];
-					if (childTodo.completed === false) {
-						childrenUncompletedCount++;
-					}
-					if (childTodo.deleted === false) {
-						childrenUndeletedCount++;
+
+				if (todoLiUl && todoLiUl.classList.length === 0) {
+					for (var i = 0; i < todo.children.length; i++) {
+						var childTodo = todo.children[i];
+						if (childTodo.completed === false) {
+							childrenUncompletedCount++;
+						}
+						if (childTodo.deleted === false) {
+							childrenUndeletedCount++;
+						}
 					}
 				}
-
 			}
 
 			if (todoLi === clickedTodoLi) {

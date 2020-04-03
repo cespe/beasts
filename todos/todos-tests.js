@@ -2415,21 +2415,10 @@ tests({
 		eq(child1LiShowChildrenButton.classList.contains('inactive'), false);
 		eq(child1LiShowChildrenButton.textContent, 'Hide children');
 
-		debugger;
 		child1LiShowChildrenButton.click();		// hide grandchild, de-activate showChildren button
 
 		eq(child1LiShowChildrenButton.classList.contains('inactive'), false);
 		eq(child1LiShowChildrenButton.textContent, 'Show children');
-//		eq(grandchild1LiShowChildrenButton.classList.contains('inactive'), true);
-//		eq(child2LiShowChildrenButton.classList.contains('inactive'), true);
-
-//		eq(child1LiCompleteSelectedChildrenButton.classList.contains('inactive'), true);
-//		eq(grandchild1LiCompleteSelectedChildrenButton.classList.contains('inactive'), true);
-//		eq(child2LiCompleteSelectedChildrenButton.classList.contains('inactive'), true);
-
-//		eq(child1LiDeleteSelectedChildrenButton.classList.contains('inactive'), true);
-//		eq(grandchild1LiDeleteSelectedChildrenButton.classList.contains('inactive'), true);
-//		eq(child2LiDeleteSelectedChildrenButton.classList.contains('inactive'), true);
 
 		todoLi1SelectChildrenButton.click();
 
