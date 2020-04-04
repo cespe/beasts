@@ -7153,11 +7153,11 @@ tests({
 
 		childLi1SelectChildrenButton.click();
 
-		eq(selectAllButton.textContent, "Unselect all");
+		eq(selectAllButton.textContent, "Select all");
 		eq(completeSelectedButton.textContent, "Complete selected");
-		eq(completeSelectedButton.classList.contains('inactive'), false);
+		eq(completeSelectedButton.classList.contains('inactive'), true);
 		eq(deleteSelectedButton.textContent, "Delete selected");
-		eq(deleteSelectedButton.classList.contains('inactive'), false);
+		eq(deleteSelectedButton.classList.contains('inactive'), true);
 
 		eq(todo1.selected, false);
 		eq(todoLi1SelectButton.textContent, 'Select');
