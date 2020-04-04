@@ -2322,6 +2322,9 @@ tests({
 		eq(grandchild1LiAddChildButton.classList.contains('inactive'), false);
 		eq(child2LiAddChildButton.classList.contains('inactive'), false);
 	},
+	"If all hidden children are filtered out, showChildren button should be inactive.": function() {
+		fail();
+	},
 	"Clicking a root 'Unselect children' button should remove class 'inactive' on nested showChildren buttons even if children are hidden.": function() {
 		fail();
 	},
