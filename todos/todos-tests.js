@@ -2322,6 +2322,9 @@ tests({
 		eq(grandchild1LiAddChildButton.classList.contains('inactive'), false);
 		eq(child2LiAddChildButton.classList.contains('inactive'), false);
 	},
+	"Clicking a root 'Unselect children' button should remove class 'inactive' on nested showChildren buttons even if children are hidden.": function() {
+		fail();
+	},
 	"Clicking a root selectChildren button should toggle 'inactive' on all childLi showChildren, completeSelectedChildren and deleteSelectedChildren buttons.": function() {
 		todolist.innerHTML = '';
 		todos = [];
@@ -2884,6 +2887,9 @@ tests({
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
+	},
+	"Clicking 'Unselect all' button should remove class 'inactive' on nested showChildren buttons even when when children are hidden.": function() {
+		fail();
 	},
 	"Clicking selectAll button should also toggle todoLi completed, deleted, addSibling, and addChild button classes 'inactive'.": function() {
 		todos = [];
