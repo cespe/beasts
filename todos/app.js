@@ -466,6 +466,7 @@ function appendNewChildTodoLi(todoLi) {
 	newLi.children[entryIndex].focus();	// focus the entry <p>
 }
 
+// TODO remove orphaned function
 function removeClassDeletedRemoved(todoUl) {
 	for (var i = 0; i < todoUl.children.length; i++) {
 		var todoLi = todoUl.children[i];
@@ -480,6 +481,7 @@ function removeClassDeletedRemoved(todoUl) {
 	}
 }
 
+// TODO remove orphaned function
 function addClassDeletedRemoved(todoUl) {
 	for (var i = 0; i < todoUl.children.length; i++) {
 		var todoLi = todoUl.children[i];
@@ -551,7 +553,49 @@ function altSelectChildren(todoLi) {
 	var childrenUncompletedCount = 0;
 	var childrenUndeletedCount = 0;
 
-	function selectChildrenFromRoot(todoLi) {
+	// Handle the three possible cases: root button clicked, branch button clicked, selectAll button clicked
+	// although TODO the selectAll handler currently uses the old selectChildren function via a call to selectAllChildren
+
+	if (clickedTodoLiSelectButton.classList.contains('inactive')) {
+		// root button clicked
+		selectChildrenFromRoot(todoLi);
+	} else {
+		// branch button clicked
+		selectChildrenFromBranch(todoLi);
+		// Get root todoLi to toggle its selectChildrenButton if necessary
+		var rootTodo = findSelectChildrenRootTodo(clickedTodo);
+		if (rootTodo) {
+			if (!anySelectedTodos(rootTodo.children)) {
+				// restore all normal buttons under rootTodoLi
+				var rootTodoLi = document.getElementById(rootTodo.id);
+				unselectAllChildren(rootTodoLi);
+			}	
+		} else {
+			// root button is selectAll
+			if (!anySelectedTodos(todos)) {
+				// restore all normal buttons
+				unselectAll();
+			}
+		}
+	}
+
+	// The root and branch handlers increment counters to determine button text
+
+	if (childrenUncompletedCount === 0) {
+		clickedTodoLiCompleteSelectedChildrenButton.textContent = 'Uncomplete selected children';
+	} else {
+		clickedTodoLiCompleteSelectedChildrenButton.textContent = 'Complete selected children';
+	}
+	if (childrenUndeletedCount === 0) {
+		clickedTodoLiDeleteSelectedChildrenButton.textContent = 'Undelete selected children';
+	} else {
+		clickedTodoLiDeleteSelectedChildrenButton.textContent = 'Delete selected children';
+	}
+	togglePurgeSelectedDeletedTodos();		// toggle button class active or inactive
+
+	// The helper functions to handle root and branch clicks. TODO Do these have to be internal?
+
+	function selectChildrenFromRoot(todoLi) {	// starts from clicked todoLi button, then recurses
 		var todoLiSelectButton = todoLi.children[selectedIndex];
 		var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
 		var todoLiCompleteButton = todoLi.children[completedIndex];
@@ -610,7 +654,7 @@ function altSelectChildren(todoLi) {
 		
 			}
 
-		} else {	// Root 'Unselect children' clicked
+		} else {																		// Root 'Unselect children' clicked
 			todoLiCompleteButton.classList.remove('inactive');
 			todoLiDeleteButton.classList.remove('inactive');
 			todoLiAddSiblingButton.classList.remove('inactive');
@@ -648,7 +692,7 @@ function altSelectChildren(todoLi) {
 		}
 	}
 
-	function selectChildrenFromBranch(todoLi) {
+	function selectChildrenFromBranch(todoLi) {		// starts from clicked todoLi button, then recurses
 		var todoLiSelectButton = todoLi.children[selectedIndex];
 		var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
 		var todoLiCompleteButton = todoLi.children[completedIndex];
@@ -735,41 +779,6 @@ function altSelectChildren(todoLi) {
 			}
 		}
 	}
-
-	if (clickedTodoLiSelectButton.classList.contains('inactive')) {
-		// root button clicked
-		selectChildrenFromRoot(todoLi);
-	} else {
-		// branch button clicked
-		selectChildrenFromBranch(todoLi);
-		// Get root todoLi to toggle its selectChildrenButton if necessary
-		var rootTodo = findSelectChildrenRootTodo(clickedTodo);
-		if (rootTodo) {
-			if (!anySelectedTodos(rootTodo.children)) {
-				// restore all normal buttons under rootTodoLi
-				var rootTodoLi = document.getElementById(rootTodo.id);
-				unselectAllChildren(rootTodoLi);
-			}	
-		} else {
-			// root button is selectAll
-			if (!anySelectedTodos(todos)) {
-				// restore all normal buttons
-				unselectAll();
-			}
-		}
-	}
-
-	if (childrenUncompletedCount === 0) {
-		clickedTodoLiCompleteSelectedChildrenButton.textContent = 'Uncomplete selected children';
-	} else {
-		clickedTodoLiCompleteSelectedChildrenButton.textContent = 'Complete selected children';
-	}
-	if (childrenUndeletedCount === 0) {
-		clickedTodoLiDeleteSelectedChildrenButton.textContent = 'Undelete selected children';
-	} else {
-		clickedTodoLiDeleteSelectedChildrenButton.textContent = 'Delete selected children';
-	}
-	togglePurgeSelectedDeletedTodos();
 }
 
 function findSelectChildrenRootTodo(todoLi) {
@@ -787,7 +796,8 @@ function findSelectChildrenRootTodo(todoLi) {
 	}
 }
 
-function selectChildrenFromRoot(todoLi) {
+// TODO delete unused function it is defined and used inside altSelectChildren
+function xxselectChildrenFromRoot(todoLi) {
 	var todoLiSelectButton = todoLi.children[selectedIndex];
 	var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
 	var todoLiCompleteButton = todoLi.children[completedIndex];
@@ -807,7 +817,7 @@ function selectChildrenFromRoot(todoLi) {
 			childLi = todoLiUl.children[i];
 			childLiUl = childLi.children[todoLiUlIndex];
 			if (childLiUl && childLiUl.children.length > 0) {
-				selectChildrenFromRoot(childLi);
+				xxselectChildrenFromRoot(childLi);
 			}
 		}
 		if (todoLiSelectChildrenButton.textContent === 'Select children') {		// 'Select children' clicked
@@ -901,8 +911,8 @@ function selectChildrenFromRoot(todoLi) {
 		}
 	}
 }
-
-function selectChildrenFromBranch(todoLi) {
+// TODO delete unused function (it is defined and used inside altSelectChildren
+function xxselectChildrenFromBranch(todoLi) {
 	var todoLiSelectButton = todoLi.children[selectedIndex];
 	var todoLiSelectChildrenButton = todoLi.children[selectChildrenIndex];
 	var todoLiCompleteButton = todoLi.children[completedIndex];
@@ -922,7 +932,7 @@ function selectChildrenFromBranch(todoLi) {
 			childLi = todoLiUl.children[i];
 			childLiUl = childLi.children[todoLiUlIndex];
 			if (childLiUl && childLiUl.children.length > 0) {
-				selectChildrenFromRoot(childLi);
+				xxselectChildrenFromRoot(childLi);
 			}
 		}
 		if (todoLiSelectChildrenButton.textContent === 'Select children') {
@@ -1751,6 +1761,29 @@ function todoClickHandler(event) {
 			}
 		}
 		if (event.target.name === "selectChildren") {
+
+			// The selectChildren button
+			//	toggles between 'Select children' and 'Unselect children'
+			//	has two cases root and branch
+			//	root toggles nested children between normal mode and selection mode
+			//		normal: Select hidden
+			//				Complete, Delete, addSibling, addChild shown
+			//				showChildren shown
+			//				selectChildren shown if children not hidden
+			//		selection:	Select shown
+			//					Complete, Delete, addSibling, addChild hidden
+			//					showChildren hidden
+			//					selectChildren shown if children not hidden
+			//	branch toggles nested childrens'  select and selectChildren buttons text
+			//	root should not set text of Complete and Delete buttons when returning to normal mode
+			//	root should not set text of its completeSelectedChildren and deleteSelectedChildren buttons
+			//	root should not set text of child showChildren buttons or visibility of selectChildren button
+			//
+			//	event should bubble up so higher level buttons (branch and root) can be adjusted if necessary
+			//		while bubbling up, check each todoLi for root status.
+			//		event listener on body could trigger selectAll adjustment
+			
+
 			altSelectChildren(todoLi);
 			togglePurgeSelectedDeletedTodos();
 		}
@@ -1764,7 +1797,7 @@ function todoClickHandler(event) {
 	}
 }
 
-function actionsClickHandler() {
+function actionsClickHandler(event) {
 	if (event.target.nodeName === "BUTTON") {		// TODO is this conditional needed?
 		var todosUl = todolist.children[0];
 		// handle case (just for tests?) where todosUl is not defined

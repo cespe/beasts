@@ -1265,6 +1265,9 @@ tests({
 		eq(todoLi1Ul.classList.contains('collapsed'), false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 },
+	"If showChildren button text is 'Hide children', css should preserve spacing above the following entry.": function() {
+		fail();
+},
 	"Clicking a showChildren button should toggle button text and todoLiUl class.": function() {
 		todolist.innerHTML = '';
 		todos = [];
@@ -2327,6 +2330,26 @@ tests({
 	},
 	"Clicking a root 'Unselect children' button should remove class 'inactive' on nested showChildren buttons even if children are hidden.": function() {
 		fail();
+		todolist.innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Item 1 grandchild 1');
+		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
+		todolist.appendChild(createTodosUl(todos));
+		todoLi1 = todolist.children[0].children[0];
+
+		childLi1ShowChildrenButton.click();
+
+		todoLi1SelectChildrenButton.click();
+
+		// grandchildLi1 not selected because it is hidden
+
+		todoLiSelectChildrenButton.click();
+
+		// childLi1ShowChildrenButton not inactive
 	},
 	"Clicking a root selectChildren button should toggle 'inactive' on all childLi showChildren, completeSelectedChildren and deleteSelectedChildren buttons.": function() {
 		todolist.innerHTML = '';
@@ -7235,6 +7258,45 @@ tests({
 		eq(childLi2AddChildButton.textContent, 'Add child');
 		eq(childLi2AddChildButton.classList.contains('inactive'), false);
 	}, 
+	"If a parent's nested todos become unselected due to a lower-level Select button click, the app should toggle showChildren buttons as if receiving a click on the parent selectChildren button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		todo1.addChild(child1);
+		child1.addChild(grandchild1);
+		todolist.innerHTML = '';
+		todolist.appendChild(createTodosUl(todos));
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children[selectChildrenIndex];
+		var todoLi1Ul = todoLi1.children[todoLiUlIndex];
+
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectButton = childLi1.children[selectedIndex];
+		var childLi1ShowChildrenButton = childLi1.children[showChildrenIndex];
+		var childLi1Ul = childLi1.children[todoLiUlIndex];
+
+		eq(childLi1ShowChildrenButton.textContent, 'Hide children');
+		eq(childLi1ShowChildrenButton.classList.contains('inactive'), false);
+		eq(childLi1Ul.classList.contains('collapsed'), false);
+		
+		childLi1ShowChildrenButton.click();
+
+		eq(childLi1Ul.classList.contains('collapsed'), true);
+
+		debugger;
+		todoLi1SelectChildrenButton.click();
+
+		eq(childLi1ShowChildrenButton.classList.contains('inactive'), true);
+
+		childLi1SelectButton.click();
+
+		eq(childLi1ShowChildrenButton.textContent, 'Show children');
+		eq(childLi1ShowChildrenButton.classList.contains('inactive'), false);
+		eq(childLi1Ul.classList.contains('collapsed'), true);
+	},
 	"If a parent's nested todos become unselected due to a lower-level selectChildren button click, the app should toggle buttons as if receiving a click on the parent selectChildren button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
