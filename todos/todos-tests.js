@@ -3996,6 +3996,7 @@ tests({
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
 
+		debugger;
 		startApp();
 		
 		todoUl = todolist.children[0];
@@ -4050,7 +4051,9 @@ tests({
 		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
 		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
 	},
-	"A removed todoLi with unremoved descendants should have have class 'removed-parent'.": function() {
+	"A filtered-out todoLi with non-filtered-out descendants should have have class 'removed-parent'.": function() {
+		// TODO what about when children are collapsed? Seems like showChildren should be available
+		fail();
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
@@ -4066,7 +4069,6 @@ tests({
 
 		startApp();
 
-		debugger;
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
 		todoLi2 = todoUl.children[1];

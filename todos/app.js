@@ -19,7 +19,11 @@ function Todo(entry) {
 	this.collapsed = false;
 	this.deleted = false;
 	this.completed = false;
+	
 	this.selected = false;
+
+	this.filteredOut = false;			// true if this todo is filtered out of the display
+	this.filteredOutParent = false;		// true if descendant(s) are not filtered out
 }
 
 Todo.prototype.changeId = function() {
@@ -497,6 +501,40 @@ function addClassDeletedRemoved(todoUl) {
 }
 
 function setTodoLiClass(todoUl, cssClass, action) {
+	for (var i = 0; i < todoUl.children.length; i++) {
+		var todoLi = todoUl.children[i];
+		var todoLiUl = todoLi.children[todoLiUlIndex];
+		if (todoLiUl && todoLiUl.children.length > 0) {
+			setTodoLiClass(todoLiUl, cssClass, action);
+		}
+		var entry = todoLi.children[entryIndex];
+		var fadedRed = entry.classList.contains('faded-red');
+		var struck = entry.classList.contains('struck');
+		if (cssClass === 'deleted-removed' && fadedRed) {
+			if (action === 'add') {
+				todoLi.classList.add(cssClass);
+			} else {
+				todoLi.classList.remove(cssClass);
+			}
+		}
+		if (cssClass === 'active-removed' && !struck && !fadedRed) {
+			if (action === 'add') {
+				todoLi.classList.add('active-removed');
+			} else {
+				todoLi.classList.remove('active-removed');
+			}
+		}
+		if (cssClass === 'completed-removed' && struck) {
+			if (action === 'add') {
+				todoLi.classList.add('completed-removed');
+			} else {
+				todoLi.classList.remove('completed-removed');
+			}
+		}
+	}
+}
+
+function newsetTodoLiClass(todoUl, cssClass, action) {
 	for (var i = 0; i < todoUl.children.length; i++) {
 		var todoLi = todoUl.children[i];
 		var todoLiUl = todoLi.children[todoLiUlIndex];
