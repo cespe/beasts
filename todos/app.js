@@ -319,7 +319,7 @@ function createTodoLi(todo) {
 		entry.classList.add('struck');
 	}
 	if (todo.deleted) {
-		entry.classList.add('faded');
+		entry.classList.add('faded-red');
 	}
 	todoLi.appendChild(entry);
 
@@ -475,7 +475,7 @@ function removeClassDeletedRemoved(todoUl) {
 		if (todoLiUl && todoLiUl.children.length > 0) {
 			removeClassDeletedRemoved(todoLiUl);
 		}
-		if (entry.classList.contains('faded')) {
+		if (entry.classList.contains('faded-red')) {
 			todoLi.classList.remove('deleted-removed');
 		}
 	}
@@ -490,7 +490,7 @@ function addClassDeletedRemoved(todoUl) {
 		if (todoLiUl && todoLiUl.children.length > 0) {
 			addClassDeletedRemoved(todoLiUl);
 		}
-		if (entry.classList.contains('faded')) {
+		if (entry.classList.contains('faded-red')) {
 			todoLi.classList.add('deleted-removed');
 		}
 	}
@@ -504,16 +504,16 @@ function setTodoLiClass(todoUl, cssClass, action) {
 			setTodoLiClass(todoLiUl, cssClass, action);
 		}
 		var entry = todoLi.children[entryIndex];
-		var faded = entry.classList.contains('faded');
+		var fadedRed = entry.classList.contains('faded-red');
 		var struck = entry.classList.contains('struck');
-		if (cssClass === 'deleted-removed' && faded) {
+		if (cssClass === 'deleted-removed' && fadedRed) {
 			if (action === 'add') {
 				todoLi.classList.add(cssClass);
 			} else {
 				todoLi.classList.remove(cssClass);
 			}
 		}
-		if (cssClass === 'active-removed' && !struck && !faded) {
+		if (cssClass === 'active-removed' && !struck && !fadedRed) {
 			if (action === 'add') {
 				todoLi.classList.add('active-removed');
 			} else {
@@ -1329,7 +1329,7 @@ function deleteSelectedChildren(todoLi) {
 				// recursion done
 				if (childLi.children[entryIndex].classList.contains('highlighted')) {
 					childLi.children[deleteIndex].textContent = 'Undelete';
-					childLi.children[entryIndex].classList.add('faded');
+					childLi.children[entryIndex].classList.add('faded-red');
 					childLi.classList.remove('active-removed');		// is this needed?
 					var childTodo = findTodo(todos, childLi.id);
 					childTodo.markDeleted(true);
@@ -1350,7 +1350,7 @@ function deleteSelectedChildren(todoLi) {
 				// recursion done
 				if (childLi.children[entryIndex].classList.contains('highlighted')) {
 					childLi.children[deleteIndex].textContent = 'Delete';
-					childLi.children[entryIndex].classList.remove('faded');
+					childLi.children[entryIndex].classList.remove('faded-red');
 					childLi.classList.remove('deleted-removed');		// is this needed?
 					var childTodo = findTodo(todos, childLi.id);
 					childTodo.markDeleted(false);
@@ -1705,7 +1705,7 @@ function todoClickHandler(event) {
 			todo.deleted = !todo.deleted;
 			if (todo.deleted) {
 				todoLiDeleteButton.textContent = 'Undelete';
-				todoLi.children[entryIndex].classList.add('faded');
+				todoLi.children[entryIndex].classList.add('faded-red');
 				if (showDeletedButton.textContent === 'Deleted') {
 					todoLi.classList.add('deleted-removed');
 					// if no todoLis are displayed, set selectAllButton inactive
@@ -1720,7 +1720,7 @@ function todoClickHandler(event) {
 				}
 			} else {
 				todoLiDeleteButton.textContent = 'Delete';
-				todoLi.children[entryIndex].classList.remove('faded');
+				todoLi.children[entryIndex].classList.remove('faded-red');
 				if (showActiveButton.textContent === 'Active') {
 					todoLi.classList.add('active-removed');
 				}
@@ -2032,7 +2032,7 @@ function actionsClickHandler(event) {
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = false;
 						var todoLiEntry = todoLi.children[entryIndex];
-						todoLiEntry.classList.remove('faded');
+						todoLiEntry.classList.remove('faded-red');
 						todoLi.classList.remove('deleted-removed');
 						if (showActiveButton.textContent === 'Active') {
 							todoLi.classList.add('active-removed');
@@ -2051,7 +2051,7 @@ function actionsClickHandler(event) {
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = true;
 						var todoLiEntry = todoLi.children[entryIndex];
-						todoLiEntry.classList.add('faded');
+						todoLiEntry.classList.add('faded-red');
 						if (showDeletedButton.textContent === 'Deleted') {
 							todoLi.classList.add('deleted-removed');
 						}

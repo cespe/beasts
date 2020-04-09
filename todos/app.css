@@ -3,10 +3,10 @@
 	text-decoration: line-through;
 }
 
-.faded {
-	/* 50% translucent per MDN color page */
+.faded-red {
+	/* 70% translucent red per MDN color page */
 	/* styles deleted todos */
-	color: rgba(0, 0, 0, 0.5);
+	color: rgba(255, 0, 0, 0.7);
 }
 
 .active-removed {
