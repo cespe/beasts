@@ -3984,7 +3984,7 @@ tests({
 		// In order to show filtered child todoLis with filtered-out parents, the parents must remain in the DOM.
 		// Thus the system of classes (active-removed, etc.) to hide filtered-out todoLis.
 	},
-	"The header actions bar should have a showActive button to toggle showing active todos.": function() {
+	"The header actions bar should have a showActive button to toggle the display of active todos.": function() {
 		// active todos are not completed and not deleted
 		eq(showActiveButton.nodeName, 'BUTTON');
 		eq(showActiveButton.innerText, '√ Active');
@@ -4004,15 +4004,18 @@ tests({
 		eq(showActiveButton.textContent, '√ Active');
 		eq(todoLi1.classList.contains('active-removed'), false);
 	},
-	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos.": function() {
+	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos, including nested todos.": function() {
 		todolist.innerHTML = '';
 		todos = [];
-		todo1 = new Todo('Item active');
+		todo1 = new Todo('Item 1 active');
 		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
+		todo2 = new Todo('Item 2 completed');
 		todo2.markCompleted(true);
-		todo2Child = new Todo('Item 2 child');
+		todo2Child = new Todo('Item 2 child active');
 		todo2.addChild(todo2Child);
+		todo2Grandchild = new Todo('Item 2 grandchild completed');
+		todo2Grandchild.markCompleted(true);
+		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
 		startApp();
@@ -4022,11 +4025,14 @@ tests({
 		todoLi2 = todoUl.children[1];
 		todoLi2Ul = todoLi2.children[todoLiUlIndex];
 		todoLi2ChildLi = todoLi2Ul.children[0];
+		todoLi2ChildLiUl = todoLi2ChildLi.children[todoLiUlIndex];
+		todoLi2GrandchildLi = todoLi2ChildLiUl.children[0];
 
 		eq(showActiveButton.textContent, '√ Active');
 		eq(todoLi1.classList.contains('active-removed'), false);
 		eq(todoLi2.classList.contains('active-removed'), false);
 		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
+		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
 
 		showActiveButton.click();
 
@@ -4034,6 +4040,7 @@ tests({
 		eq(todoLi1.classList.contains('active-removed'), true);
 		eq(todoLi2.classList.contains('active-removed'), false);
 		eq(todoLi2ChildLi.classList.contains('active-removed'), true);
+		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
 
 		showActiveButton.click();
 
@@ -4041,8 +4048,58 @@ tests({
 		eq(todoLi1.classList.contains('active-removed'), false);
 		eq(todoLi2.classList.contains('active-removed'), false);
 		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
+		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
 	},
-	"The header actions bar should have a showCompleted button to toggle showing completed todos.": function() {
+	"A removed todoLi with unremoved descendants should have have class 'removed-parent'.": function() {
+		todolist.innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item 1 active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2 completed');
+		todo2.markCompleted(true);
+		todo2Child = new Todo('Item 2 child active');
+		todo2.addChild(todo2Child);
+		todo2Grandchild = new Todo('Item 2 grandchild completed');
+		todo2Grandchild.markCompleted(true);
+		todo2Child.addChild(todo2Grandchild);
+		insertTodo(todos, todo2);
+
+		startApp();
+
+		debugger;
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+		todoLi2ChildLi = todoLi2Ul.children[0];
+		todoLi2ChildLiUl = todoLi2ChildLi.children[todoLiUlIndex];
+		todoLi2GrandchildLi = todoLi2ChildLiUl.children[0];
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi2.classList.contains('active-removed'), false);
+		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
+		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, 'Active');
+		eq(todoLi1.classList.contains('active-removed'), true);
+		eq(todoLi2.classList.contains('active-removed'), false);
+		eq(todoLi2ChildLi.classList.contains('active-removed'), true);
+		eq(todoLi2ChildLi.classList.contains('removed-parent'), true);
+		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todoLi2.classList.contains('active-removed'), false);
+		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
+		eq(todoLi2ChildLi.classList.contains('removed-parent'), false);
+		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
+	}, 
+	"The header actions bar should have a showCompleted button to toggle the display of completed todos.": function() {
 		eq(showCompletedButton.nodeName, 'BUTTON');
 		eq(showCompletedButton.innerText, '√ Completed');
 		eq(showCompletedButton.parentElement, actionsBar);
@@ -4104,12 +4161,13 @@ tests({
 		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
 		eq(todoLi2Child.children[entryIndex].classList.contains('struck'), true);
 	},
-	"The header actions bar should have a showDeleted button to toggle showing deleted todos.": function() {
+	"The header actions bar should have a showDeleted button to toggle the display of deleted todos.": function() {
 		eq(showDeletedButton.nodeName, 'BUTTON');
 		eq(showDeletedButton.innerText, 'Deleted');
 		eq(showDeletedButton.parentElement, actionsBar);
 	},
 	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'deleted-removed' on deleted todos.": function() {
+		// By default, deleted todos are not displayed.
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1 active');
