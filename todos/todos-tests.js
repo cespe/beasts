@@ -784,7 +784,7 @@ tests({
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.length, 0);
 	},
-	"If todo.completed is true, button text should be 'Uncomplete' and entry <p> class should be 'struck'.": function () {
+	"If todo.completed is true, button text should be 'Uncomplete' and entry <p> class should be 'struck-completed'.": function () {
 		todolist.innerHTML = '';
 		var todos = [];
 		todo1 = new Todo('Item 1');
@@ -796,7 +796,7 @@ tests({
 
 		eq(todo1.completed, true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 	},
 	"Clicking a 'completed' button should toggle button text, todo.completed, and entry <p> class.": function() {
 		todolist.innerHTML = '';
@@ -815,13 +815,13 @@ tests({
 
 		eq(todo1.completed, true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 
 		todoLi1CompleteButton.click();
 
 		eq(todo1.completed, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), false);
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 	},
 	"Marking a todo completed should not mark its children completed.": function() {
 		// because then marking uncompleted could incorrectly reverse some child values
@@ -845,25 +845,25 @@ tests({
 
 		eq(todo1.completed, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), false);
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 		eq(child1.completed, false);
 		eq(todoLi1Child1CompleteButton.textContent, 'Complete');
-		eq(todoLi1Child1.children[entryIndex].classList.contains('struck'), false);
+		eq(todoLi1Child1.children[entryIndex].classList.contains('struck-completed'), false);
 		eq(child2.completed, false);
 		eq(todoLi1Child2CompleteButton.textContent, 'Complete');
-		eq(todoLi1Child2.children[entryIndex].classList.contains('struck'), false);
+		eq(todoLi1Child2.children[entryIndex].classList.contains('struck-completed'), false);
 
 		todoLi1CompleteButton.click();
 
 		eq(todo1.completed, true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 		eq(child1.completed, false);
 		eq(todoLi1Child1CompleteButton.textContent, 'Complete');
-		eq(todoLi1Child1.children[entryIndex].classList.contains('struck'), false);
+		eq(todoLi1Child1.children[entryIndex].classList.contains('struck-completed'), false);
 		eq(child2.completed, false);
 		eq(todoLi1Child2CompleteButton.textContent, 'Complete');
-		eq(todoLi1Child2.children[entryIndex].classList.contains('struck'), false);
+		eq(todoLi1Child2.children[entryIndex].classList.contains('struck-completed'), false);
 	},
 	"Each todo li should have a 'deleted' button to toggle 'Delete/Undelete'.": function() {
 		todos = [];
@@ -873,7 +873,7 @@ tests({
 		eq(todoLi.children[deleteIndex].nodeName, 'BUTTON');
 		eq(todoLi.children[deleteIndex].name, 'deleted');
 	},
-	"When a todoLi is created, if todo.deleted is false, button should be 'Delete' and entry <p> class not 'faded-red'.": function() {
+	"When a todoLi is created, if todo.deleted is false, button should be 'Delete' and entry <p> class not 'dotted-deleted'.": function() {
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -886,7 +886,7 @@ tests({
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todoLi1.children[entryIndex].classList.length, 0);
 	},
-	"When a todoLi is created, if todo.deleted is true, button should be 'Undelete' and entry <p> class 'faded-red'.": function() {
+	"When a todoLi is created, if todo.deleted is true, button should be 'Undelete' and entry <p> class 'dotted-deleted'.": function() {
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -898,7 +898,7 @@ tests({
 
 		eq(todo1.deleted, true);
 		eq(todoLi1DeleteButton.textContent, 'Undelete');
-		eq(todoLi1.children[entryIndex].classList.contains('faded-red'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), true);
 	},
 	"Clicking a 'deleted' button should toggle button text, todo.deleted, entry <p> class.": function() {
 		todolist.innerHTML = '';
@@ -917,13 +917,13 @@ tests({
 
 		eq(todo1.deleted, true);
 		eq(todoLi1DeleteButton.textContent, 'Undelete');
-		eq(todoLi1.children[entryIndex].classList.contains('faded-red'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), true);
 
 		todoLi1DeleteButton.click();
 
 		eq(todo1.deleted, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
-		eq(todoLi1.children[entryIndex].classList.contains('faded-red'), false);
+		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), false);
 	},
 	"Clicking 'deleted' button should also toggle its todoLi class 'deleted-removed'.": function() {
 		todolist.innerHTML = '';
@@ -1793,23 +1793,23 @@ tests({
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(childLi1Entry.classList.contains('struck'), true);
-		eq(childLi2Entry.classList.contains('struck'), false);
+		eq(childLi1Entry.classList.contains('struck-completed'), true);
+		eq(childLi2Entry.classList.contains('struck-completed'), false);
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
-		eq(childLi1Entry.classList.contains('struck'), true);
-		eq(childLi2Entry.classList.contains('struck'), false);
+		eq(childLi1Entry.classList.contains('struck-completed'), true);
+		eq(childLi2Entry.classList.contains('struck-completed'), false);
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(childLi1Entry.classList.contains('struck'), true);
-		eq(childLi2Entry.classList.contains('struck'), false);
+		eq(childLi1Entry.classList.contains('struck-completed'), true);
+		eq(childLi2Entry.classList.contains('struck-completed'), false);
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
 	},
 	"If root selectChildren button text is 'Select children', clicking it should set completeSelectedChildren button text to 'Uncomplete selected children' if all children are marked completed.": function() {
@@ -1834,23 +1834,23 @@ tests({
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(childLi1Entry.classList.contains('struck'), true);
-		eq(childLi2Entry.classList.contains('struck'), true);
+		eq(childLi1Entry.classList.contains('struck-completed'), true);
+		eq(childLi2Entry.classList.contains('struck-completed'), true);
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
-		eq(childLi1Entry.classList.contains('struck'), true);
-		eq(childLi2Entry.classList.contains('struck'), true);
+		eq(childLi1Entry.classList.contains('struck-completed'), true);
+		eq(childLi2Entry.classList.contains('struck-completed'), true);
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Uncomplete selected children');
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(childLi1Entry.classList.contains('struck'), true);
-		eq(childLi2Entry.classList.contains('struck'), true);
+		eq(childLi1Entry.classList.contains('struck-completed'), true);
+		eq(childLi2Entry.classList.contains('struck-completed'), true);
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Uncomplete selected children');
 	},
 	"If root selectChildren button text is 'Select children', clicking it should set deleteSelectedChildren button text to 'Delete selected children' if all children are not marked deleted.": function() {
@@ -1874,23 +1874,23 @@ tests({
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(childLi1Entry.classList.contains('faded-red'), true);
-		eq(childLi2Entry.classList.contains('faded-red'), false);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(childLi2Entry.classList.contains('dotted-deleted'), false);
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
-		eq(childLi1Entry.classList.contains('faded-red'), true);
-		eq(childLi2Entry.classList.contains('faded-red'), false);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(childLi2Entry.classList.contains('dotted-deleted'), false);
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(childLi1Entry.classList.contains('faded-red'), true);
-		eq(childLi2Entry.classList.contains('faded-red'), false);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(childLi2Entry.classList.contains('dotted-deleted'), false);
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
 	},
 	"If root selectChildren button text is 'Select children', clicking it should set deleteSelectedChildren button text to 'Undelete selected children' if all children are marked deleted.": function() {
@@ -1915,23 +1915,23 @@ tests({
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(childLi1Entry.classList.contains('faded-red'), true);
-		eq(childLi2Entry.classList.contains('faded-red'), true);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(childLi2Entry.classList.contains('dotted-deleted'), true);
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
-		eq(childLi1Entry.classList.contains('faded-red'), true);
-		eq(childLi2Entry.classList.contains('faded-red'), true);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(childLi2Entry.classList.contains('dotted-deleted'), true);
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Undelete selected children');
 
 		todoLi1SelectChildrenButton.click();
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
-		eq(childLi1Entry.classList.contains('faded-red'), true);
-		eq(childLi2Entry.classList.contains('faded-red'), true);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(childLi2Entry.classList.contains('dotted-deleted'), true);
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Undelete selected children');
 	},
 	"Clicking a root selectChildren button should toggle 'inactive' on all childLi Select buttons.": function() {
@@ -2584,8 +2584,8 @@ tests({
 		var child2LiCompleteButton = child2Li.children[completedIndex];
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
-		eq(child1LiEntry.classList.contains('struck'), false);
-		eq(child2LiEntry.classList.contains('struck'), false);
+		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(child2LiEntry.classList.contains('struck-completed'), false);
 		eq(child1.completed, false);
 		eq(child2.completed, false);
 		eq(child1LiCompleteButton.textContent, 'Complete');
@@ -2597,8 +2597,8 @@ tests({
 
 		todoLi1CompleteSelectedChildrenButton.click();
 
-		eq(child1LiEntry.classList.contains('struck'), true);
-		eq(child2LiEntry.classList.contains('struck'), true);
+		eq(child1LiEntry.classList.contains('struck-completed'), true);
+		eq(child2LiEntry.classList.contains('struck-completed'), true);
 		eq(child1.completed, true);
 		eq(child2.completed, true);
 		eq(child1LiCompleteButton.textContent, 'Uncomplete');
@@ -2606,8 +2606,8 @@ tests({
 
 		todoLi1CompleteSelectedChildrenButton.click();
 		
-		eq(child1LiEntry.classList.contains('struck'), false);
-		eq(child2LiEntry.classList.contains('struck'), false);
+		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(child2LiEntry.classList.contains('struck-completed'), false);
 		eq(child1.completed, false);
 		eq(child2.completed, false);
 		eq(child1LiCompleteButton.textContent, 'Complete');
@@ -2634,8 +2634,8 @@ tests({
 		var grandchild1LiCompleteButton = grandchild1Li.children[completedIndex];
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
-		eq(child1LiEntry.classList.contains('struck'), false);
-		eq(grandchild1LiEntry.classList.contains('struck'), false);
+		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(grandchild1LiEntry.classList.contains('struck-completed'), false);
 		eq(child1.completed, false);
 		eq(grandchild1.completed, false);
 		eq(child1LiCompleteButton.textContent, 'Complete');
@@ -2647,8 +2647,8 @@ tests({
 
 		todoLi1CompleteSelectedChildrenButton.click();
 
-		eq(child1LiEntry.classList.contains('struck'), true);
-		eq(grandchild1LiEntry.classList.contains('struck'), true);
+		eq(child1LiEntry.classList.contains('struck-completed'), true);
+		eq(grandchild1LiEntry.classList.contains('struck-completed'), true);
 		eq(child1.completed, true);
 		eq(grandchild1.completed, true);
 		eq(child1LiCompleteButton.textContent, 'Uncomplete');
@@ -2656,8 +2656,8 @@ tests({
 
 		todoLi1CompleteSelectedChildrenButton.click();
 		
-		eq(child1LiEntry.classList.contains('struck'), false);
-		eq(grandchild1LiEntry.classList.contains('struck'), false);
+		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(grandchild1LiEntry.classList.contains('struck-completed'), false);
 		eq(child1.completed, false);
 		eq(grandchild1.completed, false);
 		eq(child1LiCompleteButton.textContent, 'Complete');
@@ -2684,8 +2684,8 @@ tests({
 		var child2LiDeleteButton = child2Li.children[deleteIndex];
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
-		eq(child1LiEntry.classList.contains('faded-red'), false);
-		eq(child2LiEntry.classList.contains('faded-red'), false);
+		eq(child1LiEntry.classList.contains('dotted-deleted'), false);
+		eq(child2LiEntry.classList.contains('dotted-deleted'), false);
 		eq(child1.deleted, false);
 		eq(child2.deleted, false);
 		eq(child1LiDeleteButton.textContent, 'Delete');
@@ -2697,8 +2697,8 @@ tests({
 
 		todoLi1DeleteSelectedChildrenButton.click();
 
-		eq(child1LiEntry.classList.contains('faded-red'), true);
-		eq(child2LiEntry.classList.contains('faded-red'), true);
+		eq(child1LiEntry.classList.contains('dotted-deleted'), true);
+		eq(child2LiEntry.classList.contains('dotted-deleted'), true);
 		eq(child1.deleted, true);
 		eq(child2.deleted, true);
 		eq(child1LiDeleteButton.textContent, 'Undelete');
@@ -2706,8 +2706,8 @@ tests({
 
 		todoLi1DeleteSelectedChildrenButton.click();
 		
-		eq(child1LiEntry.classList.contains('faded-red'), false);
-		eq(child2LiEntry.classList.contains('faded-red'), false);
+		eq(child1LiEntry.classList.contains('dotted-deleted'), false);
+		eq(child2LiEntry.classList.contains('dotted-deleted'), false);
 		eq(child1.deleted, false);
 		eq(child2.deleted, false);
 		eq(child1LiDeleteButton.textContent, 'Delete');
@@ -2739,9 +2739,9 @@ tests({
 		var child2LiDeleteButton = child2Li.children[deleteIndex];
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
-		eq(child1LiEntry.classList.contains('faded-red'), false);
-		eq(grandchild1LiEntry.classList.contains('faded-red'), false);
-		eq(child2LiEntry.classList.contains('faded-red'), false);
+		eq(child1LiEntry.classList.contains('dotted-deleted'), false);
+		eq(grandchild1LiEntry.classList.contains('dotted-deleted'), false);
+		eq(child2LiEntry.classList.contains('dotted-deleted'), false);
 		eq(child1.deleted, false);
 		eq(grandchild1.deleted, false);
 		eq(child2.deleted, false);
@@ -2755,9 +2755,9 @@ tests({
 
 		todoLi1DeleteSelectedChildrenButton.click();
 
-		eq(child1LiEntry.classList.contains('faded-red'), true);
-		eq(grandchild1LiEntry.classList.contains('faded-red'), true);
-		eq(child2LiEntry.classList.contains('faded-red'), true);
+		eq(child1LiEntry.classList.contains('dotted-deleted'), true);
+		eq(grandchild1LiEntry.classList.contains('dotted-deleted'), true);
+		eq(child2LiEntry.classList.contains('dotted-deleted'), true);
 		eq(child1.deleted, true);
 		eq(grandchild1.deleted, true);
 		eq(child2.deleted, true);
@@ -2767,9 +2767,9 @@ tests({
 
 		todoLi1DeleteSelectedChildrenButton.click();
 		
-		eq(child1LiEntry.classList.contains('faded-red'), false);
-		eq(grandchild1LiEntry.classList.contains('faded-red'), false);
-		eq(child2LiEntry.classList.contains('faded-red'), false);
+		eq(child1LiEntry.classList.contains('dotted-deleted'), false);
+		eq(grandchild1LiEntry.classList.contains('dotted-deleted'), false);
+		eq(child2LiEntry.classList.contains('dotted-deleted'), false);
 		eq(child1.deleted, false);
 		eq(grandchild1.deleted, false);
 		eq(child2.deleted, false);
@@ -2988,24 +2988,24 @@ tests({
 		var todoLi2Entry = todoLi2.children[entryIndex];
 
 		eq(selectAllButton.textContent, 'Select all');
-		eq(todoLi1Entry.classList.contains('struck'), true);
-		eq(todoLi2Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
+		eq(todoLi2Entry.classList.contains('struck-completed'), false);
 		eq(completeSelectedButton.classList.contains('inactive'), true);
 		eq(completeSelectedButton.textContent, 'Complete selected');
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Unselect all');
-		eq(todoLi1Entry.classList.contains('struck'), true);
-		eq(todoLi2Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
+		eq(todoLi2Entry.classList.contains('struck-completed'), false);
 		eq(completeSelectedButton.classList.contains('inactive'), false);
 		eq(completeSelectedButton.textContent, 'Complete selected');
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Select all');
-		eq(todoLi1Entry.classList.contains('struck'), true);
-		eq(todoLi2Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
+		eq(todoLi2Entry.classList.contains('struck-completed'), false);
 		eq(completeSelectedButton.classList.contains('inactive'), true);
 		eq(completeSelectedButton.textContent, 'Complete selected');
 	},
@@ -3025,24 +3025,24 @@ tests({
 		var todoLi2Entry = todoLi2.children[entryIndex];
 
 		eq(selectAllButton.textContent, 'Select all');
-		eq(todoLi1Entry.classList.contains('struck'), true);
-		eq(todoLi2Entry.classList.contains('struck'), true);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
+		eq(todoLi2Entry.classList.contains('struck-completed'), true);
 		eq(completeSelectedButton.classList.contains('inactive'), true);
 		eq(completeSelectedButton.textContent, 'Complete selected');
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Unselect all');
-		eq(todoLi1Entry.classList.contains('struck'), true);
-		eq(todoLi2Entry.classList.contains('struck'), true);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
+		eq(todoLi2Entry.classList.contains('struck-completed'), true);
 		eq(completeSelectedButton.classList.contains('inactive'), false);
 		eq(completeSelectedButton.textContent, 'Uncomplete selected');
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Select all');
-		eq(todoLi1Entry.classList.contains('struck'), true);
-		eq(todoLi2Entry.classList.contains('struck'), true);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
+		eq(todoLi2Entry.classList.contains('struck-completed'), true);
 		eq(completeSelectedButton.classList.contains('inactive'), true);
 		eq(completeSelectedButton.textContent, 'Uncomplete selected');
 	},
@@ -3064,24 +3064,24 @@ tests({
 		var todoLi2Entry = todoLi2.children[entryIndex];
 
 		eq(selectAllButton.textContent, 'Select all');
-		eq(todoLi1Entry.classList.contains('faded-red'), true);
-		eq(todoLi2Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), false);
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 
 		selectAllButton.click();
 		
 		eq(selectAllButton.textContent, 'Unselect all');
-		eq(todoLi1Entry.classList.contains('faded-red'), true);
-		eq(todoLi2Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), false);
 		eq(deleteSelectedButton.classList.contains('inactive'), false);
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Select all');
-		eq(todoLi1Entry.classList.contains('faded-red'), true);
-		eq(todoLi2Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), false);
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 	},
@@ -3104,24 +3104,24 @@ tests({
 		var todoLi2Entry = todoLi2.children[entryIndex];
 
 		eq(selectAllButton.textContent, 'Select all');
-		eq(todoLi1Entry.classList.contains('faded-red'), true);
-		eq(todoLi2Entry.classList.contains('faded-red'), true);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), true);
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 
 		selectAllButton.click();
 		
 		eq(selectAllButton.textContent, 'Unselect all');
-		eq(todoLi1Entry.classList.contains('faded-red'), true);
-		eq(todoLi2Entry.classList.contains('faded-red'), true);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), true);
 		eq(deleteSelectedButton.classList.contains('inactive'), false);
 		eq(deleteSelectedButton.textContent, 'Undelete selected');
 
 		selectAllButton.click();
 
 		eq(selectAllButton.textContent, 'Select all');
-		eq(todoLi1Entry.classList.contains('faded-red'), true);
-		eq(todoLi2Entry.classList.contains('faded-red'), true);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), true);
 		eq(deleteSelectedButton.classList.contains('inactive'), true);
 		eq(deleteSelectedButton.textContent, 'Undelete selected');
 	},
@@ -3477,17 +3477,17 @@ tests({
 		eq(todoLi1SelectButton.textContent, 'Select');
 		eq(todo1.selected, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todo2.selected, false);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
-		eq(todoLi2Entry.classList.contains('struck'), false);
+		eq(todoLi2Entry.classList.contains('struck-completed'), false);
 		eq(todo2.completed, false);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3CompleteButton.textContent, 'Complete');
-		eq(todoLi3Entry.classList.contains('struck'), false);
+		eq(todoLi3Entry.classList.contains('struck-completed'), false);
 		eq(todo3.completed, false);
 
 		selectAllButton.click();
@@ -3498,17 +3498,17 @@ tests({
 		eq(todoLi1SelectButton.textContent, 'Unselect');
 		eq(todo1.selected, true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi1Entry.classList.contains('struck'), true);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
 		eq(todo1.completed, true);
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todo2.selected, true);
 		eq(todoLi2CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi2Entry.classList.contains('struck'), true);
+		eq(todoLi2Entry.classList.contains('struck-completed'), true);
 		eq(todo2.completed, true);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3CompleteButton.textContent, 'Complete');
-		eq(todoLi3Entry.classList.contains('struck'), false);
+		eq(todoLi3Entry.classList.contains('struck-completed'), false);
 		eq(todo3.completed, false);
 
 		completeSelectedButton.click();
@@ -3517,17 +3517,17 @@ tests({
 		eq(todoLi1SelectButton.textContent, 'Unselect');
 		eq(todo1.selected, true);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), false);
 		eq(todo1.completed, false);
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todo2.selected, true);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
-		eq(todoLi2Entry.classList.contains('struck'), false);
+		eq(todoLi2Entry.classList.contains('struck-completed'), false);
 		eq(todo2.completed, false);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3CompleteButton.textContent, 'Complete');
-		eq(todoLi3Entry.classList.contains('struck'), false);
+		eq(todoLi3Entry.classList.contains('struck-completed'), false);
 		eq(todo3.completed, false);
 	},
 	"The completeSelected button should also complete/uncomplete nested selected todos.": function() {
@@ -3590,37 +3590,37 @@ tests({
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), false);
 		eq(todo1.completed, false);
 		eq(childLi1SelectButton.textContent, 'Select');
 		eq(childLi1Entry.classList.contains('highlighted'), false);
 		eq(child1.selected, false);
 		eq(childLi1CompleteButton.textContent, 'Complete');
-		eq(childLi1Entry.classList.contains('struck'), false);
+		eq(childLi1Entry.classList.contains('struck-completed'), false);
 		eq(child1.completed, false);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo2.selected, false);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
-		eq(todoLi2Entry.classList.contains('struck'), false);
+		eq(todoLi2Entry.classList.contains('struck-completed'), false);
 		eq(todo2.completed, false);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todoLi3Entry.classList.contains('highlighted'), false);
 		eq(todo3.selected, false);
 		eq(todoLi3CompleteButton.textContent, 'Complete');
-		eq(todoLi3Entry.classList.contains('struck'), false);
+		eq(todoLi3Entry.classList.contains('struck-completed'), false);
 		eq(todo3.completed, false);
 		eq(childLi3SelectButton.textContent, 'Select');
 		eq(childLi3Entry.classList.contains('highlighted'), false);
 		eq(child3.selected, false);
 		eq(childLi3CompleteButton.textContent, 'Complete');
-		eq(childLi3Entry.classList.contains('struck'), false);
+		eq(childLi3Entry.classList.contains('struck-completed'), false);
 		eq(child3.completed, false);
 		eq(grandchildLi3SelectButton.textContent, 'Select');
 		eq(grandchildLi3Entry.classList.contains('highlighted'), false);
 		eq(grandchild3.selected, false);
 		eq(grandchildLi3CompleteButton.textContent, 'Complete');
-		eq(grandchildLi3Entry.classList.contains('struck'), false);
+		eq(grandchildLi3Entry.classList.contains('struck-completed'), false);
 		eq(grandchild3.completed, false);
 
 		todoLi2DeleteButton.click();
@@ -3635,36 +3635,36 @@ tests({
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), false);
 		eq(childLi1SelectButton.textContent, 'Unselect');
 		eq(childLi1Entry.classList.contains('highlighted'), true);
 		eq(child1.selected, true);
 		eq(childLi1CompleteButton.textContent, 'Uncomplete');
-		eq(childLi1Entry.classList.contains('struck'), true);
+		eq(childLi1Entry.classList.contains('struck-completed'), true);
 		eq(child1.completed, true);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo2.selected, false);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
-		eq(todoLi2Entry.classList.contains('struck'), false);
+		eq(todoLi2Entry.classList.contains('struck-completed'), false);
 		eq(todo2.completed, false);
 		eq(todoLi3SelectButton.textContent, 'Unselect');
 		eq(todoLi3Entry.classList.contains('highlighted'), true);
 		eq(todo3.selected, true);
 		eq(todoLi3CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi3Entry.classList.contains('struck'), true);
+		eq(todoLi3Entry.classList.contains('struck-completed'), true);
 		eq(todo3.completed, true);
 		eq(childLi3SelectButton.textContent, 'Unselect');
 		eq(childLi3Entry.classList.contains('highlighted'), true);
 		eq(child3.selected, true);
 		eq(childLi3CompleteButton.textContent, 'Uncomplete');
-		eq(childLi3Entry.classList.contains('struck'), true);
+		eq(childLi3Entry.classList.contains('struck-completed'), true);
 		eq(child3.completed, true);
 		eq(grandchildLi3SelectButton.textContent, 'Unselect');
 		eq(grandchildLi3Entry.classList.contains('highlighted'), true);
 		eq(grandchild3.selected, true);
 		eq(grandchildLi3CompleteButton.textContent, 'Uncomplete');
-		eq(grandchildLi3Entry.classList.contains('struck'), true);
+		eq(grandchildLi3Entry.classList.contains('struck-completed'), true);
 		eq(grandchild3.completed, true);
 
 
@@ -3676,37 +3676,37 @@ tests({
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), false);
 		eq(todo1.completed, false);
 		eq(childLi1SelectButton.textContent, 'Unselect');
 		eq(childLi1Entry.classList.contains('highlighted'), true);
 		eq(child1.selected, true);
 		eq(childLi1CompleteButton.textContent, 'Complete');
-		eq(childLi1Entry.classList.contains('struck'), false);
+		eq(childLi1Entry.classList.contains('struck-completed'), false);
 		eq(child1.completed, false);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo2.selected, false);
 		eq(todoLi2CompleteButton.textContent, 'Complete');
-		eq(todoLi2Entry.classList.contains('struck'), false);
+		eq(todoLi2Entry.classList.contains('struck-completed'), false);
 		eq(todo2.completed, false);
 		eq(todoLi3SelectButton.textContent, 'Unselect');
 		eq(todoLi3Entry.classList.contains('highlighted'), true);
 		eq(todo3.selected, true);
 		eq(todoLi3CompleteButton.textContent, 'Complete');
-		eq(todoLi3Entry.classList.contains('struck'), false);
+		eq(todoLi3Entry.classList.contains('struck-completed'), false);
 		eq(todo3.completed, false);
 		eq(childLi3SelectButton.textContent, 'Unselect');
 		eq(childLi3Entry.classList.contains('highlighted'), true);
 		eq(child3.selected, true);
 		eq(childLi3CompleteButton.textContent, 'Complete');
-		eq(childLi3Entry.classList.contains('struck'), false);
+		eq(childLi3Entry.classList.contains('struck-completed'), false);
 		eq(child3.completed, false);
 		eq(grandchildLi3SelectButton.textContent, 'Unselect');
 		eq(grandchildLi3Entry.classList.contains('highlighted'), true);
 		eq(grandchild3.selected, true);
 		eq(grandchildLi3CompleteButton.textContent, 'Complete');
-		eq(grandchildLi3Entry.classList.contains('struck'), false);
+		eq(grandchildLi3Entry.classList.contains('struck-completed'), false);
 		eq(grandchild3.completed, false);
 	},
 	"Clicking the deleteSelected button should toggle its button text and toggle todo.deleted, todoLi deleted button text, and entry <p> class for selected todos.": function() {
@@ -3738,19 +3738,19 @@ tests({
 		eq(todo1.selected, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
-		eq(todoLi1Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todo2.selected, false);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
-		eq(todoLi2Entry.classList.contains('faded-red'), false);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3DeleteButton.textContent, 'Delete');
 		eq(todoLi3Entry.classList.contains('highlighted'), false);
-		eq(todoLi3Entry.classList.contains('faded-red'), false);
+		eq(todoLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(todo3.deleted, false);
 
 		todoLi1SelectButton.click();
@@ -3763,19 +3763,19 @@ tests({
 		eq(todo1.selected, true);
 		eq(todoLi1DeleteButton.textContent, 'Undelete');
 		eq(todoLi1Entry.classList.contains('highlighted'), true);
-		eq(todoLi1Entry.classList.contains('faded-red'), true);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), true);
 		eq(todo1.deleted, true);
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todo2.selected, true);
 		eq(todoLi2DeleteButton.textContent, 'Undelete');
 		eq(todoLi2Entry.classList.contains('highlighted'), true);
-		eq(todoLi2Entry.classList.contains('faded-red'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), true);
 		eq(todo2.deleted, true);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3DeleteButton.textContent, 'Delete');
 		eq(todoLi3Entry.classList.contains('highlighted'), false);
-		eq(todoLi3Entry.classList.contains('faded-red'), false);
+		eq(todoLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(todo3.deleted, false);
 
 		deleteSelectedButton.click();
@@ -3785,19 +3785,19 @@ tests({
 		eq(todo1.selected, true);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todoLi1Entry.classList.contains('highlighted'), true);
-		eq(todoLi1Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), false);
 		eq(todo1.deleted, false);
 		eq(todoLi2SelectButton.textContent, 'Unselect');
 		eq(todo2.selected, true);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
 		eq(todoLi2Entry.classList.contains('highlighted'), true);
-		eq(todoLi2Entry.classList.contains('faded-red'), false);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todo3.selected, false);
 		eq(todoLi3DeleteButton.textContent, 'Delete');
 		eq(todoLi3Entry.classList.contains('highlighted'), false);
-		eq(todoLi3Entry.classList.contains('faded-red'), false);
+		eq(todoLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(todo3.deleted, false);
 },
 	"The deleteSelected button should also delete/undelete nested selected todos.": function() {
@@ -3860,37 +3860,37 @@ tests({
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
-		eq(todoLi1Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), false);
 		eq(todo1.deleted, false);
 		eq(childLi1SelectButton.textContent, 'Select');
 		eq(childLi1Entry.classList.contains('highlighted'), false);
 		eq(child1.selected, false);
 		eq(childLi1DeleteButton.textContent, 'Delete');
-		eq(childLi1Entry.classList.contains('faded-red'), false);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), false);
 		eq(child1.deleted, false);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo2.selected, false);
 		eq(todoLi2DeleteButton.textContent, 'Delete');
-		eq(todoLi2Entry.classList.contains('faded-red'), false);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), false);
 		eq(todo2.deleted, false);
 		eq(todoLi3SelectButton.textContent, 'Select');
 		eq(todoLi3Entry.classList.contains('highlighted'), false);
 		eq(todo3.selected, false);
 		eq(todoLi3DeleteButton.textContent, 'Delete');
-		eq(todoLi3Entry.classList.contains('faded-red'), false);
+		eq(todoLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(todo3.deleted, false);
 		eq(childLi3SelectButton.textContent, 'Select');
 		eq(childLi3Entry.classList.contains('highlighted'), false);
 		eq(child3.selected, false);
 		eq(childLi3DeleteButton.textContent, 'Delete');
-		eq(childLi3Entry.classList.contains('faded-red'), false);
+		eq(childLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(child3.deleted, false);
 		eq(grandchildLi3SelectButton.textContent, 'Select');
 		eq(grandchildLi3Entry.classList.contains('highlighted'), false);
 		eq(grandchild3.selected, false);
 		eq(grandchildLi3DeleteButton.textContent, 'Delete');
-		eq(grandchildLi3Entry.classList.contains('faded-red'), false);
+		eq(grandchildLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(grandchild3.deleted, false);
 
 		todoLi2DeleteButton.click();
@@ -3905,37 +3905,37 @@ tests({
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
-		eq(todoLi1Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), false);
 		eq(todo1.deleted, false);
 		eq(childLi1SelectButton.textContent, 'Unselect');
 		eq(childLi1Entry.classList.contains('highlighted'), true);
 		eq(child1.selected, true);
 		eq(childLi1DeleteButton.textContent, 'Undelete');
-		eq(childLi1Entry.classList.contains('faded-red'), true);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), true);
 		eq(child1.deleted, true);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo2.selected, false);
 		eq(todoLi2DeleteButton.textContent, 'Undelete');
-		eq(todoLi2Entry.classList.contains('faded-red'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), true);
 		eq(todo2.deleted, true);
 		eq(todoLi3SelectButton.textContent, 'Unselect');
 		eq(todoLi3Entry.classList.contains('highlighted'), true);
 		eq(todo3.selected, true);
 		eq(todoLi3DeleteButton.textContent, 'Undelete');
-		eq(todoLi3Entry.classList.contains('faded-red'), true);
+		eq(todoLi3Entry.classList.contains('dotted-deleted'), true);
 		eq(todo3.deleted, true);
 		eq(childLi3SelectButton.textContent, 'Unselect');
 		eq(childLi3Entry.classList.contains('highlighted'), true);
 		eq(child3.selected, true);
 		eq(childLi3DeleteButton.textContent, 'Undelete');
-		eq(childLi3Entry.classList.contains('faded-red'), true);
+		eq(childLi3Entry.classList.contains('dotted-deleted'), true);
 		eq(child3.deleted, true);
 		eq(grandchildLi3SelectButton.textContent, 'Unselect');
 		eq(grandchildLi3Entry.classList.contains('highlighted'), true);
 		eq(grandchild3.selected, true);
 		eq(grandchildLi3DeleteButton.textContent, 'Undelete');
-		eq(grandchildLi3Entry.classList.contains('faded-red'), true);
+		eq(grandchildLi3Entry.classList.contains('dotted-deleted'), true);
 		eq(grandchild3.deleted, true);
 
 
@@ -3947,37 +3947,37 @@ tests({
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
-		eq(todoLi1Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), false);
 		eq(todo1.deleted, false);
 		eq(childLi1SelectButton.textContent, 'Unselect');
 		eq(childLi1Entry.classList.contains('highlighted'), true);
 		eq(child1.selected, true);
 		eq(childLi1DeleteButton.textContent, 'Delete');
-		eq(childLi1Entry.classList.contains('faded-red'), false);
+		eq(childLi1Entry.classList.contains('dotted-deleted'), false);
 		eq(child1.deleted, false);
 		eq(todoLi2SelectButton.textContent, 'Select');
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(todo2.selected, false);
 		eq(todoLi2DeleteButton.textContent, 'Undelete');
-		eq(todoLi2Entry.classList.contains('faded-red'), true);
+		eq(todoLi2Entry.classList.contains('dotted-deleted'), true);
 		eq(todo2.deleted, true);
 		eq(todoLi3SelectButton.textContent, 'Unselect');
 		eq(todoLi3Entry.classList.contains('highlighted'), true);
 		eq(todo3.selected, true);
 		eq(todoLi3DeleteButton.textContent, 'Delete');
-		eq(todoLi3Entry.classList.contains('faded-red'), false);
+		eq(todoLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(todo3.deleted, false);
 		eq(childLi3SelectButton.textContent, 'Unselect');
 		eq(childLi3Entry.classList.contains('highlighted'), true);
 		eq(child3.selected, true);
 		eq(childLi3DeleteButton.textContent, 'Delete');
-		eq(childLi3Entry.classList.contains('faded-red'), false);
+		eq(childLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(child3.deleted, false);
 		eq(grandchildLi3SelectButton.textContent, 'Unselect');
 		eq(grandchildLi3Entry.classList.contains('highlighted'), true);
 		eq(grandchild3.selected, true);
 		eq(grandchildLi3DeleteButton.textContent, 'Delete');
-		eq(grandchildLi3Entry.classList.contains('faded-red'), false);
+		eq(grandchildLi3Entry.classList.contains('dotted-deleted'), false);
 		eq(grandchild3.deleted, false);
 	},
 	"Section: Actions bar -- filters": function() {
@@ -4144,24 +4144,24 @@ tests({
 		eq(showCompletedButton.textContent, '√ Completed');
 		eq(todoLi1.classList.contains('completed-removed'), false);
 		eq(todoLi2Child.classList.contains('completed-removed'), false);
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
-		eq(todoLi2Child.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
+		eq(todoLi2Child.children[entryIndex].classList.contains('struck-completed'), true);
 
 		showCompletedButton.click();
 
 		eq(showCompletedButton.textContent, 'Completed');
 		eq(todoLi1.classList.contains('completed-removed'), true);
 		eq(todoLi2Child.classList.contains('completed-removed'), true);
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
-		eq(todoLi2Child.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
+		eq(todoLi2Child.children[entryIndex].classList.contains('struck-completed'), true);
 
 		showCompletedButton.click();
 
 		eq(showCompletedButton.textContent, '√ Completed');
 		eq(todoLi1.classList.contains('completed-removed'), false);
 		eq(todoLi2Child.classList.contains('completed-removed'), false);
-		eq(todoLi1.children[entryIndex].classList.contains('struck'), true);
-		eq(todoLi2Child.children[entryIndex].classList.contains('struck'), true);
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
+		eq(todoLi2Child.children[entryIndex].classList.contains('struck-completed'), true);
 	},
 	"The header actions bar should have a showDeleted button to toggle the display of deleted todos.": function() {
 		eq(showDeletedButton.nodeName, 'BUTTON');
@@ -4825,7 +4825,7 @@ tests({
 		completeSelectedButton.click();
 
 		eq(todoLi1.classList.contains('active-removed'), false);
-		eq(todoLi1Entry.classList.contains('struck'), true);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
 		eq(todo1.completed, true);
 
 		showActiveButton.click();
@@ -4835,7 +4835,7 @@ tests({
 		completeSelectedButton.click();		// click 'Uncomplete selected'
 
 		eq(todoLi1.classList.contains('active-removed'), true);
-		eq(todoLi1Entry.classList.contains('struck'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), false);
 		eq(todo1.completed, false);
 	},
 	"If showDeleted button text is 'Deleted', clicking 'Delete selected' button should add todoLi class 'deleted-removed'.": function() {
@@ -4876,7 +4876,7 @@ tests({
 
 		eq(todoLi1.classList.contains('active-removed'), false);
 		eq(todoLi1.classList.contains('deleted-removed'), true);
-		eq(todoLi1Entry.classList.contains('faded-red'), true);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), true);
 		eq(todo1.deleted, true);
 
 		showActiveButton.click();
@@ -4887,7 +4887,7 @@ tests({
 
 		eq(todoLi1.classList.contains('active-removed'), true);
 		eq(todoLi1.classList.contains('deleted-removed'), false);
-		eq(todoLi1Entry.classList.contains('faded-red'), false);
+		eq(todoLi1Entry.classList.contains('dotted-deleted'), false);
 		eq(todo1.deleted, false);
 	},
 	"When selectAllButton text is 'Select all', it should toggle inactive when no todos are displayed.": function() {

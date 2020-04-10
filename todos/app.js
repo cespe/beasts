@@ -22,8 +22,8 @@ function Todo(entry) {
 	
 	this.selected = false;
 
-	this.filteredOut = false;			// true if this todo is filtered out of the display
-	this.filteredOutParent = false;		// true if descendant(s) are not filtered out
+//	this.filteredOut = false;			// true if this todo is filtered out of the display
+//	this.filteredOutParent = false;		// true if descendant(s) are not filtered out
 }
 
 Todo.prototype.changeId = function() {
@@ -320,10 +320,10 @@ function createTodoLi(todo) {
 	entry.textContent = todo.entry;
 	entry.classList.remove('highlighted');
 	if (todo.completed) {
-		entry.classList.add('struck');
+		entry.classList.add('struck-completed');
 	}
 	if (todo.deleted) {
-		entry.classList.add('faded-red');
+		entry.classList.add('dotted-deleted');
 	}
 	todoLi.appendChild(entry);
 
@@ -479,7 +479,7 @@ function removeClassDeletedRemoved(todoUl) {
 		if (todoLiUl && todoLiUl.children.length > 0) {
 			removeClassDeletedRemoved(todoLiUl);
 		}
-		if (entry.classList.contains('faded-red')) {
+		if (entry.classList.contains('dotted-deleted')) {
 			todoLi.classList.remove('deleted-removed');
 		}
 	}
@@ -494,7 +494,7 @@ function addClassDeletedRemoved(todoUl) {
 		if (todoLiUl && todoLiUl.children.length > 0) {
 			addClassDeletedRemoved(todoLiUl);
 		}
-		if (entry.classList.contains('faded-red')) {
+		if (entry.classList.contains('dotted-deleted')) {
 			todoLi.classList.add('deleted-removed');
 		}
 	}
@@ -508,23 +508,23 @@ function setTodoLiClass(todoUl, cssClass, action) {
 			setTodoLiClass(todoLiUl, cssClass, action);
 		}
 		var entry = todoLi.children[entryIndex];
-		var fadedRed = entry.classList.contains('faded-red');
-		var struck = entry.classList.contains('struck');
-		if (cssClass === 'deleted-removed' && fadedRed) {
+		var dottedDeleted = entry.classList.contains('dotted-deleted');
+		var struckCompleted = entry.classList.contains('struck-completed');
+		if (cssClass === 'deleted-removed' && dottedDeleted) {
 			if (action === 'add') {
 				todoLi.classList.add(cssClass);
 			} else {
 				todoLi.classList.remove(cssClass);
 			}
 		}
-		if (cssClass === 'active-removed' && !struck && !fadedRed) {
+		if (cssClass === 'active-removed' && !struckCompleted && !dottedDeleted) {
 			if (action === 'add') {
 				todoLi.classList.add('active-removed');
 			} else {
 				todoLi.classList.remove('active-removed');
 			}
 		}
-		if (cssClass === 'completed-removed' && struck) {
+		if (cssClass === 'completed-removed' && struckCompleted) {
 			if (action === 'add') {
 				todoLi.classList.add('completed-removed');
 			} else {
@@ -542,23 +542,23 @@ function newsetTodoLiClass(todoUl, cssClass, action) {
 			setTodoLiClass(todoLiUl, cssClass, action);
 		}
 		var entry = todoLi.children[entryIndex];
-		var fadedRed = entry.classList.contains('faded-red');
-		var struck = entry.classList.contains('struck');
-		if (cssClass === 'deleted-removed' && fadedRed) {
+		var dottedDeleted = entry.classList.contains('dotted-deleted');
+		var struckCompleted = entry.classList.contains('struck-completed');
+		if (cssClass === 'deleted-removed' && dottedDeleted) {
 			if (action === 'add') {
 				todoLi.classList.add(cssClass);
 			} else {
 				todoLi.classList.remove(cssClass);
 			}
 		}
-		if (cssClass === 'active-removed' && !struck && !fadedRed) {
+		if (cssClass === 'active-removed' && !struckCompleted && !dottedDeleted) {
 			if (action === 'add') {
 				todoLi.classList.add('active-removed');
 			} else {
 				todoLi.classList.remove('active-removed');
 			}
 		}
-		if (cssClass === 'completed-removed' && struck) {
+		if (cssClass === 'completed-removed' && struckCompleted) {
 			if (action === 'add') {
 				todoLi.classList.add('completed-removed');
 			} else {
@@ -1316,7 +1316,7 @@ function completeSelectedChildren(todoLi) {
 				// recursion done
 				if (childLi.children[entryIndex].classList.contains('highlighted')) {
 					childLi.children[completedIndex].textContent = 'Uncomplete';
-					childLi.children[entryIndex].classList.add('struck');
+					childLi.children[entryIndex].classList.add('struck-completed');
 					childLi.classList.remove('active-removed');		// is this needed?
 					var childTodo = findTodo(todos, childLi.id);
 					childTodo.markCompleted(true);
@@ -1337,7 +1337,7 @@ function completeSelectedChildren(todoLi) {
 				// recursion done
 				if (childLi.children[entryIndex].classList.contains('highlighted')) {
 					childLi.children[completedIndex].textContent = 'Complete';
-					childLi.children[entryIndex].classList.remove('struck');
+					childLi.children[entryIndex].classList.remove('struck-completed');
 					childLi.classList.remove('completed-removed');		// is this needed?
 					var childTodo = findTodo(todos, childLi.id);
 					childTodo.markCompleted(false);
@@ -1367,7 +1367,7 @@ function deleteSelectedChildren(todoLi) {
 				// recursion done
 				if (childLi.children[entryIndex].classList.contains('highlighted')) {
 					childLi.children[deleteIndex].textContent = 'Undelete';
-					childLi.children[entryIndex].classList.add('faded-red');
+					childLi.children[entryIndex].classList.add('dotted-deleted');
 					childLi.classList.remove('active-removed');		// is this needed?
 					var childTodo = findTodo(todos, childLi.id);
 					childTodo.markDeleted(true);
@@ -1388,7 +1388,7 @@ function deleteSelectedChildren(todoLi) {
 				// recursion done
 				if (childLi.children[entryIndex].classList.contains('highlighted')) {
 					childLi.children[deleteIndex].textContent = 'Delete';
-					childLi.children[entryIndex].classList.remove('faded-red');
+					childLi.children[entryIndex].classList.remove('dotted-deleted');
 					childLi.classList.remove('deleted-removed');		// is this needed?
 					var childTodo = findTodo(todos, childLi.id);
 					childTodo.markDeleted(false);
@@ -1705,7 +1705,7 @@ function todoClickHandler(event) {
 			todo.completed = !todo.completed;
 			if (!todo.completed) {
 				todoLiCompleteButton.textContent = 'Complete';
-				todoLi.children[entryIndex].classList.remove('struck');
+				todoLi.children[entryIndex].classList.remove('struck-completed');
 				// TODO convert to array.find() to stop looping as soon as a match is found
 //				var count = 0;
 //				for (var i = 0; i < todos.length; i++) {
@@ -1722,7 +1722,7 @@ function todoClickHandler(event) {
 				}
 			} else {
 				todoLiCompleteButton.textContent = 'Uncomplete';
-				todoLi.children[entryIndex].classList.add('struck');
+				todoLi.children[entryIndex].classList.add('struck-completed');
 				if (showCompletedButton.textContent === 'Completed') {
 					todoLi.classList.add('completed-removed');
 					// if no todoLis are displayed, set selectAllButton inactive
@@ -1743,7 +1743,7 @@ function todoClickHandler(event) {
 			todo.deleted = !todo.deleted;
 			if (todo.deleted) {
 				todoLiDeleteButton.textContent = 'Undelete';
-				todoLi.children[entryIndex].classList.add('faded-red');
+				todoLi.children[entryIndex].classList.add('dotted-deleted');
 				if (showDeletedButton.textContent === 'Deleted') {
 					todoLi.classList.add('deleted-removed');
 					// if no todoLis are displayed, set selectAllButton inactive
@@ -1758,7 +1758,7 @@ function todoClickHandler(event) {
 				}
 			} else {
 				todoLiDeleteButton.textContent = 'Delete';
-				todoLi.children[entryIndex].classList.remove('faded-red');
+				todoLi.children[entryIndex].classList.remove('dotted-deleted');
 				if (showActiveButton.textContent === 'Active') {
 					todoLi.classList.add('active-removed');
 				}
@@ -2027,7 +2027,7 @@ function actionsClickHandler(event) {
 					if (todoLiSelectButton.textContent === 'Unselect') {
 						todoLiCompleteButton.textContent = 'Complete';
 						var todoLiEntry = todoLi.children[entryIndex];
-						todoLiEntry.classList.remove('struck');
+						todoLiEntry.classList.remove('struck-completed');
 						var todo = findTodo(todos, todoLi.id);
 						todo.markCompleted(false);
 						if (showActiveButton.textContent === 'Active') {
@@ -2045,7 +2045,7 @@ function actionsClickHandler(event) {
 					if (todoLiSelectButton.textContent === 'Unselect') {
 						todoLiCompleteButton.textContent = 'Uncomplete';
 						var todoLiEntry = todoLi.children[entryIndex];
-						todoLiEntry.classList.add('struck');
+						todoLiEntry.classList.add('struck-completed');
 						var todo = findTodo(todos, todoLi.id);
 						todo.completed = true;
 						if (showCompletedButton.textContent === 'Completed') {
@@ -2070,7 +2070,7 @@ function actionsClickHandler(event) {
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = false;
 						var todoLiEntry = todoLi.children[entryIndex];
-						todoLiEntry.classList.remove('faded-red');
+						todoLiEntry.classList.remove('dotted-deleted');
 						todoLi.classList.remove('deleted-removed');
 						if (showActiveButton.textContent === 'Active') {
 							todoLi.classList.add('active-removed');
@@ -2089,7 +2089,7 @@ function actionsClickHandler(event) {
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = true;
 						var todoLiEntry = todoLi.children[entryIndex];
-						todoLiEntry.classList.add('faded-red');
+						todoLiEntry.classList.add('dotted-deleted');
 						if (showDeletedButton.textContent === 'Deleted') {
 							todoLi.classList.add('deleted-removed');
 						}
