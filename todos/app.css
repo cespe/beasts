@@ -1,12 +1,15 @@
 .struck {
 	/* styles completed todos */
+	color: rgba(0, 0, 0, 0.5);
 	text-decoration: line-through;
 }
 
 .faded-red {
 	/* 70% translucent red per MDN color page */
 	/* styles deleted todos */
-	color: rgba(255, 0, 0, 0.7);
+	color: rgba(255, 0, 0, 0.5);
+	text-decoration: line-through;
+	text-decoration-style: dotted;
 }
 
 .active-removed {
