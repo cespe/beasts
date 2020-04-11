@@ -47,6 +47,12 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.completed, false);
 	},
+	"A todo object should be created with a 'displayTags' property of type set with member 'active'.": function() {
+		newTodo = new Todo();
+		eq(newTodo.displayTags instanceof Set, true);
+		eq(newTodo.displayTags.size, 1);
+		eq(newTodo.displayTags.has('active'), true);
+	},
 	"A todo object should be created with a 'collapsed' property of type boolean set to false.": function() {
 		// When false, expand children <ul> to show child todos; when true, collapse <ul> to hide them
 		newTodo = new Todo();
@@ -3996,7 +4002,6 @@ tests({
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
 
-		debugger;
 		startApp();
 		
 		todoUl = todolist.children[0];

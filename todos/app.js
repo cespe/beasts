@@ -22,6 +22,9 @@ function Todo(entry) {
 	
 	this.selected = false;
 
+	this.displayTags = new Set();
+	this.displayTags.add('active');		// new todo is active on creation
+
 //	this.filteredOut = false;			// true if this todo is filtered out of the display
 //	this.filteredOutParent = false;		// true if descendant(s) are not filtered out
 }
@@ -183,6 +186,23 @@ function anyUnselectedTodos(array) {
 	return false;
 }
 
+// Return true if any todos, including nested todos, are filtered in for display
+function anyFilteredInTodos(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+//		if (/*any todo.tags are in filteredIn set*/) {
+//			return true;
+//		}
+		if (todo.children.length > 0) {
+			var todoFilteredIn = anyFilteredInTodos(todo.children);
+			if (todoFilteredIn) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 // Return true if any todos, including nested todos, are deleted
 // TODO this function might be orphaned
 function anyDeletedTodos(array) {
@@ -260,6 +280,28 @@ var showChildrenIndex = 8;
 var completeSelectedChildrenIndex = 9;
 var deleteSelectedChildrenIndex = 10;
 var todoLiUlIndex = 11;
+
+// A set to specify which todos will be displayed
+var filteredIn = new Set();
+
+function renderTodolist() {
+
+	filteredIn.clear();
+
+	if (showActiveButton.textContent === '√ Active') {
+		filteredIn.add('#active');
+	}
+	if (showCompletedButton.textContent = '√ Completed') {
+		filteredIn.add('#completed');
+	}
+	if (showDeleetedButton.textContent = '√ Deleted') {
+		filteredIn.add('#deleted');
+	}
+
+	newTodolist = createTodosUl(todos);
+	todolist.innerHTML = ''; 
+	todoList.appendChild(newTodoList);
+}
 
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
@@ -414,6 +456,7 @@ function createTodosUl(todosArray, filter) {
 	}
 	return todosUl;
 }
+
 
 // Insert a new empty todoLi into the given array after the given todoLi.id, ready for text entry.
 // If no todoLi.id is given, defaults to push().
