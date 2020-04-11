@@ -4019,6 +4019,7 @@ tests({
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item completed');
+		todo2.tagCompleted(true);
 		insertTodo(todos, todo2);
 
 		startApp();
@@ -4036,6 +4037,41 @@ tests({
 		eq(todo2.displayTags.has('completed'), true);
 		eq(todoLi2, todoUl.children[1]);
 	},
+	"On startup, the showDeleted button text should be 'Deleted' and todos with displayTag 'deleted' should not be displayed.": function() {
+		todolist.innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item completed');
+		todo2.tagCompleted(true);
+		insertTodo(todos, todo2);
+		todo3 = new Todo('Item deleted');
+		todo3.tagDeleted(true);
+		insertTodo(todos, todo3);
+
+		startApp();
+		
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi3 = todoUl.children[2];
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todo1.displayTags.has('active'), true);
+		eq(todoLi1, todoUl.children[0]);
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todo2.displayTags.has('active'), false);
+		eq(todo2.displayTags.has('completed'), true);
+		eq(todoLi2, todoUl.children[1]);
+
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(todoLi3, undefined);
+//		eq(todo3.displayTags.has('active'), false);
+//		eq(todo3.displayTags.has('deleted'), true);
+//		eq(todoLi3, todoUl.children[2]);
+	},
+
 	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos, including nested todos.": function() {
 		todolist.innerHTML = '';
 		todos = [];

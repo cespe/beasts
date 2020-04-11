@@ -52,6 +52,7 @@ Todo.prototype.tagCompleted = function(bool) {
 		this.displayTags.add('active');
 	}
 }
+// Remove orphan
 Todo.prototype.markCompleted = function(bool) {
 	this.completed = bool;
 }
