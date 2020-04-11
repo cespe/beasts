@@ -3996,7 +3996,7 @@ tests({
 		eq(showActiveButton.innerText, '√ Active');
 		eq(showActiveButton.parentElement, actionsBar);
 	},
-	"On startup, the showActive button text should be '√ Active' and todoLi class not 'active-removed' on active todos.": function() {
+	"On startup, the showActive button text should be '√ Active' and todos with displayTag 'active' should be displayed.": function() {
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item active');
@@ -4008,7 +4008,30 @@ tests({
 		todoLi1 = todoUl.children[0];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todoLi1.classList.contains('active-removed'), false);
+		eq(todo1.displayTags.has('active'), true);
+	},
+	"On startup, the showCompleted button text should be '√ Completed' and todos with displayTag 'completed' should be displayed.": function() {
+		todolist.innerHTML = '';
+		todos = [];
+		todo1 = new Todo('Item active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item completed');
+		insertTodo(todos, todo2);
+
+		startApp();
+		
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+
+		eq(showActiveButton.textContent, '√ Active');
+		eq(todo1.displayTags.has('active'), true);
+		eq(todoLi1, todoUl.children[0]);
+
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(todo2.displayTags.has('active'), false);
+		eq(todo2.displayTags.has('completed'), true);
+		eq(todoLi2, todoUl.children[1]);
 	},
 	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos, including nested todos.": function() {
 		todolist.innerHTML = '';
@@ -4110,21 +4133,6 @@ tests({
 		eq(showCompletedButton.nodeName, 'BUTTON');
 		eq(showCompletedButton.innerText, '√ Completed');
 		eq(showCompletedButton.parentElement, actionsBar);
-	},
-	"On startup, the showCompleted button text should be '√ Completed' and todoLi class not 'completed-removed' on completed todos.": function() {
-		todolist.innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item completed');
-		todo1.markCompleted(true);
-		insertTodo(todos, todo2);
-
-		startApp();
-		
-		todoUl = todolist.children[0];
-		todoLi1 = todoUl.children[0];
-
-		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todoLi1.classList.contains('completed-removed'), false);
 	},
 	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'completed-removed' on completed todos.": function() {
 		todolist.innerHTML = '';
