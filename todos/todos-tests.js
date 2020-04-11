@@ -83,6 +83,17 @@ tests({
 		eq(newTodo.displayTags.has('active'), true);
 		eq(newTodo.displayTags.has('completed'), false)
 	},
+	"The app should have a way to tag a todo deleted or not deleted.": function() {
+		newTodo = new Todo('Item 1');
+		eq(newTodo.displayTags.has('active'), true);
+		eq(newTodo.displayTags.has('deleted'), false)
+		newTodo.tagDeleted(true);
+		eq(newTodo.displayTags.has('active'), false);
+		eq(newTodo.displayTags.has('deleted'), true)
+		newTodo.tagDeleted(false);
+		eq(newTodo.displayTags.has('active'), true);
+		eq(newTodo.displayTags.has('deleted'), false)
+	},
 	"The app should have a way to mark a todo deleted or not deleted.": function() {
 		newTodo = new Todo('Item 1');
 		eq(newTodo.deleted, false);
