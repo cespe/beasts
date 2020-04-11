@@ -95,7 +95,34 @@ tests({
 		eq(newTodo.displayTags.has('deleted'), false)
 	},
 	"A todo can be both completed and deleted, but not both completed and active or deleted and active.": function() {
-		fail();
+		newTodo = new Todo('Item 1');
+		eq(newTodo.displayTags.has('active'), true);
+		eq(newTodo.displayTags.has('completed'), false)
+		eq(newTodo.displayTags.has('deleted'), false)
+		
+		newTodo.tagDeleted(true);
+		
+		eq(newTodo.displayTags.has('active'), false);
+		eq(newTodo.displayTags.has('completed'), false)
+		eq(newTodo.displayTags.has('deleted'), true)
+		
+		newTodo.tagDeleted(false);
+		
+		eq(newTodo.displayTags.has('active'), true);
+		eq(newTodo.displayTags.has('completed'), false)
+		eq(newTodo.displayTags.has('deleted'), false)
+
+		newTodo.tagCompleted(true);
+		
+		eq(newTodo.displayTags.has('active'), false);
+		eq(newTodo.displayTags.has('completed'), true)
+		eq(newTodo.displayTags.has('deleted'), false)
+
+		newTodo.tagDeleted(true);
+		
+		eq(newTodo.displayTags.has('active'), false);
+		eq(newTodo.displayTags.has('completed'), true)
+		eq(newTodo.displayTags.has('deleted'), true)
 	},
 	"The app should have a way to mark a todo deleted or not deleted.": function() {
 		newTodo = new Todo('Item 1');
