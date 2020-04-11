@@ -43,6 +43,15 @@ Todo.prototype.markSelected = function(bool) {
 	this.selected = bool;
 }
 
+Todo.prototype.tagCompleted = function(bool) {
+	if (bool) {
+		this.displayTags.delete('active');
+		this.displayTags.add('completed');
+	} else {
+		this.displayTags.delete('completed');
+		this.displayTags.add('active');
+	}
+}
 Todo.prototype.markCompleted = function(bool) {
 	this.completed = bool;
 }
