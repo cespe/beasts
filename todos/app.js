@@ -52,11 +52,23 @@ Todo.prototype.tagCompleted = function(bool) {
 		this.displayTags.add('active');
 	}
 }
+
+Todo.prototype.tagDeleted = function(bool) {
+	if (bool) {
+		this.displayTags.delete('active');
+		this.displayTags.add('deleted');
+	} else {
+		this.displayTags.delete('deleted');
+		if (!this.displayTags.has('completed')) {
+			this.displayTags.add('active');
+		}
+	}
+}
 // Remove orphan
 Todo.prototype.markCompleted = function(bool) {
 	this.completed = bool;
 }
-
+// Remove orphan
 Todo.prototype.markDeleted = function(bool) {
 	this.deleted = bool;
 }

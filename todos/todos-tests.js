@@ -72,7 +72,7 @@ tests({
 		newTodo.markSelected(false);
 		eq(newTodo.selected, false);
 	},
-	"The app should have a way to tag a todo completed or not completed.": function() {
+	"The app should have a way to toggle a todo completed or active.": function() {
 		newTodo = new Todo('Item 1');
 		eq(newTodo.displayTags.has('active'), true);
 		eq(newTodo.displayTags.has('completed'), false)
@@ -83,7 +83,7 @@ tests({
 		eq(newTodo.displayTags.has('active'), true);
 		eq(newTodo.displayTags.has('completed'), false)
 	},
-	"The app should have a way to tag a todo deleted or not deleted.": function() {
+	"The app should have a way to toggle a todo deleted or active.": function() {
 		newTodo = new Todo('Item 1');
 		eq(newTodo.displayTags.has('active'), true);
 		eq(newTodo.displayTags.has('deleted'), false)
@@ -93,6 +93,9 @@ tests({
 		newTodo.tagDeleted(false);
 		eq(newTodo.displayTags.has('active'), true);
 		eq(newTodo.displayTags.has('deleted'), false)
+	},
+	"A todo can be both completed and deleted, but not both completed and active or deleted and active.": function() {
+		fail();
 	},
 	"The app should have a way to mark a todo deleted or not deleted.": function() {
 		newTodo = new Todo('Item 1');
