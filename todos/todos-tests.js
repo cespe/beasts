@@ -40,23 +40,33 @@ tests({
 		eq(newTodo.selected, false);
 	},
 	"A todo object should be created with a 'deleted' property of type boolean set to false.": function() {
+		remove();
 		newTodo = new Todo();
 		eq(newTodo.deleted, false);
 	},
 	"A todo object should be created with a 'completed' property of type boolean set to false.": function() {
+		remove();
 		newTodo = new Todo();
 		eq(newTodo.completed, false);
 	},
-	"A todo object should be created with a 'displayTags' property of type set with member 'active'.": function() {
+	"A todo object should be created with a 'displayTags' property of type set with member '#active'.": function() {
 		newTodo = new Todo();
 		eq(newTodo.displayTags instanceof Set, true);
 		eq(newTodo.displayTags.size, 1);
-		eq(newTodo.displayTags.has('active'), true);
+		eq(newTodo.displayTags.has('#active'), true);
 	},
 	"A todo object should be created with a 'collapsed' property of type boolean set to false.": function() {
 		// When false, expand children <ul> to show child todos; when true, collapse <ul> to hide them
 		newTodo = new Todo();
 		eq(newTodo.collapsed, false);
+	},
+	"A todo object should be created with a 'filteredIn' property of type boolean set to false.": function() {
+		newTodo = new Todo();
+		eq(newTodo.filteredIn, false);
+	},
+	"A todo object should be created with a 'filteredOutParentOfFiteredIn' property of type boolean set to false.": function() {
+		newTodo = new Todo();
+		eq(newTodo.filteredOutParentOfFilteredIn, false);
 	},
 	"The app should have a way to update a todo entry.": function() {
 		newTodo = new Todo('Item 1');
@@ -74,57 +84,58 @@ tests({
 	},
 	"The app should have a way to toggle a todo completed or active.": function() {
 		newTodo = new Todo('Item 1');
-		eq(newTodo.displayTags.has('active'), true);
-		eq(newTodo.displayTags.has('completed'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#completed'), false)
 		newTodo.tagCompleted(true);
-		eq(newTodo.displayTags.has('active'), false);
-		eq(newTodo.displayTags.has('completed'), true)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), true)
 		newTodo.tagCompleted(false);
-		eq(newTodo.displayTags.has('active'), true);
-		eq(newTodo.displayTags.has('completed'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#completed'), false)
 	},
 	"The app should have a way to toggle a todo deleted or active.": function() {
 		newTodo = new Todo('Item 1');
-		eq(newTodo.displayTags.has('active'), true);
-		eq(newTodo.displayTags.has('deleted'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#deleted'), false)
 		newTodo.tagDeleted(true);
-		eq(newTodo.displayTags.has('active'), false);
-		eq(newTodo.displayTags.has('deleted'), true)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#deleted'), true)
 		newTodo.tagDeleted(false);
-		eq(newTodo.displayTags.has('active'), true);
-		eq(newTodo.displayTags.has('deleted'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#deleted'), false)
 	},
 	"A todo can be both completed and deleted, but not both completed and active or deleted and active.": function() {
 		newTodo = new Todo('Item 1');
-		eq(newTodo.displayTags.has('active'), true);
-		eq(newTodo.displayTags.has('completed'), false)
-		eq(newTodo.displayTags.has('deleted'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#deleted'), false)
 		
 		newTodo.tagDeleted(true);
 		
-		eq(newTodo.displayTags.has('active'), false);
-		eq(newTodo.displayTags.has('completed'), false)
-		eq(newTodo.displayTags.has('deleted'), true)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#deleted'), true)
 		
 		newTodo.tagDeleted(false);
 		
-		eq(newTodo.displayTags.has('active'), true);
-		eq(newTodo.displayTags.has('completed'), false)
-		eq(newTodo.displayTags.has('deleted'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#deleted'), false)
 
 		newTodo.tagCompleted(true);
 		
-		eq(newTodo.displayTags.has('active'), false);
-		eq(newTodo.displayTags.has('completed'), true)
-		eq(newTodo.displayTags.has('deleted'), false)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), true)
+		eq(newTodo.displayTags.has('#deleted'), false)
 
 		newTodo.tagDeleted(true);
 		
-		eq(newTodo.displayTags.has('active'), false);
-		eq(newTodo.displayTags.has('completed'), true)
-		eq(newTodo.displayTags.has('deleted'), true)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), true)
+		eq(newTodo.displayTags.has('#deleted'), true)
 	},
 	"The app should have a way to mark a todo deleted or not deleted.": function() {
+		remove();
 		newTodo = new Todo('Item 1');
 		eq(newTodo.deleted, false);
 		newTodo.markDeleted(true);
@@ -4040,7 +4051,7 @@ tests({
 		eq(showActiveButton.innerText, '√ Active');
 		eq(showActiveButton.parentElement, actionsBar);
 	},
-	"On startup, the showActive button text should be '√ Active' and todos with displayTag 'active' should be displayed.": function() {
+	"On startup, the showActive button text should be '√ Active' and todos with displayTag '#active' should be displayed.": function() {
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item active');
@@ -4052,9 +4063,9 @@ tests({
 		todoLi1 = todoUl.children[0];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.displayTags.has('active'), true);
+		eq(todo1.displayTags.has('#active'), true);
 	},
-	"On startup, the showCompleted button text should be '√ Completed' and todos with displayTag 'completed' should be displayed.": function() {
+	"On startup, the showCompleted button text should be '√ Completed' and todos with displayTag '#completed' should be displayed.": function() {
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item active');
@@ -4070,15 +4081,15 @@ tests({
 		todoLi2 = todoUl.children[1];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.displayTags.has('active'), true);
+		eq(todo1.displayTags.has('#active'), true);
 		eq(todoLi1, todoUl.children[0]);
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todo2.displayTags.has('active'), false);
-		eq(todo2.displayTags.has('completed'), true);
+		eq(todo2.displayTags.has('#active'), false);
+		eq(todo2.displayTags.has('#completed'), true);
 		eq(todoLi2, todoUl.children[1]);
 	},
-	"On startup, the showDeleted button text should be 'Deleted' and todos with displayTag 'deleted' should not be displayed.": function() {
+	"On startup, the showDeleted button text should be 'Deleted' and todos with displayTag '#deleted' should not be displayed.": function() {
 		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item active');
@@ -4098,19 +4109,16 @@ tests({
 		todoLi3 = todoUl.children[2];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.displayTags.has('active'), true);
+		eq(todo1.displayTags.has('#active'), true);
 		eq(todoLi1, todoUl.children[0]);
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todo2.displayTags.has('active'), false);
-		eq(todo2.displayTags.has('completed'), true);
+		eq(todo2.displayTags.has('#active'), false);
+		eq(todo2.displayTags.has('#completed'), true);
 		eq(todoLi2, todoUl.children[1]);
 
 		eq(showDeletedButton.textContent, 'Deleted');
-		eq(todoLi3, undefined);
-//		eq(todo3.displayTags.has('active'), false);
-//		eq(todo3.displayTags.has('deleted'), true);
-//		eq(todoLi3, todoUl.children[2]);
+		eq(todoLi3, undefined);							// todoLi3 not created
 	},
 
 	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos, including nested todos.": function() {
