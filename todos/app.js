@@ -23,10 +23,10 @@ function Todo(entry) {
 	this.selected = false;
 
 	this.displayTags = new Set();
-	this.displayTags.add('active');		// new todo is active on creation
+	this.displayTags.add('#active');				// new todo is active on creation
 
-//	this.filteredOut = false;			// true if this todo is filtered out of the display
-//	this.filteredOutParent = false;		// true if descendant(s) are not filtered out
+	this.filteredIn = false;						// true if this todo is filtered in to the display
+	this.filteredOutParentOfFilteredIn = false;		// true if  this todo is filtered out but descendant(s) are not
 }
 
 Todo.prototype.changeId = function() {
@@ -45,22 +45,22 @@ Todo.prototype.markSelected = function(bool) {
 
 Todo.prototype.tagCompleted = function(bool) {
 	if (bool) {
-		this.displayTags.delete('active');
-		this.displayTags.add('completed');
+		this.displayTags.delete('#active');
+		this.displayTags.add('#completed');
 	} else {
-		this.displayTags.delete('completed');
-		this.displayTags.add('active');
+		this.displayTags.delete('#completed');
+		this.displayTags.add('#active');
 	}
 }
 
 Todo.prototype.tagDeleted = function(bool) {
 	if (bool) {
-		this.displayTags.delete('active');
-		this.displayTags.add('deleted');
+		this.displayTags.delete('#active');
+		this.displayTags.add('#deleted');
 	} else {
-		this.displayTags.delete('deleted');
-		if (!this.displayTags.has('completed')) {
-			this.displayTags.add('active');
+		this.displayTags.delete('#deleted');
+		if (!this.displayTags.has('#completed')) {
+			this.displayTags.add('#active');
 		}
 	}
 }
@@ -313,16 +313,16 @@ function renderTodolist() {
 	if (showActiveButton.textContent === '√ Active') {
 		filteredIn.add('#active');
 	}
-	if (showCompletedButton.textContent = '√ Completed') {
+	if (showCompletedButton.textContent === '√ Completed') {
 		filteredIn.add('#completed');
 	}
-	if (showDeleetedButton.textContent = '√ Deleted') {
+	if (showDeletedButton.textContent === '√ Deleted') {
 		filteredIn.add('#deleted');
 	}
 
 	newTodolist = createTodosUl(todos);
 	todolist.innerHTML = ''; 
-	todoList.appendChild(newTodoList);
+	todolist.appendChild(newTodolist);
 }
 
 function createTodoLi(todo) {
@@ -446,6 +446,7 @@ function createTodosUl(todosArray, filter) {
 	
 	var todosUl = document.createElement('ul');
 
+	// filteredArray excludes filtered-out todos unless they are parents of filtered-in todos
 	var filteredArray = todosArray.filter(function(todo) {
 		if (filter === "all") {
 			return !todo.deleted;
@@ -462,23 +463,17 @@ function createTodosUl(todosArray, filter) {
 		}
 	});
 
-	for (var i = 0; i < filteredArray.length; i++) {
-		var todo = filteredArray[i];
-		var todoLi = createTodoLi(todo);
-		if (todo.children.length > 0) {
-			var nestedTodosUl = createTodosUl(todo.children);	// TODO add filter here to filter children?
-			if (todo.collapsed) {
-				nestedTodosUl.classList.add('collapsed');
-			}
-			todoLi.appendChild(nestedTodosUl);
-			todosUl.appendChild(todoLi);
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+
+		if (todo.children.length > 0 && !todo.collapsed) {
+			var nestedTodosUl = createTodosUl(todo.children);
 		} else {
 			todosUl.appendChild(todoLi);
 		}
 	}
 	return todosUl;
 }
-
 
 // Insert a new empty todoLi into the given array after the given todoLi.id, ready for text entry.
 // If no todoLi.id is given, defaults to push().
@@ -2200,7 +2195,9 @@ function startApp() {
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
 	} else {
-		todolist.appendChild(createTodosUl(todos));
+		renderTodolist();
+
+//		todolist.appendChild(createTodosUl(todos));
 	}
 }
 
