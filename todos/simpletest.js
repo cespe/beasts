@@ -12,6 +12,7 @@ var TinyTest = {
 		var successes = 0;
 		var unautomated = 0;
 		var unimplemented = 0;
+		var unnecessary = 0;
 		var numberOfTests = 0;
 		function pluralize(number, word) {
 			if (number === 1) {
@@ -40,6 +41,9 @@ var TinyTest = {
 				} else if (e.message === 'future') {
 					unimplemented++;
 					console.log(testName + '%c Not implemented.', "color: orange;");
+				} else if (e.message === 'remove') {
+					unnecessary++;
+					console.log(testName + '%c Not needed.', "color: purple;");
 				} else {
 					failures++;
 					console.groupCollapsed(testName + ' %c' +  e, "color: red;");
@@ -69,6 +73,10 @@ var TinyTest = {
 		throw new Error('future');
 	},
 
+	remove: function(msg) {
+		throw new Error('remove');
+	},
+
     assert: function(value, msg) {
         if (!value) {
             throw new Error('assert(): ' + msg);
@@ -92,6 +100,7 @@ var TinyTest = {
 var fail               = TinyTest.fail.bind(TinyTest),
 	manual			   = TinyTest.manual.bind(TinyTest),
 	future			   = TinyTest.future.bind(TinyTest),
+	remove			   = TinyTest.remove.bind(TinyTest),
     assert             = TinyTest.assert.bind(TinyTest),
     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
     eq                 = TinyTest.assertStrictEquals.bind(TinyTest), // alias for assertEquals in original, changed here to Strict
