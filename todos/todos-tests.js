@@ -159,8 +159,14 @@ tests({
 		newTodo.markCollapsed(false);
 		eq(newTodo.collapsed, false);
 	},
+	"The app should have a way to mark a todo filtered in or not according to a supplied set of display tags.": function() {
+		fail();
+	},
+	"The app should have a way to mark a todo as a filtered-out parent of filtered-in todos according to a supplied set of display tags.": function() {
+		fail();
+	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
-		// Test insertTodo(array, todoToInsert, todoBeforeInsertionPoint)
+		// Tests insertTodo(array, todoToInsert, todoBeforeInsertionPoint)
 		todos = []
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -234,6 +240,7 @@ tests({
 
 	},
 	"The app should have a way to delete a todo from the array it is in.": function() {
+		// Tests deleteTodo(array, todo)
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -263,7 +270,7 @@ tests({
 
 	},
 	"The app should have a way to return a todo when given its id.": function() {
-		// Test findTodo(array, id)
+		// Tests findTodo(array, id)
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -286,7 +293,7 @@ tests({
 		eq(result, grandchild1);
 	},
 	"The app should have a way to return the array holding a todo when given its id.": function() {
-		// Test findArray(array, id)
+		// Tests findArray(array, id)
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -309,7 +316,7 @@ tests({
 		eq(result, child1.children);
 	},
 	"The app should have a way to return the parent of a given todo.": function() {
-		// Test findParent(childTodo)
+		// Tests findParent(childTodo)
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -342,7 +349,7 @@ tests({
 		eq(result, item2Child1);
 	},
 	"The app should have a way to determine if any todos, including nested todos, are selected.": function() {
-		// Test anySelectedTodos(array)
+		// Tests anySelectedTodos(array)
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -401,7 +408,7 @@ tests({
 		eq(anySelectedTodos(todo2.children), false);
 	},
 	"The app should have a way to determine if any todos, including nested todos, are unselected.": function() {
-		// Test anyUnselectedTodos(array)
+		// Tests anyUnselectedTodos(array)
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
