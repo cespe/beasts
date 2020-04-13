@@ -165,12 +165,16 @@ tests({
 		todo2 = new Todo('Item 2 completed');
 		todo3 = new Todo('Item 3 deleted');
 
-		todo2.tagCompleted();
-		todo3.tagDeleted();
+		todo2.tagCompleted(true);
+		todo3.tagDeleted(true);
 
 		filterSet = new Set();
 		filterSet.add('#active');
 		filterSet.add('#deleted');
+
+		todo1.markFilteredIn(filterSet);
+		todo2.markFilteredIn(filterSet);
+		todo3.markFilteredIn(filterSet);
 
 		eq(todo1.filteredIn, true);
 		eq(todo2.filteredIn, false);

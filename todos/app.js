@@ -78,6 +78,17 @@ Todo.prototype.addChild = function(child) {
 Todo.prototype.markCollapsed = function(bool) {
 	this.collapsed = bool;
 }
+Todo.prototype.markFilteredIn = function(set) {		// parameter is the filteredIn set
+	this.filteredIn = false;
+	var tags = Array.from(this.displayTags);
+	for (var i = 0; i < tags.length; i++) {
+		var tag = tags[i];
+		if (set.has(tag)) {
+			this.filteredIn = true;
+			return;
+		}
+	}
+}
 
 function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 
