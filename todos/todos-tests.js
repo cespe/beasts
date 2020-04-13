@@ -160,10 +160,61 @@ tests({
 		eq(newTodo.collapsed, false);
 	},
 	"The app should have a way to mark a todo filtered in or not according to a supplied set of display tags.": function() {
-		fail();
+		// Tests todo.markFilteredIn(set)
+		todo1 = new Todo('Item 1 active');
+		todo2 = new Todo('Item 2 completed');
+		todo3 = new Todo('Item 3 deleted');
+
+		todo2.tagCompleted();
+		todo3.tagDeleted();
+
+		filterSet = new Set();
+		filterSet.add('#active');
+		filterSet.add('#deleted');
+
+		eq(todo1.filteredIn, true);
+		eq(todo2.filteredIn, false);
+		eq(todo3.filteredIn, true);
 	},
 	"The app should have a way to mark a todo as a filtered-out parent of filtered-in todos according to a supplied set of display tags.": function() {
+		// Tests todo.markFilteredOutParentOfFilteredIn(set);
 		fail();
+//		todos = [];
+		todo1 = new Todo('Item 1 filtered in');						// tagged active on creation
+//		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2 filtered-out parent');
+		todo2.tagCompleted();
+		child2 = new Todo('Item 2 child filtered-out parent');
+		child2.tagCompleted();
+		todo2.addChild(child2);
+		grandchild2 = new Todo('Item 2 grandchild filtered in');
+		grandchild2.tagDeleted();
+		child2.addChild(grandchild2);
+//		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3 filtered-out parent');
+		todo3.tagDeleted();
+		child3 = new Todo('Item 3 child filtered in');				// tagged active on creation		
+		todo3.addChild(child3);
+//		insertTodo(todos, todo3);
+
+		var filterSet = new Set();
+		filterSet.add('#active');
+		filterSet.add('#deleted');
+
+		todo1.markFilteredOutParentOfFilteredIn(filterSet);
+		todo2.markFilteredOutParentOfFilteredIn(filterSet);
+		child2.markFilteredOutParentOfFilteredIn(filterSet);
+		grandchild2.markFilteredOutParentOfFilteredIn(filterSet);
+		todo3.markFilteredOutParentOfFilteredIn(filterSet);
+		child3.markFilteredOutParentOfFilteredIn(filterSet);
+
+		eq(todo1.filteredOutParentOfFilteredIn, false);
+		eq(todo2.filteredOutParentOfFilteredIn, true);
+		eq(child2.filteredOutParentOfFilteredIn, true);
+		eq(grandchild2.filteredOutParentOfFilteredIn, false);
+		eq(todo2.filteredOutParentOfFilteredIn, true);
+		eq(child3.filteredOutParentOfFilteredIn, false);
+
 	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
 		// Tests insertTodo(array, todoToInsert, todoBeforeInsertionPoint)
