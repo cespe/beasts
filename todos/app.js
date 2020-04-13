@@ -90,6 +90,20 @@ Todo.prototype.markFilteredIn = function(set) {		// parameter is the filteredIn 
 	}
 }
 
+Todo.prototype.markFilteredOutParentOfFilteredIn = function() {
+	if (this.filteredIn === true || this.children.length === 0) {
+		this.filteredOutParentOfFilteredIn = false;
+	} else {
+		for (var i = 0; i < this.children.length; i++) {
+			var child = this.children[i];
+			if (child.filteredIn || child.filteredOutParentOfFilteredIn) {
+				this.filteredOutParentOfFilteredIn = true;
+				return
+			} 
+		}
+	}
+}
+
 function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 
 	// Enforce unique todo ids in the array.

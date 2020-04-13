@@ -181,36 +181,39 @@ tests({
 		eq(todo3.filteredIn, true);
 	},
 	"The app should have a way to mark a todo as a filtered-out parent of filtered-in todos according to a supplied set of display tags.": function() {
-		// Tests todo.markFilteredOutParentOfFilteredIn(set);
-		fail();
-//		todos = [];
+		// Tests todo.markFilteredOutParentOfFilteredIn();
 		todo1 = new Todo('Item 1 filtered in');						// tagged active on creation
-//		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2 filtered-out parent');
-		todo2.tagCompleted();
+		todo2.tagCompleted(true);
 		child2 = new Todo('Item 2 child filtered-out parent');
-		child2.tagCompleted();
+		child2.tagCompleted(true);
 		todo2.addChild(child2);
 		grandchild2 = new Todo('Item 2 grandchild filtered in');
-		grandchild2.tagDeleted();
+		grandchild2.tagDeleted(true);
 		child2.addChild(grandchild2);
-//		insertTodo(todos, todo2);
 		todo3 = new Todo('Item 3 filtered-out parent');
-		todo3.tagDeleted();
+		todo3.tagDeleted(true);
 		child3 = new Todo('Item 3 child filtered in');				// tagged active on creation		
 		todo3.addChild(child3);
-//		insertTodo(todos, todo3);
 
 		var filterSet = new Set();
 		filterSet.add('#active');
 		filterSet.add('#deleted');
 
-		todo1.markFilteredOutParentOfFilteredIn(filterSet);
-		todo2.markFilteredOutParentOfFilteredIn(filterSet);
-		child2.markFilteredOutParentOfFilteredIn(filterSet);
-		grandchild2.markFilteredOutParentOfFilteredIn(filterSet);
-		todo3.markFilteredOutParentOfFilteredIn(filterSet);
-		child3.markFilteredOutParentOfFilteredIn(filterSet);
+		todo1.markFilteredIn(filterSet);
+		todo2.markFilteredIn(filterSet);
+		child2.markFilteredIn(filterSet);
+		grandchild2.markFilteredIn(filterSet);
+		todo3.markFilteredIn(filterSet);
+		child3.markFilteredIn(filterSet);
+
+		// These are ordered to simulate recursion, needed for the function to work properly
+		todo1.markFilteredOutParentOfFilteredIn();
+		grandchild2.markFilteredOutParentOfFilteredIn();
+		child2.markFilteredOutParentOfFilteredIn();
+		todo2.markFilteredOutParentOfFilteredIn();
+		child3.markFilteredOutParentOfFilteredIn();
+		todo3.markFilteredOutParentOfFilteredIn();
 
 		eq(todo1.filteredOutParentOfFilteredIn, false);
 		eq(todo2.filteredOutParentOfFilteredIn, true);
