@@ -582,7 +582,7 @@ tests({
 		todo2Grandchild1.selected = true;
 		eq(anyUnselectedTodos(todo2.children), false);
 	},
-	"The app should have a way to build an li element from a todo entry.": function() {
+	"The app should have a way to build a todo li element from a todo entry.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -596,6 +596,9 @@ tests({
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
 		eq(todoLi.id, todo1.id);
+	},
+	"The app should have a way to build a parent placeholder li element from a todo entry.": function() {
+		// Tests createParentPlaceholderLi(todo)
 	},
 	"The app should have a way to generate a ul element from an array of todos.": function() {
 		// Tests createTodosUl
