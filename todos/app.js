@@ -98,7 +98,7 @@ Todo.prototype.markFilteredOutParentOfFilteredIn = function() {
 			var child = this.children[i];
 			if (child.filteredIn || child.filteredOutParentOfFilteredIn) {
 				this.filteredOutParentOfFilteredIn = true;
-				return
+				return;
 			} 
 		}
 	}
@@ -134,6 +134,33 @@ function insertTodo(array, todoToInsert, todoBeforeInsertionPoint) {
 function deleteTodo(array, todo) {
 	var position = array.indexOf(todo);
 	array.splice(position, 1);
+}
+
+function applyDisplayTags(filterSet) {
+
+	function markFilteredInTodos(todosArray) {
+		for (var i = 0; i < todosArray.length; i++) {
+			var todo = todosArray[i];
+			if (todo.children.length > 0) {
+				markFilteredInTodos(todo.children);
+			}
+			todo.markFilteredIn(filterSet);
+		}
+	}
+
+	function markFilteredOutParentsOfFilteredInTodos(todosArray) {
+		for (var i = 0; i < todosArray.length; i++) {
+			var todo = todosArray[i];
+			if (todo.children.length > 0) {
+				markFilteredOutParentsOfFilteredInTodos(todo.children);
+			}
+			todo.markFilteredOutParentOfFilteredIn();
+		}
+
+	}
+
+	markFilteredInTodos(todos);
+	markFilteredOutParentsOfFilteredInTodos(todos);
 }
 
 /*********************************** Data selection **************************************/
