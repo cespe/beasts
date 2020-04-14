@@ -374,6 +374,10 @@ function generateFilterSet() {
 
 function renderTodolist() {
 
+	var filterSet = generateFilterSet();
+
+	applyDisplayTags(filterSet);
+
 	newTodolist = createTodosUl(todos);
 	todolist.innerHTML = ''; 
 	todolist.appendChild(newTodolist);
@@ -519,9 +523,15 @@ function createTodosUl(todosArray, filter) {
 
 	for (var i = 0; i < todosArray.length; i++) {
 		var todo = todosArray[i];
-
+		if (todo.filteredIn)  {
+			var todoLi = createTodoLi(todo)
+		} else if (todo.filteredOutParentOfFilteredIn) {
+			var todoLi = createParentPlaceholderLi(todo);
+		}
 		if (todo.children.length > 0 && !todo.collapsed) {
 			var nestedTodosUl = createTodosUl(todo.children);
+			todoLi.appendChild(nestedTodosUl);
+			todosUl.appendChild(todoLi);
 		} else {
 			todosUl.appendChild(todoLi);
 		}
