@@ -4177,8 +4177,104 @@ tests({
 		eq(showDeletedButton.parentElement, actionsBar);
 	},
 	"The app should have a way to generate a set of filter tags from showActive, showCompleted, and showDeleted button text.": function() {
-		fail();
 		// Tests generateFilterSet()
+		
+		// Case: default set at startup
+		eq(showActiveButton.textContent, '√ Active');
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		var set1 = generateFilterSet();
+
+		eq(set1.size, 2);
+		eq(set1.has('#active'), true);
+		eq(set1.has('#completed'), true);
+		eq(set1.has('#deleted'), false);
+
+		// Case: none set
+		showActiveButton.textContent = 'Active';
+		showCompletedButton.textContent = 'Completed';
+		showDeletedButton.textContent = 'Deleted';
+
+		var set2 = generateFilterSet();
+
+		eq(set2.size, 0);
+		eq(set2.has('#active'), false);
+		eq(set2.has('#completed'), false);
+		eq(set2.has('#deleted'), false);
+
+		// Case: all set
+		showActiveButton.textContent = '√ Active';
+		showCompletedButton.textContent = '√ Completed';
+		showDeletedButton.textContent = '√ Deleted';
+
+		var set3 = generateFilterSet();
+
+		eq(set3.size, 3);
+		eq(set3.has('#active'), true);
+		eq(set3.has('#completed'), true);
+		eq(set3.has('#deleted'), true);
+
+		// Case: active only set
+		showActiveButton.textContent = '√ Active';
+		showCompletedButton.textContent = 'Completed';
+		showDeletedButton.textContent = 'Deleted';
+
+		var set4 = generateFilterSet();
+
+		eq(set4.size, 1);
+		eq(set4.has('#active'), true);
+		eq(set4.has('#completed'), false);
+		eq(set4.has('#deleted'), false);
+
+		// Case: completed only set
+		showActiveButton.textContent = '√Active';
+		showCompletedButton.textContent = '√ Completed';
+		showDeletedButton.textContent = 'Deleted';
+
+		var set5 = generateFilterSet();
+
+		eq(set5.size, 1);
+		eq(set5.has('#active'), false);
+		eq(set5.has('#completed'), true);
+		eq(set5.has('#deleted'), false);
+
+		// Case: deleted only set
+		showActiveButton.textContent = 'Active';
+		showCompletedButton.textContent = 'Completed';
+		showDeletedButton.textContent = '√ Deleted';
+
+		var set6 = generateFilterSet();
+
+		eq(set6.size, 1);
+		eq(set6.has('#active'), false);
+		eq(set6.has('#completed'), false);
+		eq(set6.has('#deleted'), true);
+
+		// Case: two set, active and deleted
+		showActiveButton.textContent = '√ Active';
+		showCompletedButton.textContent = 'Completed';
+		showDeletedButton.textContent = '√ Deleted';
+
+		var set7 = generateFilterSet();
+
+		eq(set7.size, 2);
+		eq(set7.has('#active'), true);
+		eq(set7.has('#completed'), false);
+		eq(set7.has('#deleted'), true);
+
+		// Case: two set, active and deleted
+		showActiveButton.textContent = '√ Active';
+		showCompletedButton.textContent = 'Completed';
+		showDeletedButton.textContent = '√ Deleted';
+
+		var set7 = generateFilterSet();
+
+		eq(set7.size, 2);
+		eq(set7.has('#active'), true);
+		eq(set7.has('#completed'), false);
+		eq(set7.has('#deleted'), true);
+
 	},
 	"On startup, the showActive button text should be '√ Active' and todos with displayTag '#active' should be displayed.": function() {
 		todolist.innerHTML = '';
