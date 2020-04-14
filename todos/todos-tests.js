@@ -4166,6 +4166,20 @@ tests({
 		eq(showActiveButton.innerText, '√ Active');
 		eq(showActiveButton.parentElement, actionsBar);
 	},
+	"The header actions bar should have a showCompleted button to toggle the display of completed todos.": function() {
+		eq(showCompletedButton.nodeName, 'BUTTON');
+		eq(showCompletedButton.innerText, '√ Completed');
+		eq(showCompletedButton.parentElement, actionsBar);
+	},
+	"The header actions bar should have a showDeleted button to toggle the display of deleted todos.": function() {
+		eq(showDeletedButton.nodeName, 'BUTTON');
+		eq(showDeletedButton.innerText, 'Deleted');
+		eq(showDeletedButton.parentElement, actionsBar);
+	},
+	"The app should have a way to generate a set of filter tags from showActive, showCompleted, and showDeleted button text.": function() {
+		fail();
+		// Tests generateFilterSet()
+	},
 	"On startup, the showActive button text should be '√ Active' and todos with displayTag '#active' should be displayed.": function() {
 		todolist.innerHTML = '';
 		todos = [];
@@ -4332,11 +4346,6 @@ tests({
 		eq(todoLi2ChildLi.classList.contains('removed-parent'), false);
 		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
 	}, 
-	"The header actions bar should have a showCompleted button to toggle the display of completed todos.": function() {
-		eq(showCompletedButton.nodeName, 'BUTTON');
-		eq(showCompletedButton.innerText, '√ Completed');
-		eq(showCompletedButton.parentElement, actionsBar);
-	},
 	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'completed-removed' on completed todos.": function() {
 		todolist.innerHTML = '';
 		todos = [];
@@ -4378,11 +4387,6 @@ tests({
 		eq(todoLi2Child.classList.contains('completed-removed'), false);
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 		eq(todoLi2Child.children[entryIndex].classList.contains('struck-completed'), true);
-	},
-	"The header actions bar should have a showDeleted button to toggle the display of deleted todos.": function() {
-		eq(showDeletedButton.nodeName, 'BUTTON');
-		eq(showDeletedButton.innerText, 'Deleted');
-		eq(showDeletedButton.parentElement, actionsBar);
 	},
 	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'deleted-removed' on deleted todos.": function() {
 		// By default, deleted todos are not displayed.

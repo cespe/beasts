@@ -356,11 +356,9 @@ var deleteSelectedChildrenIndex = 10;
 var todoLiUlIndex = 11;
 
 // A set to specify which todos will be displayed
-var filteredIn = new Set();
+function generateFilterSet() {
 
-function renderTodolist() {
-
-	filteredIn.clear();
+	var filteredIn = new Set();
 
 	if (showActiveButton.textContent === '√ Active') {
 		filteredIn.add('#active');
@@ -371,6 +369,10 @@ function renderTodolist() {
 	if (showDeletedButton.textContent === '√ Deleted') {
 		filteredIn.add('#deleted');
 	}
+	return filteredIn;
+}
+
+function renderTodolist() {
 
 	newTodolist = createTodosUl(todos);
 	todolist.innerHTML = ''; 
