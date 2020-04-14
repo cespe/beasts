@@ -192,7 +192,7 @@ tests({
 		grandchild2.tagDeleted(true);
 		child2.addChild(grandchild2);
 		todo3 = new Todo('Item 3 filtered-out parent');
-		todo3.tagDeleted(true);
+		todo3.tagCompleted(true);
 		child3 = new Todo('Item 3 child filtered in');				// tagged active on creation		
 		todo3.addChild(child3);
 
@@ -326,6 +326,50 @@ tests({
 		eq(todo1.children[0], child1);
 		eq(todo1.children[1], child3);
 
+	},
+	"The app should have a way to update filter tags and apply them to all todos.": function() {
+		// Tests applyDisplayTags(filterSet)
+		todo1 = new Todo('Item 1 filtered in');						// tagged active on creation
+		todo2 = new Todo('Item 2 filtered-out parent');
+		todo2.tagCompleted(true);
+		child2 = new Todo('Item 2 child filtered-out parent');
+		child2.tagCompleted(true);
+		todo2.addChild(child2);
+		grandchild2 = new Todo('Item 2 grandchild filtered in');
+		grandchild2.tagDeleted(true);
+		grandchild3 = new Todo('Item 3 grandchild filtered out');
+		grandchild3.tagCompleted(true);
+		child2.addChild(grandchild2);
+		child2.addChild(grandchild3);
+		todo3 = new Todo('Item 3 filtered-out parent');
+		todo3.tagCompleted(true);
+		child3 = new Todo('Item 3 child filtered in');				// tagged active on creation		
+		todo3.addChild(child3);
+		todo4 = new Todo('Item 4 filtered in');						// tagged active on creation
+
+		var filterSet = new Set();
+		filterSet.add('#active');
+		filterSet.add('#deleted');
+
+		applyDisplayTags(filterSet);
+
+		eq(todo1.filteredIn, true);
+		eq(todo2.filteredIn, false);
+		eq(child2.filteredIn, false);
+		eq(grandchild2.filteredIn, true);
+		eq(grandchild3.filteredIn, false);
+		eq(todo3.filteredIn, false);
+		eq(child3.filteredIn, true);
+		eq(todo4.filteredIn, true);
+
+		eq(todo1.filteredOutParentOfFilteredIn, false);
+		eq(todo2.filteredOutParentOfFilteredIn, true);
+		eq(child2.filteredOutParentOfFilteredIn, true);
+		eq(grandchild2.filteredOutParentOfFilteredIn, false);
+		eq(grandchild3.filteredOutParentOfFilteredIn, false);
+		eq(todo3.filteredOutParentOfFilteredIn, true);
+		eq(child3.filteredOutParentOfFilteredIn, false);
+		eq(todo4.filteredOutParentOfFilteredIn, false);
 	},
 	"The app should have a way to return a todo when given its id.": function() {
 		// Tests findTodo(array, id)
@@ -549,6 +593,7 @@ tests({
 		eq(todoLi.id, todo1.id);
 	},
 	"The app should have a way to generate a ul element from an array of todos.": function() {
+		// Tests createTodosUl
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
