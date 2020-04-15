@@ -512,6 +512,7 @@ function createTodosUl(todosArray, filter) {
 	
 	var todosUl = document.createElement('ul');
 
+	// TODO remove
 	// filteredArray excludes filtered-out todos unless they are parents of filtered-in todos
 	var filteredArray = todosArray.filter(function(todo) {
 		if (filter === "all") {
@@ -550,7 +551,6 @@ function createTodosUl(todosArray, filter) {
 // Insert a new empty todoLi into the given array after the given todoLi.id, ready for text entry.
 // If no todoLi.id is given, defaults to push().
 // 'array' argument will be either todos or a todo.children array, so no recursive search is needed.
-// TODO run through debugger, looks like it needs revision
 function insertNewTodoLi(array, id) {
 	var targetLi = document.getElementById(id);
 	var insertAfter = array.find(function(el) {
