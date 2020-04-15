@@ -136,7 +136,7 @@ function deleteTodo(array, todo) {
 	array.splice(position, 1);
 }
 
-function applyDisplayTags(filterSet) {
+function applyDisplayTags(filterSet) {					// TODO Combine these into one function to avoid two recursions
 
 	function markFilteredInTodos(todosArray) {
 		for (var i = 0; i < todosArray.length; i++) {

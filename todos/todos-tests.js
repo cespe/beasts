@@ -631,30 +631,37 @@ tests({
 		// Tests createTodosUl
 		todos = [];
 		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
-		insertTodo(todos, todo2);
-		var result = createTodosUl(todos);
-
-		eq(result.childElementCount, 2);
-		eq(result.children.item(0).children[entryIndex].textContent, 'Item 1');
-		eq(result.children.item(1).children[entryIndex].textContent, 'Item 2');
-
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
 		child1 = new Todo('Item 1 child 1');
+		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child1);
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		var result = createTodosUl(todos);
-		eq(result.childElementCount, 2);
-		eq(result.children.item(0).children[entryIndex].textContent, 'Item 1');
-		eq(result.children.item(0).children[todoLiUlIndex].children[0].children[entryIndex].textContent, 'Item 1 child 1');
-		eq(result.children.item(1).children[entryIndex].textContent, 'Item 2');
+
+		var filterSet = generateFilterSet();
+		applyDisplayTags(filterSet);
+
+		var topLevelUl = createTodosUl(todos);
+
+		// Case: top-level <ul>
+
+		eq(topLevelUl.nodeName, 'UL');
+		eq(topLevelUl.childElementCount, 2);
+		eq(topLevelUl.children[0].children[entryIndex].textContent, 'Item 1');
+		eq(topLevelUl.children[1].children[entryIndex].textContent, 'Item 2');
+
+		// Case: nested <ul>
+		
+		var childLevelUl = topLevelUl.children[0].children[todoLiUlIndex];
+
+		eq(childLevelUl.nodeName, 'UL');
+		eq(childLevelUl.childElementCount, 2);
+		eq(childLevelUl.children[0].children[entryIndex].textContent, 'Item 1 child 1');
+		eq(childLevelUl.children[1].children[entryIndex].textContent, 'Item 1 child 2');
 	},
 	"When loaded, the app should display todos.": function() {
-		todolist.innerHTML = '';
+		// Tests renderTodolist()
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -662,7 +669,8 @@ tests({
 		insertTodo(todos, todo2);
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
-		todolist.appendChild(createTodosUl(todos));
+
+		renderTodolist();
 		
 		var todo1Li = document.getElementById(todo1.id);
 		var todo1LiEntry = todo1Li.children[entryIndex].textContent;
