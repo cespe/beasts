@@ -582,12 +582,13 @@ tests({
 		todo2Grandchild1.selected = true;
 		eq(anyUnselectedTodos(todo2.children), false);
 	},
-	"The app should have a way to build a todo li element from a todo entry.": function() {
+	"The app should have a way to build a todo li element from a todo object.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
 
+		eq(todoLi.nodeName, 'LI');
 		eq(todoLi.children[entryIndex].textContent, 'Item 1');	
 	},
 	"Each todo li should have an id equal to todo.id.": function() {
@@ -597,9 +598,35 @@ tests({
 		var todoLi = createTodoLi(todo1);
 		eq(todoLi.id, todo1.id);
 	},
-	"The app should have a way to build a parent placeholder li element from a todo entry.": function() {
+	"The app should have a way to build a placeholderi li element from a todo object.": function() {
 		// Tests createParentPlaceholderLi(todo)
+		var todo1 = new Todo('Item 1 filtered-out parent');
+//		todo1.tagDeleted(true);
+//		var filterSet = new Set();
+//		filterSet.add('#active');
+//		todo1.markFilteredIn(filterSet);
+//		child1 = new Todo('Item 1 child 1 filtered in');
+//		todo1.addChild(child1);
+//		child1.markFilteredIn(filterSet);
+//		todo1.markFilteredOutParentOfFilteredIn();
+
+//		eq(todo1.filteredIn, true);
+//		eq(todo1.filteredOutParentOfFilteredIn, true);
+//		eq(child1.filteredIn, true);
+
+		var todo1ParentPlaceholderLi = createParentPlaceholderLi(todo1);
+
+		eq(todo1ParentPlaceholderLi.nodeName, 'LI');
+		eq(todo1ParentPlaceholderLi.id, todo1.id);
+		
 	},
+	"A parent placeholder li should have class 'parent-placeholder'.": function() {
+
+		var todo1 = new Todo('Item 1 filtered-out parent');
+		var todo1ParentPlaceholderLi = createParentPlaceholderLi(todo1);
+
+		eq(todo1ParentPlaceholderLi.classList.contains('parent-placeholder'), true);
+	}, 
 	"The app should have a way to generate a ul element from an array of todos.": function() {
 		// Tests createTodosUl
 		todos = [];
@@ -4395,56 +4422,6 @@ tests({
 		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
 		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
 	},
-	"A filtered-out todoLi with non-filtered-out descendants should have have class 'removed-parent'.": function() {
-		// TODO what about when children are collapsed? Seems like showChildren should be available
-		fail();
-		todolist.innerHTML = '';
-		todos = [];
-		todo1 = new Todo('Item 1 active');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2 completed');
-		todo2.markCompleted(true);
-		todo2Child = new Todo('Item 2 child active');
-		todo2.addChild(todo2Child);
-		todo2Grandchild = new Todo('Item 2 grandchild completed');
-		todo2Grandchild.markCompleted(true);
-		todo2Child.addChild(todo2Grandchild);
-		insertTodo(todos, todo2);
-
-		startApp();
-
-		todoUl = todolist.children[0];
-		todoLi1 = todoUl.children[0];
-		todoLi2 = todoUl.children[1];
-		todoLi2Ul = todoLi2.children[todoLiUlIndex];
-		todoLi2ChildLi = todoLi2Ul.children[0];
-		todoLi2ChildLiUl = todoLi2ChildLi.children[todoLiUlIndex];
-		todoLi2GrandchildLi = todoLi2ChildLiUl.children[0];
-
-		eq(showActiveButton.textContent, '√ Active');
-		eq(todoLi1.classList.contains('active-removed'), false);
-		eq(todoLi2.classList.contains('active-removed'), false);
-		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
-		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
-
-		showActiveButton.click();
-
-		eq(showActiveButton.textContent, 'Active');
-		eq(todoLi1.classList.contains('active-removed'), true);
-		eq(todoLi2.classList.contains('active-removed'), false);
-		eq(todoLi2ChildLi.classList.contains('active-removed'), true);
-		eq(todoLi2ChildLi.classList.contains('removed-parent'), true);
-		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
-
-		showActiveButton.click();
-
-		eq(showActiveButton.textContent, '√ Active');
-		eq(todoLi1.classList.contains('active-removed'), false);
-		eq(todoLi2.classList.contains('active-removed'), false);
-		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
-		eq(todoLi2ChildLi.classList.contains('removed-parent'), false);
-		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
-	}, 
 	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'completed-removed' on completed todos.": function() {
 		todolist.innerHTML = '';
 		todos = [];

@@ -383,6 +383,14 @@ function renderTodolist() {
 	todolist.appendChild(newTodolist);
 }
 
+function createParentPlaceholderLi(todo) {
+	var todoLi = document.createElement('li');
+	todoLi.id = todo.id;
+	todoLi.classList.add('parent-placeholder');
+
+	return todoLi;
+}
+
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
