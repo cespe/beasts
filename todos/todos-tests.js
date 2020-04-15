@@ -898,14 +898,13 @@ tests({
 	"When a todoLi is created, todo.selected should be set to false, 'selected' button text should be 'Select' and class 'inactive', and entry <p> class should remove 'highlighted'.": function() {
 		// Start with a clean slate
 		// Select button is inactive/hidden until Select all is clicked
-		var todos = []
+		todos = []
 		todo1 = new Todo('Item 1');
 		todo1.markSelected(true);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo1);
 		insertTodo(todos, todo2);
 		
-
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
@@ -995,7 +994,7 @@ tests({
 		eq(todoLi.children[completedIndex].name, 'completed');
 	},
 	"When a todoLi is created, if todo.completed is false, button should be 'Complete' and entry <p> class should be ''.": function() {
-		var todos = [];
+		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
@@ -1009,7 +1008,7 @@ tests({
 		eq(todoLi1.children[entryIndex].classList.length, 0);
 	},
 	"If todo.completed is true, button text should be 'Uncomplete' and entry <p> class should be 'struck-completed'.": function () {
-		var todos = [];
+		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCompleted(true);
 		insertTodo(todos, todo1);
