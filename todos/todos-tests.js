@@ -1471,7 +1471,7 @@ tests({
 
 		eq(todoLi1ShowChildren.classList.contains('inactive'), true);
 	},
-	"If a todo has children and todo.collapsed is true, todoLi should be created with todoLiUl class 'collapsed' and showChildren button text 'Show children'.": function() {
+	"If a todo has children and todo.collapsed is true, todoLi should be created with showChildren button text 'Show children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCollapsed(true);
@@ -1487,7 +1487,7 @@ tests({
 		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
 		todoLi1Ul = todoLi1.children[todoLiUlIndex];
 
-		eq(todoLi1Ul.classList.contains('collapsed'), true);
+		eq(todoLi1Ul, undefined);	// child todoLis not created if collapsed
 		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
 },
 	"If a todo has children and todo.collapsed is false, todoLi should be created with todoLiUl class '' and showChildren button text 'Hide children'.": function() {
