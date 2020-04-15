@@ -25,7 +25,7 @@ function Todo(entry) {
 	this.displayTags = new Set();
 	this.displayTags.add('#active');				// new todo is active on creation
 
-	this.filteredIn = false;						// true if this todo is filtered in to the display
+	this.filteredIn = true;						// new todo is filtered in on creation 
 	this.filteredOutParentOfFilteredIn = false;		// true if  this todo is filtered out but descendant(s) are not
 }
 

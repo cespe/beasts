@@ -60,9 +60,11 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.collapsed, false);
 	},
-	"A todo object should be created with a 'filteredIn' property of type boolean set to false.": function() {
+	"A todo object should be created with a 'filteredIn' property of type boolean set to true.": function() {
+		// Created true because default displayTag is '#active' and the app only allows new todos when '#active'
+		// When showActiveButton is 'Active', addTodo, addSibling, addChild buttons and key shortcuts are disabled.
 		newTodo = new Todo();
-		eq(newTodo.filteredIn, false);
+		eq(newTodo.filteredIn, true);
 	},
 	"A todo object should be created with a 'filteredOutParentOfFiteredIn' property of type boolean set to false.": function() {
 		newTodo = new Todo();
@@ -4642,6 +4644,9 @@ tests({
 		eq(addTodoButton.parentElement, actionsBar);
 		
 		todos = [];
+
+		// No todos to render, but need to clear out innerHTML from prior test
+		renderTodolist();
 
 		addTodoButton.click();
 
