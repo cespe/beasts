@@ -622,12 +622,21 @@ tests({
 		eq(todo1ParentPlaceholderLi.id, todo1.id);
 		
 	},
-	"A parent placeholder li should have class 'parent-placeholder'.": function() {
-
+	"A parent-placeholder todoLi should include a <p> element for its todo entry but it should not be editable.": function() {
 		var todo1 = new Todo('Item 1 filtered-out parent');
 		var todo1ParentPlaceholderLi = createParentPlaceholderLi(todo1);
+		var todo1ParentPlaceholderLiEntry = todo1ParentPlaceholderLi.children[parentPlaceholderEntryIndex];
 
-		eq(todo1ParentPlaceholderLi.classList.contains('parent-placeholder'), true);
+		eq(todo1ParentPlaceholderLiEntry.nodeName, 'P');
+		eq(todo1ParentPlaceholderLiEntry.contentEditable, 'false');
+
+	},
+	"A parent placeholder li should have class 'parent-placeholder' on its entry.": function() {
+		var todo1 = new Todo('Item 1 filtered-out parent');
+		var todo1ParentPlaceholderLi = createParentPlaceholderLi(todo1);
+		var todo1ParentPlaceholderLiEntry = todo1ParentPlaceholderLi.children[parentPlaceholderEntryIndex];
+
+		eq(todo1ParentPlaceholderLiEntry.classList.contains('parent-placeholder'), true);
 	}, 
 	"The app should have a way to generate a ul element from an array of todos.": function() {
 		// Tests createTodosUl
@@ -733,11 +742,12 @@ tests({
 		renderTodolist();
 		
 		var todo1Li = document.getElementById(todo1.id);
+		var todo1LiEntry = todo1Li.children[0];
 
 		eq(todo1.filteredIn, false);
 		eq(todo1.filteredOutParentOfFilteredIn, true);
 		eq(child1.filteredIn, true);
-		eq(todo1Li.classList.contains('parent-placeholder'), true);
+		eq(todo1LiEntry.classList.contains('parent-placeholder'), true);
 	},
 	"The app should have a way to insert the first todoLi into an empty todos list.": function() {
 		todolist.innerHTML = '';
@@ -902,26 +912,6 @@ tests({
 		eq(document.activeElement, todoLi2Entry);
 		eq(document.hasFocus(), true);
 		eq(todos[0].entry, "test");				// state after edit
-	},
-	"A parent-placeholder todoLi should include its todo entry but it should not be editable.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1 filtered-out parent');
-		todo1.tagDeleted(true);
-		child1 = new Todo('Item 1 child 1 filtered in');
-		todo1.addChild(child1);
-		insertTodo(todos, todo1);
-
-		renderTodolist();
-		
-		var todo1Li = document.getElementById(todo1.id);
-		var todo1LiEntry = todo1Li.children[entryIndex];
-
-		eq(todo1.filteredIn, false);
-		eq(todo1.filteredOutParentOfFilteredIn, true);
-		eq(child1.filteredIn, true);
-		eq(todo1Li.classList.contains('parent-placeholder'), true);
-		eq(todo1LiEntry.textContent, 'Item 1 filtered-out parent');
-		eq(todo1LiEntry.contentEditable, 'false');
 	},
 	"Section: todoLi buttons": function() {
 	},
@@ -4528,7 +4518,6 @@ tests({
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi.id, todo2Grandchild.id);
 
-		debugger;
 		showActiveButton.click();
 
 		eq(showActiveButton.textContent, 'Active');
@@ -4536,17 +4525,15 @@ tests({
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
 		childLi = todoLi1Ul.children[0];
-		childLiUl = childLi.children[todoLiUlIndex];
+		childLiUl = childLi.children[parentPlaceholderUlIndex];
 		grandchildLi = childLiUl.children[0];
 		todoLi2 = todoUl.children[1];
-		todoLi2Ul = todoLi2.children[todoLiUlIndex];
 
 		eq(todoUl.children.length, 1);
 		eq(todoLi1.id, todo2.id);
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi.id, todo2Grandchild.id);
 		eq(todoLi2, undefined);
-		eq(todoLi2Ul, undefined);
 
 		showActiveButton.click();
 

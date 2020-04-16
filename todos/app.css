@@ -13,20 +13,23 @@
 
 .active-removed {
 	/* styles active todos that are filtered out */
-	display: none;
+	/* display: none; */
+	color: rgba(255, 0, 0, 1)
 }
 
 .completed-removed {
 	/* styles completed todos that are filtered out */
-	display: none;
+	/* display: none; */
+	color: rgba(255, 0, 0, 1)
 }
 
 .deleted-removed {
 	/* styles deleted todos that are filtered out */
-	display: none;
+	/* display: none; */
+	color: rgba(255, 0, 0, 1)
 }
 
-.removed-parent {
+.parent-placeholder {
 	/* styles filtered-out parents of todos that are not filtered out */
 	/* the removed parent todoLi shows the faded text of its entry but no buttons */
 	color: rgba(0, 0, 0, 0.2);

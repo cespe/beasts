@@ -25,8 +25,8 @@ function Todo(entry) {
 	this.displayTags = new Set();
 	this.displayTags.add('#active');				// new todo is active on creation
 
-	this.filteredIn = true;						// new todo is filtered in on creation 
-	this.filteredOutParentOfFilteredIn = false;		// true if  this todo is filtered out but descendant(s) are not
+	this.filteredIn = true;						// new todo is filtered in for display on creation 
+	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
 }
 
 Todo.prototype.changeId = function() {
@@ -355,6 +355,10 @@ var completeSelectedChildrenIndex = 9;
 var deleteSelectedChildrenIndex = 10;
 var todoLiUlIndex = 11;
 
+// index positions of parent-placeholder todoLi.children[i]
+var parentPlaceholderEntryIndex = 0;
+var parentPlaceholderUlIndex = 1;
+
 // A set to specify which todos will be displayed
 function generateFilterSet() {
 
@@ -386,7 +390,18 @@ function renderTodolist() {
 function createParentPlaceholderLi(todo) {
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
-	todoLi.classList.add('parent-placeholder');
+
+	var entry = document.createElement('p');
+	entry.contentEditable = false;
+	entry.textContent = todo.entry;
+	entry.classList.add('parent-placeholder');
+	if (todo.displayTags.has('#completed')) {
+		entry.classList.add('struck-completed');
+	}
+	if (todo.displayTags.has('#deleted')) {
+		entry.classList.add('dotted-deleted');
+	}
+	todoLi.appendChild(entry);
 
 	return todoLi;
 }
@@ -537,12 +552,14 @@ function createTodosUl(todosArray, filter) {
 		} else if (todo.filteredOutParentOfFilteredIn) {
 			var todoLi = createParentPlaceholderLi(todo);
 		}
-		if (todo.children.length > 0 && !todo.collapsed) {
-			var nestedTodosUl = createTodosUl(todo.children);
-			todoLi.appendChild(nestedTodosUl);
-			todosUl.appendChild(todoLi);
-		} else {
-			todosUl.appendChild(todoLi);
+		if (todoLi) {
+			if (todo.children.length > 0 && !todo.collapsed) {
+				var nestedTodosUl = createTodosUl(todo.children);
+				todoLi.appendChild(nestedTodosUl);
+				todosUl.appendChild(todoLi);
+			} else {
+				todosUl.appendChild(todoLi);
+			}
 		}
 	}
 	return todosUl;
@@ -1981,26 +1998,27 @@ function actionsClickHandler(event) {
 			if (showActiveButton.textContent === '√ Active') {
 				showActiveButton.textContent = 'Active';
 				addTodoButton.classList.add('inactive');	// disallow new todos when actives are hidden
-				setTodoLiClass(todosUl, 'active-removed', 'add');
+//				setTodoLiClass(todosUl, 'active-removed', 'add');
 				// if no todoLis are displayed, set selectAllButton inactive
-				if (selectAllButton.textContent === 'Select all'); {
-					if (!todoLiDisplayed(todos)) {
-						selectAllButton.classList.add('inactive');
-					}
-					toggleDisplayDependentTodoLiButtons();
-				}
+//				if (selectAllButton.textContent === 'Select all'); {
+//					if (!todoLiDisplayed(todos)) {
+//						selectAllButton.classList.add('inactive');
+//					}
+//					toggleDisplayDependentTodoLiButtons();
+//				}
 
 			} else {
 				showActiveButton.textContent = '√ Active';
 				addTodoButton.classList.remove('inactive');
-				setTodoLiClass(todosUl, 'active-removed', 'remove');
-				if (selectAllButton.textContent === 'Select all') {
-					if (todoLiDisplayed(todos)) {
-						selectAllButton.classList.remove('inactive');
-					}
-					toggleDisplayDependentTodoLiButtons();
-				}
+//				setTodoLiClass(todosUl, 'active-removed', 'remove');
+//				if (selectAllButton.textContent === 'Select all') {
+//					if (todoLiDisplayed(todos)) {
+//						selectAllButton.classList.remove('inactive');
+//					}
+//					toggleDisplayDependentTodoLiButtons();
+//				}
 			}
+			renderTodolist();
 		}
 		if (event.target.name === "showCompleted") {
 //			var showCompletedButton = event.target;
