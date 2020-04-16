@@ -4478,8 +4478,76 @@ tests({
 		eq(showDeletedButton.textContent, 'Deleted');
 		eq(todoLi3, undefined);							// todoLi3 not created
 	},
+	"Clicking the showActive button should toggle button text and re-render todolist.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1 active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2 completed');
+		todo2.tagCompleted(true);
+		todo2Child = new Todo('Item 2 child active');
+		todo2.addChild(todo2Child);
+		todo2Grandchild = new Todo('Item 2 grandchild completed');
+		todo2Grandchild.tagCompleted(true);
+		todo2Child.addChild(todo2Grandchild);
+		insertTodo(todos, todo2);
 
+		startApp();
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+		childLi = todoLi2Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+
+		eq(showActiveButton.textContent, '√ Active');
+
+		eq(todoUl.children.length, 2);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi.id, todo2Grandchild.id);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, 'Active');
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		childLi = todoLi1Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+
+		eq(todoUl.children.length, 1);
+		eq(todoLi1.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi.id, todo2Grandchild.id);
+		eq(todoLi2, undefined);
+		eq(todoLi2Ul, undefined);
+
+		showActiveButton.click();
+
+		eq(showActiveButton.textContent, '√ Active');
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+		childLi = todoLi2Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+
+		eq(todoUl.children.length, 2);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi.id, todo2Grandchild.id);
+	},
 	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos, including nested todos.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1 active');
 		insertTodo(todos, todo1);
