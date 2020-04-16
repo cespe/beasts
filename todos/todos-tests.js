@@ -849,7 +849,6 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-
 		renderTodolist();
 
 		var todosUl = todolist.children[0];
@@ -903,6 +902,26 @@ tests({
 		eq(document.activeElement, todoLi2Entry);
 		eq(document.hasFocus(), true);
 		eq(todos[0].entry, "test");				// state after edit
+	},
+	"A parent-placeholder todoLi should include its todo entry but it should not be editable.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1 filtered-out parent');
+		todo1.tagDeleted(true);
+		child1 = new Todo('Item 1 child 1 filtered in');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+		
+		var todo1Li = document.getElementById(todo1.id);
+		var todo1LiEntry = todo1Li.children[entryIndex];
+
+		eq(todo1.filteredIn, false);
+		eq(todo1.filteredOutParentOfFilteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo1Li.classList.contains('parent-placeholder'), true);
+		eq(todo1LiEntry.textContent, 'Item 1 filtered-out parent');
+		eq(todo1LiEntry.contentEditable, 'false');
 	},
 	"Section: todoLi buttons": function() {
 	},
@@ -4509,6 +4528,7 @@ tests({
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi.id, todo2Grandchild.id);
 
+		debugger;
 		showActiveButton.click();
 
 		eq(showActiveButton.textContent, 'Active');
