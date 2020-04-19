@@ -4745,7 +4745,75 @@ tests({
 		eq(todoLi2.classList.contains('deleted-removed'), false);
 		eq(todoLi3.classList.contains('deleted-removed'), true);
 	},
+	"Clicking the showDeleted button should toggle button text and re-render todolist.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1 active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2 deleted');
+		todo2.tagDeleted(true);
+		todo2Child = new Todo('Item 2 child active');
+		todo2.addChild(todo2Child);
+		todo2Grandchild = new Todo('Item 2 grandchild deleted');
+		todo2Grandchild.tagDeleted(true);
+		todo2Child.addChild(todo2Grandchild);
+		insertTodo(todos, todo2);
+
+		startApp();
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[parentPlaceholderUlIndex];
+		childLi = todoLi2Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		eq(todoUl.children.length, 2);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi, undefined);
+
+		showDeletedButton.click();
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+		childLi = todoLi2Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+
+		eq(todoUl.children.length, 2);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi.id, todo2Grandchild.id);
+
+		showDeletedButton.click();
+
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[parentPlaceholderUlIndex];
+		childLi = todoLi2Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+
+		eq(todoUl.children.length, 2);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi, undefined);
+	},
 	"Clicking the showDeleted button should toggle button text and set/unset todoLi class 'deleted-removed' on deleted todos.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1 active');
 		todo1Child = new Todo('Item 1 child');
