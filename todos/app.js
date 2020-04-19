@@ -413,7 +413,7 @@ function createTodoLi(todo) {
 	var completeButton = document.createElement('button')
 	completeButton.name = 'completed';
 	completeButton.type = 'button';
-	if (todo.completed) {
+	if (todo.displayTags.has('#completed')) {
 		completeButton.textContent = 'Uncomplete';
 	} else {
 		completeButton.textContent = 'Complete';
@@ -464,7 +464,7 @@ function createTodoLi(todo) {
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
 	entry.classList.remove('highlighted');
-	if (todo.completed) {
+	if (todo.displayTags.has('#completed')) {
 		entry.classList.add('struck-completed');
 	}
 	if (todo.deleted) {
