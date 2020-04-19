@@ -2024,25 +2024,26 @@ function actionsClickHandler(event) {
 //			var showCompletedButton = event.target;
 			if (showCompletedButton.textContent === '√ Completed') {
 				showCompletedButton.textContent = 'Completed';
-				setTodoLiClass(todosUl, 'completed-removed', 'add');
+//				setTodoLiClass(todosUl, 'completed-removed', 'add');
 				// if no todoLis are displayed, set selectAllButton inactive
-				if (selectAllButton.textContent === 'Select all'); {
-					if (!todoLiDisplayed(todos)) {
-						selectAllButton.classList.add('inactive');
-					}
-					toggleDisplayDependentTodoLiButtons();
-				}
+//				if (selectAllButton.textContent === 'Select all'); {
+//					if (!todoLiDisplayed(todos)) {
+//						selectAllButton.classList.add('inactive');
+//					}
+//					toggleDisplayDependentTodoLiButtons();
+//				}
 
 			} else {
 				showCompletedButton.textContent = '√ Completed';
-				setTodoLiClass(todosUl, 'completed-removed', 'remove');
-				if (selectAllButton.textContent === 'Select all') {
-					if (todoLiDisplayed(todos)) {
-						selectAllButton.classList.remove('inactive');
-					}
-					toggleDisplayDependentTodoLiButtons();
-				}
+//				setTodoLiClass(todosUl, 'completed-removed', 'remove');
+//				if (selectAllButton.textContent === 'Select all') {
+//					if (todoLiDisplayed(todos)) {
+//						selectAllButton.classList.remove('inactive');
+//					}
+//					toggleDisplayDependentTodoLiButtons();
+//				}
 			}
+			renderTodolist();
 		}
 		if (event.target.name === "showDeleted") {
 //			var showDeletedButton = event.target;
