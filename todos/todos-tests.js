@@ -4524,6 +4524,7 @@ tests({
 
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
 		childLi = todoLi1Ul.children[0];
 		childLiUl = childLi.children[parentPlaceholderUlIndex];
 		grandchildLi = childLiUl.children[0];
@@ -4599,7 +4600,75 @@ tests({
 		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
 		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
 	},
+	"Clicking the showCompleted button should toggle button text and re-render todolist.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1 active');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2 completed');
+		todo2.tagCompleted(true);
+		todo2Child = new Todo('Item 2 child active');
+		todo2.addChild(todo2Child);
+		todo2Grandchild = new Todo('Item 2 grandchild completed');
+		todo2Grandchild.tagCompleted(true);
+		todo2Child.addChild(todo2Grandchild);
+		insertTodo(todos, todo2);
+
+		startApp();
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+		childLi = todoLi2Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+
+		eq(showCompletedButton.textContent, '√ Completed');
+
+		eq(todoUl.children.length, 2);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi.id, todo2Grandchild.id);
+
+		showCompletedButton.click();
+
+		eq(showCompletedButton.textContent, 'Completed');
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[parentPlaceholderUlIndex];
+		childLi = todoLi2Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+
+		eq(todoUl.children.length, 2);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi, undefined);
+
+		showCompletedButton.click();
+
+		eq(showCompletedButton.textContent, '√ Completed');
+
+		todoUl = todolist.children[0];
+		todoLi1 = todoUl.children[0];
+		todoLi2 = todoUl.children[1];
+		todoLi2Ul = todoLi2.children[todoLiUlIndex];
+		childLi = todoLi2Ul.children[0];
+		childLiUl = childLi.children[todoLiUlIndex];
+		grandchildLi = childLiUl.children[0];
+
+		eq(todoUl.children.length, 2);
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);
+		eq(childLi.id, todo2Child.id);
+		eq(grandchildLi.id, todo2Grandchild.id);
+	},
 	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'completed-removed' on completed todos.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item completed');
 		todo1.markCompleted(true);
@@ -4642,6 +4711,7 @@ tests({
 	},
 	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'deleted-removed' on deleted todos.": function() {
 		// By default, deleted todos are not displayed.
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1 active');
 		todo1Child = new Todo('Item 1 child');
