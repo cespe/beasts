@@ -18,7 +18,7 @@ function Todo(entry) {
 	this.children = [];
 	this.collapsed = false;
 	this.deleted = false;
-	this.completed = false;
+	this.completed = false;		// remove orphan
 	
 	this.selected = false;
 
