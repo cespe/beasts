@@ -19,6 +19,7 @@ function Todo(entry) {
 	this.collapsed = false;
 	this.deleted = false;
 	this.completed = false;		// remove orphan
+	this.stage = 'active';
 	
 	this.selected = false;
 

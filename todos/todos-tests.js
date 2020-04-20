@@ -49,6 +49,10 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.completed, false);
 	},
+	"A todo object should be created with a 'stage' property of type string set to 'active'.": function() {
+		newTodo = new Todo();
+		eq(newTodo.stage, 'active');
+	},
 	"A todo object should be created with a 'displayTags' property of type set with member '#active'.": function() {
 		newTodo = new Todo();
 		eq(newTodo.displayTags instanceof Set, true);
