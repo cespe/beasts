@@ -22,8 +22,8 @@ function Todo(entry) {
 	
 	this.selected = false;
 
-	this.displayTags = new Set();
-	this.displayTags.add('#active');				// new todo is active on creation
+	this.stageTags = new Set();					// todo stages are active, completed, deleted/TODO canceled
+	this.stageTags.add('#active');				// new todo is active on creation
 
 	this.filteredIn = true;						// new todo is filtered in for display on creation 
 	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
@@ -45,22 +45,22 @@ Todo.prototype.markSelected = function(bool) {
 
 Todo.prototype.tagCompleted = function(bool) {
 	if (bool) {
-		this.displayTags.delete('#active');
-		this.displayTags.add('#completed');
+		this.stageTags.delete('#active');
+		this.stageTags.add('#completed');
 	} else {
-		this.displayTags.delete('#completed');
-		this.displayTags.add('#active');
+		this.stageTags.delete('#completed');
+		this.stageTags.add('#active');
 	}
 }
 
 Todo.prototype.tagDeleted = function(bool) {
 	if (bool) {
-		this.displayTags.delete('#active');
-		this.displayTags.add('#deleted');
+		this.stageTags.delete('#active');
+		this.stageTags.add('#deleted');
 	} else {
-		this.displayTags.delete('#deleted');
-		if (!this.displayTags.has('#completed')) {
-			this.displayTags.add('#active');
+		this.stageTags.delete('#deleted');
+		if (!this.stageTags.has('#completed')) {
+			this.stageTags.add('#active');
 		}
 	}
 }
@@ -80,7 +80,7 @@ Todo.prototype.markCollapsed = function(bool) {
 }
 Todo.prototype.markFilteredIn = function(set) {		// parameter is the filteredIn set
 	this.filteredIn = false;
-	var tags = Array.from(this.displayTags);
+	var tags = Array.from(this.stageTags);
 	for (var i = 0; i < tags.length; i++) {
 		var tag = tags[i];
 		if (set.has(tag)) {
@@ -395,10 +395,10 @@ function createParentPlaceholderLi(todo) {
 	entry.contentEditable = false;
 	entry.textContent = todo.entry;
 	entry.classList.add('parent-placeholder');
-	if (todo.displayTags.has('#completed')) {
+	if (todo.stageTags.has('#completed')) {
 		entry.classList.add('struck-completed');
 	}
-	if (todo.displayTags.has('#deleted')) {
+	if (todo.stageTags.has('#deleted')) {
 		entry.classList.add('dotted-deleted');
 	}
 	todoLi.appendChild(entry);
@@ -413,7 +413,7 @@ function createTodoLi(todo) {
 	var completeButton = document.createElement('button')
 	completeButton.name = 'completed';
 	completeButton.type = 'button';
-	if (todo.displayTags.has('#completed')) {
+	if (todo.stageTags.has('#completed')) {
 		completeButton.textContent = 'Uncomplete';
 	} else {
 		completeButton.textContent = 'Complete';
@@ -464,7 +464,7 @@ function createTodoLi(todo) {
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
 	entry.classList.remove('highlighted');
-	if (todo.displayTags.has('#completed')) {
+	if (todo.stageTags.has('#completed')) {
 		entry.classList.add('struck-completed');
 	}
 	if (todo.deleted) {
@@ -1852,7 +1852,7 @@ function todoClickHandler(event) {
 		if (event.target.name === "completed") {
 //			var todoLiCompleteButton = todoLi.children[completedIndex];
 //			todo.completed = !todo.completed;
-			if (todo.displayTags.has('#completed')) {
+			if (todo.stageTags.has('#completed')) {
 				todo.tagCompleted(false);
 //				todoLiCompleteButton.textContent = 'Complete';
 //				todoLi.children[entryIndex].classList.remove('struck-completed');
