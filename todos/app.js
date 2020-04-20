@@ -25,8 +25,8 @@ function Todo(entry) {
 	
 	this.selected = false;
 
-	this.displayTags = new Set();
-	this.displayTags.add('#active');	// new todo is active on creation
+//	this.displayTags = new Set();
+//	this.displayTags.add('#active');	// new todo is active on creation
 
 	this.filteredIn = true;						// new todo is filtered in for display on creation 
 	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
@@ -46,7 +46,17 @@ Todo.prototype.markSelected = function(bool) {
 	this.selected = bool;
 }
 
+/*
+Todo.prototype.tagForDisplay = function() {
+	this.displayTags.clear();
+	this.displayTags.add('#' + this.stage);
+	if (this.deleted) {
+		this.displayTags.add('#deleted');
+	}
+}
+
 // Remove orphan
+/*
 Todo.prototype.tagCompleted = function(bool) {
 	if (bool) {
 		this.displayTags.delete('#active');
@@ -54,13 +64,6 @@ Todo.prototype.tagCompleted = function(bool) {
 	} else {
 		this.displayTags.delete('#completed');
 		this.displayTags.add('#active');
-	}
-}
-Todo.prototype.tagForDisplay = function() {
-	this.displayTags.clear();
-	this.displayTags.add('#' + this.stage);
-	if (this.deleted) {
-		this.displayTags.add('#deleted');
 	}
 }
 // Remove orphan
@@ -80,6 +83,7 @@ Todo.prototype.tagDeleted = function(bool) {
 Todo.prototype.markCompleted = function(bool) {
 	this.completed = bool;
 }
+*/
 Todo.prototype.markDeleted = function(bool) {
 	this.deleted = bool;
 }
@@ -94,8 +98,17 @@ Todo.prototype.addChild = function(child) {
 Todo.prototype.markCollapsed = function(bool) {
 	this.collapsed = bool;
 }
-Todo.prototype.markFilteredIn = function(set) {		// parameter is the filteredIn set
+Todo.prototype.markFilteredIn = function(filterSet) {
 	this.filteredIn = false;
+	var stageTag = '#' + this.stage;
+	if (filterSet.has(stageTag)) {
+		this.filteredIn = true;	
+		if (this.deleted && !filterSet.has('#deleted')) {
+			this.filteredIn = false;
+		}
+	}
+}
+/*
 	var tags = Array.from(this.displayTags);
 	for (var i = 0; i < tags.length; i++) {
 		var tag = tags[i];
@@ -105,7 +118,7 @@ Todo.prototype.markFilteredIn = function(set) {		// parameter is the filteredIn 
 		}
 	}
 }
-
+*/
 Todo.prototype.markFilteredOutParentOfFilteredIn = function() {
 	if (this.filteredIn === true || this.children.length === 0) {
 		this.filteredOutParentOfFilteredIn = false;
@@ -411,10 +424,10 @@ function createParentPlaceholderLi(todo) {
 	entry.contentEditable = false;
 	entry.textContent = todo.entry;
 	entry.classList.add('parent-placeholder');
-	if (todo.displayTags.has('#completed')) {
+	if (todo.stage === 'completed') {
 		entry.classList.add('struck-completed');
 	}
-	if (todo.displayTags.has('#deleted')) {
+	if (todo.deleted) {
 		entry.classList.add('dotted-deleted');
 	}
 	todoLi.appendChild(entry);
@@ -429,7 +442,7 @@ function createTodoLi(todo) {
 	var completeButton = document.createElement('button')
 	completeButton.name = 'completed';
 	completeButton.type = 'button';
-	if (todo.displayTags.has('#completed')) {
+	if (todo.stage === 'completed') {
 		completeButton.textContent = 'Uncomplete';
 	} else {
 		completeButton.textContent = 'Complete';
@@ -479,8 +492,8 @@ function createTodoLi(todo) {
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
-	entry.classList.remove('highlighted');
-	if (todo.displayTags.has('#completed')) {
+//	entry.classList.remove('highlighted');
+	if (todo.stage === 'completed') {
 		entry.classList.add('struck-completed');
 	}
 	if (todo.deleted) {
@@ -1868,8 +1881,8 @@ function todoClickHandler(event) {
 		if (event.target.name === "completed") {
 //			var todoLiCompleteButton = todoLi.children[completedIndex];
 //			todo.completed = !todo.completed;
-			if (todo.displayTags.has('#completed')) {
-				todo.tagCompleted(false);
+			if (todo.stage === 'completed') {
+				todo.stage = 'active';
 //				todoLiCompleteButton.textContent = 'Complete';
 //				todoLi.children[entryIndex].classList.remove('struck-completed');
 				// TODO convert to array.find() to stop looping as soon as a match is found
@@ -1887,7 +1900,7 @@ function todoClickHandler(event) {
 //					todoLi.classList.add('active-removed');
 //				}
 			} else {
-				todo.tagCompleted(true);
+				todo.stage = 'completed';
 //				todoLiCompleteButton.textContent = 'Uncomplete';
 //				todoLi.children[entryIndex].classList.add('struck-completed');
 //				if (showCompletedButton.textContent === 'Completed') {

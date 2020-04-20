@@ -53,6 +53,7 @@ tests({
 		eq(newTodo.stage, 'active');
 	},
 	"A todo object should be created with a 'displayTags' property of type Set with member '#active'.": function() {
+		remove();
 		newTodo = new Todo();
 		eq(newTodo.displayTags instanceof Set, true);
 		eq(newTodo.displayTags.size, 1);
@@ -100,6 +101,7 @@ tests({
 		eq(newTodo.stage, 'active');
 	},
 	"The app should have a way to toggle a todo's stage tags for display.": function() {
+		remove();
 		newTodo = new Todo('Item 1');
 		eq(newTodo.displayTags.has('#active'), true);
 		eq(newTodo.displayTags.has('#completed'), false)
@@ -121,6 +123,7 @@ tests({
 		eq(newTodo.displayTags.has('#canceled'), false)
 	},
 	"The app should have a way to toggle a todo's display tags between deleted and not deleted.": function() {
+		remove();
 		newTodo = new Todo('Item 1');
 		eq(newTodo.displayTags.has('#deleted'), false)
 		newTodo.markDeleted(true);
@@ -185,14 +188,14 @@ tests({
 		newTodo.markCollapsed(false);
 		eq(newTodo.collapsed, false);
 	},
-	"The app should have a way to mark a todo filtered in or not according to a supplied set of display tags.": function() {
+	"The app should have a way to mark a todo filtered in for display or not according to a supplied set of tags.": function() {
 		// Tests todo.markFilteredIn(set)
 		todo1 = new Todo('Item 1 active');
 		todo2 = new Todo('Item 2 completed');
 		todo3 = new Todo('Item 3 deleted');
 
-		todo2.tagCompleted(true);
-		todo3.tagDeleted(true);
+		todo2.setStage('completed');
+		todo3.markDeleted(true);
 
 		filterSet = new Set();
 		filterSet.add('#active');
@@ -210,15 +213,15 @@ tests({
 		// Tests todo.markFilteredOutParentOfFilteredIn();
 		todo1 = new Todo('Item 1 filtered in');						// tagged active on creation
 		todo2 = new Todo('Item 2 filtered-out parent');
-		todo2.tagCompleted(true);
+		todo2.setStage('completed');
 		child2 = new Todo('Item 2 child filtered-out parent');
-		child2.tagCompleted(true);
+		child2.setStage('completed');
 		todo2.addChild(child2);
 		grandchild2 = new Todo('Item 2 grandchild filtered in');
-		grandchild2.tagDeleted(true);
+		grandchild2.markDeleted(true);
 		child2.addChild(grandchild2);
 		todo3 = new Todo('Item 3 filtered-out parent');
-		todo3.tagCompleted(true);
+		todo3.setStage('completed');
 		child3 = new Todo('Item 3 child filtered in');				// tagged active on creation		
 		todo3.addChild(child3);
 
@@ -358,19 +361,19 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1 filtered in');						// tagged active on creation
 		todo2 = new Todo('Item 2 filtered-out parent');
-		todo2.tagCompleted(true);
+		todo2.setStage('completed');
 		child2 = new Todo('Item 2 child filtered in');				// tagged active on creation		
 		todo2.addChild(child2);
 		todo3 = new Todo('Item 3 filtered in');						// tagged active on creation
 		todo4 = new Todo('Item 4 filtered-out parent');
-		todo4.tagCompleted(true);
+		todo4.setStage('completed');
 		child4 = new Todo('Item 4 child filtered-out parent');
-		child4.tagCompleted(true);
+		child4.setStage('completed');
 		todo4.addChild(child4);
 		grandchild1 = new Todo('Item 4 grandchild 1 filtered in');
-		grandchild1.tagDeleted(true);
+		grandchild1.markDeleted(true);
 		grandchild2 = new Todo('Item 4 grandchild 2 filtered out');
-		grandchild2.tagCompleted(true);
+		grandchild2.setStage('completed');
 		child4.addChild(grandchild1);
 		child4.addChild(grandchild2);
 		insertTodo(todos, todo1);
@@ -758,7 +761,7 @@ tests({
 	"When loaded, the app should display filtered-out parent todos when necessary to display filtered-in child todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1 filtered-out parent');
-		todo1.tagDeleted(true);
+		todo1.markDeleted(true);
 		child1 = new Todo('Item 1 child 1 filtered in');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
@@ -1056,12 +1059,12 @@ tests({
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todo1.displayTags.has('#completed'), false);
+		eq(todo1.stage === 'completed', false);
 	},
 	"If todo is completed, todoLi 'completed' button text should be 'Uncomplete'.": function () {
 		todos = [];
 		todo1 = new Todo('Item 1');
-		todo1.tagCompleted(true);
+		todo1.stage = 'completed';
 		insertTodo(todos, todo1);
 		
 		renderTodolist();
@@ -1070,7 +1073,7 @@ tests({
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todo1.displayTags.has('#completed'), true);
+		eq(todo1.stage === 'completed', true);
 	},
 	"When a todoLi is created, if todo.completed is false, button should be 'Complete' and entry <p> class should be ''.": function() {
 		remove();
@@ -1113,13 +1116,13 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 
-		eq(todo1.displayTags.has('#completed'), false);
+		eq(todo1.stage === 'completed', false);
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 	},
 	"If todo is completed, todoLi entry <p> class should contain 'struck-completed'.": function () {
 		todos = [];
 		todo1 = new Todo('Item 1');
-		todo1.tagCompleted(true);
+		todo1.stage = 'completed';
 		insertTodo(todos, todo1);
 		
 		renderTodolist();
@@ -1127,7 +1130,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 
-		eq(todo1.displayTags.has('#completed'), true);
+		eq(todo1.stage === 'completed', true);
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 	},
 	"Clicking a todoLi 'completed' button should tag the todo complete and re-render the todoLi.": function() {
@@ -1140,7 +1143,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todo1.displayTags.has('#completed'), false);
+		eq(todo1.stage === 'completed', false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 
@@ -1149,7 +1152,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todo1.displayTags.has('#completed'), true);
+		eq(todo1.stage === 'completed', true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 
@@ -1158,7 +1161,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todo1.displayTags.has('#completed'), false);
+		eq(todo1.stage === 'completed', false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 	},
@@ -1210,25 +1213,34 @@ tests({
 		var todoLi1Child1CompleteButton = todoLi1Child1.children[completedIndex];
 		var todoLi1Child2CompleteButton = todoLi1Child2.children[completedIndex];
 
-		eq(todo1.completed, false);
+		eq(todo1.stage === 'completed', false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
-		eq(child1.completed, false);
+		eq(child1.stage === 'completed', false);
 		eq(todoLi1Child1CompleteButton.textContent, 'Complete');
 		eq(todoLi1Child1.children[entryIndex].classList.contains('struck-completed'), false);
-		eq(child2.completed, false);
+		eq(child2.stage === 'completed', false);
 		eq(todoLi1Child2CompleteButton.textContent, 'Complete');
 		eq(todoLi1Child2.children[entryIndex].classList.contains('struck-completed'), false);
 
 		todoLi1CompleteButton.click();
 
-		eq(todo1.completed, true);
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1CompleteButton = todoLi1.children[completedIndex];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		todoLi1Child1 = todoLi1Ul.children[0];
+		todoLi1Child2 = todoLi1Ul.children[1];
+		todoLi1Child1CompleteButton = todoLi1Child1.children[completedIndex];
+		todoLi1Child2CompleteButton = todoLi1Child2.children[completedIndex];
+
+		eq(todo1.stage === 'completed', true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
-		eq(child1.completed, false);
+		eq(child1.stage === 'completed', false);
 		eq(todoLi1Child1CompleteButton.textContent, 'Complete');
 		eq(todoLi1Child1.children[entryIndex].classList.contains('struck-completed'), false);
-		eq(child2.completed, false);
+		eq(child2.stage === 'completed', false);
 		eq(todoLi1Child2CompleteButton.textContent, 'Complete');
 		eq(todoLi1Child2.children[entryIndex].classList.contains('struck-completed'), false);
 	},
