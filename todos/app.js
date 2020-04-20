@@ -1850,11 +1850,12 @@ function todoClickHandler(event) {
 			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === "completed") {
-			var todoLiCompleteButton = todoLi.children[completedIndex];
-			todo.completed = !todo.completed;
-			if (!todo.completed) {
-				todoLiCompleteButton.textContent = 'Complete';
-				todoLi.children[entryIndex].classList.remove('struck-completed');
+//			var todoLiCompleteButton = todoLi.children[completedIndex];
+//			todo.completed = !todo.completed;
+			if (todo.displayTags.has('#completed')) {
+				todo.tagCompleted(false);
+//				todoLiCompleteButton.textContent = 'Complete';
+//				todoLi.children[entryIndex].classList.remove('struck-completed');
 				// TODO convert to array.find() to stop looping as soon as a match is found
 //				var count = 0;
 //				for (var i = 0; i < todos.length; i++) {
@@ -1865,26 +1866,28 @@ function todoClickHandler(event) {
 //				if (count === 0) {
 //					completeSelectedButton.classList.remove('completed');
 //				}
-				todoLi.classList.remove('completed-removed');
-				if (showActiveButton.textContent === 'Active') {
-					todoLi.classList.add('active-removed');
-				}
+//				todoLi.classList.remove('completed-removed');
+//				if (showActiveButton.textContent === 'Active') {
+//					todoLi.classList.add('active-removed');
+//				}
 			} else {
-				todoLiCompleteButton.textContent = 'Uncomplete';
-				todoLi.children[entryIndex].classList.add('struck-completed');
-				if (showCompletedButton.textContent === 'Completed') {
-					todoLi.classList.add('completed-removed');
+				todo.tagCompleted(true);
+//				todoLiCompleteButton.textContent = 'Uncomplete';
+//				todoLi.children[entryIndex].classList.add('struck-completed');
+//				if (showCompletedButton.textContent === 'Completed') {
+//					todoLi.classList.add('completed-removed');
 					// if no todoLis are displayed, set selectAllButton inactive
-					if (selectAllButton.textContent === 'Select all'); {
-						if (!todoLiDisplayed(todoArray)) {
-							selectAllButton.classList.add('inactive');
-						}
-						if (todoArray !== todos) {		// only need to worry about children
-							toggleDisplayDependentTodoLiButtons(todo);
-						}
-					}
-				}
+//					if (selectAllButton.textContent === 'Select all'); {
+//						if (!todoLiDisplayed(todoArray)) {
+//							selectAllButton.classList.add('inactive');
+//						}
+//						if (todoArray !== todos) {		// only need to worry about children
+//							toggleDisplayDependentTodoLiButtons(todo);
+//						}
+//					}
+//				}
 			}
+			renderTodolist();
 		}
 		if (event.target.name === "deleted") {
 			var todoLiDeleteButton = todoLi.children[deleteIndex];

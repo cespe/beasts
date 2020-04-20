@@ -1021,7 +1021,7 @@ tests({
 		eq(todoLi.children[completedIndex].nodeName, 'BUTTON');
 		eq(todoLi.children[completedIndex].name, 'completed');
 	},
-	"When a todoLi is created, if todo is not completed, button text should be 'Complete'": function() {
+	"If a todo is not completed, its todoLi 'completed' button text should be 'Complete'": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1034,7 +1034,7 @@ tests({
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todo1.displayTags.has('#completed'), false);
 	},
-	"If todo is completed, button text should be 'Uncomplete'.": function () {
+	"If todo is completed, todoLi 'completed' button text should be 'Uncomplete'.": function () {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.tagCompleted(true);
@@ -1079,7 +1079,7 @@ tests({
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 	},
-	"When a todoLi is created, if todo is not completed,  entry <p> class should not contain 'struck-completed'.": function() {
+	"If todo is not completed, todoLi entry <p> class should not contain 'struck-completed'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1092,7 +1092,7 @@ tests({
 		eq(todo1.displayTags.has('#completed'), false);
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 	},
-	"If todo is completed, entry <p> class should contain 'struck-completed'.": function () {
+	"If todo is completed, todoLi entry <p> class should contain 'struck-completed'.": function () {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.tagCompleted(true);
@@ -1106,7 +1106,40 @@ tests({
 		eq(todo1.displayTags.has('#completed'), true);
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 	},
+	"Clicking a todoLi 'completed' button should tag the todo complete and re-render the todoLi.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompleteButton = todoLi1.children[completedIndex];
+
+		eq(todo1.displayTags.has('#completed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
+
+		todoLi1CompleteButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1CompleteButton = todoLi1.children[completedIndex];
+
+		eq(todo1.displayTags.has('#completed'), true);
+		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
+
+		todoLi1CompleteButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1CompleteButton = todoLi1.children[completedIndex];
+
+		eq(todo1.displayTags.has('#completed'), false);
+		eq(todoLi1CompleteButton.textContent, 'Complete');
+		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
+	},
 	"Clicking a 'completed' button should toggle button text, todo.completed, and entry <p> class.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
