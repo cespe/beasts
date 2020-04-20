@@ -18,11 +18,11 @@ tests({
 		insertTodo(todos, newTodo);
 		eq(todos[0], newTodo);
 	},
-	"A todo object should be created with an 'id' property of type string to store an identifier.": function() {
+	"A todo object should be created with an 'id' property of type String to store an identifier.": function() {
 		newTodo = new Todo();
 		eq(typeof newTodo.id, "string");
 	},
-	"Todo should take an entry of type string and store it in the todo object 'entry' property.": function() {
+	"Todo should take an entry of type String and store it in the todo object 'entry' property.": function() {
 		newTodo = new Todo('Item 1');
 		eq(newTodo.entry, 'Item 1');
 	},
@@ -30,47 +30,46 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.entry, '');
 	},
-	"A todo object should be created with a 'children' property of type array to store nested todo objects.": function() {
+	"A todo object should be created with a 'children' property of type Array to store nested todo objects.": function() {
 		newTodo = new Todo();
 		eq(Array.isArray(newTodo.children), true);
 		eq(newTodo.children.length, 0);
 	},
-	"A todo object should be created with a 'selected' property of type boolean set to false.": function() {
+	"A todo object should be created with a 'selected' property of type Boolean set to false.": function() {
 		newTodo = new Todo();
 		eq(newTodo.selected, false);
 	},
-	"A todo object should be created with a 'deleted' property of type boolean set to false.": function() {
-		remove();
+	"A todo object should be created with a 'deleted' property of type Boolean set to false.": function() {
 		newTodo = new Todo();
 		eq(newTodo.deleted, false);
 	},
-	"A todo object should be created with a 'completed' property of type boolean set to false.": function() {
+	"A todo object should be created with a 'completed' property of type Boolean set to false.": function() {
 		remove();
 		newTodo = new Todo();
 		eq(newTodo.completed, false);
 	},
-	"A todo object should be created with a 'stage' property of type string set to 'active'.": function() {
+	"A todo object should be created with a 'stage' property of type String set to 'active'.": function() {
 		newTodo = new Todo();
 		eq(newTodo.stage, 'active');
 	},
-	"A todo object should be created with a 'displayTags' property of type set with member '#active'.": function() {
+	"A todo object should be created with a 'displayTags' property of type Set with member '#active'.": function() {
 		newTodo = new Todo();
 		eq(newTodo.displayTags instanceof Set, true);
 		eq(newTodo.displayTags.size, 1);
 		eq(newTodo.displayTags.has('#active'), true);
 	},
-	"A todo object should be created with a 'collapsed' property of type boolean set to false.": function() {
+	"A todo object should be created with a 'collapsed' property of type Boolean set to false.": function() {
 		// When false, expand children <ul> to show child todos; when true, collapse <ul> to hide them
 		newTodo = new Todo();
 		eq(newTodo.collapsed, false);
 	},
-	"A todo object should be created with a 'filteredIn' property of type boolean set to true.": function() {
+	"A todo object should be created with a 'filteredIn' property of type Boolean set to true.": function() {
 		// Created true because default displayTag is '#active' and the app only allows new todos when '#active'
 		// When showActiveButton is 'Active', addTodo, addSibling, addChild buttons and key shortcuts are disabled.
 		newTodo = new Todo();
 		eq(newTodo.filteredIn, true);
 	},
-	"A todo object should be created with a 'filteredOutParentOfFiteredIn' property of type boolean set to false.": function() {
+	"A todo object should be created with a 'filteredOutParentOfFiteredIn' property of type Boolean set to false.": function() {
 		newTodo = new Todo();
 		eq(newTodo.filteredOutParentOfFilteredIn, false);
 	},
@@ -88,29 +87,51 @@ tests({
 		newTodo.markSelected(false);
 		eq(newTodo.selected, false);
 	},
-	"The app should have a way to toggle a todo completed or active.": function() {
+	"The app should have a way to set a todo's 'stage' property to a value from todoStages set.": function() {
+		newTodo = new Todo('Item 1');
+		eq(newTodo.stage, 'active');
+		eq(todoStages instanceof Set, true);
+		// TODO test for error if value is not in todoStages
+		newTodo.setStage('completed');
+		eq(newTodo.stage, 'completed');
+		newTodo.setStage('canceled');
+		eq(newTodo.stage, 'canceled');
+		newTodo.setStage('active');
+		eq(newTodo.stage, 'active');
+	},
+	"The app should have a way to toggle a todo's stage tags for display.": function() {
 		newTodo = new Todo('Item 1');
 		eq(newTodo.displayTags.has('#active'), true);
 		eq(newTodo.displayTags.has('#completed'), false)
-		newTodo.tagCompleted(true);
+		eq(newTodo.displayTags.has('#canceled'), false)
+		newTodo.setStage('completed');
+		newTodo.tagForDisplay();
 		eq(newTodo.displayTags.has('#active'), false);
 		eq(newTodo.displayTags.has('#completed'), true)
-		newTodo.tagCompleted(false);
+		eq(newTodo.displayTags.has('#canceled'), false)
+		newTodo.setStage('canceled');
+		newTodo.tagForDisplay();
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#canceled'), true)
+		newTodo.setStage('active');
+		newTodo.tagForDisplay();
 		eq(newTodo.displayTags.has('#active'), true);
 		eq(newTodo.displayTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#canceled'), false)
 	},
-	"The app should have a way to toggle a todo deleted or active.": function() {
+	"The app should have a way to toggle a todo's display tags between deleted and not deleted.": function() {
 		newTodo = new Todo('Item 1');
-		eq(newTodo.displayTags.has('#active'), true);
 		eq(newTodo.displayTags.has('#deleted'), false)
-		newTodo.tagDeleted(true);
-		eq(newTodo.displayTags.has('#active'), false);
+		newTodo.markDeleted(true);
+		newTodo.tagForDisplay();
 		eq(newTodo.displayTags.has('#deleted'), true)
-		newTodo.tagDeleted(false);
-		eq(newTodo.displayTags.has('#active'), true);
+		newTodo.markDeleted(false);
+		newTodo.tagForDisplay();
 		eq(newTodo.displayTags.has('#deleted'), false)
 	},
 	"A todo can be both completed and deleted, but not both completed and active or deleted and active.": function() {
+		remove();
 		newTodo = new Todo('Item 1');
 		eq(newTodo.displayTags.has('#active'), true);
 		eq(newTodo.displayTags.has('#completed'), false)
@@ -141,7 +162,6 @@ tests({
 		eq(newTodo.displayTags.has('#deleted'), true)
 	},
 	"The app should have a way to mark a todo deleted or not deleted.": function() {
-		remove();
 		newTodo = new Todo('Item 1');
 		eq(newTodo.deleted, false);
 		newTodo.markDeleted(true);

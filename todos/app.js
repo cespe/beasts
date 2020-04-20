@@ -4,9 +4,11 @@
 
 var todos = [];
 
-//function addNewTodo(todo) {
-//	todos.push(todo);
-//}
+// Allowed values for the lifecycle stage a todo is in
+var todoStages = new Set();
+todoStages.add('active');
+todoStages.add('completed');
+todoStages.add('canceled');
 
 function Todo(entry) {
 	this.id = Math.random().toString(36).slice(2);
@@ -18,13 +20,13 @@ function Todo(entry) {
 	this.children = [];
 	this.collapsed = false;
 	this.deleted = false;
-	this.completed = false;		// remove orphan
-	this.stage = 'active';
+	this.completed = false;				// remove orphan
+	this.stage = 'active';				// stages are active, completed, canceled
 	
 	this.selected = false;
 
 	this.displayTags = new Set();
-	this.displayTags.add('#active');				// new todo is active on creation
+	this.displayTags.add('#active');	// new todo is active on creation
 
 	this.filteredIn = true;						// new todo is filtered in for display on creation 
 	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
@@ -44,6 +46,7 @@ Todo.prototype.markSelected = function(bool) {
 	this.selected = bool;
 }
 
+// Remove orphan
 Todo.prototype.tagCompleted = function(bool) {
 	if (bool) {
 		this.displayTags.delete('#active');
@@ -53,7 +56,14 @@ Todo.prototype.tagCompleted = function(bool) {
 		this.displayTags.add('#active');
 	}
 }
-
+Todo.prototype.tagForDisplay = function() {
+	this.displayTags.clear();
+	this.displayTags.add('#' + this.stage);
+	if (this.deleted) {
+		this.displayTags.add('#deleted');
+	}
+}
+// Remove orphan
 Todo.prototype.tagDeleted = function(bool) {
 	if (bool) {
 		this.displayTags.delete('#active');
@@ -65,13 +75,18 @@ Todo.prototype.tagDeleted = function(bool) {
 		}
 	}
 }
+
 // Remove orphan
 Todo.prototype.markCompleted = function(bool) {
 	this.completed = bool;
 }
-// Remove orphan
 Todo.prototype.markDeleted = function(bool) {
 	this.deleted = bool;
+}
+Todo.prototype.setStage = function(stage) {
+	if (todoStages.has(stage)) {		// TODO throw error if not an allowed value?
+		this.stage = stage;
+	}
 }
 Todo.prototype.addChild = function(child) {
 	this.children.push(child);
