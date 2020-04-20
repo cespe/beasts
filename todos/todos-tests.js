@@ -49,11 +49,11 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.completed, false);
 	},
-	"A todo object should be created with a 'stageTags' property of type set with member '#active'.": function() {
+	"A todo object should be created with a 'displayTags' property of type set with member '#active'.": function() {
 		newTodo = new Todo();
-		eq(newTodo.stageTags instanceof Set, true);
-		eq(newTodo.stageTags.size, 1);
-		eq(newTodo.stageTags.has('#active'), true);
+		eq(newTodo.displayTags instanceof Set, true);
+		eq(newTodo.displayTags.size, 1);
+		eq(newTodo.displayTags.has('#active'), true);
 	},
 	"A todo object should be created with a 'collapsed' property of type boolean set to false.": function() {
 		// When false, expand children <ul> to show child todos; when true, collapse <ul> to hide them
@@ -86,55 +86,55 @@ tests({
 	},
 	"The app should have a way to toggle a todo completed or active.": function() {
 		newTodo = new Todo('Item 1');
-		eq(newTodo.stageTags.has('#active'), true);
-		eq(newTodo.stageTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#completed'), false)
 		newTodo.tagCompleted(true);
-		eq(newTodo.stageTags.has('#active'), false);
-		eq(newTodo.stageTags.has('#completed'), true)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), true)
 		newTodo.tagCompleted(false);
-		eq(newTodo.stageTags.has('#active'), true);
-		eq(newTodo.stageTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#completed'), false)
 	},
 	"The app should have a way to toggle a todo deleted or active.": function() {
 		newTodo = new Todo('Item 1');
-		eq(newTodo.stageTags.has('#active'), true);
-		eq(newTodo.stageTags.has('#deleted'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#deleted'), false)
 		newTodo.tagDeleted(true);
-		eq(newTodo.stageTags.has('#active'), false);
-		eq(newTodo.stageTags.has('#deleted'), true)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#deleted'), true)
 		newTodo.tagDeleted(false);
-		eq(newTodo.stageTags.has('#active'), true);
-		eq(newTodo.stageTags.has('#deleted'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#deleted'), false)
 	},
 	"A todo can be both completed and deleted, but not both completed and active or deleted and active.": function() {
 		newTodo = new Todo('Item 1');
-		eq(newTodo.stageTags.has('#active'), true);
-		eq(newTodo.stageTags.has('#completed'), false)
-		eq(newTodo.stageTags.has('#deleted'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#deleted'), false)
 		
 		newTodo.tagDeleted(true);
 		
-		eq(newTodo.stageTags.has('#active'), false);
-		eq(newTodo.stageTags.has('#completed'), false)
-		eq(newTodo.stageTags.has('#deleted'), true)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#deleted'), true)
 		
 		newTodo.tagDeleted(false);
 		
-		eq(newTodo.stageTags.has('#active'), true);
-		eq(newTodo.stageTags.has('#completed'), false)
-		eq(newTodo.stageTags.has('#deleted'), false)
+		eq(newTodo.displayTags.has('#active'), true);
+		eq(newTodo.displayTags.has('#completed'), false)
+		eq(newTodo.displayTags.has('#deleted'), false)
 
 		newTodo.tagCompleted(true);
 		
-		eq(newTodo.stageTags.has('#active'), false);
-		eq(newTodo.stageTags.has('#completed'), true)
-		eq(newTodo.stageTags.has('#deleted'), false)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), true)
+		eq(newTodo.displayTags.has('#deleted'), false)
 
 		newTodo.tagDeleted(true);
 		
-		eq(newTodo.stageTags.has('#active'), false);
-		eq(newTodo.stageTags.has('#completed'), true)
-		eq(newTodo.stageTags.has('#deleted'), true)
+		eq(newTodo.displayTags.has('#active'), false);
+		eq(newTodo.displayTags.has('#completed'), true)
+		eq(newTodo.displayTags.has('#deleted'), true)
 	},
 	"The app should have a way to mark a todo deleted or not deleted.": function() {
 		remove();
@@ -1032,7 +1032,7 @@ tests({
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todo1.stageTags.has('#completed'), false);
+		eq(todo1.displayTags.has('#completed'), false);
 	},
 	"If todo is completed, todoLi 'completed' button text should be 'Uncomplete'.": function () {
 		todos = [];
@@ -1046,7 +1046,7 @@ tests({
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todo1.stageTags.has('#completed'), true);
+		eq(todo1.displayTags.has('#completed'), true);
 	},
 	"When a todoLi is created, if todo.completed is false, button should be 'Complete' and entry <p> class should be ''.": function() {
 		remove();
@@ -1089,7 +1089,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 
-		eq(todo1.stageTags.has('#completed'), false);
+		eq(todo1.displayTags.has('#completed'), false);
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 	},
 	"If todo is completed, todoLi entry <p> class should contain 'struck-completed'.": function () {
@@ -1103,7 +1103,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.children[entryIndex];
 
-		eq(todo1.stageTags.has('#completed'), true);
+		eq(todo1.displayTags.has('#completed'), true);
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 	},
 	"Clicking a todoLi 'completed' button should tag the todo complete and re-render the todoLi.": function() {
@@ -1116,7 +1116,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todo1.stageTags.has('#completed'), false);
+		eq(todo1.displayTags.has('#completed'), false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 
@@ -1125,7 +1125,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todo1.stageTags.has('#completed'), true);
+		eq(todo1.displayTags.has('#completed'), true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
 
@@ -1134,7 +1134,7 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1CompleteButton = todoLi1.children[completedIndex];
 
-		eq(todo1.stageTags.has('#completed'), false);
+		eq(todo1.displayTags.has('#completed'), false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 	},
@@ -4521,7 +4521,7 @@ tests({
 		todoLi1 = todoUl.children[0];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.stageTags.has('#active'), true);
+		eq(todo1.displayTags.has('#active'), true);
 	},
 	"On startup, the showCompleted button text should be '√ Completed' and todos with displayTag '#completed' should be displayed.": function() {
 		todos = [];
@@ -4538,12 +4538,12 @@ tests({
 		todoLi2 = todoUl.children[1];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.stageTags.has('#active'), true);
+		eq(todo1.displayTags.has('#active'), true);
 		eq(todoLi1, todoUl.children[0]);
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todo2.stageTags.has('#active'), false);
-		eq(todo2.stageTags.has('#completed'), true);
+		eq(todo2.displayTags.has('#active'), false);
+		eq(todo2.displayTags.has('#completed'), true);
 		eq(todoLi2, todoUl.children[1]);
 	},
 	"On startup, the showDeleted button text should be 'Deleted' and todos with displayTag '#deleted' should not be displayed.": function() {
@@ -4565,12 +4565,12 @@ tests({
 		todoLi3 = todoUl.children[2];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.stageTags.has('#active'), true);
+		eq(todo1.displayTags.has('#active'), true);
 		eq(todoLi1, todoUl.children[0]);
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todo2.stageTags.has('#active'), false);
-		eq(todo2.stageTags.has('#completed'), true);
+		eq(todo2.displayTags.has('#active'), false);
+		eq(todo2.displayTags.has('#completed'), true);
 		eq(todoLi2, todoUl.children[1]);
 
 		eq(showDeletedButton.textContent, 'Deleted');
