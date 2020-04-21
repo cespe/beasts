@@ -53,7 +53,7 @@ tests({
 		eq(newTodo.collapsed, false);
 	},
 	"A todo object should be created with a 'filteredIn' property of type Boolean set to true.": function() {
-		// Created true because default displayTag is '#active' and the app only allows new todos when '#active'
+		// Created true because default stage is 'active' and the app only creates new todos when showActiveButton is '√ Active'.
 		// When showActiveButton is 'Active', addTodo, addSibling, addChild buttons and key shortcuts are disabled.
 		newTodo = new Todo();
 		eq(newTodo.filteredIn, true);
@@ -1261,7 +1261,7 @@ tests({
 		eq(todoLi1AddSibling.name, 'addSibling');
 		eq(todoLi1AddSibling.textContent, 'Add sibling');
 	},
-	"Clicking an 'addSibling' button should create a new sibling todo in and todoLi nested at the same level.": function() {
+	"Clicking an 'addSibling' button should create a new sibling todo, re-render todolist, and focus new todoLi entry <p>.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1282,19 +1282,37 @@ tests({
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todo1.children[0].id, todoLi1Child1.id);
 
+		debugger;
 		todoLi1SiblingButton.click();				// Add a sibling at top level to todos array
 
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		todoLi1Child1 = todoLi1Ul.children[0];
+		todoLi1Child1AddSiblingButton = todoLi1Child1.children[addSiblingIndex];
+		var todoLi2 = todosUl.children[1]			// the added sibling
+		var todoLi2Entry = todoLi2.children[entryIndex];
+
 		eq(todosUl.childElementCount, 2);
-		var todoLi2 = todosUl.children[1]
 		eq(todoLi2.nodeName, 'LI');
 		eq(todoLi2.id, todos[1].id)
+		eq(document.activeElement, todoLi2Entry);
+		eq(document.hasFocus(), true);
 
 		todoLi1Child1AddSiblingButton.click();		// Add a sibling at nested level to todo.children array
 
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		todoLi1Child1 = todoLi1Ul.children[0];
+		var todoLi1Child2 = todoLi1Ul.children[1];	// the added sibling
+		var todoLi1Child2Entry = todoLi1Child2.children[entryIndex];
+
 		eq(todoLi1Ul.childElementCount, 2);
-		var todoLi1Child2 = todoLi1Ul.children[1];
 		eq(todoLi1Child2.nodeName, 'LI');
 		eq(todo1.children[1].id, todoLi1Child2.id);
+		eq(document.activeElement, todoLi1Child2Entry);
+		eq(document.hasFocus(), true);
 	},
 	"Each todo li should have an 'addChild' button to add a child todo underneath it.": function() {
 		todos = [];

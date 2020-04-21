@@ -428,7 +428,7 @@ function createParentPlaceholderLi(todo) {
 		entry.classList.add('struck-completed');
 	}
 	if (todo.deleted) {
-		entry.classList.add('dotted-deleted');
+		entry.classList.add('faded-deleted');
 	}
 	todoLi.appendChild(entry);
 
@@ -438,6 +438,9 @@ function createParentPlaceholderLi(todo) {
 function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
+
+	// All these buttons are created with button.type = 'button' to distinguish from a submit
+	// or reset button, as recommended by MDN.
 
 	var completeButton = document.createElement('button')
 	completeButton.name = 'completed';
@@ -454,7 +457,6 @@ function createTodoLi(todo) {
 	deleteButton.type = 'button';
 	if (todo.deleted) {
 		deleteButton.textContent = 'Undelete';
-//		todoLi.classList.add('deleted-removed');		// hide deleted todos by default
 	} else {
 		deleteButton.textContent = 'Delete';
 	}
@@ -474,7 +476,7 @@ function createTodoLi(todo) {
 
 	var selectedButton = document.createElement('button')
 	selectedButton.name = 'selected';
-	selectedButton.type = 'button';	// to distinguish from a submit or reset button
+	selectedButton.type = 'button';	
 	selectedButton.textContent = 'Select';
 	if (todo.selected) {
 		todo.selected = false;		// clean slate when todoLi's are created
@@ -492,12 +494,11 @@ function createTodoLi(todo) {
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
-//	entry.classList.remove('highlighted');
 	if (todo.stage === 'completed') {
 		entry.classList.add('struck-completed');
 	}
 	if (todo.deleted) {
-		entry.classList.add('dotted-deleted');
+		entry.classList.add('faded-deleted');
 	}
 	todoLi.appendChild(entry);
 
@@ -657,7 +658,7 @@ function removeClassDeletedRemoved(todoUl) {
 		if (todoLiUl && todoLiUl.children.length > 0) {
 			removeClassDeletedRemoved(todoLiUl);
 		}
-		if (entry.classList.contains('dotted-deleted')) {
+		if (entry.classList.contains('faded-deleted')) {
 			todoLi.classList.remove('deleted-removed');
 		}
 	}
@@ -672,7 +673,7 @@ function addClassDeletedRemoved(todoUl) {
 		if (todoLiUl && todoLiUl.children.length > 0) {
 			addClassDeletedRemoved(todoLiUl);
 		}
-		if (entry.classList.contains('dotted-deleted')) {
+		if (entry.classList.contains('faded-deleted')) {
 			todoLi.classList.add('deleted-removed');
 		}
 	}
@@ -686,7 +687,7 @@ function setTodoLiClass(todoUl, cssClass, action) {
 			setTodoLiClass(todoLiUl, cssClass, action);
 		}
 		var entry = todoLi.children[entryIndex];
-		var dottedDeleted = entry.classList.contains('dotted-deleted');
+		var dottedDeleted = entry.classList.contains('faded-deleted');
 		var struckCompleted = entry.classList.contains('struck-completed');
 		if (cssClass === 'deleted-removed' && dottedDeleted) {
 			if (action === 'add') {
@@ -720,7 +721,7 @@ function newsetTodoLiClass(todoUl, cssClass, action) {
 			setTodoLiClass(todoLiUl, cssClass, action);
 		}
 		var entry = todoLi.children[entryIndex];
-		var dottedDeleted = entry.classList.contains('dotted-deleted');
+		var dottedDeleted = entry.classList.contains('faded-deleted');
 		var struckCompleted = entry.classList.contains('struck-completed');
 		if (cssClass === 'deleted-removed' && dottedDeleted) {
 			if (action === 'add') {
@@ -1545,7 +1546,7 @@ function deleteSelectedChildren(todoLi) {
 				// recursion done
 				if (childLi.children[entryIndex].classList.contains('highlighted')) {
 					childLi.children[deleteIndex].textContent = 'Undelete';
-					childLi.children[entryIndex].classList.add('dotted-deleted');
+					childLi.children[entryIndex].classList.add('faded-deleted');
 					childLi.classList.remove('active-removed');		// is this needed?
 					var childTodo = findTodo(todos, childLi.id);
 					childTodo.markDeleted(true);
@@ -1566,7 +1567,7 @@ function deleteSelectedChildren(todoLi) {
 				// recursion done
 				if (childLi.children[entryIndex].classList.contains('highlighted')) {
 					childLi.children[deleteIndex].textContent = 'Delete';
-					childLi.children[entryIndex].classList.remove('dotted-deleted');
+					childLi.children[entryIndex].classList.remove('faded-deleted');
 					childLi.classList.remove('deleted-removed');		// is this needed?
 					var childTodo = findTodo(todos, childLi.id);
 					childTodo.markDeleted(false);
@@ -1924,7 +1925,7 @@ function todoClickHandler(event) {
 			todo.deleted = !todo.deleted;
 			if (todo.deleted) {
 				todoLiDeleteButton.textContent = 'Undelete';
-				todoLi.children[entryIndex].classList.add('dotted-deleted');
+				todoLi.children[entryIndex].classList.add('faded-deleted');
 				if (showDeletedButton.textContent === 'Deleted') {
 					todoLi.classList.add('deleted-removed');
 					// if no todoLis are displayed, set selectAllButton inactive
@@ -1939,7 +1940,7 @@ function todoClickHandler(event) {
 				}
 			} else {
 				todoLiDeleteButton.textContent = 'Delete';
-				todoLi.children[entryIndex].classList.remove('dotted-deleted');
+				todoLi.children[entryIndex].classList.remove('faded-deleted');
 				if (showActiveButton.textContent === 'Active') {
 					todoLi.classList.add('active-removed');
 				}
@@ -1947,7 +1948,12 @@ function todoClickHandler(event) {
 			}
 		}
 		if (event.target.name === "addSibling") {
-			insertNewTodoLi(todoArray, todoLi.id)
+//			insertNewTodoLi(todoArray, todoLi.id)
+			var newTodo = new Todo();
+			insertTodo(todoArray, newTodo, todo);		// todoArray and todo are set above by clickHandler
+			renderTodolist();
+			newTodoLi = document.getElementById(newTodo.id);
+			newTodoLi.children[entryIndex].focus();
 		}
 		if (event.target.name === "addChild") {
 			appendNewChildTodoLi(todoLi)
@@ -2254,7 +2260,7 @@ function actionsClickHandler(event) {
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = false;
 						var todoLiEntry = todoLi.children[entryIndex];
-						todoLiEntry.classList.remove('dotted-deleted');
+						todoLiEntry.classList.remove('faded-deleted');
 						todoLi.classList.remove('deleted-removed');
 						if (showActiveButton.textContent === 'Active') {
 							todoLi.classList.add('active-removed');
@@ -2273,7 +2279,7 @@ function actionsClickHandler(event) {
 						var todo = findTodo(todos, todoLi.id);
 						todo.deleted = true;
 						var todoLiEntry = todoLi.children[entryIndex];
-						todoLiEntry.classList.add('dotted-deleted');
+						todoLiEntry.classList.add('faded-deleted');
 						if (showDeletedButton.textContent === 'Deleted') {
 							todoLi.classList.add('deleted-removed');
 						}
