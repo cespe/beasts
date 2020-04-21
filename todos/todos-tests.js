@@ -43,21 +43,9 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.deleted, false);
 	},
-	"A todo object should be created with a 'completed' property of type Boolean set to false.": function() {
-		remove();
-		newTodo = new Todo();
-		eq(newTodo.completed, false);
-	},
 	"A todo object should be created with a 'stage' property of type String set to 'active'.": function() {
 		newTodo = new Todo();
 		eq(newTodo.stage, 'active');
-	},
-	"A todo object should be created with a 'displayTags' property of type Set with member '#active'.": function() {
-		remove();
-		newTodo = new Todo();
-		eq(newTodo.displayTags instanceof Set, true);
-		eq(newTodo.displayTags.size, 1);
-		eq(newTodo.displayTags.has('#active'), true);
 	},
 	"A todo object should be created with a 'collapsed' property of type Boolean set to false.": function() {
 		// When false, expand children <ul> to show child todos; when true, collapse <ul> to hide them
@@ -99,70 +87,6 @@ tests({
 		eq(newTodo.stage, 'canceled');
 		newTodo.setStage('active');
 		eq(newTodo.stage, 'active');
-	},
-	"The app should have a way to toggle a todo's stage tags for display.": function() {
-		remove();
-		newTodo = new Todo('Item 1');
-		eq(newTodo.displayTags.has('#active'), true);
-		eq(newTodo.displayTags.has('#completed'), false)
-		eq(newTodo.displayTags.has('#canceled'), false)
-		newTodo.setStage('completed');
-		newTodo.tagForDisplay();
-		eq(newTodo.displayTags.has('#active'), false);
-		eq(newTodo.displayTags.has('#completed'), true)
-		eq(newTodo.displayTags.has('#canceled'), false)
-		newTodo.setStage('canceled');
-		newTodo.tagForDisplay();
-		eq(newTodo.displayTags.has('#active'), false);
-		eq(newTodo.displayTags.has('#completed'), false)
-		eq(newTodo.displayTags.has('#canceled'), true)
-		newTodo.setStage('active');
-		newTodo.tagForDisplay();
-		eq(newTodo.displayTags.has('#active'), true);
-		eq(newTodo.displayTags.has('#completed'), false)
-		eq(newTodo.displayTags.has('#canceled'), false)
-	},
-	"The app should have a way to toggle a todo's display tags between deleted and not deleted.": function() {
-		remove();
-		newTodo = new Todo('Item 1');
-		eq(newTodo.displayTags.has('#deleted'), false)
-		newTodo.markDeleted(true);
-		newTodo.tagForDisplay();
-		eq(newTodo.displayTags.has('#deleted'), true)
-		newTodo.markDeleted(false);
-		newTodo.tagForDisplay();
-		eq(newTodo.displayTags.has('#deleted'), false)
-	},
-	"A todo can be both completed and deleted, but not both completed and active or deleted and active.": function() {
-		remove();
-		newTodo = new Todo('Item 1');
-		eq(newTodo.displayTags.has('#active'), true);
-		eq(newTodo.displayTags.has('#completed'), false)
-		eq(newTodo.displayTags.has('#deleted'), false)
-		
-		newTodo.tagDeleted(true);
-		
-		eq(newTodo.displayTags.has('#active'), false);
-		eq(newTodo.displayTags.has('#completed'), false)
-		eq(newTodo.displayTags.has('#deleted'), true)
-		
-		newTodo.tagDeleted(false);
-		
-		eq(newTodo.displayTags.has('#active'), true);
-		eq(newTodo.displayTags.has('#completed'), false)
-		eq(newTodo.displayTags.has('#deleted'), false)
-
-		newTodo.tagCompleted(true);
-		
-		eq(newTodo.displayTags.has('#active'), false);
-		eq(newTodo.displayTags.has('#completed'), true)
-		eq(newTodo.displayTags.has('#deleted'), false)
-
-		newTodo.tagDeleted(true);
-		
-		eq(newTodo.displayTags.has('#active'), false);
-		eq(newTodo.displayTags.has('#completed'), true)
-		eq(newTodo.displayTags.has('#deleted'), true)
 	},
 	"The app should have a way to mark a todo deleted or not deleted.": function() {
 		newTodo = new Todo('Item 1');
@@ -1075,37 +999,6 @@ tests({
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todo1.stage === 'completed', true);
 	},
-	"When a todoLi is created, if todo.completed is false, button should be 'Complete' and entry <p> class should be ''.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-
-		eq(todo1.completed, false);
-		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1.children[entryIndex].classList.length, 0);
-	},
-	"If todo.completed is true, button text should be 'Uncomplete' and entry <p> class should be 'struck-completed'.": function () {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markCompleted(true);
-		insertTodo(todos, todo1);
-		
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-
-		eq(todo1.completed, true);
-		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
-	},
 	"If todo is not completed, todoLi entry <p> class should not contain 'struck-completed'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1162,33 +1055,6 @@ tests({
 		todoLi1CompleteButton = todoLi1.children[completedIndex];
 
 		eq(todo1.stage === 'completed', false);
-		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
-	},
-	"Clicking a 'completed' button should toggle button text, todo.completed, and entry <p> class.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children[completedIndex];
-
-		eq(todo1.completed, false);
-		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1.children[entryIndex].classList.length, 0);
-
-		todoLi1CompleteButton.click();
-
-		eq(todo1.completed, true);
-		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
-
-		todoLi1CompleteButton.click();
-
-		eq(todo1.completed, false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), false);
 	},
@@ -1308,37 +1174,6 @@ tests({
 		eq(todo1.deleted, true);
 		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), true);
 	},
-	"When a todoLi is created, if todo.deleted is false, button should be 'Delete' and entry <p> class not 'dotted-deleted'.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
-
-		eq(todo1.deleted, false);
-		eq(todoLi1DeleteButton.textContent, 'Delete');
-		eq(todoLi1.children[entryIndex].classList.length, 0);
-	},
-	"When a todoLi is created, if todo.deleted is true, button should be 'Undelete' and entry <p> class 'dotted-deleted'.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markDeleted(true);
-		insertTodo(todos, todo1);
-		
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
-
-		eq(todo1.deleted, true);
-		eq(todoLi1DeleteButton.textContent, 'Undelete');
-		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), true);
-	},
 	"Clicking a 'deleted' button should toggle button text and todo.deleted and re-render the todoLi.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1370,28 +1205,6 @@ tests({
 		eq(todo1.deleted, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), false);
-	},
-	"Clicking 'deleted' button should also toggle its todoLi class 'deleted-removed'.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		
-
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
-
-		eq(todoLi1.classList.contains('deleted-removed'), false);
-
-		todoLi1DeletedButton.click();
-
-		eq(todoLi1.classList.contains('deleted-removed'), true);
-
-		todoLi1DeletedButton.click();
-
-		eq(todoLi1.classList.contains('deleted-removed'), false);
 	},
 	"Deleting a todo should not delete its children.": function() {
 		// The children are just along for the ride
