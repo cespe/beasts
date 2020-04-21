@@ -4562,52 +4562,6 @@ tests({
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi.id, todo2Grandchild.id);
 	},
-	"Clicking the showActive button should toggle button text and set/unset todoLi class 'active-removed' on active todos, including nested todos.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1 active');
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2 completed');
-		todo2.markCompleted(true);
-		todo2Child = new Todo('Item 2 child active');
-		todo2.addChild(todo2Child);
-		todo2Grandchild = new Todo('Item 2 grandchild completed');
-		todo2Grandchild.markCompleted(true);
-		todo2Child.addChild(todo2Grandchild);
-		insertTodo(todos, todo2);
-
-		startApp();
-
-		todoUl = todolist.children[0];
-		todoLi1 = todoUl.children[0];
-		todoLi2 = todoUl.children[1];
-		todoLi2Ul = todoLi2.children[todoLiUlIndex];
-		todoLi2ChildLi = todoLi2Ul.children[0];
-		todoLi2ChildLiUl = todoLi2ChildLi.children[todoLiUlIndex];
-		todoLi2GrandchildLi = todoLi2ChildLiUl.children[0];
-
-		eq(showActiveButton.textContent, '√ Active');
-		eq(todoLi1.classList.contains('active-removed'), false);
-		eq(todoLi2.classList.contains('active-removed'), false);
-		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
-		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
-
-		showActiveButton.click();
-
-		eq(showActiveButton.textContent, 'Active');
-		eq(todoLi1.classList.contains('active-removed'), true);
-		eq(todoLi2.classList.contains('active-removed'), false);
-		eq(todoLi2ChildLi.classList.contains('active-removed'), true);
-		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
-
-		showActiveButton.click();
-
-		eq(showActiveButton.textContent, '√ Active');
-		eq(todoLi1.classList.contains('active-removed'), false);
-		eq(todoLi2.classList.contains('active-removed'), false);
-		eq(todoLi2ChildLi.classList.contains('active-removed'), false);
-		eq(todoLi2GrandchildLi.classList.contains('active-removed'), false);
-	},
 	"Clicking the showCompleted button should toggle button text and re-render todolist.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1 active');
@@ -4675,84 +4629,6 @@ tests({
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi.id, todo2Grandchild.id);
 	},
-	"Clicking the showCompleted button should toggle button text and set/unset todoLi class 'completed-removed' on completed todos.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item completed');
-		todo1.markCompleted(true);
-		todo2 = new Todo( 'Item 2');
-		todo2Child = new Todo('Item 2 child');
-		todo2Child.markCompleted(true);
-		todo2.addChild(todo2Child);
-		insertTodo(todos, todo1);
-		insertTodo(todos, todo2);
-
-		startApp();
-
-		todoUl = todolist.children[0];
-		todoLi1 = todoUl.children[0];
-		todoLi2 = todoUl.children[1];
-		todoLi2Ul = todoLi2.children[todoLiUlIndex];
-		todoLi2Child = todoLi2Ul.children[0];
-
-		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todoLi1.classList.contains('completed-removed'), false);
-		eq(todoLi2Child.classList.contains('completed-removed'), false);
-		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
-		eq(todoLi2Child.children[entryIndex].classList.contains('struck-completed'), true);
-
-		showCompletedButton.click();
-
-		eq(showCompletedButton.textContent, 'Completed');
-		eq(todoLi1.classList.contains('completed-removed'), true);
-		eq(todoLi2Child.classList.contains('completed-removed'), true);
-		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
-		eq(todoLi2Child.children[entryIndex].classList.contains('struck-completed'), true);
-
-		showCompletedButton.click();
-
-		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todoLi1.classList.contains('completed-removed'), false);
-		eq(todoLi2Child.classList.contains('completed-removed'), false);
-		eq(todoLi1.children[entryIndex].classList.contains('struck-completed'), true);
-		eq(todoLi2Child.children[entryIndex].classList.contains('struck-completed'), true);
-	},
-	"On startup, the showDeleted button text should be 'Deleted' and todoLi class 'deleted-removed' on deleted todos.": function() {
-		// By default, deleted todos are not displayed.
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1 active');
-		todo1Child = new Todo('Item 1 child');
-		todo1Child.markDeleted(true);
-		todo1.addChild(todo1Child);
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2 completed');
-		todo2.markCompleted(true);
-		insertTodo(todos, todo2);
-		todo3 = new Todo('Item 3 deleted');
-		todo3.markDeleted(true);
-		insertTodo(todos, todo3);
-
-		startApp();
-
-		eq(showDeletedButton.textContent, 'Deleted');
-
-		var todosUl = todolist.children[0];
-		var todoLi1 = todosUl.children[0];
-		var todoLi1Child = todoLi1.children[todoLiUlIndex].children[0];
-		var todoLi2 = todosUl.children[1];
-		var todoLi3 = todosUl.children[2];
-
-		eq(todoLi1.id, todo1.id);
-		eq(todoLi1Child.id, todo1Child.id);
-		eq(todoLi2.id, todo2.id);
-		eq(todoLi3.id, todo3.id);
-
-		eq(todoLi1.classList.contains('deleted-removed'), false);
-		eq(todoLi1Child.classList.contains('deleted-removed'), true);
-		eq(todoLi2.classList.contains('deleted-removed'), false);
-		eq(todoLi3.classList.contains('deleted-removed'), true);
-	},
 	"Clicking the showDeleted button should toggle button text and re-render todolist.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1 active');
@@ -4819,58 +4695,6 @@ tests({
 		eq(todoLi2.id, todo2.id);
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi, undefined);
-	},
-	"Clicking the showDeleted button should toggle button text and set/unset todoLi class 'deleted-removed' on deleted todos.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1 active');
-		todo1Child = new Todo('Item 1 child');
-		todo1Child.markDeleted(true);
-		todo1.addChild(todo1Child);
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2 completed');
-		todo2.markCompleted(true);
-		insertTodo(todos, todo2);
-		todo3 = new Todo('Item 3 deleted');
-		todo3.markDeleted(true);
-		insertTodo(todos, todo3);
-
-		startApp();
-
-		eq(showDeletedButton.textContent, 'Deleted');
-
-		var todosUl = todolist.children[0];
-		var todoLi1 = todosUl.children[0];
-		var todoLi1Child = todoLi1.children[todoLiUlIndex].children[0];
-		var todoLi2 = todosUl.children[1];
-		var todoLi3 = todosUl.children[2];
-
-		eq(todoLi1.id, todo1.id);
-		eq(todoLi1Child.id, todo1Child.id);
-		eq(todoLi2.id, todo2.id);
-		eq(todoLi3.id, todo3.id);
-
-		eq(todoLi1.classList.contains('deleted-removed'), false);
-		eq(todoLi1Child.classList.contains('deleted-removed'), true);
-		eq(todoLi2.classList.contains('deleted-removed'), false);
-		eq(todoLi3.classList.contains('deleted-removed'), true);
-
-		showDeletedButton.click();
-
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(todoLi1.classList.contains('deleted-removed'), false);
-		eq(todoLi1Child.classList.contains('deleted-removed'), false);
-		eq(todoLi2.classList.contains('deleted-removed'), false);
-		eq(todoLi3.classList.contains('deleted-removed'), false);
-
-		showDeletedButton.click();
-
-		eq(showDeletedButton.textContent, 'Deleted');
-		eq(todoLi1.classList.contains('deleted-removed'), false);
-		eq(todoLi1Child.classList.contains('deleted-removed'), true);
-		eq(todoLi2.classList.contains('deleted-removed'), false);
-		eq(todoLi3.classList.contains('deleted-removed'), true);
-
 	},
 	"Section: Actions bar -- other buttons": function() {
 
