@@ -1252,7 +1252,64 @@ tests({
 		eq(todoLi.children[deleteIndex].nodeName, 'BUTTON');
 		eq(todoLi.children[deleteIndex].name, 'deleted');
 	},
+	"If a todo is not deleted, its todoLi 'deleted' button text should be 'Delete'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+
+		eq(todo1.deleted, false);
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+	},
+	"If todo is deleted, its todoLi 'deleted' button text should be 'Undelete'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markDeleted(true);
+		insertTodo(todos, todo1);
+		
+		showDeletedButton.textContent = '√ Deleted';		// required for renderTodolist to generate the todoLi
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+
+		eq(todo1.deleted, true);
+		eq(todoLi1DeleteButton.textContent, 'Undelete');
+	},
+	"If todo is not deleted, its todoLi entry should not contain class 'dotted-deleted'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(todo1.deleted, false);
+		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), false);
+	},
+	"If todo is deleted, its todoLi entry should contain class 'dotted-deleted'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markDeleted(true);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.children[entryIndex];
+
+		eq(todo1.deleted, true);
+		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), true);
+	},
 	"When a todoLi is created, if todo.deleted is false, button should be 'Delete' and entry <p> class not 'dotted-deleted'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1267,6 +1324,7 @@ tests({
 		eq(todoLi1.children[entryIndex].classList.length, 0);
 	},
 	"When a todoLi is created, if todo.deleted is true, button should be 'Undelete' and entry <p> class 'dotted-deleted'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markDeleted(true);
@@ -1281,7 +1339,7 @@ tests({
 		eq(todoLi1DeleteButton.textContent, 'Undelete');
 		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), true);
 	},
-	"Clicking a 'deleted' button should toggle button text, todo.deleted, entry <p> class.": function() {
+	"Clicking a 'deleted' button should toggle button text and todo.deleted and re-render the todoLi.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1293,9 +1351,12 @@ tests({
 
 		eq(todo1.deleted, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
-		eq(todoLi1.children[entryIndex].classList.length, 0);
+		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), false);
 
 		todoLi1DeleteButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
 
 		eq(todo1.deleted, true);
 		eq(todoLi1DeleteButton.textContent, 'Undelete');
@@ -1303,11 +1364,15 @@ tests({
 
 		todoLi1DeleteButton.click();
 
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children[deleteIndex];
+
 		eq(todo1.deleted, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 		eq(todoLi1.children[entryIndex].classList.contains('dotted-deleted'), false);
 	},
 	"Clicking 'deleted' button should also toggle its todoLi class 'deleted-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1355,6 +1420,12 @@ tests({
 		eq(child2.deleted, false);
 
 		todoLi1DeletedButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		var todoLi1DeletedButton = todoLi1.children[deleteIndex];
+		var todoLi1Child1DeletedButton = todoLi1.children[todoLiUlIndex].children[0].children[deleteIndex];
+		var todoLi1Child2DeletedButton = todoLi1.children[todoLiUlIndex].children[1].children[deleteIndex];
 
 		eq(todoLi1DeletedButton.textContent, 'Undelete');
 		eq(todo1.deleted, true);
@@ -4546,7 +4617,7 @@ tests({
 		eq(set7.has('#deleted'), true);
 
 	},
-	"On startup, the showActive button text should be '√ Active' and todos with displayTag '#active' should be displayed.": function() {
+	"On startup, the showActive button text should be '√ Active' and todos with stage 'active' should be displayed.": function() {
 		todos = [];
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
@@ -4557,14 +4628,14 @@ tests({
 		todoLi1 = todoUl.children[0];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.displayTags.has('#active'), true);
+		eq(todo1.stage, 'active');
 	},
-	"On startup, the showCompleted button text should be '√ Completed' and todos with displayTag '#completed' should be displayed.": function() {
+	"On startup, the showCompleted button text should be '√ Completed' and todos with stage 'completed' should be displayed.": function() {
 		todos = [];
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item completed');
-		todo2.tagCompleted(true);
+		todo2.setStage('completed');
 		insertTodo(todos, todo2);
 
 		startApp();
@@ -4574,23 +4645,22 @@ tests({
 		todoLi2 = todoUl.children[1];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.displayTags.has('#active'), true);
+		eq(todo1.stage, 'active');
 		eq(todoLi1, todoUl.children[0]);
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todo2.displayTags.has('#active'), false);
-		eq(todo2.displayTags.has('#completed'), true);
+		eq(todo2.stage, 'completed');
 		eq(todoLi2, todoUl.children[1]);
 	},
-	"On startup, the showDeleted button text should be 'Deleted' and todos with displayTag '#deleted' should not be displayed.": function() {
+	"On startup, the showDeleted button text should be 'Deleted' and deleted todos should not be displayed.": function() {
 		todos = [];
 		todo1 = new Todo('Item active');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item completed');
-		todo2.tagCompleted(true);
+		todo2.setStage('completed');
 		insertTodo(todos, todo2);
 		todo3 = new Todo('Item deleted');
-		todo3.tagDeleted(true);
+		todo3.markDeleted(true);
 		insertTodo(todos, todo3);
 
 		startApp();
@@ -4601,12 +4671,12 @@ tests({
 		todoLi3 = todoUl.children[2];
 
 		eq(showActiveButton.textContent, '√ Active');
-		eq(todo1.displayTags.has('#active'), true);
+		eq(todo1.stage, 'active');
 		eq(todoLi1, todoUl.children[0]);
 
 		eq(showCompletedButton.textContent, '√ Completed');
-		eq(todo2.displayTags.has('#active'), false);
-		eq(todo2.displayTags.has('#completed'), true);
+		eq(todo2.stage === 'active', false);
+		eq(todo2.stage, 'completed');
 		eq(todoLi2, todoUl.children[1]);
 
 		eq(showDeletedButton.textContent, 'Deleted');
@@ -4617,11 +4687,11 @@ tests({
 		todo1 = new Todo('Item 1 active');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2 completed');
-		todo2.tagCompleted(true);
+		todo2.setStage('completed');
 		todo2Child = new Todo('Item 2 child active');
 		todo2.addChild(todo2Child);
 		todo2Grandchild = new Todo('Item 2 grandchild completed');
-		todo2Grandchild.tagCompleted(true);
+		todo2Grandchild.setStage('completed');
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
@@ -4730,11 +4800,11 @@ tests({
 		todo1 = new Todo('Item 1 active');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2 completed');
-		todo2.tagCompleted(true);
+		todo2.setStage('completed');
 		todo2Child = new Todo('Item 2 child active');
 		todo2.addChild(todo2Child);
 		todo2Grandchild = new Todo('Item 2 grandchild completed');
-		todo2Grandchild.tagCompleted(true);
+		todo2Grandchild.setStage('completed');
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
@@ -4875,11 +4945,11 @@ tests({
 		todo1 = new Todo('Item 1 active');
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2 deleted');
-		todo2.tagDeleted(true);
+		todo2.markDeleted(true);
 		todo2Child = new Todo('Item 2 child active');
 		todo2.addChild(todo2Child);
 		todo2Grandchild = new Todo('Item 2 grandchild deleted');
-		todo2Grandchild.tagDeleted(true);
+		todo2Grandchild.markDeleted(true);
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
