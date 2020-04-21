@@ -4,6 +4,11 @@
 	text-decoration: line-through;
 }
 
+.faded-deleted {
+	/* styles deleted todos */
+	color: rgba(0, 0, 0, 0.4);
+}
+
 .dotted-deleted {
 	/* styles deleted todos */
 	color: rgba(0, 0, 0, 0.4);
@@ -32,7 +37,7 @@
 .parent-placeholder {
 	/* styles filtered-out parents of todos that are not filtered out */
 	/* the removed parent todoLi shows the faded text of its entry but no buttons */
-	color: rgba(0, 0, 0, 0.2);
+	color: rgba(0, 0, 0, 0.1);
 }
 
 .inactive {

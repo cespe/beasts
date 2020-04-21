@@ -454,7 +454,7 @@ function createTodoLi(todo) {
 	deleteButton.type = 'button';
 	if (todo.deleted) {
 		deleteButton.textContent = 'Undelete';
-		todoLi.classList.add('deleted-removed');		// hide deleted todos by default
+//		todoLi.classList.add('deleted-removed');		// hide deleted todos by default
 	} else {
 		deleteButton.textContent = 'Delete';
 	}
