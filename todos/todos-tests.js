@@ -1282,7 +1282,6 @@ tests({
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todo1.children[0].id, todoLi1Child1.id);
 
-		debugger;
 		todoLi1SiblingButton.click();				// Add a sibling at top level to todos array
 
 		todosUl = todolist.children[0];
@@ -1297,7 +1296,7 @@ tests({
 		eq(todoLi2.nodeName, 'LI');
 		eq(todoLi2.id, todos[1].id)
 		eq(document.activeElement, todoLi2Entry);
-		eq(document.hasFocus(), true);
+		eq(document.hasFocus(), true);				// doesn't pass unless console is closed
 
 		todoLi1Child1AddSiblingButton.click();		// Add a sibling at nested level to todo.children array
 
@@ -1312,7 +1311,7 @@ tests({
 		eq(todoLi1Child2.nodeName, 'LI');
 		eq(todo1.children[1].id, todoLi1Child2.id);
 		eq(document.activeElement, todoLi1Child2Entry);
-		eq(document.hasFocus(), true);
+		eq(document.hasFocus(), true);				// doesn't pass unless console is closed
 	},
 	"Each todo li should have an 'addChild' button to add a child todo underneath it.": function() {
 		todos = [];
@@ -1328,34 +1327,45 @@ tests({
 		eq(todoLi1AddChild.name, 'addChild');
 		eq(todoLi1AddChild.textContent, 'Add child');
 	},
-	"Clicking an 'addChild' button should create a new nested child todo and todoLi.": function() {
+	"Clicking an 'addChild' button should create a new nested child todo, re-render todolist, and focus new todoLi entry <p>.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-
 		renderTodolist();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1ChildButton = todoLi1.children[addChildIndex];
+		todoLi1AddChildButton = todoLi1.children[addChildIndex];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
 
 		eq(todosUl.childElementCount, 1);
-		eq(todoLi1.childElementCount, 11);
+		eq(todo1.children[0], undefined);
+		eq(todoLi1Ul, undefined);
 
-		todoLi1ChildButton.click();
+		todoLi1AddChildButton.click();
 
-		eq(todosUl.childElementCount, 1);
-		eq(todoLi1.childElementCount, 12);
+		todo1 = todos[0];
+		child1 = todo1.children[0];
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
 		var todoLi1Ul = todoLi1.children[todoLiUlIndex]
 		var todoLi1Child1 = todoLi1Ul.children[0];
-		eq(todoLi1Child1.nodeName, 'LI');
-		eq(todoLi1Child1.id, todos[0].children[0].id)
-		eq(todoLi1Child1.children[entryIndex].textContent, "");
-		eq(todos[0].children[0].entry, "");
+		var todoLi1Child1Entry = todoLi1Child1.children[entryIndex];
 
+		eq(todosUl.childElementCount, 1);
+		neq(todoLi1Ul, undefined);
+		eq(todoLi1Ul.childElementCount, 1);
+
+		eq(todo1.children[0].entry, "");
+		eq(todoLi1Child1.nodeName, 'LI');
+		eq(todoLi1Child1.id, child1.id)
+		eq(child1.entry === "", true);
+		eq(todoLi1Child1Entry.textContent, "");
+		eq(document.activeElement, todoLi1Child1Entry);
+		eq(document.hasFocus(), true);					// doesn't pass unless console is closed
 	},
-	"Clicking an addChild button should set todo.collapsed false and expand nested todos.": function() {
+	"Clicking an addChild button should set todo.collapsed false and display nested todos on re-render.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1364,22 +1374,43 @@ tests({
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1ChildButton = todoLi1.children[addChildIndex];
+		todoLi1AddChildButton = todoLi1.children[addChildIndex];
 		
-		todoLi1ChildButton.click();
+		todoLi1AddChildButton.click();
+
+		todo1 = todos[0]
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1AddChildButton = todoLi1.children[addChildIndex];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		var child1 = todo1.children[0];
+		var childLi1 = todoLi1Ul.children[0];
 
 		eq(todo1.collapsed, false);
-		eq(todoLi1.children[todoLiUlIndex].classList.contains('collapsed'), false);
+		eq(todo1.children.length, 1);
+		eq(todo1.children[0], child1);
+		eq(todoLi1Ul.children[0], childLi1);
 
 		todo1.collapsed = true;
-		todoLi1.children[todoLiUlIndex].classList.add('collapsed');
 
-		todoLi1ChildButton.click();
+		todoLi1AddChildButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		child1 = todo1.children[0];
+		childLi1 = todoLi1Ul.children[0];
+		var child2 = todo1.children[1];
+		var childLi2 = todoLi1Ul.children[1];
 
 		eq(todo1.collapsed, false);
-		eq(todoLi1.children[todoLiUlIndex].classList.contains('collapsed'), false);
+		eq(todo1.children.length, 2);
+		eq(todo1.children[0], child1);
+		eq(todo1.children[1], child2);
+		eq(todoLi1Ul.children[0], childLi1);
+		eq(todoLi1Ul.children[1], childLi2);
 	},
-	"Each todo li should have an 'undoEdit' button to revert changes to the entry.": function() {
+	"Each todoLi should have an 'undoEdit' button to revert changes to the entry.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);

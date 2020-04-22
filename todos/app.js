@@ -1956,11 +1956,16 @@ function todoClickHandler(event) {
 			newTodoLi.children[entryIndex].focus();
 		}
 		if (event.target.name === "addChild") {
-			appendNewChildTodoLi(todoLi)
+//			appendNewChildTodoLi(todoLi)
 			todo.collapsed = false;
-			todoLi.children[todoLiUlIndex].classList.remove('collapsed');
-			todoLi.children[showChildrenIndex].classList.remove('inactive');
-			todoLi.children[selectChildrenIndex].classList.remove('inactive');
+			var newTodo= new Todo();
+			insertTodo(todo.children, newTodo);
+			renderTodolist();
+			newTodoLi = document.getElementById(newTodo.id);
+			newTodoLi.children[entryIndex].focus();
+//			todoLi.children[todoLiUlIndex].classList.remove('collapsed');
+//			todoLi.children[showChildrenIndex].classList.remove('inactive');
+//			todoLi.children[selectChildrenIndex].classList.remove('inactive');
 		}
 		if (event.target.name === "undoEdit") {
 			todo.entry = originalEntry;
