@@ -758,12 +758,12 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		eq(todoLi1.childElementCount, 11);
+		eq(todoLi1.querySelector('ul'), null);
 		eq(todoLi1.querySelector('p').textContent, 'Item 1');
 
 		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
 
-		eq(todoLi1.childElementCount, 12);
+		eq(todoLi1.querySelector('ul'), );
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todoLi1Ul.nodeName, "UL");
@@ -866,15 +866,15 @@ tests({
 	},
 	"Section: todoLi buttons": function() {
 	},
-	"Each todo li should have a 'selected' button to toggle 'selected/unselected'.": function() {
+	"Each todo li should have a 'select' button to toggle 'selected/unselected'.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
-		eq(todoLi.children.namedItem('selected').nodeName, 'BUTTON');
-		eq(todoLi.children.namedItem('selected').name, 'selected');
+		eq(todoLi.children.namedItem('select').nodeName, 'BUTTON');
+		eq(todoLi.children.namedItem('select').name, 'select');
 	},
-	"When a todoLi is created, todo.selected should be set to false, 'selected' button text should be 'Select' and class 'inactive', and entry <p> class should remove 'highlighted'.": function() {
+	"When a todoLi is created, todo.selected should be set to false, 'select' button text should be 'Select' and class 'inactive', and entry <p> class should remove 'highlighted'.": function() {
 		// Start with a clean slate
 		// Select button is inactive/hidden until Select all is clicked
 		todos = []
@@ -888,8 +888,8 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		var todoLi2Entry = todoLi2.querySelector('p');
 
@@ -902,7 +902,7 @@ tests({
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 	},
-	"Clicking a 'selected' button should toggle button text, toggle todo.selected, and entry <p> class 'highlighted.": function() {
+	"Clicking a 'select' button should toggle button text, toggle todo.selected, and entry <p> class 'highlighted.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -911,7 +911,7 @@ tests({
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
 		var todoLi1Entry = todoLi1.querySelector('p');
 
 		eq(todoLi1SelectButton.textContent, 'Select');
@@ -944,9 +944,9 @@ tests({
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1Child1SelectButton = todoLi1.querySelector('ul').children[0].children.namedItem('selected');
-		var todoLi1Child2SelectButton = todoLi1.querySelector('ul').children[1].children.namedItem('selected');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1Child1SelectButton = todoLi1.querySelector('ul').children[0].children.namedItem('select');
+		var todoLi1Child2SelectButton = todoLi1.querySelector('ul').children[1].children.namedItem('select');
 
 		eq(todo1.selected, false);
 		eq(todoLi1SelectButton.textContent, 'Select');
@@ -964,15 +964,15 @@ tests({
 		eq(child1.selected, false);
 		eq(todoLi1Child2SelectButton.textContent, 'Select');
 	},
-	"Each todoLi should have a 'completed' button to toggle 'Complete/Uncomplete'.": function() {
+	"Each todoLi should have a 'complete' button to toggle 'Complete/Uncomplete'.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
-		eq(todoLi.children.namedItem('completed').nodeName, 'BUTTON');
-		eq(todoLi.children.namedItem('completed').name, 'completed');
+		eq(todoLi.children.namedItem('complete').nodeName, 'BUTTON');
+		eq(todoLi.children.namedItem('complete').name, 'complete');
 	},
-	"If a todo is not completed, its todoLi 'completed' button text should be 'Complete'": function() {
+	"If a todo is not completed, its todoLi 'complete' button text should be 'Complete'": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -980,12 +980,12 @@ tests({
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 
 		eq(todoLi1CompleteButton.textContent, 'Complete');
 		eq(todo1.stage === 'completed', false);
 	},
-	"If todo is completed, todoLi 'completed' button text should be 'Uncomplete'.": function () {
+	"If todo is completed, todoLi 'complete' button text should be 'Uncomplete'.": function () {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.stage = 'completed';
@@ -994,7 +994,7 @@ tests({
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
 		eq(todo1.stage === 'completed', true);
@@ -1026,7 +1026,7 @@ tests({
 		eq(todo1.stage === 'completed', true);
 		eq(todoLi1.querySelector('p').classList.contains('struck-completed'), true);
 	},
-	"Clicking a todoLi 'completed' button should tag the todo complete and re-render the todoLi.": function() {
+	"Clicking a todoLi 'complete' button should tag the todo complete and re-render the todoLi.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1034,29 +1034,32 @@ tests({
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1Entry = todoLi1.querySelector('p');
 
 		eq(todo1.stage === 'completed', false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1.querySelector('p').classList.contains('struck-completed'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), false);
 
 		todoLi1CompleteButton.click();
 
 		todoLi1 = todolist.children[0].children[0];
-		todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		todoLi1Entry = todoLi1.querySelector('p');
 
 		eq(todo1.stage === 'completed', true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
-		eq(todoLi1.querySelector('p').classList.contains('struck-completed'), true);
+		eq(todoLi1Entry.classList.contains('struck-completed'), true);
 
 		todoLi1CompleteButton.click();
 
 		todoLi1 = todolist.children[0].children[0];
-		todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		todoLi1Entry = todoLi1.querySelector('p');
 
 		eq(todo1.stage === 'completed', false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
-		eq(todoLi1.querySelector('p').classList.contains('struck-completed'), false);
+		eq(todoLi1Entry.classList.contains('struck-completed'), false);
 	},
 	"Marking a todo completed should not mark its children completed.": function() {
 		// because then marking uncompleted could incorrectly reverse some child values
@@ -1072,12 +1075,12 @@ tests({
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		var todoLi1Child1 = todoLi1Ul.children[0];
 		var todoLi1Child2 = todoLi1Ul.children[1];
-		var todoLi1Child1CompleteButton = todoLi1Child1.children.namedItem('completed');
-		var todoLi1Child2CompleteButton = todoLi1Child2.children.namedItem('completed');
+		var todoLi1Child1CompleteButton = todoLi1Child1.children.namedItem('complete');
+		var todoLi1Child2CompleteButton = todoLi1Child2.children.namedItem('complete');
 
 		eq(todo1.stage === 'completed', false);
 		eq(todoLi1CompleteButton.textContent, 'Complete');
@@ -1093,12 +1096,12 @@ tests({
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 		todoLi1Ul = todoLi1.querySelector('ul');
 		todoLi1Child1 = todoLi1Ul.children[0];
 		todoLi1Child2 = todoLi1Ul.children[1];
-		todoLi1Child1CompleteButton = todoLi1Child1.children.namedItem('completed');
-		todoLi1Child2CompleteButton = todoLi1Child2.children.namedItem('completed');
+		todoLi1Child1CompleteButton = todoLi1Child1.children.namedItem('complete');
+		todoLi1Child2CompleteButton = todoLi1Child2.children.namedItem('complete');
 
 		eq(todo1.stage === 'completed', true);
 		eq(todoLi1CompleteButton.textContent, 'Uncomplete');
@@ -1110,13 +1113,13 @@ tests({
 		eq(todoLi1Child2CompleteButton.textContent, 'Complete');
 		eq(todoLi1Child2.querySelector('p').classList.contains('struck-completed'), false);
 	},
-	"Each todo li should have a 'deleted' button to toggle 'Delete/Undelete'.": function() {
+	"Each todo li should have a 'delete' button to toggle 'Delete/Undelete'.": function() {
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		var todoLi = createTodoLi(todo1);
-		eq(todoLi.children.namedItem('deleted').nodeName, 'BUTTON');
-		eq(todoLi.children.namedItem('deleted').name, 'deleted');
+		eq(todoLi.children.namedItem('delete').nodeName, 'BUTTON');
+		eq(todoLi.children.namedItem('delete').name, 'delete');
 	},
 	"If a todo is not deleted, its todoLi 'deleted' button text should be 'Delete'.": function() {
 		todos = [];
@@ -1126,7 +1129,7 @@ tests({
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 
 		eq(todo1.deleted, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
@@ -1142,7 +1145,7 @@ tests({
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 
 		eq(todo1.deleted, true);
 		eq(todoLi1DeleteButton.textContent, 'Undelete');
@@ -1182,7 +1185,7 @@ tests({
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 
 		eq(todo1.deleted, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
@@ -1191,7 +1194,7 @@ tests({
 		todoLi1DeleteButton.click();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 
 		eq(todo1.deleted, true);
 		eq(todoLi1DeleteButton.textContent, 'Undelete');
@@ -1200,7 +1203,7 @@ tests({
 		todoLi1DeleteButton.click();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 
 		eq(todo1.deleted, false);
 		eq(todoLi1DeleteButton.textContent, 'Delete');
@@ -1221,9 +1224,9 @@ tests({
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		var todoLi1DeletedButton = todoLi1.children.namedItem('deleted');
-		var todoLi1Child1DeletedButton = todoLi1.querySelector('ul').children[0].children.namedItem('deleted');
-		var todoLi1Child2DeletedButton = todoLi1.querySelector('ul').children[1].children.namedItem('deleted');
+		var todoLi1DeletedButton = todoLi1.children.namedItem('delete');
+		var todoLi1Child1DeletedButton = todoLi1.querySelector('ul').children[0].children.namedItem('delete');
+		var todoLi1Child2DeletedButton = todoLi1.querySelector('ul').children[1].children.namedItem('delete');
 
 		eq(todoLi1DeletedButton.textContent, 'Delete');
 		eq(todo1.deleted, false);
@@ -1236,9 +1239,9 @@ tests({
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		var todoLi1DeletedButton = todoLi1.children.namedItem('deleted');
-		var todoLi1Child1DeletedButton = todoLi1.querySelector('ul').children[0].children.namedItem('deleted');
-		var todoLi1Child2DeletedButton = todoLi1.querySelector('ul').children[1].children.namedItem('deleted');
+		var todoLi1DeletedButton = todoLi1.children.namedItem('delete');
+		var todoLi1Child1DeletedButton = todoLi1.querySelector('ul').children[0].children.namedItem('delete');
+		var todoLi1Child2DeletedButton = todoLi1.querySelector('ul').children[1].children.namedItem('delete');
 
 		eq(todoLi1DeletedButton.textContent, 'Undelete');
 		eq(todo1.deleted, true);
@@ -1341,7 +1344,7 @@ tests({
 
 		eq(todosUl.childElementCount, 1);
 		eq(todo1.children[0], undefined);
-		eq(todoLi1Ul, undefined);
+		eq(todoLi1Ul, null);
 
 		todoLi1AddChildButton.click();
 
@@ -1354,7 +1357,7 @@ tests({
 		var todoLi1Child1Entry = todoLi1Child1.querySelector('p');
 
 		eq(todosUl.childElementCount, 1);
-		neq(todoLi1Ul, undefined);
+		neq(todoLi1Ul, null);
 		eq(todoLi1Ul.childElementCount, 1);
 
 		eq(todo1.children[0].entry, "");
@@ -1782,10 +1785,10 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
-		var child1LiSelectButton = child1Li.children.namedItem('selected');
+		var child1LiSelectButton = child1Li.children.namedItem('select');
 		var child1LiEntry = child1Li.querySelector('p');
 		var child2Li = todoLi1.querySelector('ul').children[1];
-		var child2LiSelectButton = child2Li.children.namedItem('selected');
+		var child2LiSelectButton = child2Li.children.namedItem('select');
 		var child2LiEntry = child2Li.querySelector('p');
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
@@ -1833,13 +1836,13 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
-		var child1LiSelectButton = child1Li.children.namedItem('selected');
+		var child1LiSelectButton = child1Li.children.namedItem('select');
 		var child1LiEntry = child1Li.querySelector('p');
 		var child2Li = todoLi1.querySelector('ul').children[1];
-		var child2LiSelectButton = child2Li.children.namedItem('selected');
+		var child2LiSelectButton = child2Li.children.namedItem('select');
 		var child2LiEntry = child2Li.querySelector('p');
 		var child3Li = todoLi1.querySelector('ul').children[2];
-		var child3LiSelectButton = child3Li.children.namedItem('selected');
+		var child3LiSelectButton = child3Li.children.namedItem('select');
 		var child3LiEntry = child3Li.querySelector('p');
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
@@ -1899,16 +1902,16 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
-		var child1LiSelectButton = child1Li.children.namedItem('selected');
+		var child1LiSelectButton = child1Li.children.namedItem('select');
 		var child1LiEntry = child1Li.querySelector('p');
 		var grandchild1Li = child1Li.querySelector('ul').children[0];
-		var grandchild1LiSelectButton = grandchild1Li.children.namedItem('selected');
+		var grandchild1LiSelectButton = grandchild1Li.children.namedItem('select');
 		var grandchild1LiEntry = grandchild1Li.querySelector('p');
 		var child2Li = todoLi1.querySelector('ul').children[1];
-		var child2LiSelectButton = child2Li.children.namedItem('selected');
+		var child2LiSelectButton = child2Li.children.namedItem('select');
 		var child2LiEntry = child2Li.querySelector('p');
 		var child3Li = todoLi1.querySelector('ul').children[2];
-		var child3LiSelectButton = child3Li.children.namedItem('selected');
+		var child3LiSelectButton = child3Li.children.namedItem('select');
 		var child3LiEntry = child3Li.querySelector('p');
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
@@ -1973,8 +1976,8 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
@@ -2019,8 +2022,8 @@ tests({
 		var todoLi1 = todolist.children[0].children[0];
 
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
@@ -2028,8 +2031,8 @@ tests({
 		var childLi1 = todoLi1.querySelector('ul').children[0];
 
 		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1AddSiblingButton = childLi1.children.namedItem('addSibling');
 		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
 		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
@@ -2301,11 +2304,11 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
-		var child1LiSelectButton = child1Li.children.namedItem('selected');
+		var child1LiSelectButton = child1Li.children.namedItem('select');
 		var grandchild1Li = child1Li.querySelector('ul').children[0];
-		var grandchild1LiSelectButton = grandchild1Li.children.namedItem('selected');
+		var grandchild1LiSelectButton = grandchild1Li.children.namedItem('select');
 		var child2Li = todoLi1.querySelector('ul').children[1];
-		var child2LiSelectButton = child2Li.children.namedItem('selected');
+		var child2LiSelectButton = child2Li.children.namedItem('select');
 
 		eq(child1LiSelectButton.classList.contains('inactive'), true);
 		eq(grandchild1LiSelectButton.classList.contains('inactive'), true);
@@ -2339,12 +2342,12 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
-		var child1LiSelectButton = child1Li.children.namedItem('selected');
+		var child1LiSelectButton = child1Li.children.namedItem('select');
 		var child1LiSelectChildrenButton = child1Li.children.namedItem('selectChildren');
 		var grandchild1Li = child1Li.querySelector('ul').children[0];
-		var grandchild1LiSelectButton = grandchild1Li.children.namedItem('selected');
+		var grandchild1LiSelectButton = grandchild1Li.children.namedItem('select');
 		var child2Li = todoLi1.querySelector('ul').children[1];
-		var child2LiSelectButton = child2Li.children.namedItem('selected');
+		var child2LiSelectButton = child2Li.children.namedItem('select');
 
 		eq(child1LiSelectButton.classList.contains('inactive'), true);
 		eq(grandchild1LiSelectButton.classList.contains('inactive'), true);
@@ -2396,13 +2399,13 @@ tests({
 		var grandchild1Li = child1Li.querySelector('ul').children[0];
 		var child2Li = todoLi1.querySelector('ul').children[1];
 		
-		var child1LiCompleteButton = child1Li.children.namedItem('completed');
-		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('completed');
-		var child2LiCompleteButton = child2Li.children.namedItem('completed');
+		var child1LiCompleteButton = child1Li.children.namedItem('complete');
+		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('complete');
+		var child2LiCompleteButton = child2Li.children.namedItem('complete');
 
-		var child1LiDeleteButton = child1Li.children.namedItem('deleted');
-		var grandchild1LiDeleteButton = grandchild1Li.children.namedItem('deleted');
-		var child2LiDeleteButton = child2Li.children.namedItem('deleted');
+		var child1LiDeleteButton = child1Li.children.namedItem('delete');
+		var grandchild1LiDeleteButton = grandchild1Li.children.namedItem('delete');
+		var child2LiDeleteButton = child2Li.children.namedItem('delete');
 
 		var child1LiAddSiblingButton = child1Li.children.namedItem('addSibling');
 		var grandchild1LiAddSiblingButton = grandchild1Li.children.namedItem('addSibling');
@@ -2486,13 +2489,13 @@ tests({
 		var grandchild1Li = child1Li.querySelector('ul').children[0];
 		var child2Li = todoLi1.querySelector('ul').children[1];
 		
-		var child1LiCompleteButton = child1Li.children.namedItem('completed');
-		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('completed');
-		var child2LiCompleteButton = child2Li.children.namedItem('completed');
+		var child1LiCompleteButton = child1Li.children.namedItem('complete');
+		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('complete');
+		var child2LiCompleteButton = child2Li.children.namedItem('complete');
 
-		var child1LiDeleteButton = child1Li.children.namedItem('deleted');
-		var grandchild1LiDeleteButton = grandchild1Li.children.namedItem('deleted');
-		var child2LiDeleteButton = child2Li.children.namedItem('deleted');
+		var child1LiDeleteButton = child1Li.children.namedItem('delete');
+		var grandchild1LiDeleteButton = grandchild1Li.children.namedItem('delete');
+		var child2LiDeleteButton = child2Li.children.namedItem('delete');
 
 		var child1LiAddSiblingButton = child1Li.children.namedItem('addSibling');
 		var grandchild1LiAddSiblingButton = grandchild1Li.children.namedItem('addSibling');
@@ -2578,13 +2581,13 @@ tests({
 		
 		var child1LiSelectChildrenButton = child1Li.children.namedItem('selectChildren');
 		
-		var child1LiCompleteButton = child1Li.children.namedItem('completed');
-		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('completed');
-		var child2LiCompleteButton = child2Li.children.namedItem('completed');
+		var child1LiCompleteButton = child1Li.children.namedItem('complete');
+		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('complete');
+		var child2LiCompleteButton = child2Li.children.namedItem('complete');
 
-		var child1LiDeleteButton = child1Li.children.namedItem('deleted');
-		var grandchild1LiDeleteButton = grandchild1Li.children.namedItem('deleted');
-		var child2LiDeleteButton = child2Li.children.namedItem('deleted');
+		var child1LiDeleteButton = child1Li.children.namedItem('delete');
+		var grandchild1LiDeleteButton = grandchild1Li.children.namedItem('delete');
+		var child2LiDeleteButton = child2Li.children.namedItem('delete');
 
 		var child1LiAddSiblingButton = child1Li.children.namedItem('addSibling');
 		var grandchild1LiAddSiblingButton = grandchild1Li.children.namedItem('addSibling');
@@ -2923,7 +2926,7 @@ tests({
 		eq(child2LiDeleteSelectedChildrenButton.classList.contains('inactive'), true);
 	},
 
-	"Clicking a 'completeSelectedChildren' button should toggle button text and toggle todo.completed, todoLi entry class and 'completed' button text on selected child todos.": function() {
+	"Clicking a 'completeSelectedChildren' button should toggle button text and toggle todo.completed, todoLi entry class and 'complete' button text on selected child todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -2939,10 +2942,10 @@ tests({
 		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
 		var child1LiEntry = child1Li.querySelector('p');
-		var child1LiCompleteButton = child1Li.children.namedItem('completed');
+		var child1LiCompleteButton = child1Li.children.namedItem('complete');
 		var child2Li = todoLi1.querySelector('ul').children[1];
 		var child2LiEntry = child2Li.querySelector('p');
-		var child2LiCompleteButton = child2Li.children.namedItem('completed');
+		var child2LiCompleteButton = child2Li.children.namedItem('complete');
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(child1LiEntry.classList.contains('struck-completed'), false);
@@ -2990,10 +2993,10 @@ tests({
 		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
 		var child1LiEntry = child1Li.querySelector('p');
-		var child1LiCompleteButton = child1Li.children.namedItem('completed');
+		var child1LiCompleteButton = child1Li.children.namedItem('complete');
 		var grandchild1Li = child1Li.querySelector('ul').children[0];
 		var grandchild1LiEntry = grandchild1Li.querySelector('p');
-		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('completed');
+		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('complete');
 
 		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(child1LiEntry.classList.contains('struck-completed'), false);
@@ -3041,10 +3044,10 @@ tests({
 		var todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
 		var child1LiEntry = child1Li.querySelector('p');
-		var child1LiDeleteButton = child1Li.children.namedItem('deleted');
+		var child1LiDeleteButton = child1Li.children.namedItem('delete');
 		var child2Li = todoLi1.querySelector('ul').children[1];
 		var child2LiEntry = child2Li.querySelector('p');
-		var child2LiDeleteButton = child2Li.children.namedItem('deleted');
+		var child2LiDeleteButton = child2Li.children.namedItem('delete');
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(child1LiEntry.classList.contains('faded-deleted'), false);
@@ -3094,13 +3097,13 @@ tests({
 		var todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
 		var child1Li = todoLi1.querySelector('ul').children[0];
 		var child1LiEntry = child1Li.querySelector('p');
-		var child1LiDeleteButton = child1Li.children.namedItem('deleted');
+		var child1LiDeleteButton = child1Li.children.namedItem('delete');
 		var grandchild1Li = child1Li.querySelector('ul').children[0];
 		var grandchild1LiEntry = grandchild1Li.querySelector('p');
-		var grandchild1LiDeleteButton = grandchild1Li.children.namedItem('deleted');
+		var grandchild1LiDeleteButton = grandchild1Li.children.namedItem('delete');
 		var child2Li = todoLi1.querySelector('ul').children[1];
 		var child2LiEntry = child2Li.querySelector('p');
-		var child2LiDeleteButton = child2Li.children.namedItem('deleted');
+		var child2LiDeleteButton = child2Li.children.namedItem('delete');
 
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(child1LiEntry.classList.contains('faded-deleted'), false);
@@ -3242,8 +3245,8 @@ tests({
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		var todoLi2Entry = todoLi2.querySelector('p');
 
@@ -3295,12 +3298,12 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi2CompleteButton = todoLi2.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
-		var todoLi2DeleteButton = todoLi2.children.namedItem('deleted');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi2CompleteButton = todoLi2.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi2AddSiblingButton = todoLi2.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
@@ -3522,7 +3525,7 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
-		todoLi2DeleteButton = todoLi2.children.namedItem('deleted');
+		todoLi2DeleteButton = todoLi2.children.namedItem('delete');
 
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
@@ -3555,9 +3558,9 @@ tests({
 		todoLi1HideChildrenButton = todoLi1.children.namedItem('showChildren');
 		todoLi1Child1 = todoLi1.querySelector('ul').children[0];
 		todoLi1Child2 = todoLi1.querySelector('ul').children[1];
-		todoLi1Child2DeleteButton = todoLi1Child2.children.namedItem('deleted');
+		todoLi1Child2DeleteButton = todoLi1Child2.children.namedItem('delete');
 		todoLi2 = todolist.children[0].children[1];
-		todoLi2DeleteButton = todoLi2.children.namedItem('deleted');
+		todoLi2DeleteButton = todoLi2.children.namedItem('delete');
 
 		// Case 1: todos hidden by filter settings
 
@@ -3648,14 +3651,14 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		childLi1 = todoLi1.querySelector('ul').children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
 		var todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1AddSiblingButton = childLi1.children.namedItem('addSibling');
 		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
 
@@ -3732,14 +3735,14 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		childLi1 = todoLi1.querySelector('ul').children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
 		var todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1AddSiblingButton = childLi1.children.namedItem('addSibling');
 		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
 		var childLi1Entry = childLi1.querySelector('p');
@@ -3839,12 +3842,12 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
 		todoLi3 = todolist.children[0].children[2];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
-		var todoLi2CompleteButton = todoLi2.children.namedItem('completed');
-		var todoLi3SelectButton = todoLi3.children.namedItem('selected');
-		var todoLi3CompleteButton = todoLi3.children.namedItem('completed');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+		var todoLi2CompleteButton = todoLi2.children.namedItem('complete');
+		var todoLi3SelectButton = todoLi3.children.namedItem('select');
+		var todoLi3CompleteButton = todoLi3.children.namedItem('complete');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		var todoLi2Entry = todoLi2.querySelector('p');
 		var todoLi3Entry = todoLi3.querySelector('p');
@@ -3936,24 +3939,24 @@ tests({
 		var childLi3 = todoLi3Ul.children[0];
 		var childLi3Ul = childLi3.querySelector('ul');
 		var grandchildLi3 = childLi3Ul.children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
-		var todoLi2CompleteButton = todoLi2.children.namedItem('completed');
-		var todoLi2DeleteButton = todoLi2.children.namedItem('deleted');
-		var todoLi3SelectButton = todoLi3.children.namedItem('selected');
-		var todoLi3CompleteButton = todoLi3.children.namedItem('completed');
-		var todoLi3DeleteButton = todoLi3.children.namedItem('deleted');
-		var childLi3SelectButton = childLi3.children.namedItem('selected');
-		var childLi3CompleteButton = childLi3.children.namedItem('completed');
-		var childLi3DeleteButton = childLi3.children.namedItem('deleted');
-		var grandchildLi3SelectButton = grandchildLi3.children.namedItem('selected');
-		var grandchildLi3CompleteButton = grandchildLi3.children.namedItem('completed');
-		var grandchildLi3DeleteButton = grandchildLi3.children.namedItem('deleted');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+		var todoLi2CompleteButton = todoLi2.children.namedItem('complete');
+		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
+		var todoLi3SelectButton = todoLi3.children.namedItem('select');
+		var todoLi3CompleteButton = todoLi3.children.namedItem('complete');
+		var todoLi3DeleteButton = todoLi3.children.namedItem('delete');
+		var childLi3SelectButton = childLi3.children.namedItem('select');
+		var childLi3CompleteButton = childLi3.children.namedItem('complete');
+		var childLi3DeleteButton = childLi3.children.namedItem('delete');
+		var grandchildLi3SelectButton = grandchildLi3.children.namedItem('select');
+		var grandchildLi3CompleteButton = grandchildLi3.children.namedItem('complete');
+		var grandchildLi3DeleteButton = grandchildLi3.children.namedItem('delete');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		var todoLi2Entry = todoLi2.querySelector('p');
 		var todoLi3Entry = todoLi3.querySelector('p');
@@ -4102,12 +4105,12 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
 		todoLi3 = todolist.children[0].children[2];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
-		var todoLi2DeleteButton = todoLi2.children.namedItem('deleted');
-		var todoLi3SelectButton = todoLi3.children.namedItem('selected');
-		var todoLi3DeleteButton = todoLi3.children.namedItem('deleted');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
+		var todoLi3SelectButton = todoLi3.children.namedItem('select');
+		var todoLi3DeleteButton = todoLi3.children.namedItem('delete');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		var todoLi2Entry = todoLi2.querySelector('p');
 		var todoLi3Entry = todoLi3.querySelector('p');
@@ -4210,24 +4213,24 @@ tests({
 		var childLi3 = todoLi3Ul.children[0];
 		var childLi3Ul = childLi3.querySelector('ul');
 		var grandchildLi3 = childLi3Ul.children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
-		var todoLi2CompleteButton = todoLi2.children.namedItem('completed');
-		var todoLi2DeleteButton = todoLi2.children.namedItem('deleted');
-		var todoLi3SelectButton = todoLi3.children.namedItem('selected');
-		var todoLi3CompleteButton = todoLi3.children.namedItem('completed');
-		var todoLi3DeleteButton = todoLi3.children.namedItem('deleted');
-		var childLi3SelectButton = childLi3.children.namedItem('selected');
-		var childLi3CompleteButton = childLi3.children.namedItem('completed');
-		var childLi3DeleteButton = childLi3.children.namedItem('deleted');
-		var grandchildLi3SelectButton = grandchildLi3.children.namedItem('selected');
-		var grandchildLi3CompleteButton = grandchildLi3.children.namedItem('completed');
-		var grandchildLi3DeleteButton = grandchildLi3.children.namedItem('deleted');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+		var todoLi2CompleteButton = todoLi2.children.namedItem('complete');
+		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
+		var todoLi3SelectButton = todoLi3.children.namedItem('select');
+		var todoLi3CompleteButton = todoLi3.children.namedItem('complete');
+		var todoLi3DeleteButton = todoLi3.children.namedItem('delete');
+		var childLi3SelectButton = childLi3.children.namedItem('select');
+		var childLi3CompleteButton = childLi3.children.namedItem('complete');
+		var childLi3DeleteButton = childLi3.children.namedItem('delete');
+		var grandchildLi3SelectButton = grandchildLi3.children.namedItem('select');
+		var grandchildLi3CompleteButton = grandchildLi3.children.namedItem('complete');
+		var grandchildLi3DeleteButton = grandchildLi3.children.namedItem('delete');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		var todoLi2Entry = todoLi2.querySelector('p');
 		var todoLi3Entry = todoLi3.querySelector('p');
@@ -4794,18 +4797,18 @@ tests({
 		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		var childLi1 = todoLi1Ul.children[0];
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
 		var childLi1DeleteSelectedChildrenButton = childLi1.children.namedItem('deleteSelectedChildren');
 		var childLi1Ul = childLi1.querySelector('ul');
 		var grandchildLi1 = childLi1Ul.children[0];
-		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('deleted');
+		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('delete');
 
 		eq(todo1.selected, false);
 		eq(todo1.deleted, false);
@@ -5101,7 +5104,7 @@ tests({
 		startApp();
 
 		var todoLi2 = todolist.children[0].children[1];
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
 		eq(todos.length, 3);
 		eq(todolist.children[0].children.length, 3);
 
@@ -5125,7 +5128,7 @@ tests({
 		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 
 		eq(showCompletedButton.textContent, '√ Completed');
 
@@ -5163,7 +5166,7 @@ tests({
 		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 
 		eq(showCompletedButton.textContent, '√ Completed');
 		eq(showActiveButton.textContent, '√ Active');
@@ -5198,7 +5201,7 @@ tests({
 		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 
 		eq(showDeletedButton.textContent, 'Deleted');
 
@@ -5220,7 +5223,7 @@ tests({
 		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 
 		eq(showDeletedButton.textContent, 'Deleted');
 
@@ -5246,7 +5249,7 @@ tests({
 		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 
 		eq(showDeletedButton.textContent, 'Deleted');
 		eq(showActiveButton.textContent, '√ Active');
@@ -5396,10 +5399,10 @@ tests({
 		startApp();
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
-		var todoLi2CompleteButton = todoLi2.children.namedItem('completed');
-		var todoLi2DeleteButton = todoLi2.children.namedItem('deleted');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		var todoLi2CompleteButton = todoLi2.children.namedItem('complete');
+		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
 
 		// Case 1: toggling showActive
 
@@ -5601,23 +5604,23 @@ tests({
 		child1.addChild(grandchild2);
 		startApp();
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		var childLi1 = todoLi1Ul.children[0];
 		var childLi2 = todoLi1Ul.children[1];
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
-		var childLi2CompleteButton = childLi2.children.namedItem('completed');
-		var childLi2DeleteButton = childLi2.children.namedItem('deleted');
+		var childLi2CompleteButton = childLi2.children.namedItem('complete');
+		var childLi2DeleteButton = childLi2.children.namedItem('delete');
 		var childLi1Ul = childLi1.querySelector('ul');
 		var grandchildLi1 = childLi1Ul.children[0];
 		var grandchildLi2 = childLi1Ul.children[1];
-		var grandchildLi1CompleteButton = grandchildLi1.children.namedItem('completed');
-		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('deleted');
-		var grandchildLi2CompleteButton = grandchildLi2.children.namedItem('completed');
-		var grandchildLi2DeleteButton = grandchildLi2.children.namedItem('deleted');
+		var grandchildLi1CompleteButton = grandchildLi1.children.namedItem('complete');
+		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('delete');
+		var grandchildLi2CompleteButton = grandchildLi2.children.namedItem('complete');
+		var grandchildLi2DeleteButton = grandchildLi2.children.namedItem('delete');
 
 
 		// Case 1: toggling showActive
@@ -5984,23 +5987,23 @@ tests({
 		child1.addChild(grandchild2);
 		startApp();
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		var childLi1 = todoLi1Ul.children[0];
 		var childLi2 = todoLi1Ul.children[1];
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
-		var childLi2CompleteButton = childLi2.children.namedItem('completed');
-		var childLi2DeleteButton = childLi2.children.namedItem('deleted');
+		var childLi2CompleteButton = childLi2.children.namedItem('complete');
+		var childLi2DeleteButton = childLi2.children.namedItem('delete');
 		var childLi1Ul = childLi1.querySelector('ul');
 		var grandchildLi1 = childLi1Ul.children[0];
 		var grandchildLi2 = childLi1Ul.children[1];
-		var grandchildLi1CompleteButton = grandchildLi1.children.namedItem('completed');
-		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('deleted');
-		var grandchildLi2CompleteButton = grandchildLi2.children.namedItem('completed');
-		var grandchildLi2DeleteButton = grandchildLi2.children.namedItem('deleted');
+		var grandchildLi1CompleteButton = grandchildLi1.children.namedItem('complete');
+		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('delete');
+		var grandchildLi2CompleteButton = grandchildLi2.children.namedItem('complete');
+		var grandchildLi2DeleteButton = grandchildLi2.children.namedItem('delete');
 
 
 		// Case 1: toggling showActive
@@ -6369,9 +6372,9 @@ tests({
 
 
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
@@ -6381,24 +6384,24 @@ tests({
 		var todoLi1Ul = todoLi1.querySelector('ul');
 
 		var childLi1 = todoLi1Ul.children[0];
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1AddSiblingButton = childLi1.children.namedItem('addSibling');
 		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
 
 		var childLi2 = todoLi1Ul.children[1];
-		var childLi2SelectButton = childLi2.children.namedItem('selected');
-		var childLi2CompleteButton = childLi2.children.namedItem('completed');
-		var childLi2DeleteButton = childLi2.children.namedItem('deleted');
+		var childLi2SelectButton = childLi2.children.namedItem('select');
+		var childLi2CompleteButton = childLi2.children.namedItem('complete');
+		var childLi2DeleteButton = childLi2.children.namedItem('delete');
 		var childLi2AddSiblingButton = childLi2.children.namedItem('addSibling');
 		var childLi2AddChildButton = childLi2.children.namedItem('addChild');
 
 		var todoLi2 = todolist.children[0].children[1];
-		var todoLi2SelectButton = todoLi2.children.namedItem('selected');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
 		var todoLi2SelectChildrenButton = todoLi2.children.namedItem('selectChildren');
-		var todoLi2CompleteButton = todoLi2.children.namedItem('completed');
-		var todoLi2DeleteButton = todoLi2.children.namedItem('deleted');
+		var todoLi2CompleteButton = todoLi2.children.namedItem('complete');
+		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
 		var todoLi2AddSiblingButton = todoLi2.children.namedItem('addSibling');
 		var todoLi2AddChildButton = todoLi2.children.namedItem('addChild');
 
@@ -7016,9 +7019,9 @@ tests({
 
 
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
@@ -7028,9 +7031,9 @@ tests({
 		var todoLi1Ul = todoLi1.querySelector('ul');
 
 		var childLi1 = todoLi1Ul.children[0];
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1AddSiblingButton = childLi1.children.namedItem('addSibling');
 		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
 		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
@@ -7040,23 +7043,23 @@ tests({
 		var childLi1Ul = childLi1.querySelector('ul');
 
 		var grandchildLi1 = childLi1Ul.children[0];
-		var grandchildLi1SelectButton = grandchildLi1.children.namedItem('selected');
-		var grandchildLi1CompleteButton = grandchildLi1.children.namedItem('completed');
-		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('deleted');
+		var grandchildLi1SelectButton = grandchildLi1.children.namedItem('select');
+		var grandchildLi1CompleteButton = grandchildLi1.children.namedItem('complete');
+		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('delete');
 		var grandchildLi1AddSiblingButton = grandchildLi1.children.namedItem('addSibling');
 		var grandchildLi1AddChildButton = grandchildLi1.children.namedItem('addChild');
 
 		var grandchildLi2 = childLi1Ul.children[1];
-		var grandchildLi2SelectButton = grandchildLi2.children.namedItem('selected');
-		var grandchildLi2CompleteButton = grandchildLi2.children.namedItem('completed');
-		var grandchildLi2DeleteButton = grandchildLi2.children.namedItem('deleted');
+		var grandchildLi2SelectButton = grandchildLi2.children.namedItem('select');
+		var grandchildLi2CompleteButton = grandchildLi2.children.namedItem('complete');
+		var grandchildLi2DeleteButton = grandchildLi2.children.namedItem('delete');
 		var grandchildLi2AddSiblingButton = grandchildLi2.children.namedItem('addSibling');
 		var grandchildLi2AddChildButton = grandchildLi2.children.namedItem('addChild');
 
 		var childLi2 = todoLi1Ul.children[1];
-		var childLi2SelectButton = childLi2.children.namedItem('selected');
-		var childLi2CompleteButton = childLi2.children.namedItem('completed');
-		var childLi2DeleteButton = childLi2.children.namedItem('deleted');
+		var childLi2SelectButton = childLi2.children.namedItem('select');
+		var childLi2CompleteButton = childLi2.children.namedItem('complete');
+		var childLi2DeleteButton = childLi2.children.namedItem('delete');
 		var childLi2AddSiblingButton = childLi2.children.namedItem('addSibling');
 		var childLi2AddChildButton = childLi2.children.namedItem('addChild');
 
@@ -7835,7 +7838,7 @@ tests({
 		var todoLi1Ul = todoLi1.querySelector('ul');
 
 		var childLi1 = todoLi1Ul.children[0];
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
 		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
 		var childLi1Ul = childLi1.querySelector('ul');
 
@@ -7871,9 +7874,9 @@ tests({
 		renderTodolist();
 
 		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('selected');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('completed');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('deleted');
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
@@ -7883,9 +7886,9 @@ tests({
 		var todoLi1Ul = todoLi1.querySelector('ul');
 
 		var childLi1 = todoLi1Ul.children[0];
-		var childLi1SelectButton = childLi1.children.namedItem('selected');
-		var childLi1CompleteButton = childLi1.children.namedItem('completed');
-		var childLi1DeleteButton = childLi1.children.namedItem('deleted');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1AddSiblingButton = childLi1.children.namedItem('addSibling');
 		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
 		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
@@ -7895,16 +7898,16 @@ tests({
 		var childLi1Ul = childLi1.querySelector('ul');
 
 		var grandchildLi1 = childLi1Ul.children[0];
-		var grandchildLi1SelectButton = grandchildLi1.children.namedItem('selected');
-		var grandchildLi1CompleteButton = grandchildLi1.children.namedItem('completed');
-		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('deleted');
+		var grandchildLi1SelectButton = grandchildLi1.children.namedItem('select');
+		var grandchildLi1CompleteButton = grandchildLi1.children.namedItem('complete');
+		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('delete');
 		var grandchildLi1AddSiblingButton = grandchildLi1.children.namedItem('addSibling');
 		var grandchildLi1AddChildButton = grandchildLi1.children.namedItem('addChild');
 		
 		var childLi2 = todoLi1Ul.children[1];
-		var childLi2SelectButton = childLi2.children.namedItem('selected');
-		var childLi2CompleteButton = childLi2.children.namedItem('completed');
-		var childLi2DeleteButton = childLi2.children.namedItem('deleted');
+		var childLi2SelectButton = childLi2.children.namedItem('select');
+		var childLi2CompleteButton = childLi2.children.namedItem('complete');
+		var childLi2DeleteButton = childLi2.children.namedItem('delete');
 		var childLi2AddSiblingButton = childLi2.children.namedItem('addSibling');
 		var childLi2AddChildButton = childLi2.children.namedItem('addChild');
 
@@ -8432,8 +8435,8 @@ tests({
 
 		eq(todo1.selected, false);
 		eq(todo2.selected, false)
-		eq(todoLi1.children.namedItem('selected').textContent, 'Select');
-		eq(todoLi2.children.namedItem('selected').textContent, 'Select');
+		eq(todoLi1.children.namedItem('select').textContent, 'Select');
+		eq(todoLi2.children.namedItem('select').textContent, 'Select');
 		eq(selectAllButton.textContent, 'Select all');
 	},
 	"If todos array is empty at startup, the app should create a new empty todo.": function() {
