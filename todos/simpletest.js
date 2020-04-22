@@ -95,6 +95,12 @@ var TinyTest = {
         }
     },
 
+	assertStrictDoesNotEqual: function(expected, actual) {
+		if (expected === actual) {
+            throw new Error('assertStrictDoesNotEqual() "' + expected + '" === "' + actual + '"');
+		}
+	},
+
 };
 
 var fail               = TinyTest.fail.bind(TinyTest),
@@ -105,6 +111,7 @@ var fail               = TinyTest.fail.bind(TinyTest),
     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
     eq                 = TinyTest.assertStrictEquals.bind(TinyTest), // alias for assertEquals in original, changed here to Strict
     assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+	neq				   = TinyTest.assertStrictDoesNotEqual.bind(TinyTest),
 //	eqstrict		   = TinyTest.assertStrictEquals.bind(TinyTest),  // added alias
     tests              = TinyTest.run.bind(TinyTest);
 
