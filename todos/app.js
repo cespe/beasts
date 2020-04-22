@@ -1920,35 +1920,37 @@ function todoClickHandler(event) {
 			renderTodolist();
 		}
 		if (event.target.name === "deleted") {
-			var todoLiDeleteButton = todoLi.children[deleteIndex];
-			todoLiDeleteButton.classList.toggle('deleted');
+//			var todoLiDeleteButton = todoLi.children[deleteIndex];
+//			todoLiDeleteButton.classList.toggle('deleted');
 			todo.deleted = !todo.deleted;
-			if (todo.deleted) {
-				todoLiDeleteButton.textContent = 'Undelete';
-				todoLi.children[entryIndex].classList.add('faded-deleted');
-				if (showDeletedButton.textContent === 'Deleted') {
-					todoLi.classList.add('deleted-removed');
-					// if no todoLis are displayed, set selectAllButton inactive
-					if (selectAllButton.textContent === 'Select all'); {
-						if (!todoLiDisplayed(todoArray)) {
-							selectAllButton.classList.add('inactive');
-						}
-						if (todoArray !== todos) {		// only need to worry about children
-							toggleDisplayDependentTodoLiButtons(todo);
-						}
-					}
-				}
-			} else {
-				todoLiDeleteButton.textContent = 'Delete';
-				todoLi.children[entryIndex].classList.remove('faded-deleted');
-				if (showActiveButton.textContent === 'Active') {
-					todoLi.classList.add('active-removed');
-				}
-				todoLi.classList.remove('deleted-removed');
-			}
+			renderTodolist();
+//			if (todo.deleted) {
+//				todoLiDeleteButton.textContent = 'Undelete';
+//				todoLi.children[entryIndex].classList.add('faded-deleted');
+//				if (showDeletedButton.textContent === 'Deleted') {
+//					todoLi.classList.add('deleted-removed');
+//					// if no todoLis are displayed, set selectAllButton inactive
+//					if (selectAllButton.textContent === 'Select all'); {
+//						if (!todoLiDisplayed(todoArray)) {
+//							selectAllButton.classList.add('inactive');
+//						}
+//						if (todoArray !== todos) {		// only need to worry about children
+//							toggleDisplayDependentTodoLiButtons(todo);
+//						}
+//					}
+//				}
+//			} else {
+//				todoLiDeleteButton.textContent = 'Delete';
+//				todoLi.children[entryIndex].classList.remove('faded-deleted');
+//				if (showActiveButton.textContent === 'Active') {
+//					todoLi.classList.add('active-removed');
+//				}
+//				todoLi.classList.remove('deleted-removed');
+//			}
 		}
 		if (event.target.name === "addSibling") {
 //			insertNewTodoLi(todoArray, todoLi.id)
+//			TODO consolidate into a new function addTodo(todoArray, todo)
 			var newTodo = new Todo();
 			insertTodo(todoArray, newTodo, todo);		// todoArray and todo are set above by clickHandler
 			renderTodolist();
@@ -1957,7 +1959,7 @@ function todoClickHandler(event) {
 		}
 		if (event.target.name === "addChild") {
 //			appendNewChildTodoLi(todoLi)
-			todo.collapsed = false;
+			todo.markCollapsed(false);
 			var newTodo= new Todo();
 			insertTodo(todo.children, newTodo);
 			renderTodolist();
