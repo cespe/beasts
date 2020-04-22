@@ -728,7 +728,9 @@ tests({
 		eq(todosUl.childElementCount, 1);
 		eq(todoLi1.querySelector('p').textContent, 'Item 1');
 		
-		insertNewTodoLi(todos, todoLi1.id);				// insert/append a new todo after the existing one
+		insertNewTodoLi(todos, todo1);				// insert/append a new todo after the existing one
+
+		todosUl = todolist.children[0];
 
 		eq(todos.length, 2);
 		eq(todos[1].entry, '');
@@ -738,7 +740,9 @@ tests({
 		var todo2 = todos[1];
 		eq(todosUl.children[1].id, todo2.id);
 
-		insertNewTodoLi(todos, todoLi1.id);				// insert a third todo between the two existing todos
+		insertNewTodoLi(todos, todo1);				// insert a third todo between the two existing todos
+
+		todosUl = todolist.children[0];
 
 		eq(todos.length, 3)
 		eq(todos[1].entry, '');
@@ -761,31 +765,35 @@ tests({
 		eq(todoLi1.querySelector('ul'), null);
 		eq(todoLi1.querySelector('p').textContent, 'Item 1');
 
-		appendNewChildTodoLi(todoLi1);			// case of first child added to a new UL
+		appendNewChildTodoLi(todo1);				// case of first child added to a new UL
 
-		eq(todoLi1.querySelector('ul'), );
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
 		var todoLi1Ul = todoLi1.querySelector('ul');
+
 		eq(todoLi1Ul.childElementCount, 1);
 		eq(todoLi1Ul.nodeName, "UL");
 
-		var child = todo1.children[0];
-		var childLi = todoLi1Ul.children[0];
-		childLi.querySelector('p').textContent = 'Item 1 child 1';
-		eq(child.id, childLi.id);
-		eq(childLi.nodeName, "LI");
-
-		appendNewChildTodoLi(todoLi1);			// case of second child added to existing UL
-
-		eq(todoLi1.childElementCount, 12);
-		
 		var child1 = todo1.children[0];
 		var child1Li = todoLi1Ul.children[0];
+
+		eq(todoLi1Ul.children[0], child1Li);	
 		eq(child1.id, child1Li.id);
 		eq(child1Li.nodeName, "LI");
-		
+
+		appendNewChildTodoLi(todo1);				// case of second child added to existing UL
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+
+		eq(todoLi1Ul.childElementCount, 2);
+		eq(todoLi1Ul.nodeName, "UL");
+
 		var child2 = todo1.children[1];
 		var child2Li = todoLi1Ul.children[1];
-		child2Li.querySelector('p').textContent = 'Item 1 child 2';
+		
+		eq(todoLi1Ul.children[1], child2Li);	
 		eq(child2.id, child2Li.id);
 		eq(child2Li.nodeName, "LI");
 	},

@@ -595,58 +595,19 @@ function createTodosUl(todosArray, filter) {
 	return todosUl;
 }
 
-// Insert a new empty todoLi into the given array after the given todoLi.id, ready for text entry.
-// If no todoLi.id is given, defaults to push().
-// 'array' argument will be either todos or a todo.children array, so no recursive search is needed.
-function insertNewTodoLi(array, id) {
-	var targetLi = document.getElementById(id);
-	var insertAfter = array.find(function(el) {
-		if (el.id === id) {
-			return el
-		}
-	});
-	var newTodo = new Todo();
-	insertTodo(array, newTodo, insertAfter);
-	var newLi = createTodoLi(newTodo);
-	if (targetLi !== null) {
-		targetLi.insertAdjacentElement('afterend', newLi);
-	} else {
-		if (document.getElementById('todolist').children.length === 0) {
-			var todosUl = document.createElement('ul');
-			document.getElementById('todolist').appendChild(todosUl);
-		}
-		document.getElementById('todolist').children[0].appendChild(newLi);
-	}
-	newLi.querySelector('p').focus();
+// Insert a new empty todoLi into the given array after the given todo, ready for text entry.
+function insertNewTodoLi(todoArray, todo) {
+		var newTodo = new Todo();
+		insertTodo(todoArray, newTodo, todo);
+		renderTodolist();
+		newTodoLi = document.getElementById(newTodo.id);
+		newTodoLi.querySelector('p').focus();
 }
 
 // Append a new todoLi in a child todosUl under a given todoLi, ready for text entry.
-// The function creates a new UL under the parent todo if necessary. Handling this case
-// explicitly avoids having to deal with the error of possibly inserting a second UL under the parent.
-
-function appendNewChildTodoLi(todoLi) {
-
-	var newTodo = new Todo();
-	var parentTodo = findTodo(todos, todoLi.id);
-	insertTodo(parentTodo.children, newTodo);
-	
-	var newLi = createTodoLi(newTodo);
-
-	// Case one: there is already a <ul> to hold nested children
-	if (todoLi.querySelector('ul') && todoLi.querySelector('ul').nodeName === "UL") {
-		existingUl = todoLi.querySelector('ul');
-		existingUl.appendChild(newLi);	
-
-	} else {
-
-	// Case two: there are no children yet, create the <ul> to hold them
-	
-		var newUl = document.createElement('ul');
-		newUl.appendChild(newLi);
-		todoLi.appendChild(newUl);
-	}
-
-	newLi.querySelector('p').focus();	// focus the entry <p>
+function appendNewChildTodoLi(todo) {
+	todo.markCollapsed(false);
+	insertNewTodoLi(todo.children, todo);
 }
 
 // TODO remove orphaned function
@@ -1949,13 +1910,13 @@ function todoClickHandler(event) {
 //			}
 		}
 		if (event.target.name === "addSibling") {
-//			insertNewTodoLi(todoArray, todoLi.id)
+			insertNewTodoLi(todoArray, todo)		// todoArray and todo are set above by clickHandler
 //			TODO consolidate into a new function addTodo(todoArray, todo)
-			var newTodo = new Todo();
-			insertTodo(todoArray, newTodo, todo);		// todoArray and todo are set above by clickHandler
-			renderTodolist();
-			newTodoLi = document.getElementById(newTodo.id);
-			newTodoLi.querySelector('p').focus();
+//			var newTodo = new Todo();
+//			insertTodo(todoArray, newTodo, todo);
+//			renderTodolist();
+//			newTodoLi = document.getElementById(newTodo.id);
+//			newTodoLi.querySelector('p').focus();
 		}
 		if (event.target.name === "addChild") {
 //			appendNewChildTodoLi(todoLi)
