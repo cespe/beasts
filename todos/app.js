@@ -521,18 +521,18 @@ function createTodoLi(todo) {
 	}
 	todoLi.appendChild(selectChildrenButton);
 
-	var showChildrenButton = document.createElement('button');
-	showChildrenButton.name = 'showChildren';
-	showChildrenButton.type = 'button';
-	if (todo.collapsed) {
-		showChildrenButton.textContent = 'Show children';
-	} else {
-		showChildrenButton.textContent = 'Hide children';
+	if (todo.children.length > 0) {
+//		showChildrenButton.classList.add('inactive');
+		var showChildrenButton = document.createElement('button');
+		showChildrenButton.name = 'showChildren';
+		showChildrenButton.type = 'button';
+		if (todo.collapsed) {
+			showChildrenButton.textContent = 'Show children';
+		} else {
+			showChildrenButton.textContent = 'Hide children';
+		}
+		todoLi.appendChild(showChildrenButton);
 	}
-	if (todo.children.length === 0) {
-		showChildrenButton.classList.add('inactive');
-	}
-	todoLi.appendChild(showChildrenButton);
 
 	var completeSelectedChildrenButton = document.createElement('button');
 	completeSelectedChildrenButton.name = 'completeSelectedChildren';
@@ -1976,21 +1976,24 @@ function todoClickHandler(event) {
 			todoLiUndoEditButton.classList.add('inactive');
 		}
 		if (event.target.name === "showChildren") {
-			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
-			var todoLiUl = todoLi.children[todoLiUlIndex];
+			todo.collapsed = !todo.collapsed;
+			renderTodolist();
+
+//			var todoLiShowChildrenButton = todoLi.children[showChildrenIndex];
+//			var todoLiUl = todoLi.children[todoLiUlIndex];
 			
 			// don't need to test for nesting because button is not available otherwise
-			if (todo.collapsed) {
-				todo.markCollapsed(false);
-				todoLiUl.classList.remove('collapsed');
-				todoLiShowChildrenButton.textContent = 'Hide children';
-				todoLi.children[selectChildrenIndex].classList.remove('inactive');
-			} else {
-				todo.markCollapsed(true);
-				todoLiUl.classList.add('collapsed');
-				todoLiShowChildrenButton.textContent = 'Show children';
-				todoLi.children[selectChildrenIndex].classList.add('inactive');
-			}
+//			if (todo.collapsed) {
+//				todo.markCollapsed(false);
+//				todoLiUl.classList.remove('collapsed');
+//				todoLiShowChildrenButton.textContent = 'Hide children';
+//				todoLi.children[selectChildrenIndex].classList.remove('inactive');
+//			} else {
+//				todo.markCollapsed(true);
+//				todoLiUl.classList.add('collapsed');
+//				todoLiShowChildrenButton.textContent = 'Show children';
+//				todoLi.children[selectChildrenIndex].classList.add('inactive');
+//			}
 		}
 		if (event.target.name === "selectChildren") {
 

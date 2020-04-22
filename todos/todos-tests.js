@@ -1531,20 +1531,22 @@ tests({
 
 		// TODO should entry still have focus?
 	},
-	"Each todoLi should have a showChildren button to expand/collapse nested todos.": function() {
+	"Each todoLi with children should have a showChildren button to expand/collapse nested todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
+		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 
-		eq(todoLi1ShowChildren.nodeName, 'BUTTON');
-		eq(todoLi1ShowChildren.name, 'showChildren');
+		eq(todoLi1ShowChildrenButton.nodeName, 'BUTTON');
+		eq(todoLi1ShowChildrenButton.name, 'showChildren');
 	},
-	"If a todo has no children, todoLi should be created with showChildren button class 'inactive'.": function() {
+	"If a todo has no children, todoLi should be created without a showChildren button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1552,9 +1554,8 @@ tests({
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1ShowChildren = todoLi1.children[showChildrenIndex];
 
-		eq(todoLi1ShowChildren.classList.contains('inactive'), true);
+		eq(todoLi1.children.namedItem('showChildren'), null);
 	},
 	"If a todo has children and todo.collapsed is true, todoLi should be created with showChildren button text 'Show children'.": function() {
 		todos = [];
@@ -1563,19 +1564,17 @@ tests({
 		child1 = new Todo('Item 1 child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		
 
 		renderTodolist();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
-		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 
-		eq(todoLi1Ul, undefined);	// child todoLis not created if collapsed
+		eq(todo1.collapsed, true);
 		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
 },
-	"If a todo has children and todo.collapsed is false, todoLi should be created with todoLiUl class '' and showChildren button text 'Hide children'.": function() {
+	"If a todo has children and todo.collapsed is false, todoLi should be created with showChildren button text 'Hide children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1586,51 +1585,55 @@ tests({
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
-		todoLi1Ul = todoLi1.children[todoLiUlIndex];
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 
-		eq(todoLi1Ul.classList.contains('collapsed'), false);
+		eq(todo1.collapsed, false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 },
 	"If showChildren button text is 'Hide children', css should preserve spacing above the following entry.": function() {
 		fail();
 },
-	"Clicking a showChildren button should toggle button text and todoLiUl class.": function() {
+	"Clicking a showChildren button should toggle button text and re-render todoLis.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
 		insertTodo(todos, todo1);
-		
 
 		renderTodolist();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
-		todoLi1ChildButton = todoLi1.children[addChildIndex];
-		todoLi1ShowChildrenButton = todoLi1.children[showChildrenIndex];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 
 		eq(todo1.collapsed, false);
-		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), true);
+		eq(child1.id, childLi1.id);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+
+		todoLi1ShowChildrenButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 		
-		todoLi1ChildButton.click();
-
-		todoLi1Ul = todoLi1.children[todoLiUlIndex];	// <ul> created by Add child
-		eq(todo1.collapsed, false);
-		eq(todoLi1ShowChildrenButton.classList.contains('inactive'), false);
-		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
-		eq(todoLi1Ul.classList.contains('collapsed'), false);
-
-		todoLi1ShowChildrenButton.click();
-
 		eq(todo1.collapsed, true);
+		eq(todoLi1Ul, null);			// childLi1 not created on re-render
 		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
-		eq(todoLi1Ul.classList.contains('collapsed'), true);
 
 		todoLi1ShowChildrenButton.click();
 
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
+
 		eq(todo1.collapsed, false);
+		eq(child1.id, childLi1.id);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
-		eq(todoLi1Ul.classList.contains('collapsed'), false);
 	},
 	"Each todo should have a 'selectChildren' button to select all of its children.": function() {
 		todos = [];
