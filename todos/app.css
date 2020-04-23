@@ -37,7 +37,7 @@
 .parent-placeholder {
 	/* styles filtered-out parents of todos that are not filtered out */
 	/* the removed parent todoLi shows the faded text of its entry but no buttons */
-	color: rgba(0, 0, 0, 0.1);
+	color: rgba(0, 0, 0, 0.15);
 }
 
 .inactive {
