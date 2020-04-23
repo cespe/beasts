@@ -289,6 +289,17 @@ function anyUnselectedTodos(array) {
 	return false;
 }
 
+// Return true if any todos at root level of array are selected
+function anySelectedRootTodos(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.selected) {
+			return true;
+		}
+	}
+	return false;
+}
+
 // Return true if any todos, including nested todos, are filtered in for display
 function anyFilteredInTodos(array) {
 	for (var i = 0; i < array.length; i++) {
@@ -354,7 +365,7 @@ function purgeSelectedDeletedTodos(array) {
 /************************************* DOM manipulation ********************************/
 
 // Fixed page elements
-var actionsBar = document.getElementById('actions');
+var actionsBar = document.getElementById('actionsbar');
 var selectAllButton = document.getElementsByName('selectAll')[0];
 var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
@@ -387,6 +398,33 @@ var oldUndoEditButton = undefined;	// button to deactivate from last todoLi to b
 // index positions of parent-placeholder todoLi.children[i]
 //var parentPlaceholderEntryIndex = 0;
 //var parentPlaceholderUlIndex = 1;
+
+function renderActionsBar() {
+	var newActionDiv = createActionButtons();
+	actionsBar.innerHTML = '';
+	actionsBar.appendChild(newActionDiv);
+}
+
+function createActionButtons() {
+	var actionsDiv = document.createElement('div');
+	actionsDiv.id = 'actions';
+
+	// All these buttons are created with button.type = 'button' to distinguish from a submit
+	// or reset button, as recommended by MDN.
+	
+	var selectAllButton = document.createElement('button');
+	selectAllButton.name = 'selectAll';
+	selectAllButton.type = 'button';
+	var anySelected = anySelectedRootTodos(todos);		// true if any root-level todos are selected
+	if (anySelected) {
+		selectAllButton.textContent = 'Unselect all';
+	} else {
+		selectAllButton.textContent = 'Select all';
+	}
+	actionsDiv.appendChild(selectAllButton);
+
+	return actionsDiv;
+}
 
 // A set to specify which todos will be displayed
 function generateFilterSet() {
@@ -442,7 +480,7 @@ function createTodoLi(todo) {
 	// All these buttons are created with button.type = 'button' to distinguish from a submit
 	// or reset button, as recommended by MDN.
 
-	var completeButton = document.createElement('button')
+	var completeButton = document.createElement('button');
 	completeButton.name = 'complete';
 	completeButton.type = 'button';
 	if (todo.stage === 'completed') {
