@@ -1797,14 +1797,14 @@ function keyUpHandler(event) {
 			if (event.shiftKey) {
 				// Shift-return appends a new child todo
 				// these lines lifted from addChild event handler, TODO consolidate
-				appendNewChildTodoLi(todoLi)
-				todo.collapsed = false;
-				todoLi.querySelector('ul').classList.remove('collapsed');
-				todoLi.children.namedItem('showChildren').classList.remove('inactive');
-				todoLi.children.namedItem('selectChildren').classList.remove('inactive');
+				appendNewChildTodoLi(todo)
+//				todo.collapsed = false;
+//				todoLi.querySelector('ul').classList.remove('collapsed');
+//				todoLi.children.namedItem('showChildren').classList.remove('inactive');
+//				todoLi.children.namedItem('selectChildren').classList.remove('inactive');
 			} else {
 				// Return inserts a new sibling todo
-				insertNewTodoLi(todoArray, todo.id);
+				insertNewTodoLi(todoArray, todo);
 			}
 		} else if (event.key === "Escape") {
 			// these lines lifted from undoEdit event handler, TODO consolidate
@@ -1969,13 +1969,13 @@ function todoClickHandler(event) {
 //			newTodoLi.querySelector('p').focus();
 		}
 		if (event.target.name === "addChild") {
-//			appendNewChildTodoLi(todoLi)
-			todo.markCollapsed(false);
-			var newTodo= new Todo();
-			insertTodo(todo.children, newTodo);
-			renderTodolist();
-			newTodoLi = document.getElementById(newTodo.id);
-			newTodoLi.querySelector('p').focus();
+			appendNewChildTodoLi(todo)
+//			todo.markCollapsed(false);
+//			var newTodo= new Todo();
+//			insertTodo(todo.children, newTodo);
+//			renderTodolist();
+//			newTodoLi = document.getElementById(newTodo.id);
+//			newTodoLi.querySelector('p').focus();
 //			todoLi.querySelector('ul').classList.remove('collapsed');
 //			todoLi.children.namedItem('showChildren').classList.remove('inactive');
 //			todoLi.children.namedItem('selectChildren').classList.remove('inactive');
