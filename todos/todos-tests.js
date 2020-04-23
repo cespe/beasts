@@ -1453,7 +1453,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		startApp();
+		renderTodolist();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1UndoEditButton = todoLi.children.namedItem('undoEdit');
@@ -1493,7 +1493,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		startApp();
+		renderTodolist();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -1531,7 +1531,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		startApp();
+		renderTodolist();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -3218,19 +3218,6 @@ tests({
 	},
 	"Section: Actions bar -- Selection": function() {
 	},
-//	"The app should have a header section called 'appheader' to hold global action buttons.": function() {
-//		eq(appheader.nodeName, 'HEADER');
-//		eq(appheader.parentElement.nodeName, 'BODY');
-//		eq(appheader.id, 'appheader');
-//	},
-//	"The app should have a way to add currently applicable buttons to the header actions bar.": function() {
-//		renderActionsBar();
-//
-//		var actionsBar = document.getElementById('actions');
-//		
-//		eq(actionsBar.nodeName, 'DIV');
-//		eq(actionsBar.parentElement.nodeName, 'HEADER');
-//	},
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.innerText, 'Select all');
@@ -3256,6 +3243,7 @@ tests({
 		startApp();
 
 		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.disabled, false);
 		eq(completeSelectedButton.textContent, 'Complete selected');
 		eq(completeSelectedButton.classList.contains('inactive'), true);
 		eq(deleteSelectedButton.textContent, 'Delete selected');
@@ -3269,7 +3257,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		startApp();
+		renderTodolist();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
@@ -3322,7 +3310,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		startApp();
+		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -4594,7 +4582,7 @@ tests({
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
-		startApp();
+		renderTodolist();
 
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
@@ -4661,7 +4649,7 @@ tests({
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
-		startApp();
+		renderTodolist();
 
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
@@ -4728,7 +4716,7 @@ tests({
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
-		startApp();
+		renderTodolist();
 
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
@@ -4825,7 +4813,7 @@ tests({
 		grandchild1 = new Todo('Grandchild 1');
 		child1.addChild(grandchild1);
 
-		startApp();
+		renderTodolist();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
@@ -5132,7 +5120,7 @@ tests({
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
 
-		startApp();
+		renderTodolist();
 
 		var todoLi2 = todolist.children[0].children[1];
 		var todoLi2SelectButton = todoLi2.children.namedItem('select');
@@ -5156,7 +5144,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -5194,7 +5182,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -5229,7 +5217,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
@@ -5251,7 +5239,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
@@ -5277,7 +5265,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
@@ -5317,7 +5305,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 
@@ -5341,7 +5329,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -5371,7 +5359,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 
@@ -5391,7 +5379,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		startApp();
+		renderTodolist();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -5427,7 +5415,7 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		startApp();
+		renderTodolist();
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -5633,7 +5621,7 @@ tests({
 		grandchild2 = new Todo('Grandchild 2');
 		child1.addChild(grandchild1);
 		child1.addChild(grandchild2);
-		startApp();
+		renderTodolist();
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -6016,7 +6004,7 @@ tests({
 		grandchild2 = new Todo('Grandchild 2');
 		child1.addChild(grandchild1);
 		child1.addChild(grandchild2);
-		startApp();
+		renderTodolist();
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
@@ -8285,7 +8273,7 @@ tests({
 		child1.addChild(grandchild2);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		startApp();		// sets up Actions bar buttons
+		renderTodolist();		// sets up Actions bar buttons
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
@@ -8369,7 +8357,7 @@ tests({
 		manual();
 		godolist.innerHTML = '';
 		todos = [];
-		startApp();		// Initiate app with a blank focused todo
+		renderTodolist();		// Initiate app with a blank focused todo
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');

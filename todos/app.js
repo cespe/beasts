@@ -2330,27 +2330,24 @@ function setUpEventListeners() {
 }
 
 function startApp() {
-	// set defaults on action bar buttons
-	selectAllButton.textContent = 'Select all';
-	selectAllButton.classList.remove('inactive');
-	completeSelectedButton.textContent = 'Complete selected';
-	completeSelectedButton.classList.add('inactive');
-	deleteSelectedButton.textContent = 'Delete selected';
-	deleteSelectedButton.classList.add('inactive');
-	purgeSelectedDeletedButton.classList.add('inactive');
-	showActiveButton.textContent = '√ Active';
-	showCompletedButton.textContent = '√ Completed';
-	showDeletedButton.textContent = 'Deleted';
-	addTodoButton.classList.remove('inactive');	
-	todolist.innerHTML = '';
+	// Start app with a new empty todo if the todolist is empty
+//	selectAllButton.textContent = 'Select all';
+//	selectAllButton.classList.remove('inactive');
+//	completeSelectedButton.textContent = 'Complete selected';
+//	completeSelectedButton.classList.add('inactive');
+//	deleteSelectedButton.textContent = 'Delete selected';
+//	deleteSelectedButton.classList.add('inactive');
+//	purgeSelectedDeletedButton.classList.add('inactive');
+//	showActiveButton.textContent = '√ Active';
+//	showCompletedButton.textContent = '√ Completed';
+//	showDeletedButton.textContent = 'Deleted';
+//	addTodoButton.classList.remove('inactive');	
+//	todolist.innerHTML = '';
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
-	} else {
-		renderTodolist();
-
-//		todolist.appendChild(createTodosUl(todos));
-	}
+	} 
+	renderTodolist();
 }
 
 setUpEventListeners();
-
+startApp();
