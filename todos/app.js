@@ -367,7 +367,7 @@ function purgeSelectedDeletedTodos(array) {
 // Fixed page elements
 //var appheader = document.getElementById('appheader');
 var actionsBar = document.getElementById('actions');
-var selectAllButton = document.getElementsByName('selectAll')[0];
+var selectAllButton = actionsBar.children.namedItem('selectAll');
 var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
 var showActiveButton = document.getElementsByName('showActive')[0];
@@ -1768,9 +1768,9 @@ function unselectAll() {
 
 function togglePurgeSelectedDeletedTodos() {
 	if (showDeletedButton.textContent === '√ Deleted' && anySelectedDeletedTodos(todos)) {
-		purgeSelectedDeletedButton.classList.remove('inactive');
+		purgeSelectedDeletedButton.disabled = false;
 	} else {
-		purgeSelectedDeletedButton.classList.add('inactive');
+		purgeSelectedDeletedButton.disabled = true;
 	}
 }
 
@@ -2331,17 +2331,17 @@ function setUpEventListeners() {
 
 function startApp() {
 	// Start app with a new empty todo if the todolist is empty
-//	selectAllButton.textContent = 'Select all';
-//	selectAllButton.classList.remove('inactive');
-//	completeSelectedButton.textContent = 'Complete selected';
-//	completeSelectedButton.classList.add('inactive');
-//	deleteSelectedButton.textContent = 'Delete selected';
-//	deleteSelectedButton.classList.add('inactive');
-//	purgeSelectedDeletedButton.classList.add('inactive');
-//	showActiveButton.textContent = '√ Active';
-//	showCompletedButton.textContent = '√ Completed';
-//	showDeletedButton.textContent = 'Deleted';
-//	addTodoButton.classList.remove('inactive');	
+	selectAllButton.textContent = 'Select all';
+	selectAllButton.disabled = false;
+	completeSelectedButton.textContent = 'Complete selected';
+	completeSelectedButton.disabled = true;
+	deleteSelectedButton.textContent = 'Delete selected';
+	deleteSelectedButton.disabled = true;
+	purgeSelectedDeletedButton.disabled = true;
+	showActiveButton.textContent = '√ Active';
+	showCompletedButton.textContent = '√ Completed';
+	showDeletedButton.textContent = 'Deleted';
+	addTodoButton.disabled = false;	
 //	todolist.innerHTML = '';
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
@@ -2350,4 +2350,3 @@ function startApp() {
 }
 
 setUpEventListeners();
-startApp();

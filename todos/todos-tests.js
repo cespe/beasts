@@ -3223,17 +3223,17 @@ tests({
 		eq(selectAllButton.innerText, 'Select all');
 		eq(selectAllButton.parentElement, actionsBar);
 	},
-	"The header actions bar should have a 'Complete selected' button to mark selected todos completed.": function() {
+	"And also a disabled-by-default 'Complete selected' button to mark selected todos completed.": function() {
 		eq(completeSelectedButton.nodeName, 'BUTTON');
 		eq(completeSelectedButton.innerText, 'Complete selected');
 		eq(completeSelectedButton.parentElement, actionsBar);
 	},
-	"The header actions bar should have a 'Delete selected' button to delete selected todos.": function() {
+	"And also a disabled-by-default 'Delete selected' button to delete selected todos.": function() {
 		eq(deleteSelectedButton.nodeName, 'BUTTON');
 		eq(deleteSelectedButton.innerText, 'Delete selected');
 		eq(deleteSelectedButton.parentElement, actionsBar);
 	},
-	"The header actions bar should have a 'Purge selected deleted todos' button to expunge selected deleted todos.": function() {
+	"And also a disabled-by-default 'Purge selected deleted todos' button to expunge selected deleted todos.": function() {
 		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
 		eq(purgeSelectedDeletedButton.innerText, 'Purge selected deleted todos');
 		eq(purgeSelectedDeletedButton.parentElement, actionsBar);
@@ -3245,10 +3245,10 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 		eq(selectAllButton.disabled, false);
 		eq(completeSelectedButton.textContent, 'Complete selected');
-		eq(completeSelectedButton.classList.contains('inactive'), true);
+		eq(completeSelectedButton.disabled, true);
 		eq(deleteSelectedButton.textContent, 'Delete selected');
-		eq(deleteSelectedButton.classList.contains('inactive'), true);
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+		eq(deleteSelectedButton.disabled, true);
+		eq(purgeSelectedDeletedButton.disabled, true);
 	},
 	"Clicking selectAll button should toggle button text, each todoLi selected button text, each todo.selected, and each entry <p> class." : function() {
 		todos = [];
@@ -4773,9 +4773,10 @@ tests({
 	"Section: Actions bar -- other buttons": function() {
 
 	},
-	"The header actions bar should have an addTodo button that adds a todo to the end of the list.": function() {
-		// In case filtering the list results in no displayed todos
+	"The header actions bar should have an 'addTodo' button that adds a todo to the end of the list.": function() {
+		// In case filtering the list results in no displayed todos so that addSibling is unavailable.
 		eq(addTodoButton.nodeName, 'BUTTON');
+		eq(addTodoButton.disabled, false);
 		eq(addTodoButton.innerText, 'Add todo');
 		eq(addTodoButton.parentElement, actionsBar);
 		
@@ -4794,17 +4795,19 @@ tests({
 
 		addTodoButton.click();
 
+		todosUl = todolist.children[0];
 		todoLi2 = todosUl.children[1];
 		eq(todosUl.children.length, 2);
 		eq(todos.length, 2);
 		eq(todoLi2.id, todos[1].id);
 	},
-	"The addTodoButton should be inactive by default on startup.": function() {
-		startApp();
-
-		eq(addTodoButton.classList.contains('inactive'), false);
-	},
-	"purgeSelectedDeletedButton should be active only when showDeletedButton text is '√ Deleted' and at least one todo is selected.": function() {
+	"And also a disabled-by-default 'purgeSelectedDeleted' button to expunge selected deleted todos permanently.": function() {
+		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
+		eq(purgeSelectedDeletedButton.disabled, true);
+		eq(purgeSelectedDeletedButton.textContent, 'Purge selected deleted todos');
+		eq(purgeSelectedDeletedButton.parentElement, actionsBar); 
+	}, 
+	"purgeSelectedDeletedButton should be disabled unless showDeletedButton text is '√ Deleted' and at least one todo is selected.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -4836,7 +4839,7 @@ tests({
 		eq(grandchild1.selected, false);
 		eq(grandchild1.deleted, false);
 		eq(showDeletedButton.textContent, 'Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+		eq(purgeSelectedDeletedButton.disabled, true);
 
 		selectAllButton.click();
 
