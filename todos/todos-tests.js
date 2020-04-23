@@ -3218,14 +3218,29 @@ tests({
 	},
 	"Section: Actions bar -- Selection": function() {
 	},
-	"The app should have a header section with an actions bar to hold action buttons.": function() {
-		eq(actionsBar.nodeName, 'DIV');
-		eq(actionsBar.parentElement.nodeName, 'HEADER');
+	"The app should have a header section called 'actionsbar' to hold global action buttons.": function() {
+		eq(actionsBar.nodeName, 'HEADER');
+		eq(actionsBar.parentElement.nodeName, 'BODY');
+		eq(actionsBar.id, 'actionsbar');
+	},
+	"The app should have a way to add currently applicable buttons to the header actions bar.": function() {
+		renderActionsBar();
+
+		var actionsDiv = document.getElementById('actions');
+		
+		eq(actionsDiv.nodeName, 'DIV');
+		eq(actionsDiv.parentElement.nodeName, 'HEADER');
+
 	},
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
+		renderActionsBar();
+
+		var actionsDiv = document.getElementById('actions');
+		var selectAllButton = actionsDiv.children.namedItem('selectAll');
+
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.innerText, 'Select all');
-		eq(selectAllButton.parentElement, actionsBar);
+		eq(selectAllButton.parentElement, actionsDiv);
 	},
 	"The header actions bar should have a 'Complete selected' button to mark selected todos completed.": function() {
 		eq(completeSelectedButton.nodeName, 'BUTTON');
