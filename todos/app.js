@@ -520,15 +520,17 @@ function createTodoLi(todo) {
 	childButton.textContent = 'Add child';
 	todoLi.appendChild(childButton);
 
-	var selectedButton = document.createElement('button')
-	selectedButton.name = 'select';
-	selectedButton.type = 'button';	
-	selectedButton.textContent = 'Select';
+	var selectButton = document.createElement('button')
+	selectButton.name = 'select';
+	selectButton.type = 'button';	
 	if (todo.selected) {
-		todo.selected = false;		// clean slate when todoLi's are created
+		selectButton.textContent = 'Unselect';
+		selectButton.disabled = false;
+	} else {
+		selectButton.textContent = 'Select';
+		selectButton.disabled = true;
 	}
-	selectedButton.classList.add('inactive');
-	todoLi.appendChild(selectedButton);
+	todoLi.appendChild(selectButton);
 
 	var undoEditButton = document.createElement('button')
 	undoEditButton.name = 'undoEdit';
@@ -540,6 +542,9 @@ function createTodoLi(todo) {
 	var entry = document.createElement('p');
 	entry.contentEditable = true;
 	entry.textContent = todo.entry;
+	if (todo.selected) {
+		entry.classList.add('highlighted');
+	}
 	if (todo.stage === 'completed') {
 		entry.classList.add('struck-completed');
 	}
@@ -1861,10 +1866,10 @@ function todoClickHandler(event) {
 		var todoArray = findArray(todos, todoLi.id);	// todos or a todo.children array
 
 		if (event.target.name === "select") {
-			var todoLiSelectButton = todoLi.children.namedItem('select');
-			var parentTodo = findParent(todo);
+//			var todoLiSelectButton = todoLi.children.namedItem('select');
+//			var parentTodo = findParent(todo);
 			todo.selected = !todo.selected;
-			if (todo.selected) {	// Select button was clicked, todo now selected
+/*			if (todo.selected) {	// Select button was clicked, todo now selected
 				todoLiSelectButton.textContent = 'Unselect';
 				todoLiEntry.classList.add('highlighted');
 				// if all children in branch are now selected, set parent selectChildren button to Unselect children
@@ -1889,6 +1894,8 @@ function todoClickHandler(event) {
 				}
 			}
 			togglePurgeSelectedDeletedTodos();
+*/
+			renderTodolist();
 		}
 		if (event.target.name === "complete") {
 //			var todoLiCompleteButton = todoLi.children.namedItem('complete');
@@ -2343,6 +2350,9 @@ function startApp() {
 	showDeletedButton.textContent = 'Deleted';
 	addTodoButton.disabled = false;	
 //	todolist.innerHTML = '';
+//	if (todo.selected) {
+//		todo.selected = false;		// clean slate when todoLi's are created
+//	}
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
 	} 

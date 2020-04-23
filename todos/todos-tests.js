@@ -728,7 +728,7 @@ tests({
 		eq(todosUl.childElementCount, 1);
 		eq(todoLi1.querySelector('p').textContent, 'Item 1');
 		
-		insertNewTodoLi(todos, todo1);				// insert/append a new todo after the existing one
+		insertNewTodoLi(todos, todo1);				// insert a new todo after the existing one
 
 		todosUl = todolist.children[0];
 
@@ -893,9 +893,36 @@ tests({
 		eq(todoLi.children.namedItem('select').nodeName, 'BUTTON');
 		eq(todoLi.children.namedItem('select').name, 'select');
 	},
-	"When a todoLi is created, todo.selected should be set to false, 'select' button text should be 'Select' and class 'inactive', and entry <p> class should remove 'highlighted'.": function() {
-		// Start with a clean slate
-		// Select button is inactive/hidden until Select all is clicked
+	"If a todo is not selected, its todoLi 'select' button should be 'Select' and it should be disabled.": function() {
+		todos = []
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+
+		eq(todo1.selected, false);
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.disabled, true);
+	},
+	"If a todo is selected, its todoLi 'select' button should be 'Unselect' and it should not be disabled.": function() {
+		todos = []
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+
+		eq(todo1.selected, true);
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi1SelectButton.disabled, false);
+	},
+	"If a todo is selected, its todoLi entry <p> class should contain 'highlighted'.": function() {
 		todos = []
 		todo1 = new Todo('Item 1');
 		todo1.markSelected(true);
@@ -907,25 +934,19 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
-		var todoLi1SelectButton = todoLi1.children.namedItem('select');
-		var todoLi2SelectButton = todoLi2.children.namedItem('select');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		var todoLi2Entry = todoLi2.querySelector('p');
 
-		eq(todo1.selected, false);
+		eq(todo1.selected, true);
+		eq(todoLi1Entry.classList.contains('highlighted'), true);
 		eq(todo2.selected, false);
-		eq(todoLi1SelectButton.textContent, 'Select');
-		eq(todoLi2SelectButton.textContent, 'Select');
-		eq(todoLi1SelectButton.classList.contains('inactive'), true);
-		eq(todoLi2SelectButton.classList.contains('inactive'), true);
-		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 	},
-	"Clicking a 'select' button should toggle button text, toggle todo.selected, and entry <p> class 'highlighted.": function() {
+	"Clicking a 'select' button should toggle button text and todo.selected and re-render todoLi": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);		// must start with todo selected, otherwise 'Select' button will be disabled for test
 		insertTodo(todos, todo1);
-		
 
 		renderTodolist();
 
@@ -933,55 +954,92 @@ tests({
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
 		var todoLi1Entry = todoLi1.querySelector('p');
 
-		eq(todoLi1SelectButton.textContent, 'Select');
-		eq(todoLi1Entry.classList.contains('highlighted'), false);
-		eq(todo1.selected, false);
-
-		todoLi1SelectButton.click();
-
 		eq(todoLi1SelectButton.textContent, 'Unselect');
 		eq(todoLi1Entry.classList.contains('highlighted'), true);
 		eq(todo1.selected, true);
 
 		todoLi1SelectButton.click();
 
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+		todoLi1Entry = todoLi1.querySelector('p');
+		
 		eq(todoLi1SelectButton.textContent, 'Select');
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todo1.selected, false);
+
+/*		todoLi1SelectButton.click();		// button is disabled, can't click it so can't test toggling again
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+		todoLi1Entry = todoLi1.querySelector('p');
+
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi1Entry.classList.contains('highlighted'), false);
+		eq(todo1.selected, false);
+*/
 	},
 	"Selecting a todo should not select its children.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
 		insertTodo(todos, todo1);
 		var child1 = new Todo('child 1');
 		var child2 = new Todo('child 2');
 		todo1.addChild(child1);
 		todo1.addChild(child2);
-		
 
 		renderTodolist();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi2 = todoLi1Ul.children[1];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
-		var todoLi1Child1SelectButton = todoLi1.querySelector('ul').children[0].children.namedItem('select');
-		var todoLi1Child2SelectButton = todoLi1.querySelector('ul').children[1].children.namedItem('select');
-
-		eq(todo1.selected, false);
-		eq(todoLi1SelectButton.textContent, 'Select');
-		eq(child1.selected, false);
-		eq(todoLi1Child1SelectButton.textContent, 'Select');
-		eq(child1.selected, false);
-		eq(todoLi1Child2SelectButton.textContent, 'Select');
-
-		todoLi1SelectButton.click();
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi2SelectButton = childLi2.children.namedItem('select');
+		var todoLi1Entry = todoLi1.querySelector('p');
+		var childLi1Entry = childLi1.querySelector('p');
+		var childLi2Entry = childLi2.querySelector('p');
 
 		eq(todo1.selected, true);
 		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi1Entry.classList.contains('highlighted'), true);
+		
 		eq(child1.selected, false);
-		eq(todoLi1Child1SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi1Entry.classList.contains('highlighted'), false);
+		
+		eq(child2.selected, false);
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(childLi2Entry.classList.contains('highlighted'), false);
+
+		todoLi1SelectButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi2 = todoLi1Ul.children[1];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi2SelectButton = childLi2.children.namedItem('select');
+		var todoLi1Entry = todoLi1.querySelector('p');
+		var childLi1Entry = childLi1.querySelector('p');
+		var childLi2Entry = childLi2.querySelector('p');
+
+		eq(todo1.selected, false);
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi1Entry.classList.contains('highlighted'), false);
+		
 		eq(child1.selected, false);
-		eq(todoLi1Child2SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi1Entry.classList.contains('highlighted'), false);
+		
+		eq(child2.selected, false);
+		eq(childLi2SelectButton.textContent, 'Select');
+		eq(childLi2Entry.classList.contains('highlighted'), false);
 	},
 	"Each todoLi should have a 'complete' button to toggle 'Complete/Uncomplete'.": function() {
 		todos = [];
