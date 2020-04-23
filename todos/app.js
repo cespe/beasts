@@ -365,7 +365,8 @@ function purgeSelectedDeletedTodos(array) {
 /************************************* DOM manipulation ********************************/
 
 // Fixed page elements
-var actionsBar = document.getElementById('actionsbar');
+//var appheader = document.getElementById('appheader');
+var actionsBar = document.getElementById('actions');
 var selectAllButton = document.getElementsByName('selectAll')[0];
 var completeSelectedButton = document.getElementsByName('completeSelected')[0];
 var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
@@ -399,15 +400,16 @@ var oldUndoEditButton = undefined;	// button to deactivate from last todoLi to b
 //var parentPlaceholderEntryIndex = 0;
 //var parentPlaceholderUlIndex = 1;
 
+/* Better to work with the static actionsBar buttons I think
 function renderActionsBar() {
-	var newActionDiv = createActionButtons();
-	actionsBar.innerHTML = '';
-	actionsBar.appendChild(newActionDiv);
+	var newActionsBar = createActionButtons();
+	appheader.innerHTML = '';
+	appheader.appendChild(newActionsBar);
 }
 
 function createActionButtons() {
-	var actionsDiv = document.createElement('div');
-	actionsDiv.id = 'actions';
+	var actionsBar = document.createElement('div');
+	actionsBar.id = 'actions';
 
 	// All these buttons are created with button.type = 'button' to distinguish from a submit
 	// or reset button, as recommended by MDN.
@@ -421,10 +423,16 @@ function createActionButtons() {
 	} else {
 		selectAllButton.textContent = 'Select all';
 	}
-	actionsDiv.appendChild(selectAllButton);
+	actionsBar.appendChild(selectAllButton);
 
-	return actionsDiv;
+	var showActiveButton = document.createElement('button');
+	showActiveButton.name = 'showActive';
+	showActiveButton.type = 'button';
+	actionsBar.appendChild(showActiveButton);
+
+	return actionsBar;
 }
+*/
 
 // A set to specify which todos will be displayed
 function generateFilterSet() {

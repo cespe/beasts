@@ -3218,29 +3218,23 @@ tests({
 	},
 	"Section: Actions bar -- Selection": function() {
 	},
-	"The app should have a header section called 'actionsbar' to hold global action buttons.": function() {
-		eq(actionsBar.nodeName, 'HEADER');
-		eq(actionsBar.parentElement.nodeName, 'BODY');
-		eq(actionsBar.id, 'actionsbar');
-	},
-	"The app should have a way to add currently applicable buttons to the header actions bar.": function() {
-		renderActionsBar();
-
-		var actionsDiv = document.getElementById('actions');
-		
-		eq(actionsDiv.nodeName, 'DIV');
-		eq(actionsDiv.parentElement.nodeName, 'HEADER');
-
-	},
+//	"The app should have a header section called 'appheader' to hold global action buttons.": function() {
+//		eq(appheader.nodeName, 'HEADER');
+//		eq(appheader.parentElement.nodeName, 'BODY');
+//		eq(appheader.id, 'appheader');
+//	},
+//	"The app should have a way to add currently applicable buttons to the header actions bar.": function() {
+//		renderActionsBar();
+//
+//		var actionsBar = document.getElementById('actions');
+//		
+//		eq(actionsBar.nodeName, 'DIV');
+//		eq(actionsBar.parentElement.nodeName, 'HEADER');
+//	},
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
-		renderActionsBar();
-
-		var actionsDiv = document.getElementById('actions');
-		var selectAllButton = actionsDiv.children.namedItem('selectAll');
-
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.innerText, 'Select all');
-		eq(selectAllButton.parentElement, actionsDiv);
+		eq(selectAllButton.parentElement, actionsBar);
 	},
 	"The header actions bar should have a 'Complete selected' button to mark selected todos completed.": function() {
 		eq(completeSelectedButton.nodeName, 'BUTTON');
@@ -4400,11 +4394,14 @@ tests({
 		eq(grandchild3.deleted, false);
 	},
 	"Section: Actions bar -- filters": function() {
-		// In order to show filtered child todoLis with filtered-out parents, the parents must remain in the DOM.
-		// Thus the system of classes (active-removed, etc.) to hide filtered-out todoLis.
+		// Choose to display todos based on their stage in life or whether or not they are deleted.
 	},
 	"The header actions bar should have a showActive button to toggle the display of active todos.": function() {
-		// active todos are not completed and not deleted
+		// active todos are not completed or canceled
+//		renderActionsBar();
+//		var actionsBar = document.getElementById('actions');
+//		var showActiveButton = actionsBar.children.namedItem('showActive');
+
 		eq(showActiveButton.nodeName, 'BUTTON');
 		eq(showActiveButton.innerText, '√ Active');
 		eq(showActiveButton.parentElement, actionsBar);
