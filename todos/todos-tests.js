@@ -812,8 +812,8 @@ tests({
 		eq(todoLi1Entry.contentEditable, 'true');
 
 	},
-	"An empty todo should be created in editing mode for text entry.": function() {
-		// Devtools must be closed for this test to pass.
+	"An empty todo should be created in editing mode for text entry (close devtools to pass test).": function() {
+		// Devtools must be closed for the focus() tests below to pass.
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -823,54 +823,65 @@ tests({
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 
-		insertNewTodoLi(todos, todoLi1.id);				// insert a new todo after the existing one
+		insertNewTodoLi(todos, todo1);				// insert a new todo after the existing one
 
-		eq(todos.length, 2);
-		eq(todos[1].entry, '');
-		eq(todosUl.childElementCount, 2);
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
 
 		var todoLi2 = todosUl.children[1];
 		var todoLi2Entry = todoLi2.querySelector('p');
 
+		eq(todos.length, 2);
+		eq(todos[1].entry, '');
+		eq(todosUl.childElementCount, 2);
 		eq(todoLi2Entry.textContent, '');
 		eq(document.activeElement, todoLi2Entry);
 		eq(document.hasFocus(), true);
 
-		appendNewChildTodoLi(todoLi1);					// case of first child added to a new UL
+		appendNewChildTodoLi(todo1);					// case of first child added to a new UL
 
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		var childLi = todoLi1Ul.children[0];
 		var childLiEntry = childLi.querySelector('p');
 		eq(document.activeElement, childLiEntry);
 		eq(document.hasFocus(), true);
 
-		appendNewChildTodoLi(todoLi1);					// case of second child added to existing UL
+		appendNewChildTodoLi(todo1);					// case of second child added to existing UL
 
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
 		var child2Li = todoLi1Ul.children[1];
 		var child2LiEntry = child2Li.querySelector('p');
 		eq(document.activeElement, child2LiEntry);
 		eq(document.hasFocus(), true);
 	},
-	"When editing, losing focus on the todoLi should save the revised entry.": function() {
-		// Devtools must be closed for this test to pass.
+	"When editing, losing focus on the todoLi should save the revised entry (close devtools to pass test).": function() {
+		// Devtools must be closed for the tests below to pass.
 		todolist.innerHTML = '';
 		todos = [];
 		insertNewTodoLi(todos);
-		eq(todos[0].entry, "");					// state before edit
+		eq(todos[0].entry, "");						// state before edit
+		var todo1 = todos[0];
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
+		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		todoLi1Entry.textContent = "test";			// simulate edit
 
-		insertNewTodoLi(todos, todoLi1.id);		// todoLi1 loses focus, firing focusout event
+		todoLi1AddSiblingButton.click();			// todoLi1 loses focus, firing focusout event
 
+		eq(todos[0].entry, "test");					// state after edit
+
+		todosUl = todolist.children[0];
 		var todoLi2 = todosUl.children[1];
 		var todoLi2Entry = todoLi2.querySelector('p');
 
 		eq(todoLi2Entry.textContent, '');
 		eq(document.activeElement, todoLi2Entry);
 		eq(document.hasFocus(), true);
-		eq(todos[0].entry, "test");				// state after edit
 	},
 	"Section: todoLi buttons": function() {
 	},

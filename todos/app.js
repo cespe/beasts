@@ -597,17 +597,21 @@ function createTodosUl(todosArray, filter) {
 
 // Insert a new empty todoLi into the given array after the given todo, ready for text entry.
 function insertNewTodoLi(todoArray, todo) {
-		var newTodo = new Todo();
-		insertTodo(todoArray, newTodo, todo);
-		renderTodolist();
-		newTodoLi = document.getElementById(newTodo.id);
-		newTodoLi.querySelector('p').focus();
+	var newTodo = new Todo();
+	insertTodo(todoArray, newTodo, todo);
+	renderTodolist();
+	newTodoLi = document.getElementById(newTodo.id);
+	newTodoLi.querySelector('p').focus();
 }
 
 // Append a new todoLi in a child todosUl under a given todoLi, ready for text entry.
 function appendNewChildTodoLi(todo) {
 	todo.markCollapsed(false);
-	insertNewTodoLi(todo.children, todo);
+	var newChild = new Todo();
+	insertTodo(todo.children, newChild);
+	renderTodolist();
+	newChildLi= document.getElementById(newChild.id);
+	newChildLi.querySelector('p').focus();
 }
 
 // TODO remove orphaned function
