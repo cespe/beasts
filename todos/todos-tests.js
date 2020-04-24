@@ -1724,9 +1724,11 @@ tests({
 		eq(child1.id, childLi1.id);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 	},
-	"Each todo should have a 'selectChildren' button to select all of its children.": function() {
+	"If a todo has children, its todoLi should have a 'selectChildren' button to select them.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
 		renderTodolist();
@@ -1737,21 +1739,19 @@ tests({
 		eq(todoLi1SelectChildrenButton.nodeName, 'BUTTON');
 		eq(todoLi1SelectChildrenButton.name, 'selectChildren');
 	},
-	"If a todo has no child todos, its todoLi should be created with selectChildren button class 'inactive'.": function() {
+	"If a todo has no children, its todoLi should not have a 'selectChildren' button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-
 		renderTodolist();
-
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 
-		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1SelectChildrenButton, null);
 	},
-	"If todo.collapsed is true, its todoLi should be created with selectChildren button class 'inactive'.": function() {
+	"If todo.collapsed is true, its todoLi should be created with selectChildren button disabled.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCollapsed(true);
@@ -1764,38 +1764,53 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 
-		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1SelectChildrenButton.disabled, true);
 	},
-	"If all todo children are selected, todoLi should be created with selectChildren button text 'Unselect children'.": function() {
+	"If todo.collapsed is false, its todoLi should be created with selectChildren button enabled.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
-		child1 = new Todo('Item 1 child 1');
-		child1.markSelected(true);
-		todo1.addChild(child1);
-		insertTodo(todos, todo1);
-
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
-
-		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
-		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
-	},
-	"Otherwise, todoLi should be created with selectChildren button text 'Select children'.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1');
-		child1 = new Todo('Item 1 child 1');
+		child1 = new Todo('Child 1');
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(todoLi1SelectChildrenButton.disabled, false);
+	},
+	"If any filtered-in todo children are selected, todoLi 'selectChildren' button text should be 'Unselect children'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child1.markSelected(true);
+		todo1.addChild(child1);
+		child2 = new Todo('Child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
 
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 
-		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+	},
+	"Otherwise, todoLi 'selectChildren' button text should be 'Select children'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Child 2');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
 	},
 	"Each todoLi should have a 'completeSelectedChildren' button to complete/uncomplete selected child todos.": function() {

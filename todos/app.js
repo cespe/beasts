@@ -300,16 +300,34 @@ function anySelectedRootTodos(array) {
 	return false;
 }
 
+/* Not used
 // Return true if any todos, including nested todos, are filtered in for display
 function anyFilteredInTodos(array) {
 	for (var i = 0; i < array.length; i++) {
 		var todo = array[i];
-//		if (/*any todo.tags are in filteredIn set*/) {
-//			return true;
-//		}
+		if (todo.filteredIn) {
+			return true;
+		}
 		if (todo.children.length > 0) {
 			var todoFilteredIn = anyFilteredInTodos(todo.children);
 			if (todoFilteredIn) {
+				return true;
+			}
+		}
+	}
+	return false;
+} */
+
+// Return true if any todos, including nested todos, are both selected and filtered in for display
+function anySelectedFilteredInTodos(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.selected && todo.filteredIn) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			var todoSelectedFilteredIn = anySelectedFilteredInTodos(todo.children);
+			if (todoSelectedFilteredIn) {
 				return true;
 			}
 		}
@@ -553,27 +571,8 @@ function createTodoLi(todo) {
 	}
 	todoLi.appendChild(entry);
 
-	var selectChildrenButton = document.createElement('button');
-	selectChildrenButton.name = 'selectChildren';
-	selectChildrenButton.type = 'button';
-	selectChildrenButton.textContent = 'Select children';
-	if (todo.children.length === 0 || todo.collapsed === true) {
-		selectChildrenButton.classList.add('inactive');
-	} else {
-		for (var i = 0; i < todo.children.length; i++) {
-			var count = 0;
-			if (todo.children[i].selected === true) {
-				count++
-			}
-		}
-		if (count === todo.children.length) {
-			selectChildrenButton.textContent = 'Unselect children';
-		}
-	}
-	todoLi.appendChild(selectChildrenButton);
+	if (todo.children.length > 0) {		// Last four buttons only created if there are children
 
-	if (todo.children.length > 0) {
-//		showChildrenButton.classList.add('inactive');
 		var showChildrenButton = document.createElement('button');
 		showChildrenButton.name = 'showChildren';
 		showChildrenButton.type = 'button';
@@ -583,7 +582,23 @@ function createTodoLi(todo) {
 			showChildrenButton.textContent = 'Hide children';
 		}
 		todoLi.appendChild(showChildrenButton);
+
+		var selectChildrenButton = document.createElement('button');
+		selectChildrenButton.name = 'selectChildren';
+		selectChildrenButton.type = 'button';
+		if (todo.collapsed) {
+			selectChildrenButton.disabled = true;
+		} else {
+			selectChildrenButton.disabled = false;
+		}
+		if (anySelectedFilteredInTodos(todo.children)) {
+			selectChildrenButton.textContent = 'Unselect children';
+		} else {
+			selectChildrenButton.textContent = 'Select children';
+		}
+		todoLi.appendChild(selectChildrenButton);
 	}
+
 
 	var completeSelectedChildrenButton = document.createElement('button');
 	completeSelectedChildrenButton.name = 'completeSelectedChildren';
