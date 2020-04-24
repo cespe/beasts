@@ -1490,7 +1490,7 @@ tests({
 		eq(todoLi1Ul.children[0], childLi1);
 		eq(todoLi1Ul.children[1], childLi2);
 	},
-	"Each todoLi should have an 'undoEdit' button to revert changes to the entry.": function() {
+	"Each todoLi should have a disabled-by-default 'undoEdit' button to revert changes to the entry.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1503,8 +1503,9 @@ tests({
 		eq(todoLi1UndoEditButton.nodeName, 'BUTTON');
 		eq(todoLi1UndoEditButton.name, 'undoEdit');
 		eq(todoLi1UndoEditButton.textContent, 'Undo edit');
+		eq(todoLi1UndoEditButton.disabled, true);
 	},
-	"undoEditButton should become active when a todoLi entry is edited.": function() {
+	"undoEditButton should become enabled when a todoLi entry is edited.": function() {
 		manual();
 		// app code works, TODO need to figure out synthetic events
 		todos = [];
@@ -1517,7 +1518,7 @@ tests({
 		var todoLi1UndoEditButton = todoLi.children.namedItem('undoEdit');
 		var todoLi1Entry = todoLi1.querySelector('p');
 
-		eq(todoLi1UndoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1UndoEditButton.disabled, true);
 		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// simulate input
@@ -1525,26 +1526,28 @@ tests({
 		var testEvent = new Event('input');
 		todoLi1Entry.dispatchEvent(testEvent);	// doesn't trigger app event handler
 
-		eq(todoLi1UndoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1UndoEditButton.disabled, false);
 		eq(todoLi1Entry.textContent, 'Item 11');
 
 		addTodoButton.click();
 
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1UndoEditButton = todoLi.children.namedItem('undoEdit');
 		var todoLi2 = todolist.children[0].children[1];
 		var todoLi2UndoEditButton = todoLi2.children.namedItem('undoEdit');
 		var todoLi2Entry = todoLi2.querySelector('p');
 		
-		eq(todoLi1UndoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1UndoEditButton.disabled, true);
 		eq(todoLi2Entry.textContent, '');
 
 		// simulate pasted input
 		// Code to paste 'Item 2' with a synthetic paste event to trigger the input event
 		todoLi2Entry.textContent = 'Item 2';	// doesn't trigger an input event so doesn't signal an edit
 
-		eq(todoLi2UndoEditButton.classList.contains('inactive'), false);
+		eq(todoLi2UndoEditButton.disabled, false);
 		eq(todoLi2Entry.textContent, 'Item 2');
 	},
-	"undoEditButton should become inactive when an edit is completed.": function() {
+	"undoEditButton should be disabled when an edit is completed.": function() {
 		manual();
 		// app code works, TODO need to figure out synthetic events
 		todos = [];
@@ -1555,35 +1558,40 @@ tests({
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
+		var todoLi1UndoEditButton = todoLi.children.namedItem('undoEdit');
 
-		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1UndoEditButton.disabled, true);
 		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// Case 1: edit completed with undoEditButton click
 
 		// TODO code to append a '1' with a synthetic key event
 
-		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1UndoEditButton.disabled, false);
 		eq(todoLi1Entry.textContent, 'Item 11');
 
-		undoEditButton.click();
+		todoLi1UndoEditButton.click();
 
-		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1UndoEditButton.disabled, true);
 		eq(todoLiEntry.textContent, 'Item 1');
 
 		// Case 2: edit completed when entry loses focus
 
 		// TODO code to append a '1' with a synthetic key event
 
-		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1UndoEditButton.disabled, false);
 		eq(todoLi1Entry.textContent, 'Item 11');
 
 		addTodoButton.click();	// edit over as entry loses focus
 
-		eq(undoEditButton.classList.contains('inactive'), true);
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Entry = todoLi1.querySelector('p');
+		var todoLi1UndoEditButton = todoLi.children.namedItem('undoEdit');
+
+		eq(todoLi1UndoEditButton.disabled, false);
 		eq(todoLi1Entry.textContent, 'Item 11');
 	},
-	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton inactive.": function() {
+	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton disabled.": function() {
 		manual();
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1593,20 +1601,21 @@ tests({
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
+		var todoLi1UndoEditButton = todoLi.children.namedItem('undoEdit');
 
-		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1UndoEditButton.disabled, true);
 		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// TODO need to trigger an input event here
 		// Activate undoEditButton programmatically in lieu of firing an input event
 		todoLi1Entry.textContent = 'Item 11';
 
-		eq(undoEditButton.classList.contains('inactive'), false);
+		eq(todoLi1UndoEditButton.disabled, false);
 		eq(todoLi1Entry.textContent, 'Item 11');
 
-		undoEditButton.click();
+		todoLi1UndoEditButton.click();
 
-		eq(undoEditButton.classList.contains('inactive'), true);
+		eq(todoLi1UndoEditButton.disabled, true);
 		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// TODO should entry still have focus?

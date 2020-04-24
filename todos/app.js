@@ -536,7 +536,7 @@ function createTodoLi(todo) {
 	undoEditButton.name = 'undoEdit';
 	undoEditButton.type = 'button';
 	undoEditButton.textContent = 'Undo edit';
-	undoEditButton.classList.add('inactive');
+	undoEditButton.disabled = true;
 	todoLi.appendChild(undoEditButton);
 
 	var entry = document.createElement('p');
@@ -1991,7 +1991,7 @@ function todoClickHandler(event) {
 			todo.entry = originalEntry;
 			todoLiEntry.textContent = originalEntry;
 			var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
-			todoLiUndoEditButton.classList.add('inactive');
+			todoLiUndoEditButton.disabled = true;
 		}
 		if (event.target.name === "showChildren") {
 			todo.collapsed = !todo.collapsed;
