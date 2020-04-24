@@ -192,7 +192,7 @@ function applyDisplayTags(filterSet) {					// TODO Combine these into one functi
 	markFilteredOutParentsOfFilteredInTodos(todos);
 }
 
-// Recursively mark todo.selected true or false starting with given array
+// Recursively mark todo.selected true or false, starting with given array
 function markTodosSelected(todosArray, bool) {
 	for (var i = 0; i < todosArray.length; i++) {
 		var todo = todosArray[i];
@@ -200,6 +200,21 @@ function markTodosSelected(todosArray, bool) {
 			markTodosSelected(todo.children, bool);
 		}
 		todo.selected = bool;
+	}
+}
+
+// Recursively mark todo.selected true or false for filtered-in todos, starting with given array
+function markFilteredInTodosSelected(todosArray, bool) {
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+		if (todo.children.length > 0) {
+			markFilteredInTodosSelected(todo.children, bool);
+		}
+		if (todo.filteredIn) {
+			todo.selected = bool;
+		} else {
+			todo.selected = false;		// excludes filtered-out todos
+		}
 	}
 }
 
@@ -2092,10 +2107,10 @@ function todoClickHandler(event) {
 			// can it be 'Select children' if any children are selected?
 			if (anySelectedTodos(todo.children)) {
 				// 'Unselect children' clicked
-				markTodosSelected(todo.children, false);
+				markFilteredInTodosSelected(todo.children, false);
 			} else {
 				// 'Select children' clicked
-				markTodosSelected(todo.children, true);
+				markFilteredInTodosSelected(todo.children, true);
 			}
 			renderTodolist();
 				
@@ -2398,8 +2413,7 @@ function setUpEventListeners() {
 	todolist.addEventListener('keyup', keyUpHandler);
 }
 
-function startApp() {
-	// Start app with a new empty todo if the todolist is empty
+function setActionsBarDefaults() {
 	selectAllButton.textContent = 'Select all';
 	selectAllButton.disabled = false;
 	completeSelectedButton.textContent = 'Complete selected';
@@ -2411,10 +2425,11 @@ function startApp() {
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
 	addTodoButton.disabled = false;	
-//	todolist.innerHTML = '';
-//	if (todo.selected) {
-//		todo.selected = false;		// clean slate when todoLi's are created
-//	}
+}
+
+function startApp() {
+	// Start app with a new empty todo if the todolist is empty
+	setActionsBarDefaults();
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
 	} 
