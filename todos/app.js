@@ -192,6 +192,17 @@ function applyDisplayTags(filterSet) {					// TODO Combine these into one functi
 	markFilteredOutParentsOfFilteredInTodos(todos);
 }
 
+// Recursively mark todo.selected true or false starting with given array
+function markTodosSelected(todosArray, bool) {
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+		if (todo.children.length > 0) {
+			markTodosSelected(todo.children, bool);
+		}
+		todo.selected = bool;
+	}
+}
+
 /*********************************** Data selection **************************************/
 // Return the todo with the given id
 function findTodo(array, id) {
@@ -2078,9 +2089,18 @@ function todoClickHandler(event) {
 			//		while bubbling up, check each todoLi for root status.
 			//		event listener on body could trigger selectAll adjustment
 			
-
-			altSelectChildren(todoLi);
-			togglePurgeSelectedDeletedTodos();
+			// can it be 'Select children' if any children are selected?
+			if (anySelectedTodos(todo.children)) {
+				// 'Unselect children' clicked
+				markTodosSelected(todo.children, false);
+			} else {
+				// 'Select children' clicked
+				markTodosSelected(todo.children, true);
+			}
+			renderTodolist();
+				
+//			altSelectChildren(todoLi);
+//			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === "completeSelectedChildren") {
 			completeSelectedChildren(todoLi);

@@ -1780,7 +1780,7 @@ tests({
 
 		eq(todoLi1SelectChildrenButton.disabled, false);
 	},
-	"If any filtered-in todo children are selected, todoLi 'selectChildren' button text should be 'Unselect children'.": function() {
+	"If any filtered-in nested todos are selected, todoLi 'selectChildren' button text should be 'Unselect children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -1813,7 +1813,75 @@ tests({
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
 	},
+	"Clicking 'Select children' button should select nested filtered-in todos and re-render todoLis, toggling button text.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.disabled, false);	// check just to make sure button is clickable below
+
+		todoLi1SelectChildrenButton.click();
+		
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+	},
+	"Clicking 'Unselect children' button should unselect nested filtered-in todos and re-render todoLis, toggling button text.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.disabled, false);	// check just to make sure button is clickable below
+
+		todoLi1SelectChildrenButton.click();
+		
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(todoLi1SelectChildrenButton.disabled, false);	// check just to make sure button is clickable below
+
+		todoLi1SelectChildrenButton.click();
+		
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(todoLi1SelectChildrenButton.disabled, false);
+	},
 	"Clicking a selectChildren button should toggle button text and children's todo.selected, Select button text and class, and entry <p> class.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
