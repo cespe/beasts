@@ -2967,7 +2967,7 @@ tests({
 		eq(grandchild1LiDeleteSelectedChildrenButton.classList.contains('inactive'), true);
 		eq(child2LiDeleteSelectedChildrenButton.classList.contains('inactive'), true);
 	},
-	"Each todoLi should have a 'completeSelectedChildren' button to complete/uncomplete selected child todos.": function() {
+	"If a todo has children, its todoLi should have a 'completeSelectedChildren' button to complete/uncomplete selected child todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -2978,11 +2978,27 @@ tests({
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
 
-		eq(todoLi1.children.namedItem('completeSelectedChildren').nodeName, 'BUTTON');
-		eq(todoLi1.children.namedItem('completeSelectedChildren').name, 'completeSelectedChildren');
+		eq(todoLi1CompleteSelectedChildrenButton.nodeName, 'BUTTON');
+		eq(todoLi1CompleteSelectedChildrenButton.name, 'completeSelectedChildren');
 	},
-	"Each todoLi should be created with completeSelectedChildren button class 'inactive'.": function() {
+	"If a todo has no children, its todoLi should not have a 'completeSelectedChildren' button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+
+		eq(todoLi1CompleteSelectedChildrenButton, null);
+	},
+	"A 'completeSelectedChildren' button should be disabled if there are no selected children.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -2994,7 +3010,22 @@ tests({
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
 
-		eq(todoLi1.children.namedItem('completeSelectedChildren').classList.contains('inactive'), true);
+		eq(todoLi1.children.namedItem('completeSelectedChildren').disabled, true);
+	},
+	"Otherwise, a 'completeSelectedChildren' button should be enabled.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		child1.markSelected(true);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+
+		eq(todoLi1.children.namedItem('completeSelectedChildren').disabled, false);
 	},
 	"Clicking a 'completeSelectedChildren' button should toggle button text and toggle todo.completed, todoLi entry class and 'complete' button text on selected child todos.": function() {
 		todos = [];
@@ -3113,6 +3144,21 @@ tests({
 
 		eq(todoLi1DeleteSelectedChildrenButton.nodeName, 'BUTTON');
 		eq(todoLi1DeleteSelectedChildrenButton.name, 'deleteSelectedChildren');
+	},
+	"If a todo has no children, its todoLi should not have a 'deleteSelectedChildren' button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
+
+		eq(todoLi1DeleteSelectedChildrenButton, null);
 	},
 	"A 'deleteSelectedChildren' button should be disabled if there are no selected children.": function() {
 		todos = [];
