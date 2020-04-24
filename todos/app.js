@@ -352,6 +352,22 @@ function anyDeletedTodos(array) {
 	}
 }
 
+// Return true if any todos, including nested todos, are both completed and selected
+function anySelectedCompletedTodos(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.stage === 'completed' && todo.selected) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			var todoSelectedCompleted = anySelectedCompletedTodos(todo.children);
+			if (todoSelectedCompleted) {
+				return true;
+			} 
+		}
+	}
+}
+
 // Return true if any todos, including nested todos, are both deleted and selected
 function anySelectedDeletedTodos(array) {
 	for (var i = 0; i < array.length; i++) {
@@ -591,28 +607,39 @@ function createTodoLi(todo) {
 		} else {
 			selectChildrenButton.disabled = false;
 		}
+
+		var completeSelectedChildrenButton = document.createElement('button');
+		completeSelectedChildrenButton.name = 'completeSelectedChildren';
+		completeSelectedChildrenButton.type = 'button';
+		if (anySelectedCompletedTodos(todo.children)) {
+			completeSelectedChildrenButton.textContent = 'Uncomplete selected children';
+		} else {
+			completeSelectedChildrenButton.textContent = 'Complete selected children';
+		}
+
+		var deleteSelectedChildrenButton = document.createElement('button');
+		deleteSelectedChildrenButton.name = 'deleteSelectedChildren';
+		deleteSelectedChildrenButton.type = 'button';
+		if (anySelectedDeletedTodos(todo.children)) {
+			deleteSelectedChildrenButton.textContent = 'Undelete selected children';
+		} else {
+			deleteSelectedChildrenButton.textContent = 'Delete selected children';
+		}
+
 		if (anySelectedFilteredInTodos(todo.children)) {
 			selectChildrenButton.textContent = 'Unselect children';
+			completeSelectedChildrenButton.disabled = false;
+			deleteSelectedChildrenButton.disabled = false;
 		} else {
 			selectChildrenButton.textContent = 'Select children';
+			completeSelectedChildrenButton.disabled = true;
+			deleteSelectedChildrenButton.disabled = true;
 		}
+
 		todoLi.appendChild(selectChildrenButton);
+		todoLi.appendChild(completeSelectedChildrenButton);
+		todoLi.appendChild(deleteSelectedChildrenButton);
 	}
-
-
-	var completeSelectedChildrenButton = document.createElement('button');
-	completeSelectedChildrenButton.name = 'completeSelectedChildren';
-	completeSelectedChildrenButton.type = 'button';
-	completeSelectedChildrenButton.textContent = 'Complete selected children';
-	completeSelectedChildrenButton.classList.add('inactive');
-	todoLi.appendChild(completeSelectedChildrenButton);
-
-	var deleteSelectedChildrenButton = document.createElement('button');
-	deleteSelectedChildrenButton.name = 'deleteSelectedChildren';
-	deleteSelectedChildrenButton.type = 'button';
-	deleteSelectedChildrenButton.textContent = 'Delete selected children';
-	deleteSelectedChildrenButton.classList.add('inactive');
-	todoLi.appendChild(deleteSelectedChildrenButton);
 
 	return todoLi;
 }

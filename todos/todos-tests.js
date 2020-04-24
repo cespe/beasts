@@ -2986,8 +2986,6 @@ tests({
 	"If a todo has no children, its todoLi should not have a 'completeSelectedChildren' button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
-		child1 = new Todo('Item 1 child 1');
-		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
 		renderTodolist();
@@ -3148,8 +3146,6 @@ tests({
 	"If a todo has no children, its todoLi should not have a 'deleteSelectedChildren' button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
-		child1 = new Todo('Item 1 child 1');
-		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
 		renderTodolist();
