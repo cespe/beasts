@@ -2008,7 +2008,7 @@ tests({
 		eq(child2Li, todoLi1Ul.children[1]);
 		eq(child3Li, undefined);
 	}, 
-	"The selectChildren button should operate recursively on displayed nested todos.": function() {
+	"The selectChildren button should operate recursively on all filtered-in nested todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -2016,75 +2016,114 @@ tests({
 		child1.addChild(grandchild1);
 		todo1.addChild(child1);
 		child2 = new Todo('Item 1 child 2');
-		child2.markDeleted(true);
 		todo1.addChild(child2);
 		child3 = new Todo('Item 1 child 3');
 		todo1.addChild(child3);
+		grandchild3 = new Todo('Item 1 child 3 child 1');
+		child3.addChild(grandchild3);
 		insertTodo(todos, todo1);
 		
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
-		var child1Li = todoLi1.querySelector('ul').children[0];
-		var child1LiSelectButton = child1Li.children.namedItem('select');
-		var child1LiEntry = child1Li.querySelector('p');
-		var grandchild1Li = child1Li.querySelector('ul').children[0];
-		var grandchild1LiSelectButton = grandchild1Li.children.namedItem('select');
-		var grandchild1LiEntry = grandchild1Li.querySelector('p');
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var child1Li = todoLi1Ul.children[0];
 		var child2Li = todoLi1.querySelector('ul').children[1];
-		var child2LiSelectButton = child2Li.children.namedItem('select');
-		var child2LiEntry = child2Li.querySelector('p');
 		var child3Li = todoLi1.querySelector('ul').children[2];
-		var child3LiSelectButton = child3Li.children.namedItem('select');
-		var child3LiEntry = child3Li.querySelector('p');
+
+		var child1LiUl = child1Li.querySelector('ul');
+		var child3LiUl = child3Li.querySelector('ul');
+
+		var grandchild1Li = child1LiUl.children[0];
+		var grandchild3Li = child3LiUl.children[0];
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+
 		eq(child1.selected, false);
-		eq(grandchild1.selected, false);
 		eq(child2.selected, false);
 		eq(child3.selected, false);
-		eq(child1LiSelectButton.textContent, 'Select');
-		eq(grandchild1LiSelectButton.textContent, 'Select');
-		eq(child2LiSelectButton.textContent, 'Select');
-		eq(child3LiSelectButton.textContent, 'Select');
-		eq(child1LiEntry.classList.contains('highlighted'), false);
-		eq(grandchild1LiEntry.classList.contains('highlighted'), false);
-		eq(child2LiEntry.classList.contains('highlighted'), false);
-		eq(child3LiEntry.classList.contains('highlighted'), false);
-		eq(child2Li.classList.contains('deleted-removed'), true);		// not displayed so won't be selected
+		eq(grandchild1.selected, false);
+		eq(grandchild3.selected, false);
+		eq(child1.filteredIn, true);
+		eq(child2.filteredIn, true);
+		eq(child3.filteredIn, true);
+		eq(grandchild1.filteredIn, true);
+		eq(grandchild3.filteredIn, true);
+		eq(todoLi1Ul.children.length, 3);
+		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child2Li, todoLi1Ul.children[1]);
+		eq(child3Li, todoLi1Ul.children[2]);
+		eq(grandchild1Li, child1LiUl.children[0]);
+		eq(grandchild3Li, child3LiUl.children[0]);
 
 		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		child1Li = todoLi1Ul.children[0];
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child3Li = todoLi1.querySelector('ul').children[2];
+
+		child1LiUl = child1Li.querySelector('ul');
+		child3LiUl = child3Li.querySelector('ul');
+
+		grandchild1Li = child1LiUl.children[0];
+		grandchild3Li = child3LiUl.children[0];
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+
 		eq(child1.selected, true);
-		eq(grandchild1.selected, true);
-		eq(child2.selected, false);
+		eq(child2.selected, true);
 		eq(child3.selected, true);
-		eq(child1LiSelectButton.textContent, 'Unselect');
-		eq(grandchild1LiSelectButton.textContent, 'Unselect');
-		eq(child2LiSelectButton.textContent, 'Select');
-		eq(child3LiSelectButton.textContent, 'Unselect');
-		eq(child1LiEntry.classList.contains('highlighted'), true);
-		eq(grandchild1LiEntry.classList.contains('highlighted'), true);
-		eq(child2LiEntry.classList.contains('highlighted'), false);
-		eq(child3LiEntry.classList.contains('highlighted'), true);
+		eq(grandchild1.selected, true);
+		eq(grandchild3.selected, true);
+		eq(child1.filteredIn, true);
+		eq(child2.filteredIn, true);
+		eq(child3.filteredIn, true);
+		eq(grandchild1.filteredIn, true);
+		eq(grandchild3.filteredIn, true);
+		eq(todoLi1Ul.children.length, 3);
+		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child2Li, todoLi1Ul.children[1]);
+		eq(child3Li, todoLi1Ul.children[2]);
+		eq(grandchild1Li, child1LiUl.children[0]);
+		eq(grandchild3Li, child3LiUl.children[0]);
 
 		todoLi1SelectChildrenButton.click();
 
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		child1Li = todoLi1Ul.children[0];
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child3Li = todoLi1.querySelector('ul').children[2];
+
+		child1LiUl = child1Li.querySelector('ul');
+		child3LiUl = child3Li.querySelector('ul');
+
+		grandchild1Li = child1LiUl.children[0];
+		grandchild3Li = child3LiUl.children[0];
+
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+
 		eq(child1.selected, false);
 		eq(child2.selected, false);
-		eq(grandchild1.selected, false);
 		eq(child3.selected, false);
-		eq(child1LiSelectButton.textContent, 'Select');
-		eq(grandchild1LiSelectButton.textContent, 'Select');
-		eq(child2LiSelectButton.textContent, 'Select');
-		eq(child3LiSelectButton.textContent, 'Select');
-		eq(child1LiEntry.classList.contains('highlighted'), false);
-		eq(grandchild1LiEntry.classList.contains('highlighted'), false);
-		eq(child2LiEntry.classList.contains('highlighted'), false);
-		eq(child3LiEntry.classList.contains('highlighted'), false);
+		eq(grandchild1.selected, false);
+		eq(grandchild3.selected, false);
+		eq(child1.filteredIn, true);
+		eq(child2.filteredIn, true);
+		eq(child3.filteredIn, true);
+		eq(grandchild1.filteredIn, true);
+		eq(grandchild3.filteredIn, true);
+		eq(todoLi1Ul.children.length, 3);
+		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child2Li, todoLi1Ul.children[1]);
+		eq(child3Li, todoLi1Ul.children[2]);
+		eq(grandchild1Li, child1LiUl.children[0]);
+		eq(grandchild3Li, child3LiUl.children[0]);
 	}, 
 	"Clicking a 'root' (i.e. Select button inactive) selectChildren button should toggle 'inactive' on complete, delete, addSibling, addChild and showChildren buttons.": function() {
 		// By design, hide regular parent buttons to concentrate attention on the selected children.
