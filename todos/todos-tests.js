@@ -3168,7 +3168,20 @@ tests({
 
 		eq(todoLi1.children.namedItem('completeSelectedChildren').disabled, false);
 	},
+	"If any selected nested todos are completed, 'completeSelectedChildren' button should read 'Uncomplete selected children'.": function() {
+		fail();
+	},
+	"Otherwise, 'completeSelectedChildren' button should read 'Complete selected children'.": function() {
+		fail();
+	},
+	"Clicking 'Complete selected children' button should set stage 'completed' on nested selected todos and re-render todoLis.": function() {
+		fail();
+	},
+	"Clicking 'Uncomplete selected children' button should set stage 'active' on nested selected todos and re-render todoLis.": function() {
+		fail();
+	},
 	"Clicking a 'completeSelectedChildren' button should toggle button text and toggle todo.completed, todoLi entry class and 'complete' button text on selected child todos.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3219,7 +3232,7 @@ tests({
 		eq(child1LiCompleteButton.textContent, 'Complete');
 		eq(child2LiCompleteButton.textContent, 'Complete');
 	},
-	"A completeSelectedChildren button should operate on selected nested todos.": function() {
+	"A completeSelectedChildren button should operate recursively on all selected nested todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3328,6 +3341,18 @@ tests({
 
 		eq(todoLi1.children.namedItem('deleteSelectedChildren').disabled, false);
 	},
+	"If any selected nested todos are deleted, 'deleteSelectedChildren' button should read 'Undelete selected children'.": function() {
+		fail();
+	},
+	"Otherwise, 'deleteSelectedChildren' button should read 'Delete selected children'.": function() {
+		fail();
+	},
+	"Clicking 'Delete selected children' button should mark nested selected todos deleted and re-render todoLis.": function() {
+		fail();
+	},
+	"Clicking 'Undelete selected children' button should mark nested selected todos undeleted and re-render todoLis.": function() {
+		fail();
+	},
 	"Clicking a 'deleteSelectedChildren' button should toggle button text and toggle todo.deleted, todoLi entry class and 'deleted' button text on selected child todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -3379,7 +3404,7 @@ tests({
 		eq(child1LiDeleteButton.textContent, 'Delete');
 		eq(child2LiDeleteButton.textContent, 'Delete');
 	},
-	"A deleteSelectedChildren button should operate on selected nested todos.": function() {
+	"A deleteSelectedChildren button should operate recursively on all selected nested todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
