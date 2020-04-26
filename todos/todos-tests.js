@@ -563,7 +563,6 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 
-		debugger;
 		eq(allSelectedTodosCompleted(todo1.children), false);	// zero of two selected, zero of two completed
 		
 		child1.selected = true;
@@ -585,7 +584,7 @@ tests({
 		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
 		child1.addChild(grandchild1);
 
-		eq(allSelectedTodosCompleted(todo1.children), false);	// two of three selected, two of three completed
+		eq(allSelectedTodosCompleted(todo1.children), true);	// two of three selected, two of three completed
 
 		grandchild1.selected = true;
 

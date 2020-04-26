@@ -59,5 +59,6 @@ li > ul {
 }
 
 button[disabled] {
-	visibility: hidden;
+	/* styles disabled buttons to take up space but not be visible 
+	visibility: hidden; */
 }

@@ -409,19 +409,32 @@ function anySelectedCompletedTodos(array) {
 
 // Return true if all selected todos, including nested todos, are completed
 function allSelectedTodosCompleted(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.selected && !todo.stage === 'completed') {
-			return false;
-		}
-		if (todo.children.length > 0) {
-			var todoSelectedCompleted = allSelectedTodosCompleted(todo.children);
-			if (!todoSelectedCompleted) {
-				return false;
+	var selected = 0;
+	var andCompleted = 0;
+
+	function runTest(array) {
+		for (var i = 0; i < array.length; i++) {
+			var todo = array[i];
+			if (todo.selected) {
+				selected++;
+				if (todo.stage === 'completed') {
+					andCompleted++;
+				}
 			} 
+
+			if (todo.children.length > 0) {
+				runTest(todo.children);
+			}
 		}
 	}
-	return true;
+
+	runTest(array);
+
+	if (selected > 0 && selected === andCompleted) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 // Return true if any todos, including nested todos, are both deleted and selected
