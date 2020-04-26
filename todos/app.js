@@ -407,6 +407,23 @@ function anySelectedCompletedTodos(array) {
 	}
 }
 
+// Return true if any todos, including nested todos, are both deleted and selected
+function anySelectedDeletedTodos(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.deleted && todo.selected) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			var todoSelectedDeleted = anySelectedDeletedTodos(todo.children);
+			if (todoSelectedDeleted) {
+				return true;
+			} 
+		}
+	}
+}
+
+
 // Return true if all selected todos, including nested todos, are completed
 function allSelectedTodosCompleted(array) {
 	var selected = 0;
@@ -437,19 +454,33 @@ function allSelectedTodosCompleted(array) {
 	}
 }
 
-// Return true if any todos, including nested todos, are both deleted and selected
-function anySelectedDeletedTodos(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.deleted && todo.selected) {
-			return true;
-		}
-		if (todo.children.length > 0) {
-			var todoSelectedDeleted = anySelectedDeletedTodos(todo.children);
-			if (todoSelectedDeleted) {
-				return true;
+// Return true if all selected todos, including nested todos, are deleted
+function allSelectedTodosDeleted(array) {
+	var selected = 0;
+	var andDeleted = 0;
+
+	function runTest(array) {
+		for (var i = 0; i < array.length; i++) {
+			var todo = array[i];
+			if (todo.selected) {
+				selected++;
+				if (todo.deleted === true) {
+					andDeleted++;
+				}
 			} 
+
+			if (todo.children.length > 0) {
+				runTest(todo.children);
+			}
 		}
+	}
+
+	runTest(array);
+
+	if (selected > 0 && selected === andDeleted) {
+		return true;
+	} else {
+		return false;
 	}
 }
 
@@ -701,7 +732,7 @@ function createTodoLi(todo) {
 		var deleteSelectedChildrenButton = document.createElement('button');
 		deleteSelectedChildrenButton.name = 'deleteSelectedChildren';
 		deleteSelectedChildrenButton.type = 'button';
-		if (anySelectedDeletedTodos(todo.children)) {
+		if (allSelectedTodosDeleted(todo.children)) {
 			deleteSelectedChildrenButton.textContent = 'Undelete selected children';
 		} else {
 			deleteSelectedChildrenButton.textContent = 'Delete selected children';

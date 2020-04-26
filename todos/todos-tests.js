@@ -2686,13 +2686,14 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
+		setActionsBarDefaults();
+		showDeletedButton.click();		// need to display deleted todos
+
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
-		var child1Li = todoLi1.querySelector('ul').children[0];
-		var child2Li = todoLi1.querySelector('ul').children[1];
 
 		eq(child1.selected, false);
 		eq(child2.selected, false);
@@ -2705,8 +2706,6 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
-		child1Li = todoLi1.querySelector('ul').children[0];
-		child2Li = todoLi1.querySelector('ul').children[1];
 
 		eq(child1.selected, true);
 		eq(child2.selected, true);
@@ -2724,13 +2723,14 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
+		setActionsBarDefaults();
+		showDeletedButton.click();		// need to display deleted todos
+
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
-		var child1Li = todoLi1.querySelector('ul').children[0];
-		var child2Li = todoLi1.querySelector('ul').children[1];
 
 		eq(child1.selected, false);
 		eq(child2.selected, false);
@@ -2743,8 +2743,6 @@ tests({
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
-		child1Li = todoLi1.querySelector('ul').children[0];
-		child2Li = todoLi1.querySelector('ul').children[1];
 
 		eq(child1.selected, true);
 		eq(child2.selected, true);
@@ -2954,6 +2952,8 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
+		setActionsBarDefaults();
+		showDeletedButton.click();			// need to display deleted todos
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
@@ -2973,9 +2973,9 @@ tests({
 		eq(child1LiEntry.classList.contains('faded-deleted'), false);
 		eq(child2LiEntry.classList.contains('faded-deleted'), false);
 		eq(grandchild1LiEntry.classList.contains('faded-deleted'), false);
-		eq(child1.deleted = false);
-		eq(child2.deleted = false);
-		eq(grandchild1.deleted = false);
+		eq(child1.deleted, false);
+		eq(child2.deleted, false);
+		eq(grandchild1.deleted, false);
 		eq(child1LiDeleteButton.textContent, 'Delete');
 		eq(child2LiDeleteButton.textContent, 'Delete');
 		eq(grandchild1LiDeleteButton.textContent, 'Delete');
@@ -3036,9 +3036,9 @@ tests({
 		eq(child1LiEntry.classList.contains('faded-deleted'), false);
 		eq(child2LiEntry.classList.contains('faded-deleted'), false);
 		eq(grandchild1LiEntry.classList.contains('faded-deleted'), false);
-		eq(child1.deleted = false);
-		eq(child2.deleted = false);
-		eq(grandchild1.deleted = false);
+		eq(child1.deleted, false);
+		eq(child2.deleted, false);
+		eq(grandchild1.deleted, false);
 		eq(child1LiDeleteButton.textContent, 'Delete');
 		eq(child2LiDeleteButton.textContent, 'Delete');
 		eq(grandchild1LiDeleteButton.textContent, 'Delete');
