@@ -2173,7 +2173,15 @@ function todoClickHandler(event) {
 //			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === "completeSelectedChildren") {
-			completeSelectedChildren(todoLi);
+//			completeSelectedChildren(todoLi);
+			if (allSelectedTodosCompleted(todo.children)) {
+				// 'Uncomplete selected children' clicked
+				setSelectedTodosStage(todo.children, 'active');
+			} else {
+				// 'Complete selected children' clicked
+				setSelectedTodosStage(todo.children, 'completed');
+			}
+			renderTodolist();
 		}
 		if (event.target.name === "deleteSelectedChildren") {
 			deleteSelectedChildren(todoLi);

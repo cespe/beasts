@@ -2359,6 +2359,7 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
 
 		eq(todoLi1CompleteSelectedChildrenButton.disabled, false);
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
@@ -2417,6 +2418,7 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
 
 		eq(todoLi1CompleteSelectedChildrenButton.disabled, false);
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
@@ -2556,6 +2558,7 @@ tests({
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
 
 		eq(todoLi1CompleteSelectedChildrenButton.disabled, false);
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
