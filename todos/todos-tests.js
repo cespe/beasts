@@ -2327,10 +2327,141 @@ tests({
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
 	},
 	"Clicking 'Complete selected children' button should set stage 'completed' on nested selected todos and re-render todoLis.": function() {
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		var child1Li = todoLi1.querySelector('ul').children[0];
+		var child1LiEntry = child1Li.querySelector('p');
+		var child1LiCompleteButton = child1Li.children.namedItem('complete');
+		var child2Li = todoLi1.querySelector('ul').children[1];
+		var child2LiEntry = child2Li.querySelector('p');
+		var child2LiCompleteButton = child2Li.children.namedItem('complete');
+
+		eq(todoLi1CompleteSelectedChildrenButton.disabled, true);
+		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(child2LiEntry.classList.contains('struck-completed'), false);
+		eq(child1.stage, 'active');
+		eq(child2.stage, 'active');
+		eq(child1LiCompleteButton.textContent, 'Complete');
+		eq(child2LiCompleteButton.textContent, 'Complete');
+
+		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(todoLi1CompleteSelectedChildrenButton.disabled, false);
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+
+		todoLi1CompleteSelectedChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		child1Li = todoLi1.querySelector('ul').children[0];
+		child1LiEntry = child1Li.querySelector('p');
+		child1LiCompleteButton = child1Li.children.namedItem('complete');
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child2LiEntry = child2Li.querySelector('p');
+		child2LiCompleteButton = child2Li.children.namedItem('complete');
+
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Uncomplete selected children');
+
+		eq(child1LiEntry.classList.contains('struck-completed'), true);
+		eq(child2LiEntry.classList.contains('struck-completed'), true);
+		eq(child1.stage, 'completed');
+		eq(child2.stage, 'completed');
+		eq(child1LiCompleteButton.textContent, 'Uncomplete');
+		eq(child2LiCompleteButton.textContent, 'Uncomplete');
 	},
 	"Clicking 'Uncomplete selected children' button should set stage 'active' on nested selected todos and re-render todoLis.": function() {
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		var child1Li = todoLi1.querySelector('ul').children[0];
+		var child1LiEntry = child1Li.querySelector('p');
+		var child1LiCompleteButton = child1Li.children.namedItem('complete');
+		var child2Li = todoLi1.querySelector('ul').children[1];
+		var child2LiEntry = child2Li.querySelector('p');
+		var child2LiCompleteButton = child2Li.children.namedItem('complete');
+
+		eq(todoLi1CompleteSelectedChildrenButton.disabled, true);
+		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(child2LiEntry.classList.contains('struck-completed'), false);
+		eq(child1.stage, 'active');
+		eq(child2.stage, 'active');
+		eq(child1LiCompleteButton.textContent, 'Complete');
+		eq(child2LiCompleteButton.textContent, 'Complete');
+
+		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(todoLi1CompleteSelectedChildrenButton.disabled, false);
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+
+		todoLi1CompleteSelectedChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		child1Li = todoLi1.querySelector('ul').children[0];
+		child1LiEntry = child1Li.querySelector('p');
+		child1LiCompleteButton = child1Li.children.namedItem('complete');
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child2LiEntry = child2Li.querySelector('p');
+		child2LiCompleteButton = child2Li.children.namedItem('complete');
+
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Uncomplete selected children');
+
+		eq(child1LiEntry.classList.contains('struck-completed'), true);
+		eq(child2LiEntry.classList.contains('struck-completed'), true);
+		eq(child1.stage, 'completed');
+		eq(child2.stage, 'completed');
+		eq(child1LiCompleteButton.textContent, 'Uncomplete');
+		eq(child2LiCompleteButton.textContent, 'Uncomplete');
+
+		todoLi1CompleteSelectedChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		child1Li = todoLi1.querySelector('ul').children[0];
+		child1LiEntry = child1Li.querySelector('p');
+		child1LiCompleteButton = child1Li.children.namedItem('complete');
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child2LiEntry = child2Li.querySelector('p');
+		child2LiCompleteButton = child2Li.children.namedItem('complete');
+
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+
+		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(child2LiEntry.classList.contains('struck-completed'), false);
+		eq(child1.stage, 'active');
+		eq(child2.stage, 'active');
+		eq(child1LiCompleteButton.textContent, 'Complete');
+		eq(child2LiCompleteButton.textContent, 'Complete');
 	},
 	"Clicking a 'completeSelectedChildren' button should toggle button text and toggle todo.completed, todoLi entry class and 'complete' button text on selected child todos.": function() {
 		remove();
@@ -2388,9 +2519,11 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
-		todo1.addChild(child1);
 		grandchild1 = new Todo('Item 1 grandchild 1');
 		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
 		renderTodolist();
@@ -2401,38 +2534,84 @@ tests({
 		var child1Li = todoLi1.querySelector('ul').children[0];
 		var child1LiEntry = child1Li.querySelector('p');
 		var child1LiCompleteButton = child1Li.children.namedItem('complete');
+		var child2Li = todoLi1.querySelector('ul').children[1];
+		var child2LiEntry = child2Li.querySelector('p');
+		var child2LiCompleteButton = child2Li.children.namedItem('complete');
 		var grandchild1Li = child1Li.querySelector('ul').children[0];
 		var grandchild1LiEntry = grandchild1Li.querySelector('p');
 		var grandchild1LiCompleteButton = grandchild1Li.children.namedItem('complete');
 
-		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), true);
+		eq(todoLi1CompleteSelectedChildrenButton.disabled, true);
 		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(child2LiEntry.classList.contains('struck-completed'), false);
 		eq(grandchild1LiEntry.classList.contains('struck-completed'), false);
-		eq(child1.completed, false);
-		eq(grandchild1.completed, false);
+		eq(child1.stage, 'active');
+		eq(child2.stage, 'active');
+		eq(grandchild1.stage, 'active');
 		eq(child1LiCompleteButton.textContent, 'Complete');
+		eq(child2LiCompleteButton.textContent, 'Complete');
 		eq(grandchild1LiCompleteButton.textContent, 'Complete');
 
 		todoLi1SelectChildrenButton.click();
 
-		eq(todoLi1CompleteSelectedChildrenButton.classList.contains('inactive'), false);
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		eq(todoLi1CompleteSelectedChildrenButton.disabled, false);
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
 
 		todoLi1CompleteSelectedChildrenButton.click();
 
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		child1Li = todoLi1.querySelector('ul').children[0];
+		child1LiEntry = child1Li.querySelector('p');
+		child1LiCompleteButton = child1Li.children.namedItem('complete');
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child2LiEntry = child2Li.querySelector('p');
+		child2LiCompleteButton = child2Li.children.namedItem('complete');
+		grandchild1Li = child1Li.querySelector('ul').children[0];
+		grandchild1LiEntry = grandchild1Li.querySelector('p');
+		grandchild1LiCompleteButton = grandchild1Li.children.namedItem('complete');
+
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Uncomplete selected children');
+
 		eq(child1LiEntry.classList.contains('struck-completed'), true);
+		eq(child2LiEntry.classList.contains('struck-completed'), true);
 		eq(grandchild1LiEntry.classList.contains('struck-completed'), true);
-		eq(child1.completed, true);
-		eq(grandchild1.completed, true);
+		eq(child1.stage, 'completed');
+		eq(child2.stage, 'completed');
+		eq(grandchild1.stage, 'completed');
 		eq(child1LiCompleteButton.textContent, 'Uncomplete');
+		eq(child2LiCompleteButton.textContent, 'Uncomplete');
 		eq(grandchild1LiCompleteButton.textContent, 'Uncomplete');
 
 		todoLi1CompleteSelectedChildrenButton.click();
-		
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		child1Li = todoLi1.querySelector('ul').children[0];
+		child1LiEntry = child1Li.querySelector('p');
+		child1LiCompleteButton = child1Li.children.namedItem('complete');
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child2LiEntry = child2Li.querySelector('p');
+		child2LiCompleteButton = child2Li.children.namedItem('complete');
+		grandchild1Li = child1Li.querySelector('ul').children[0];
+		grandchild1LiEntry = grandchild1Li.querySelector('p');
+		grandchild1LiCompleteButton = grandchild1Li.children.namedItem('complete');
+
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+
 		eq(child1LiEntry.classList.contains('struck-completed'), false);
+		eq(child2LiEntry.classList.contains('struck-completed'), false);
 		eq(grandchild1LiEntry.classList.contains('struck-completed'), false);
-		eq(child1.completed, false);
-		eq(grandchild1.completed, false);
+		eq(child1.stage, 'active');
+		eq(child2.stage, 'active');
+		eq(grandchild1.stage, 'active');
 		eq(child1LiCompleteButton.textContent, 'Complete');
+		eq(child2LiCompleteButton.textContent, 'Complete');
 		eq(grandchild1LiCompleteButton.textContent, 'Complete');
 	},
 	"If a todo has children, its todoLi should have a 'deleteSelectedChildren' button to delete/undelete selected child todos.": function() {
