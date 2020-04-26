@@ -218,6 +218,19 @@ function markFilteredInTodosSelected(todosArray, bool) {
 	}
 }
 
+// Recursively set given stage (active, completed, etc.) for selected nested todos, starting with given array
+function setSelectedTodosStage(todosArray, stage) {
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+		if (todo.children.length > 0) {
+			setSelectedTodosStage(todo.children, stage);
+		}
+		if (todo.selected) {
+			todo.setStage(stage);
+		}
+	}
+}
+
 /*********************************** Data selection **************************************/
 // Return the todo with the given id
 function findTodo(array, id) {
@@ -394,6 +407,23 @@ function anySelectedCompletedTodos(array) {
 	}
 }
 
+// Return true if all selected todos, including nested todos, are completed
+function allSelectedTodosCompleted(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.selected && !todo.stage === 'completed') {
+			return false;
+		}
+		if (todo.children.length > 0) {
+			var todoSelectedCompleted = allSelectedTodosCompleted(todo.children);
+			if (!todoSelectedCompleted) {
+				return false;
+			} 
+		}
+	}
+	return true;
+}
+
 // Return true if any todos, including nested todos, are both deleted and selected
 function anySelectedDeletedTodos(array) {
 	for (var i = 0; i < array.length; i++) {
@@ -556,7 +586,6 @@ function createTodoLi(todo) {
 	} else {
 		completeButton.textContent = 'Complete';
 	}
-	todoLi.appendChild(completeButton);
 
 	var deleteButton = document.createElement('button')
 	deleteButton.name = 'delete';
@@ -566,19 +595,16 @@ function createTodoLi(todo) {
 	} else {
 		deleteButton.textContent = 'Delete';
 	}
-	todoLi.appendChild(deleteButton);
 
 	var siblingButton = document.createElement('button')
 	siblingButton.name = 'addSibling';
 	siblingButton.type = 'button';
 	siblingButton.textContent = 'Add sibling';
-	todoLi.appendChild(siblingButton);
 
 	var childButton = document.createElement('button')
 	childButton.name = 'addChild';
 	childButton.type = 'button';
 	childButton.textContent = 'Add child';
-	todoLi.appendChild(childButton);
 
 	var selectButton = document.createElement('button')
 	selectButton.name = 'select';
@@ -590,13 +616,29 @@ function createTodoLi(todo) {
 		selectButton.textContent = 'Select';
 		selectButton.disabled = true;
 	}
-	todoLi.appendChild(selectButton);
 
 	var undoEditButton = document.createElement('button')
 	undoEditButton.name = 'undoEdit';
 	undoEditButton.type = 'button';
 	undoEditButton.textContent = 'Undo edit';
 	undoEditButton.disabled = true;
+
+	// Set buttons for selection mode (any todos in root array selected)
+	// find root selection array (if parent array is branch i.e. select button enabled,
+	// try next level up until you find root)
+//	if (/* any selected todos starting at root */) {
+//		completeButton.disabled = true;
+//		deleteButton.disabled = true;
+//		addSiblingButton.disabled = true;
+//		addChildButton.disabled = true;
+//		selectButton.disabled = false;
+//	}
+		
+	todoLi.appendChild(completeButton);
+	todoLi.appendChild(deleteButton);
+	todoLi.appendChild(siblingButton);
+	todoLi.appendChild(childButton);
+	todoLi.appendChild(selectButton);
 	todoLi.appendChild(undoEditButton);
 
 	var entry = document.createElement('p');
@@ -613,7 +655,7 @@ function createTodoLi(todo) {
 	}
 	todoLi.appendChild(entry);
 
-	if (todo.children.length > 0) {		// Last four buttons only created if there are children
+	if (todo.children.length > 0) {		// Next two buttons only created if there are children
 
 		var showChildrenButton = document.createElement('button');
 		showChildrenButton.name = 'showChildren';
@@ -637,7 +679,7 @@ function createTodoLi(todo) {
 		var completeSelectedChildrenButton = document.createElement('button');
 		completeSelectedChildrenButton.name = 'completeSelectedChildren';
 		completeSelectedChildrenButton.type = 'button';
-		if (anySelectedCompletedTodos(todo.children)) {
+		if (allSelectedTodosCompleted(todo.children)) {
 			completeSelectedChildrenButton.textContent = 'Uncomplete selected children';
 		} else {
 			completeSelectedChildrenButton.textContent = 'Complete selected children';

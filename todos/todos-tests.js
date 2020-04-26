@@ -329,6 +329,8 @@ tests({
 		eq(grandchild1.filteredOutParentOfFilteredIn, false);
 		eq(grandchild2.filteredOutParentOfFilteredIn, false);
 	},
+	"Section: todo array helper functions": function() {
+	},
 	"The app should have a way to return a todo when given its id.": function() {
 		// Tests findTodo(array, id)
 		todos = [];
@@ -534,6 +536,70 @@ tests({
 		eq(anyUnselectedTodos(todo2.children), true);
 		todo2Grandchild1.selected = true;
 		eq(anyUnselectedTodos(todo2.children), false);
+	},
+	"The app should have a way to determine if any todos at a root array level are selected.": function() {
+		// Tests anySelectedRootTodos(array)
+		fail();
+	},
+	"The app should have a way to check if any todos, including nested todos, are both selected and filtered in for display.": function() {
+		// Tests anySelectedFilteredInTodos(array)
+		fail();
+	},
+	"The app should have a way to check if any todos, including nested todos, are deleted.": function() {
+		// Tests anyDeletedTodos(array)
+		fail();
+	},
+	"The app should have a way to check if any todos, including nested todos, are both selected and completed.": function() {
+		// Tests anySelectedCompletedTodos(array)
+		fail();
+	},
+	"The app should have a way to check if all todos, including nested todos, are both selected and completed.": function() {
+		// Tests allSelectedTodosCompleted(array)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+
+		debugger;
+		eq(allSelectedTodosCompleted(todo1.children), false);	// zero of two selected, zero of two completed
+		
+		child1.selected = true;
+
+		eq(allSelectedTodosCompleted(todo1.children), false);	// one of two selected, zero of two completed
+
+		child2.selected = true;
+
+		eq(allSelectedTodosCompleted(todo1.children), false);	// two of two selected, zero of two completed
+		
+		child1.stage = 'completed';
+
+		eq(allSelectedTodosCompleted(todo1.children), false);	// two of two selected, one of two completed
+		
+		child2.stage = 'completed';
+
+		eq(allSelectedTodosCompleted(todo1.children), true);	// two of two selected, two of two completed
+
+		grandchild1 = new Todo('Item 1 child 1 grandchild 1');
+		child1.addChild(grandchild1);
+
+		eq(allSelectedTodosCompleted(todo1.children), false);	// two of three selected, two of three completed
+
+		grandchild1.selected = true;
+
+		eq(allSelectedTodosCompleted(todo1.children), false);	// three of three selected, two of three completed
+
+		grandchild1.stage = 'completed';
+
+		eq(allSelectedTodosCompleted(todo1.children), true);	// three of three selected, three of three completed
+	},
+	"The app should have a way to check if any todos, including nested todos, are both selected and deleted.": function() {
+		// Tests anySelectedDeletedTodos(array)
+		fail();
+	},
+	"Section: todoLi elements": function() {
 	},
 	"The app should have a way to build a todoLi element from a todo object.": function() {
 		todos = [];
@@ -2184,11 +2250,82 @@ tests({
 
 		eq(todoLi1.children.namedItem('completeSelectedChildren').disabled, false);
 	},
-	"If any selected nested todos are completed, 'completeSelectedChildren' button should read 'Uncomplete selected children'.": function() {
-		fail();
+	"If all selected nested todos are completed, 'completeSelectedChildren' button should read 'Uncomplete selected children'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		child1.setStage('completed');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		child2.setStage('completed');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		var child1Li = todoLi1.querySelector('ul').children[0];
+		var child2Li = todoLi1.querySelector('ul').children[1];
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(child1.stage, 'completed');
+		eq(child2.stage, 'completed');
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+
+		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		child1Li = todoLi1.querySelector('ul').children[0];
+		child2Li = todoLi1.querySelector('ul').children[1];
+
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(child1.stage, 'completed');
+		eq(child2.stage, 'completed');
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Uncomplete selected children');
 	},
 	"Otherwise, 'completeSelectedChildren' button should read 'Complete selected children'.": function() {
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		child1.setStage('completed');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		var child1Li = todoLi1.querySelector('ul').children[0];
+		var child2Li = todoLi1.querySelector('ul').children[1];
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(child1.stage, 'completed');
+		eq(child2.stage, 'active');
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
+
+		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+		child1Li = todoLi1.querySelector('ul').children[0];
+		child2Li = todoLi1.querySelector('ul').children[1];
+
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(child1.stage, 'completed');
+		eq(child2.stage, 'active');
+		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
 	},
 	"Clicking 'Complete selected children' button should set stage 'completed' on nested selected todos and re-render todoLis.": function() {
 		fail();
