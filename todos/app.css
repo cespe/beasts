@@ -57,3 +57,7 @@
 li > ul {
 	margin-top: 1em;
 }
+
+button[disabled] {
+	visibility: hidden;
+}
