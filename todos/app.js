@@ -501,13 +501,13 @@ function purgeSelectedDeletedTodos(array) {
 //var appheader = document.getElementById('appheader');
 var actionsBar = document.getElementById('actions');
 var selectAllButton = actionsBar.children.namedItem('selectAll');
-var completeSelectedButton = document.getElementsByName('completeSelected')[0];
-var deleteSelectedButton = document.getElementsByName('deleteSelected')[0];
-var showActiveButton = document.getElementsByName('showActive')[0];
-var showCompletedButton = document.getElementsByName('showCompleted')[0];
-var showDeletedButton = document.getElementsByName('showDeleted')[0];
-var purgeSelectedDeletedButton = document.getElementsByName('purgeSelectedDeleted')[0];
-var addTodoButton = document.getElementsByName('addTodo')[0];
+var completeSelectedButton = actionsBar.children.namedItem('completeSelected');
+var deleteSelectedButton = actionsBar.children.namedItem('deleteSelected');
+var showActiveButton = actionsBar.children.namedItem('showActive');
+var showCompletedButton = actionsBar.children.namedItem('showCompleted');
+var showDeletedButton = actionsBar.children.namedItem('showDeleted');
+var purgeSelectedDeletedButton = actionsBar.children.namedItem('purgeSelectedDeleted');
+var addTodoButton = actionsBar.children.namedItem('addTodo');
 
 var todolist = document.getElementById('todolist');
 
@@ -1947,22 +1947,19 @@ function keyDownHandler(event) {
 
 function keyUpHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
-		// target is a todo entry
+		// target is a todoLi entry
 		var todoLi = event.target.parentElement;
+		var editedEntry = event.target.textContent
 		var todo = findTodo(todos, todoLi.id);
 		var todoArray = findArray(todos, todo.id);
 		if (event.key === "Enter") {
+			if (todo.entry != editedEntry) {
+				todo.update(editedEntry);			// Must update entry before re-rendering
+			}
 			if (event.shiftKey) {
-				// Shift-return appends a new child todo
-				// these lines lifted from addChild event handler, TODO consolidate
-				appendNewChildTodoLi(todo)
-//				todo.collapsed = false;
-//				todoLi.querySelector('ul').classList.remove('collapsed');
-//				todoLi.children.namedItem('showChildren').classList.remove('inactive');
-//				todoLi.children.namedItem('selectChildren').classList.remove('inactive');
+				appendNewChildTodoLi(todo)			// Shift-return appends a new child todo
 			} else {
-				// Return inserts a new sibling todo
-				insertNewTodoLi(todoArray, todo);
+				insertNewTodoLi(todoArray, todo);	// Return inserts a new sibling todo
 			}
 		} else if (event.key === "Escape") {
 			// these lines lifted from undoEdit event handler, TODO consolidate
@@ -1970,7 +1967,8 @@ function keyUpHandler(event) {
 			var todoLiEntry = todoLi.querySelector('p');
 			todoLiEntry.textContent = originalEntry
 			var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
-			todoLiUndoEditButton.classList.add('inactive');
+			todoLiUndoEditButton.disabled = true;
+			todoLiEntry.blur();		// Blur to match result of clicking undoEdit button
 		}
 	}
 }
@@ -1989,9 +1987,9 @@ function inputHandler(event) {
 //		todoJustEdited = todo;
 		originalEntry = todo.entry;
 		if (oldUndoEditButton) {
-			oldUndoEditButton.classList.add('inactive');	// only want one undoEditButton at a time
+			oldUndoEditButton.disabled = true;	// only want one undoEditButton at a time
 		}
-		todoLiUndoEditButton.classList.remove('inactive');
+		todoLiUndoEditButton.disabled = false;
 		oldUndoEditButton = todoLiUndoEditButton;
 	}
 }
