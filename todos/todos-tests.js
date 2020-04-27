@@ -1324,7 +1324,7 @@ tests({
 		eq(todoLi1AddSibling.name, 'addSibling');
 		eq(todoLi1AddSibling.textContent, 'Add sibling');
 	},
-	"Clicking an 'addSibling' button should create a new sibling todo, re-render todolist, and focus new todoLi entry <p>.": function() {
+	"Clicking an 'addSibling' button should create a new sibling todo, re-render todolist, and focus new todoLi entry <p> (close devtools to pass test).": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -1390,7 +1390,7 @@ tests({
 		eq(todoLi1AddChild.name, 'addChild');
 		eq(todoLi1AddChild.textContent, 'Add child');
 	},
-	"Clicking an 'addChild' button should create a new nested child todo, re-render todolist, and focus new todoLi entry <p>.": function() {
+	"Clicking an 'addChild' button should create a new nested child todo, re-render todolist, and focus new todoLi entry <p> (close devtools to pass test).": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -9383,6 +9383,7 @@ tests({
 	},
 	"The app should set todo.selected to false on startup.": function() {
 		// Startup should produce a clean slate with no selected todos.
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markSelected(true);
@@ -9402,14 +9403,17 @@ tests({
 		eq(todoLi2.children.namedItem('select').textContent, 'Select');
 		eq(selectAllButton.textContent, 'Select all');
 	},
-	"If todos array is empty at startup, the app should create a new empty todo.": function() {
+	"If todos array is empty at startup, the app should create a new todo and todoLi with entry field focused (close devtools to pass test).": function() {
 		todos = [];
 		startApp();
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
+		todoLi1Entry = todoLi1.querySelector('p');
 
 		eq(todos.length, 1);
 		eq(todosUl.children.length, 1);
 		eq(todoLi1.querySelector('p').textContent, '');
+		eq(document.activeElement, todoLi1Entry);
+		eq(document.hasFocus(), true);
 	}
 });

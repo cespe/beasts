@@ -2525,8 +2525,9 @@ function startApp() {
 	setActionsBarDefaults();
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
-	} 
-	renderTodolist();
+	} else {						// 'else' because insertNewTodoLi already calls renderTodolist
+		renderTodolist();
+	}
 }
 
 setUpEventListeners();
