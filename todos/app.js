@@ -120,9 +120,8 @@ Todo.prototype.markFilteredIn = function(filterSet) {
 }
 */
 Todo.prototype.markFilteredOutParentOfFilteredIn = function() {
-	if (this.filteredIn === true || this.children.length === 0) {
-		this.filteredOutParentOfFilteredIn = false;
-	} else {
+	this.filteredOutParentOfFilteredIn = false;		// re-set to baseline value
+	if (this.filteredIn === false && this.children.length > 0) {
 		for (var i = 0; i < this.children.length; i++) {
 			var child = this.children[i];
 			if (child.filteredIn || child.filteredOutParentOfFilteredIn) {

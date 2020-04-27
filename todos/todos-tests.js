@@ -174,7 +174,81 @@ tests({
 		eq(grandchild2.filteredOutParentOfFilteredIn, false);
 		eq(todo2.filteredOutParentOfFilteredIn, true);
 		eq(child3.filteredOutParentOfFilteredIn, false);
+	},
+	"the app should set re-set markFilteredOutParentOfFilteredIn to baseline value (false) before each re-render.": function() {
+		// Fixes a bug where the property remained true when re-rendered
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
 
+		setActionsBarDefaults();
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1Entry.classList.contains('parent-placeholder'), false);
+		eq(todo1.deleted, false);
+		eq(todo1.filteredIn, true);
+		eq(todo1.filteredOutParentOfFilteredIn, false);
+		eq(child1.stage, 'active');
+		eq(child1.filteredIn, true);
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		todoLi1DeleteButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1DeleteButton = childLi1.children.namedItem('delete');
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1Entry.classList.contains('parent-placeholder'), true);
+		eq(todo1.deleted, true);
+		eq(todo1.filteredIn, false);
+		eq(todo1.filteredOutParentOfFilteredIn, true);
+		eq(child1.stage, 'active');
+		eq(child1.filteredIn, true);
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		childLi1DeleteButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+
+		eq(todo1.deleted, true);
+		eq(todo1.filteredIn, false);
+		eq(todo1.filteredOutParentOfFilteredIn, false);
+		eq(child1.deleted, true);
+		eq(child1.filteredIn, false);
+		eq(showDeletedButton.textContent, 'Deleted');
+		eq(todoLi1, undefined);
+
+		showDeletedButton.click();
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1Entry.classList.contains('faded-deleted'), true);
+		eq(todoLi1Entry.classList.contains('parent-placeholder'), false);
+		eq(todo1.deleted, true);
+		eq(todo1.filteredIn, true);
+		eq(todo1.filteredOutParentOfFilteredIn, false);
+		eq(child1.stage, 'active');
+		eq(child1.deleted, true);
+		eq(child1.filteredIn, true);
+		eq(childLi1Entry.classList.contains('faded-deleted'), true);
 	},
 	"The app should have a way to insert a new todo after any todo in the array it is in.": function() {
 		// Tests insertTodo(array, todoToInsert, todoBeforeInsertionPoint)
