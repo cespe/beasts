@@ -725,8 +725,9 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 		entry.classList.add('faded-deleted');
 	}
 	todoLi.appendChild(entry);
-
-	if (todo.children.length > 0) {		// Next two buttons only created if there are children
+	
+	// Only create last four buttons if there are children
+	if (todo.children.length > 0) {		
 
 		var showChildrenButton = document.createElement('button');
 		showChildrenButton.name = 'showChildren';
@@ -737,47 +738,47 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 			showChildrenButton.textContent = 'Hide children';
 		}
 		todoLi.appendChild(showChildrenButton);
-
-		var selectChildrenButton = document.createElement('button');
-		selectChildrenButton.name = 'selectChildren';
-		selectChildrenButton.type = 'button';
-		if (todo.collapsed) {
-			selectChildrenButton.disabled = true;
-		} else {
+		
+		// Only create last three buttons if there are children showing
+		if (!todo.collapsed) {
+			var selectChildrenButton = document.createElement('button');
+			selectChildrenButton.name = 'selectChildren';
+			selectChildrenButton.type = 'button';
 			selectChildrenButton.disabled = false;
-		}
 
-		var completeSelectedChildrenButton = document.createElement('button');
-		completeSelectedChildrenButton.name = 'completeSelectedChildren';
-		completeSelectedChildrenButton.type = 'button';
-		if (allSelectedTodosCompleted(todo.children)) {
-			completeSelectedChildrenButton.textContent = 'Uncomplete selected children';
-		} else {
-			completeSelectedChildrenButton.textContent = 'Complete selected children';
-		}
+			var anySelectedFilteredInChildren = anySelectedFilteredInTodos(todo.children);
+			if (anySelectedFilteredInChildren) {
+				selectChildrenButton.textContent = 'Unselect children';
+			} else {
+				selectChildrenButton.textContent = 'Select children';
+			}
+			todoLi.appendChild(selectChildrenButton);
 
-		var deleteSelectedChildrenButton = document.createElement('button');
-		deleteSelectedChildrenButton.name = 'deleteSelectedChildren';
-		deleteSelectedChildrenButton.type = 'button';
-		if (allSelectedTodosDeleted(todo.children)) {
-			deleteSelectedChildrenButton.textContent = 'Undelete selected children';
-		} else {
-			deleteSelectedChildrenButton.textContent = 'Delete selected children';
-		}
+			// Only create last two buttons for a root todoLi with todos selected
+			if (!todo.selectMode && anySelectedFilteredInChildren) {
+				var completeSelectedChildrenButton = document.createElement('button');
+				completeSelectedChildrenButton.name = 'completeSelectedChildren';
+				completeSelectedChildrenButton.type = 'button';
+				completeSelectedChildrenButton.disabled = false;
+				if (allSelectedTodosCompleted(todo.children)) {
+					completeSelectedChildrenButton.textContent = 'Uncomplete selected children';
+				} else {
+					completeSelectedChildrenButton.textContent = 'Complete selected children';
+				}
+				todoLi.appendChild(completeSelectedChildrenButton);
 
-		if (anySelectedFilteredInTodos(todo.children)) {
-			selectChildrenButton.textContent = 'Unselect children';
-			completeSelectedChildrenButton.disabled = false;
-			deleteSelectedChildrenButton.disabled = false;
-		} else {
-			selectChildrenButton.textContent = 'Select children';
-			completeSelectedChildrenButton.disabled = true;
-			deleteSelectedChildrenButton.disabled = true;
+				var deleteSelectedChildrenButton = document.createElement('button');
+				deleteSelectedChildrenButton.name = 'deleteSelectedChildren';
+				deleteSelectedChildrenButton.type = 'button';
+				deleteSelectedChildrenButton.disabled = false;
+				if (allSelectedTodosDeleted(todo.children)) {
+					deleteSelectedChildrenButton.textContent = 'Undelete selected children';
+				} else {
+					deleteSelectedChildrenButton.textContent = 'Delete selected children';
+				}
+				todoLi.appendChild(deleteSelectedChildrenButton);
+			}
 		}
-
-		todoLi.appendChild(selectChildrenButton);
-		todoLi.appendChild(completeSelectedChildrenButton);
-		todoLi.appendChild(deleteSelectedChildrenButton);
 	}
 
 	return todoLi;
