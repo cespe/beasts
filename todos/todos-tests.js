@@ -1507,21 +1507,6 @@ tests({
 		eq(todo1.selected, false);
 		eq(todoLi1SelectButton.textContent, 'Select');
 	},
-	"If a todo is not selected, its todoLi 'select' button should be enabled if it is in selection mode.": function() {
-		// A todo is in 'selection mode' if it has descendant selected todos or is descended from a selected todo.
-		todos = []
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('select');
-
-		eq(todo1.selected, false);
-		eq(todoLi1SelectButton.textContent, 'Select');
-//		eq(todoLi1SelectButton.disabled, true);
-	},
 	"If a todo is selected, its todoLi 'select' button should be 'Unselect' and it should not be disabled.": function() {
 		todos = []
 		todo1 = new Todo('Item 1');
@@ -1536,6 +1521,70 @@ tests({
 		eq(todo1.selected, true);
 		eq(todoLi1SelectButton.textContent, 'Unselect');
 		eq(todoLi1SelectButton.disabled, false);
+	},
+	"If todo selectMode is true, its todoLi 'select' button should be enabled; otherwise disabled.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		todo1.markSelectMode(true);
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+
+		eq(todoLi1SelectButton.disabled, false);
+
+		todo1.markSelected(false);
+		todo1.markSelectMode(false);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+
+		eq(todoLi1SelectButton.disabled, true);
+	},
+	"Also, its todoLi 'complete', 'delete', 'addSibling', and 'addChild' buttons should be disabled; otherwise enabled.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		todo1.markSelectMode(true);
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
+		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
+
+		eq(todoLi1SelectButton.disabled, false);
+		eq(todoLi1CompleteButton.disabled, true);
+		eq(todoLi1DeleteButton.disabled, true);
+		eq(todoLi1AddSiblingButton.disabled, true);
+		eq(todoLi1AddChildButton.disabled, true);
+
+		todo1.markSelected(false);
+		todo1.markSelectMode(false);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+		todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
+		todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
+
+		eq(todoLi1SelectButton.disabled, true);
+		eq(todoLi1CompleteButton.disabled, false);
+		eq(todoLi1DeleteButton.disabled, false);
+		eq(todoLi1AddSiblingButton.disabled, false);
+		eq(todoLi1AddChildButton.disabled, false);
 	},
 	"If a todo is selected, its todoLi entry <p> class should contain 'highlighted'.": function() {
 		todos = []
@@ -1916,6 +1965,11 @@ tests({
 		eq(todo1.collapsed, false);
 		eq(child1.id, childLi1.id);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+	},
+	"Clicking a 'Hide children' button should unselect any selected nested todos.": function() {
+		// This is a design decision. It seems likely a user would naturally expect hiding children
+		// to unselect them too.
+		fail();
 	},
 	"If a todo has children, its todoLi should have a 'selectChildren' button to select them.": function() {
 		todos = [];
@@ -2475,6 +2529,35 @@ tests({
 
 		eq(todoLi1.children.namedItem('completeSelectedChildren').disabled, false);
 	},
+	"However, if the todo is in select mode, its todoLi should not have a 'completeSelectedChildren' button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		todoLi1SelectChildrenButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+		var childLi1CompleteSelectedChildrenButton = childLi1.children.namedItem('completeSelectedChildren');
+
+		eq(child1.selectMode, true);
+		eq(grandchild1.selected, true);
+		eq(childLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(todoLi1CompleteSelectedChildrenButton, null);
+	},
 	"If all selected nested todos are completed, 'completeSelectedChildren' button should read 'Uncomplete selected children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2901,6 +2984,35 @@ tests({
 
 		eq(todoLi1.children.namedItem('deleteSelectedChildren').disabled, false);
 	},
+	"However, if the todo is in select mode, its todoLi should not have a 'deleteSelectedChildren' button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		var todosUl = todolist.children[0];
+		var todoLi1 = todosUl.children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		todoLi1SelectChildrenButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+		var childLi1DeleteSelectedChildrenButton = childLi1.children.namedItem('deleteSelectedChildren');
+
+		eq(child1.selectMode, true);
+		eq(grandchild1.selected, true);
+		eq(childLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(todoLi1DeleteSelectedChildrenButton, null);
+	},
 	"If any selected nested todos are deleted, 'deleteSelectedChildren' button should read 'Undelete selected children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -3326,75 +3438,6 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 	},
-	"Clicking 'Hide children' button should unselect nested todos.": function() {
-		// This is a design choice. It seems more natural that the user would assume selected children
-		// would become unselected when they are hidden.
-		fail();
-	},
-	"If todo selectMode is true, its todoLi 'select' button should be enabled; otherwise disabled.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markSelected(true);
-		todo1.markSelectMode(true);
-		insertTodo(todos, todo1);
-		
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('select');
-
-		eq(todoLi1SelectButton.disabled, false);
-
-		todo1.markSelected(false);
-		todo1.markSelectMode(false);
-		
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		todoLi1SelectButton = todoLi1.children.namedItem('select');
-
-		eq(todoLi1SelectButton.disabled, true);
-	},
-	"Also, its todoLi 'complete', 'delete', 'addSibling', and 'addChild' buttons should be disabled; otherwise enabled.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markSelected(true);
-		todo1.markSelectMode(true);
-		insertTodo(todos, todo1);
-		
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('select');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
-		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
-		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
-
-		eq(todoLi1SelectButton.disabled, false);
-		eq(todoLi1CompleteButton.disabled, true);
-		eq(todoLi1DeleteButton.disabled, true);
-		eq(todoLi1AddSiblingButton.disabled, true);
-		eq(todoLi1AddChildButton.disabled, true);
-
-		todo1.markSelected(false);
-		todo1.markSelectMode(false);
-		
-		renderTodolist();
-
-		todoLi1 = todolist.children[0].children[0];
-		todoLi1SelectButton = todoLi1.children.namedItem('select');
-		todoLi1CompleteButton = todoLi1.children.namedItem('complete');
-		todoLi1DeleteButton = todoLi1.children.namedItem('delete');
-		todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
-		todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
-
-		eq(todoLi1SelectButton.disabled, true);
-		eq(todoLi1CompleteButton.disabled, false);
-		eq(todoLi1DeleteButton.disabled, false);
-		eq(todoLi1AddSiblingButton.disabled, false);
-		eq(todoLi1AddChildButton.disabled, false);
-	},
 	"Clicking a 'root' (i.e. Select button inactive) selectChildren button should toggle 'inactive' on complete, delete, addSibling, addChild and showChildren buttons.": function() {
 		// By design, hide regular parent buttons to concentrate attention on the selected children.
 		// TODO Editing the parent entry or using addSibling and addChild keyboard shortcuts should also be disabled.
@@ -3530,6 +3573,7 @@ tests({
 		eq(childLi1ShowChildrenButton.classList.contains('inactive'), false);
 	},
 	"Clicking a root selectChildren button should toggle 'inactive' on completeSelectedChildren and deleteSelectedChildren buttons.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');

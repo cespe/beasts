@@ -645,12 +645,23 @@ function createParentPlaceholderLi(todo) {
 	return todoLi;
 }
 
-function createTodoLi(todo, selectionMode) {		// optional selectionMode
+function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
 
 	// All these buttons are created with button.type = 'button' to distinguish from a submit
 	// or reset button, as recommended by MDN.
+
+	var selectButton = document.createElement('button')
+	selectButton.name = 'select';
+	selectButton.type = 'button';	
+	if (todo.selected) {
+		selectButton.textContent = 'Unselect';
+		selectButton.disabled = false;
+	} else {
+		selectButton.textContent = 'Select';
+		selectButton.disabled = true;
+	}
 
 	var completeButton = document.createElement('button');
 	completeButton.name = 'complete';
@@ -670,26 +681,15 @@ function createTodoLi(todo, selectionMode) {		// optional selectionMode
 		deleteButton.textContent = 'Delete';
 	}
 
-	var siblingButton = document.createElement('button')
-	siblingButton.name = 'addSibling';
-	siblingButton.type = 'button';
-	siblingButton.textContent = 'Add sibling';
+	var addSiblingButton = document.createElement('button')
+	addSiblingButton.name = 'addSibling';
+	addSiblingButton.type = 'button';
+	addSiblingButton.textContent = 'Add sibling';
 
-	var childButton = document.createElement('button')
-	childButton.name = 'addChild';
-	childButton.type = 'button';
-	childButton.textContent = 'Add child';
-
-	var selectButton = document.createElement('button')
-	selectButton.name = 'select';
-	selectButton.type = 'button';	
-	if (todo.selected) {
-		selectButton.textContent = 'Unselect';
-		selectButton.disabled = false;
-	} else {
-		selectButton.textContent = 'Select';
-		selectButton.disabled = true;
-	}
+	var addChildButton = document.createElement('button')
+	addChildButton.name = 'addChild';
+	addChildButton.type = 'button';
+	addChildButton.textContent = 'Add child';
 
 	var undoEditButton = document.createElement('button')
 	undoEditButton.name = 'undoEdit';
@@ -697,24 +697,19 @@ function createTodoLi(todo, selectionMode) {		// optional selectionMode
 	undoEditButton.textContent = 'Undo edit';
 	undoEditButton.disabled = true;
 
-	// Set buttons for selection mode (any todos in root array selected)
-	// No need to worry about root vs branch because each level, starting at top, will
-	// check for nested selected todos. Can keep the code simple at the price of checking
-	// for nested selected todos at each level.
-
-//	if (/* selectionMode */) {
-//		completeButton.disabled = true;
-//		deleteButton.disabled = true;
-//		addSiblingButton.disabled = true;
-//		addChildButton.disabled = true;
-//		selectButton.disabled = false;
-//	}
+	if (todo.selectMode) {
+		completeButton.disabled = true;
+		deleteButton.disabled = true;
+		addSiblingButton.disabled = true;
+		addChildButton.disabled = true;
+		selectButton.disabled = false;
+	}
 		
+	todoLi.appendChild(selectButton);
 	todoLi.appendChild(completeButton);
 	todoLi.appendChild(deleteButton);
-	todoLi.appendChild(siblingButton);
-	todoLi.appendChild(childButton);
-	todoLi.appendChild(selectButton);
+	todoLi.appendChild(addSiblingButton);
+	todoLi.appendChild(addChildButton);
 	todoLi.appendChild(undoEditButton);
 
 	var entry = document.createElement('p');
