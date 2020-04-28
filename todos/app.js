@@ -20,10 +20,11 @@ function Todo(entry) {
 	this.children = [];
 	this.collapsed = false;
 	this.deleted = false;
-	this.completed = false;				// remove orphan
+//	this.completed = false;	
 	this.stage = 'active';				// stages are active, completed, canceled
 	
 	this.selected = false;
+	this.selectMode = false;
 
 //	this.displayTags = new Set();
 //	this.displayTags.add('#active');	// new todo is active on creation
@@ -44,6 +45,10 @@ Todo.prototype.update = function(changedEntry) {
 
 Todo.prototype.markSelected = function(bool) {
 	this.selected = bool;
+}
+
+Todo.prototype.markSelectMode = function(bool) {
+	this.selectMode = bool;
 }
 
 /*
@@ -202,6 +207,17 @@ function markTodosSelected(todosArray, bool) {
 	}
 }
 
+// Recursively mark todo.selectMode true or false, starting with given array
+function markTodosSelectMode(todosArray, bool) {
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+		if (todo.children.length > 0) {
+			markTodosSelectMode(todo.children, bool);
+		}
+		todo.selectMode = bool;
+	}
+}
+
 // Recursively mark todo.selected true or false for filtered-in todos, starting with given array
 function markFilteredInTodosSelected(todosArray, bool) {
 	for (var i = 0; i < todosArray.length; i++) {
@@ -213,6 +229,21 @@ function markFilteredInTodosSelected(todosArray, bool) {
 			todo.selected = bool;
 		} else {
 			todo.selected = false;		// excludes filtered-out todos
+		}
+	}
+}
+
+// Recursively mark todo.selectMode true or false for filtered-in todos, starting with given array
+function markFilteredInTodosSelectMode(todosArray, bool) {
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+		if (todo.children.length > 0) {
+			markFilteredInTodosSelectMode(todo.children, bool);
+		}
+		if (todo.filteredIn) {
+			todo.selectMode = bool;
+		} else {
+			todo.selectMode = false;		// excludes filtered-out todos
 		}
 	}
 }
@@ -614,7 +645,7 @@ function createParentPlaceholderLi(todo) {
 	return todoLi;
 }
 
-function createTodoLi(todo) {
+function createTodoLi(todo, selectionMode) {		// optional selectionMode
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
 
@@ -667,9 +698,11 @@ function createTodoLi(todo) {
 	undoEditButton.disabled = true;
 
 	// Set buttons for selection mode (any todos in root array selected)
-	// find root selection array (if parent array is branch i.e. select button enabled,
-	// try next level up until you find root)
-//	if (/* any selected todos starting at root */) {
+	// No need to worry about root vs branch because each level, starting at top, will
+	// check for nested selected todos. Can keep the code simple at the price of checking
+	// for nested selected todos at each level.
+
+//	if (/* selectionMode */) {
 //		completeButton.disabled = true;
 //		deleteButton.disabled = true;
 //		addSiblingButton.disabled = true;
@@ -757,32 +790,26 @@ function createTodoLi(todo) {
 
 // Build DOM elements from the todos array, e.g. when app first loads
 // or when todos are filtered for display
-function createTodosUl(todosArray, filter) {
+function createTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
 
-	// TODO remove
-	// filteredArray excludes filtered-out todos unless they are parents of filtered-in todos
-	var filteredArray = todosArray.filter(function(todo) {
-		if (filter === "all") {
-			return !todo.deleted;
-		} else if (filter === "active") {
-			return !todo.deleted && !todo.completed;
-		} else if (filter === "completed") {
-			return todo.completed;
-		} else if (filter === "deleted") {
-			return todo.deleted;
-		} else if (filter === 'selected') {
-			return todo.selected;
-		} else {
-			return true
+	var selectionMode = false;		// determines whether 'select' buttons are enabled and others disabled
+
+	if (todosArray === todos) {
+		if (anySelectedRootTodos(todos)) {
+			selectionMode = true;
 		}
-	});
+	} else {	// todo.children array
+		if (anySelectedTodos(todosArray)) {
+			selectionMode = true;
+		}
+	}
 
 	for (var i = 0; i < todosArray.length; i++) {
 		var todo = todosArray[i];
 		if (todo.filteredIn)  {
-			var todoLi = createTodoLi(todo)
+			var todoLi = createTodoLi(todo, selectionMode)
 		} else if (todo.filteredOutParentOfFilteredIn) {
 			var todoLi = createParentPlaceholderLi(todo);
 		}
@@ -2187,13 +2214,20 @@ function todoClickHandler(event) {
 			//		while bubbling up, check each todoLi for root status.
 			//		event listener on body could trigger selectAll adjustment
 			
-			// can it be 'Select children' if any children are selected?
 			if (anySelectedTodos(todo.children)) {
 				// 'Unselect children' clicked
 				markFilteredInTodosSelected(todo.children, false);
+				if (!todo.selectMode) {
+					// Root button clicked, remove selectMode flag so normal buttons are restored
+					markFilteredInTodosSelectMode(todo.children, false);
+				}
 			} else {
 				// 'Select children' clicked
 				markFilteredInTodosSelected(todo.children, true);
+				if (!todo.selectMode) {
+					// Root button clicked, set selectMode flag so normal buttons are disabled 
+					markFilteredInTodosSelectMode(todo.children, true);
+				}
 			}
 			renderTodolist();
 				
