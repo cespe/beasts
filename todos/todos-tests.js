@@ -1845,10 +1845,37 @@ tests({
 		eq(todo1.collapsed, false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 },
-	"If showChildren button text is 'Hide children', css should preserve spacing above the following entry.": function() {
-		fail();
+	"If showChildren button text is 'Show children', css should preserve spacing above the following entry if it exists.": function() {
+		manual();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo2 = new Todo('Item 2');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+
+		renderTodolist();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
+
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+
+		todoLi1ShowChildrenButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
+		
+		eq(todoLi1Ul, null);			// childLi1 not created on re-render
+		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
+
+		// css on button with text 'Show children' should add space below
 },
-	"Clicking a showChildren button should toggle button text and re-render todoLis.": function() {
+	"Clicking a showChildren button should toggle todo.collapsed and re-render todoLis, toggling button text.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -2038,7 +2065,7 @@ tests({
 		eq(child1.selected, false);
 		eq(child2.selected, false);
 	},
-	"If selectChildren is a root button (Select button disabled), it should also toggle selectMode on nested filtered-in todos.": function() {
+	"If selectChildren is a root button (Select button disabled), it should toggle selectMode on filtered-in nested todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -2078,7 +2105,7 @@ tests({
 		eq(child2.selected, false);
 		eq(child2.selectMode, false);
 	},
-	"If selectChildren is a branch button (Select button enabled), it should not toggle selectMode on nested filtered-in todos.": function() {
+	"If selectChildren is a branch button (Select button enabled), it should not toggle selectMode on filtered-in nested todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -3245,6 +3272,7 @@ tests({
 	"Section: todoLi button interactions": function() {
 	},
 	"Clicking an addChild button should activate showChildren and selectChildren buttons.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -3266,6 +3294,7 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
 	}, 
 	"When showChildren button is clicked, selectChildren button class should toggle 'inactive'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3297,26 +3326,69 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 	},
-	"If todoLi's 'select' button is enabled, its 'delete', 'delete', 'addSibling', and 'addChild' buttons should be disabled.": function() {
+	"If todo selectMode is true, its todoLi 'select' button should be enabled; otherwise disabled.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markSelected(true);
+		todo1.markSelectMode(true);
 		insertTodo(todos, todo1);
 		
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+
+		eq(todoLi1SelectButton.disabled, false);
+
+		todo1.markSelected(false);
+		todo1.markSelectMode(false);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+
+		eq(todoLi1SelectButton.disabled, true);
+	},
+	"Also, its todoLi 'complete', 'delete', 'addSibling', and 'addChild' buttons should be disabled; otherwise enabled.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		todo1.markSelectMode(true);
+		insertTodo(todos, todo1);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
-		var todoLi1SelectButton = todoLi1.children.namedItem('select');
 
+		eq(todoLi1SelectButton.disabled, false);
 		eq(todoLi1CompleteButton.disabled, true);
 		eq(todoLi1DeleteButton.disabled, true);
 		eq(todoLi1AddSiblingButton.disabled, true);
 		eq(todoLi1AddChildButton.disabled, true);
-		eq(todoLi1SelectButton.disabled, false);
+
+		todo1.markSelected(false);
+		todo1.markSelectMode(false);
+		
+		renderTodolist();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+		todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
+		todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
+
+		eq(todoLi1SelectButton.disabled, true);
+		eq(todoLi1CompleteButton.disabled, false);
+		eq(todoLi1DeleteButton.disabled, false);
+		eq(todoLi1AddSiblingButton.disabled, false);
+		eq(todoLi1AddChildButton.disabled, false);
 	},
 	"Clicking a 'root' (i.e. Select button inactive) selectChildren button should toggle 'inactive' on complete, delete, addSibling, addChild and showChildren buttons.": function() {
 		// By design, hide regular parent buttons to concentrate attention on the selected children.
