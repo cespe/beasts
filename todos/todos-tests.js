@@ -3326,6 +3326,11 @@ tests({
 		eq(todoLi1SelectChildrenButton.classList.contains('inactive'), false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 	},
+	"Clicking 'Hide children' button should unselect nested todos.": function() {
+		// This is a design choice. It seems more natural that the user would assume selected children
+		// would become unselected when they are hidden.
+		fail();
+	},
 	"If todo selectMode is true, its todoLi 'select' button should be enabled; otherwise disabled.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -3393,6 +3398,7 @@ tests({
 	"Clicking a 'root' (i.e. Select button inactive) selectChildren button should toggle 'inactive' on complete, delete, addSibling, addChild and showChildren buttons.": function() {
 		// By design, hide regular parent buttons to concentrate attention on the selected children.
 		// TODO Editing the parent entry or using addSibling and addChild keyboard shortcuts should also be disabled.
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3436,6 +3442,7 @@ tests({
 	"Clicking a 'branch' (i.e. Select button active) selectChildren button should not toggle 'inactive' on complete, delete, addSibling, addChild and showChildren buttons.": function() {
 		// By design, hide regular parent buttons to concentrate attention on the selected children.
 		// TODO Using addSibling and addChild keyboard shortcuts should also be disabled.
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3552,6 +3559,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton.classList.contains('inactive'), true);
 	},
 	"If root selectChildren button text is 'Select children', clicking it should set completeSelectedChildren button text to 'Complete selected children' if all children are not marked completed.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3593,6 +3601,7 @@ tests({
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Complete selected children');
 	},
 	"If root selectChildren button text is 'Select children', clicking it should set completeSelectedChildren button text to 'Uncomplete selected children' if all children are marked completed.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3635,6 +3644,7 @@ tests({
 		eq(todoLi1CompleteSelectedChildrenButton.textContent, 'Uncomplete selected children');
 	},
 	"If root selectChildren button text is 'Select children', clicking it should set deleteSelectedChildren button text to 'Delete selected children' if all children are not marked deleted.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3676,6 +3686,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
 	},
 	"If root selectChildren button text is 'Select children', clicking it should set deleteSelectedChildren button text to 'Undelete selected children' if all children are marked deleted.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3718,6 +3729,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Undelete selected children');
 	},
 	"Clicking a root selectChildren button should toggle 'inactive' on all childLi Select buttons.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3756,6 +3768,7 @@ tests({
 		eq(child2LiSelectButton.classList.contains('inactive'), true);
 	},
 	"Clicking a branch selectChildren button should not toggle 'inactive' on any childLi Select buttons.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3808,6 +3821,7 @@ tests({
 	},
 
 	"Clicking a root selectChildren button should toggle 'inactive' on all childLi Complete, Delete, addSibling and addChild buttons.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3897,6 +3911,7 @@ tests({
 		eq(child2LiAddChildButton.classList.contains('inactive'), false);
 	},
 	"Clicking a root selectChildren button should toggle 'inactive' on all childLi Complete, Delete, addSibling and addChild buttons.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3988,6 +4003,7 @@ tests({
 	},
 	"Clicking a branch selectChildren button should not toggle 'inactive' on any childLi Complete, Delete, addSibling or addChild buttons.": function() {
 		// TODO Consider simplifying to focus on the only childLi that matters for this test, grandchild1.
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -4114,11 +4130,8 @@ tests({
 		eq(grandchild1LiAddChildButton.classList.contains('inactive'), false);
 		eq(child2LiAddChildButton.classList.contains('inactive'), false);
 	},
-	"If all hidden children are filtered out, showChildren button should be inactive.": function() {
-		fail();
-	},
 	"Clicking a root 'Unselect children' button should remove class 'inactive' on nested showChildren buttons even if children are hidden.": function() {
-		fail();
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -4142,6 +4155,7 @@ tests({
 		// childLi1ShowChildrenButton not inactive
 	},
 	"Clicking a root selectChildren button should toggle 'inactive' on all childLi showChildren, completeSelectedChildren and deleteSelectedChildren buttons.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -4252,6 +4266,7 @@ tests({
 	},
 	"Clicking a branch selectChildren button should not toggle 'inactive' on any childLi showChildren, completeSelectedChildren or deleteSelectedChildren buttons.": function() {
 		// TODO Consider simplifying to focus on the only childLi that matters for this test, grandchild1.
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
