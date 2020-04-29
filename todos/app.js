@@ -248,6 +248,23 @@ function markFilteredInTodosSelectMode(todosArray, bool) {
 	}
 }
 
+// Recursively mark todo.selected and todo.selectMode true or false for filtered-in todos, starting with given array
+function markSelectedAndSelectModeForFilteredInTodos(todosArray, bool) {
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+		if (todo.children.length > 0) {
+			markSelectedAndSelectModeForFilteredInTodos(todo.children, bool);
+		}
+		if (todo.filteredIn) {
+			todo.selected = bool;
+			todo.selectMode = bool;
+		} else {
+			todo.selected = false;
+			todo.selectMode = false;		// excludes filtered-out todos
+		}
+	}
+}
+
 // Recursively set given stage (active, completed, etc.) for selected nested todos, starting with given array
 function setSelectedTodosStage(todosArray, stage) {
 	for (var i = 0; i < todosArray.length; i++) {
@@ -380,7 +397,17 @@ function anySelectedRootTodos(array) {
 	return false;
 }
 
-/* Not used
+// Return true if any todos at root level of array are in select mode
+function anyRootTodosInSelectMode(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.selectMode) {
+			return true;
+		}
+	}
+	return false;
+}
+
 // Return true if any todos, including nested todos, are filtered in for display
 function anyFilteredInTodos(array) {
 	for (var i = 0; i < array.length; i++) {
@@ -396,7 +423,7 @@ function anyFilteredInTodos(array) {
 		}
 	}
 	return false;
-} */
+}
 
 // Return true if any todos, including nested todos, are both selected and filtered in for display
 function anySelectedFilteredInTodos(array) {
@@ -628,13 +655,27 @@ function generateFilterSet() {
 
 function renderTodolist() {
 
-	var filterSet = generateFilterSet();
+	var filterSet = generateFilterSet();	// set which filters determine display
 
-	applyDisplayTags(filterSet);
+	applyDisplayTags(filterSet);			// mark todos for display
 
 	newTodolist = createTodosUl(todos);
+	updateActionsBar();
 	todolist.innerHTML = ''; 
 	todolist.appendChild(newTodolist);
+}
+
+function updateActionsBar() {
+	if (anyFilteredInTodos(todos)) {
+		selectAllButton.disabled = false;
+		if (anyRootTodosInSelectMode(todos)) {
+			selectAllButton.textContent = 'Unselect all';
+		} else {
+			selectAllButton.textContent = 'Select all';
+		}
+	} else {
+		selectAllButton.disabled = true;
+	}
 }
 
 function createParentPlaceholderLi(todo) {
@@ -2354,7 +2395,15 @@ function actionsClickHandler(event) {
 			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === "selectAll") {
-			// These two variable definitions are needed because the global variables are hidden by
+			if (selectAllButton.textContent === 'Select all') {
+				markSelectedAndSelectModeForFilteredInTodos(todos, true);	
+			} else {
+				markSelectedAndSelectModeForFilteredInTodos(todos, false);	
+		
+			}
+			renderTodolist();
+		}
+/*			// These two variable definitions are needed because the global variables are hidden by
 			// local variables created for some reason when the button is clicked.
 			// One hypothesis that it has to do with display: none on these two elements doesn't seem
 			// to be the reason. TODO Figure out why.
@@ -2450,6 +2499,7 @@ function actionsClickHandler(event) {
 			}
 			togglePurgeSelectedDeletedTodos();
 		}
+*/
 		if (event.target.name === 'completeSelected') {
 			var completeSelectedButton = event.target;
 			var todosUl = todolist.children[0];

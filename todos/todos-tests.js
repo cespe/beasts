@@ -4468,6 +4468,7 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 	},
 	"Clicking 'Select all' button should select all filtered-in todos, including nested todos, and re-render todoLis.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
