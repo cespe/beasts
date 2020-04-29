@@ -4420,7 +4420,243 @@ tests({
 		eq(deleteSelectedButton.disabled, true);
 		eq(purgeSelectedDeletedButton.disabled, true);
 	},
+	"The selectAll button should be enabled if there are any todos displayed but otherwise disabled.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		eq(selectAllButton.disabled, false);
+
+		todo1.markDeleted(true);
+
+		renderTodolist();
+
+		eq(selectAllButton.disabled, true);
+	},
+	"If there are any top-level todos in select mode, selectAll button text should be 'Unselect all'.": function() {
+		// Top-level todos in select mode are the only indicator that selectAll was used to select todos.
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelectMode(true);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		renderTodolist();
+
+		eq(selectAllButton.textContent, 'Unselect all');
+	},
+	"Otherwise selectAll button text should be 'Select all'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		renderTodolist();
+
+		eq(selectAllButton.textContent, 'Select all');
+
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		child1.markSelectMode(true);
+
+		renderTodolist();
+
+		eq(selectAllButton.textContent, 'Select all');
+	},
+	"Clicking 'Select all' button should select all filtered-in todos, including nested todos, and re-render todoLis.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		renderTodolist();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+		var todoLi1Entry = todoLi1.querySelector('p');
+		var todoLi2Entry = todoLi2.querySelector('p');
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.disabled, true);
+		eq(todoLi2SelectButton.disabled, true);
+		eq(todoLi1Entry.classList.contains('highlighted'), false);
+		eq(todoLi2Entry.classList.contains('highlighted'), false);
+		eq(childLi1Entry.classList.contains('highlighted'), false);
+		eq(todo1.selected, false);
+		eq(todo2.selected, false);
+		eq(child1.selected, false);
+		eq(todo1.selectMode, false);
+		eq(todo2.selectMode, false);
+		eq(child1.selectMode, false);
+
+		eq(selectAllButton.textContent, 'Select all');
+
+		selectAllButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+		todoLi2SelectButton = todoLi2.children.namedItem('select');
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi2Entry = todoLi2.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1SelectButton = childLi1.children.namedItem('select');
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi2SelectButton.textContent, 'Unselect');
+		eq(childLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi1SelectButton.disabled, false);
+		eq(todoLi2SelectButton.disabled, false);
+		eq(childLi1SelectButton.disabled, false);
+		eq(todoLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi2Entry.classList.contains('highlighted'), true);
+		eq(childLi1Entry.classList.contains('highlighted'), true);
+		eq(todo1.selected, true);
+		eq(todo2.selected, true);
+		eq(child1.selected, true);
+		eq(todo1.selectMode, true);
+		eq(todo2.selectMode, true);
+		eq(child1.selectMode, true);
+	},
+	"Clicking selectAll button should toggle select and selectMode on all filtered-in nested todos.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		renderTodolist();
+
+		eq(todo1.selected, false);
+		eq(todo2.selected, false);
+		eq(child1.selected, false);
+		eq(todo1.selectMode, false);
+		eq(todo2.selectMode, false);
+		eq(child1.selectMode, false);
+
+		eq(selectAllButton.textContent, 'Select all');
+
+		selectAllButton.click();
+
+		eq(todo1.selected, true);
+		eq(todo2.selected, true);
+		eq(child1.selected, true);
+		eq(todo1.selectMode, true);
+		eq(todo2.selectMode, true);
+		eq(child1.selectMode, true);
+
+		eq(selectAllButton.textContent, 'Unselect all');
+
+		selectAllButton.click();
+
+		eq(todo1.selected, false);
+		eq(todo2.selected, false);
+		eq(child1.selected, false);
+		eq(todo1.selectMode, false);
+		eq(todo2.selectMode, false);
+		eq(child1.selectMode, false);
+	},
+	"Clicking selectAll button should re-render todoLis.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		renderTodolist();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+		var todoLi1Entry = todoLi1.querySelector('p');
+		var todoLi2Entry = todoLi2.querySelector('p');
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.disabled, true);
+		eq(todoLi2SelectButton.disabled, true);
+		eq(todoLi1Entry.classList.contains('highlighted'), false);
+		eq(todoLi2Entry.classList.contains('highlighted'), false);
+		eq(childLi1Entry.classList.contains('highlighted'), false);
+
+		eq(selectAllButton.textContent, 'Select all');
+
+		selectAllButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+		todoLi2SelectButton = todoLi2.children.namedItem('select');
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi2Entry = todoLi2.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1SelectButton = childLi1.children.namedItem('select');
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi2SelectButton.textContent, 'Unselect');
+		eq(childLi1SelectButton.textContent, 'Unselect');
+		eq(todoLi1SelectButton.disabled, false);
+		eq(todoLi2SelectButton.disabled, false);
+		eq(childLi1SelectButton.disabled, false);
+		eq(todoLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi2Entry.classList.contains('highlighted'), true);
+		eq(childLi1Entry.classList.contains('highlighted'), true);
+
+		eq(selectAllButton.textContent, 'Unselect all');
+
+		selectAllButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+		todoLi2SelectButton = todoLi2.children.namedItem('select');
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi2Entry = todoLi2.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1SelectButton = childLi1.children.namedItem('select');
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1SelectButton.textContent, 'Select');
+		eq(todoLi2SelectButton.textContent, 'Select');
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(todoLi1SelectButton.disabled, true);
+		eq(todoLi2SelectButton.disabled, true);
+		eq(todoLi1Entry.classList.contains('highlighted'), false);
+		eq(todoLi2Entry.classList.contains('highlighted'), false);
+		eq(childLi1Entry.classList.contains('highlighted'), false);
+	},
 	"Clicking selectAll button should toggle button text, each todoLi selected button text, each todo.selected, and each entry <p> class." : function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -4470,10 +4706,8 @@ tests({
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
 	},
-	"Clicking 'Unselect all' button should remove class 'inactive' on nested showChildren buttons even when when children are hidden.": function() {
-		fail();
-	},
 	"Clicking selectAll button should also toggle todoLi completed, deleted, addSibling, and addChild button classes 'inactive'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -4530,6 +4764,7 @@ tests({
 		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	},
 	"If selectAll button text is 'Select all', clicking it should set completeSelected button text to 'Complete selected' if all todos are not marked completed.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCompleted(true);
@@ -4567,6 +4802,7 @@ tests({
 		eq(completeSelectedButton.textContent, 'Complete selected');
 	},
 	"If selectAll button text is 'Select all', clicking it should set completeSelected button text to 'Uncomplete selected' if all todos are marked completed.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markCompleted(true);
@@ -4605,6 +4841,7 @@ tests({
 		eq(completeSelectedButton.textContent, 'Uncomplete selected');
 	},
 	"If selectAll button text is 'Select all', clicking it should set deleteSelected button text to 'Delete selected' if all todos are not marked deleted.": function() {
+		remove();
 		selectAllButton.textContent = 'Select all';
 		deleteSelectedButton.textContent = 'Delete selected';
 		deleteSelectedButton.classList.add('inactive');
@@ -4645,6 +4882,7 @@ tests({
 		eq(deleteSelectedButton.textContent, 'Delete selected');
 	},
 	"If selectAll button text is 'Select all', clicking it should set deleteSelected button text to 'Undelete selected' if all todos are marked deleted.": function() {
+		remove();
 		selectAllButton.textContent = 'Select all';
 		deleteSelectedButton.textContent = 'Delete selected';
 		deleteSelectedButton.classList.add('inactive');
@@ -4686,6 +4924,7 @@ tests({
 		eq(deleteSelectedButton.textContent, 'Undelete selected');
 	},
 	"Clicking selectAll button should toggle actions bar addTodo button class 'inactive'.": function() {
+		remove();
 		eq(selectAllButton.textContent, 'Select all');
 		eq(addTodoButton.classList.contains('inactive'), false);
 
@@ -4700,6 +4939,7 @@ tests({
 		eq(addTodoButton.classList.contains('inactive'), false);
 	},
 	"selectAll button with text 'Select all' should only apply to displayed todos.": function() {
+		remove();
 		selectAllButton.textContent = 'Select all';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -4727,6 +4967,7 @@ tests({
 		eq(todoLi2.querySelector('p').classList.contains('highlighted'), false);
 	},
 	"selectAll button should also select/unselect displayed nested todos.": function() {
+		remove();
 		selectAllButton.textContent = 'Select all';
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -4825,6 +5066,7 @@ tests({
 	},
 	"If a todoLi has children displayed, clicking selectAll button should remove todoLi selectChildren button class 'inactive' and add completeSelectedChildren and deleteSelectedChildren button classes 'inactive'.": function() {
 		// Test and document the different behavior of selectChildren when selectAll has been clicked.
+		remove();
 		selectAllButton.textContent = 'Select all';
 
 		todos = [];
@@ -4908,6 +5150,7 @@ tests({
 	},
 	"If selectAll button text is 'Unselect all', then todoLi selectChildren button should only toggle childLi's select button and highlighted text.": function() {
 		// Test and document different behavior of selectChildren when selectAll has been clicked.
+		remove();
 
 		selectAllButton.textContent = 'Select all';
 
@@ -9574,7 +9817,7 @@ tests({
 	"When editing, Esc should be a shortcut for Undo Edit.": function() {
 		manual();
 	},
-	"Esc must apply only to the current todoLi entry.": function() {
+	"Esc should apply only to the current todoLi entry.": function() {
 		// TODO There is a bug such that Esc will restore originalEntry from the wrong todoLi
 		fail();
 	},
