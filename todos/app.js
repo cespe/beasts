@@ -261,6 +261,17 @@ function setSelectedTodosStage(todosArray, stage) {
 	}
 }
 
+// Recursively mark selected todos deleted or undeleted, starting with given array
+function markSelectedTodosDeleted(todosArray, bool) {
+	for (var i = 0; i < todosArray.length; i++) {
+		var todo = todosArray[i];
+		if (todo.children.length > 0) {
+			markSelectedTodosDeleted(todo.children, bool);
+		}
+		todo.deleted = bool;
+	}
+}
+
 /*********************************** Data selection **************************************/
 // Return the todo with the given id
 function findTodo(array, id) {
@@ -2242,8 +2253,16 @@ function todoClickHandler(event) {
 			renderTodolist();
 		}
 		if (event.target.name === "deleteSelectedChildren") {
-			deleteSelectedChildren(todoLi);
-			togglePurgeSelectedDeletedTodos();
+//			deleteSelectedChildren(todoLi);
+			if (allSelectedTodosDeleted(todo.children)) {
+				// 'Undelete selected children' clicked
+				markSelectedTodosDeleted(todo.children, false);
+			} else {
+				// 'Delete selected children' clicked
+				markSelectedTodosDeleted(todo.children, true);
+			}
+			renderTodolist();
+//			togglePurgeSelectedDeletedTodos();
 		}
 	}
 }
