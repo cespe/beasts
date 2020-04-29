@@ -4390,35 +4390,9 @@ tests({
 	},
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
 		eq(selectAllButton.nodeName, 'BUTTON');
+		eq(selectAllButton.name, 'selectAll');
 		eq(selectAllButton.innerText, 'Select all');
 		eq(selectAllButton.parentElement, actionsBar);
-	},
-	"And also a disabled-by-default 'Complete selected' button to mark selected todos completed.": function() {
-		eq(completeSelectedButton.nodeName, 'BUTTON');
-		eq(completeSelectedButton.innerText, 'Complete selected');
-		eq(completeSelectedButton.parentElement, actionsBar);
-	},
-	"And also a disabled-by-default 'Delete selected' button to delete selected todos.": function() {
-		eq(deleteSelectedButton.nodeName, 'BUTTON');
-		eq(deleteSelectedButton.innerText, 'Delete selected');
-		eq(deleteSelectedButton.parentElement, actionsBar);
-	},
-	"And also a disabled-by-default 'Purge selected deleted todos' button to expunge selected deleted todos.": function() {
-		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
-		eq(purgeSelectedDeletedButton.innerText, 'Purge selected deleted todos');
-		eq(purgeSelectedDeletedButton.parentElement, actionsBar);
-
-	},
-	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
-		startApp();
-
-		eq(selectAllButton.textContent, 'Select all');
-		eq(selectAllButton.disabled, false);
-		eq(completeSelectedButton.textContent, 'Complete selected');
-		eq(completeSelectedButton.disabled, true);
-		eq(deleteSelectedButton.textContent, 'Delete selected');
-		eq(deleteSelectedButton.disabled, true);
-		eq(purgeSelectedDeletedButton.disabled, true);
 	},
 	"The selectAll button should be enabled if there are any todos displayed but otherwise disabled.": function() {
 		todos = [];
@@ -5257,6 +5231,12 @@ tests({
 		eq(childLi1AddChildButton.classList.contains('inactive'), true);
 		eq(childLi1Entry.classList.contains('highlighted'), true);
 	},
+	"The header actions bar should have a 'completeSelected' button to mark selected todos completed.": function() {
+		eq(completeSelectedButton.nodeName, 'BUTTON');
+		eq(completeSelectedButton.name, 'completeSelected');
+		eq(completeSelectedButton.innerText, 'Complete selected');
+		eq(completeSelectedButton.parentElement, actionsBar);
+	},
 	"Clicking completeSelected button should toggle button text and toggle todo.completed, todoLi completed button text, and entry <p> class for selected todos.": function() {
 		selectAllButton.textContent = 'Select all';
 		todos = [];
@@ -5519,6 +5499,12 @@ tests({
 		eq(grandchildLi3CompleteButton.textContent, 'Complete');
 		eq(grandchildLi3Entry.classList.contains('struck-completed'), false);
 		eq(grandchild3.completed, false);
+	},
+	"The header actions bar should have a 'deleteSelected' button to mark selected todos deleted.": function() {
+		eq(deleteSelectedButton.nodeName, 'BUTTON');
+		eq(deleteSelectedButton.name, 'deleteSelected');
+		eq(deleteSelectedButton.innerText, 'Delete selected');
+		eq(deleteSelectedButton.parentElement, actionsBar);
 	},
 	"Clicking the deleteSelected button should toggle its button text and toggle todo.deleted, todoLi deleted button text, and entry <p> class for selected todos.": function() {
 		todos = [];
@@ -5794,6 +5780,30 @@ tests({
 		eq(grandchildLi3DeleteButton.textContent, 'Delete');
 		eq(grandchildLi3Entry.classList.contains('faded-deleted'), false);
 		eq(grandchild3.deleted, false);
+	},
+	"The header actions bar should have a 'deleteSelected' button to mark selected todos deleted.": function() {
+		eq(deleteSelectedButton.nodeName, 'BUTTON');
+		eq(deleteSelectedButton.name, 'deleteSelected');
+		eq(deleteSelectedButton.innerText, 'Delete selected');
+		eq(deleteSelectedButton.parentElement, actionsBar);
+	},
+	"The header actions bar should have a 'purgeSelectedDeleted' button to expunge selected deleted todos.": function() {
+		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
+		eq(purgeSelectedDeletedButton.name, 'purgeSelectedDeleted');
+		eq(purgeSelectedDeletedButton.innerText, 'Purge selected deleted todos');
+		eq(purgeSelectedDeletedButton.parentElement, actionsBar);
+	},
+	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
+		todos = [];
+		startApp();
+
+		eq(selectAllButton.textContent, 'Select all');
+		eq(selectAllButton.disabled, false);
+		eq(completeSelectedButton.textContent, 'Complete selected');
+		eq(completeSelectedButton.disabled, true);
+		eq(deleteSelectedButton.textContent, 'Delete selected');
+		eq(deleteSelectedButton.disabled, true);
+		eq(purgeSelectedDeletedButton.disabled, true);
 	},
 	"Section: Actions bar -- filters": function() {
 		// Choose to display todos based on their stage in life or whether or not they are deleted.
