@@ -667,22 +667,34 @@ function renderTodolist() {
 
 function updateActionsBar() {
 	if (anyFilteredInTodos(todos)) {
+		// Todos are displayed
 		selectAllButton.disabled = false;
 		if (anyRootTodosInSelectMode(todos)) {
+			// selectAll put todos in select mode, time to enable completeSelected and deleteSelected
 			selectAllButton.textContent = 'Unselect all';
 			completeSelectedButton.disabled = false;
+			deleteSelectedButton.disabled = false;
 			if (allSelectedTodosCompleted(todos)) {
 				completeSelectedButton.textContent = 'Uncomplete selected';	
 			} else {
 				completeSelectedButton.textContent = 'Complete selected';	
 			}
+			if (allSelectedTodosDeleted(todos)) {
+				deleteSelectedButton.textContent = 'Undelete selected';	
+			} else {
+				deleteSelectedButton.textContent = 'Delete selected';	
+			}
 		} else {
+			// selectAll hasn't put todos in select mode, time to disable completeSelected and deleteSelected
 			selectAllButton.textContent = 'Select all';
 			completeSelectedButton.disabled = true;
+			deleteSelectedButton.disabled = true;
 		}
 	} else {
+		// No todos are displayed
 		selectAllButton.disabled = true;
 		completeSelectedButton.disabled = true;
+		deleteSelectedButton.disabled = true;
 	}
 }
 
@@ -2560,7 +2572,16 @@ function actionsClickHandler(event) {
 		}
 */
 		if (event.target.name === 'deleteSelected') {
-			var deleteSelectedButton = event.target;
+			if (deleteSelectedButton.textContent === 'Delete selected') {
+				markSelectedTodosDeleted(todos, true);
+			} else {
+				markSelectedTodosDeleted(todos, false);
+		
+			}
+			renderTodolist();
+		}
+
+/*			var deleteSelectedButton = event.target;
 			var todosUl = todolist.children[0];
 			if (deleteSelectedButton.textContent === 'Undelete selected') {
 				deleteSelectedButton.textContent = 'Delete selected';
@@ -2603,6 +2624,7 @@ function actionsClickHandler(event) {
 			}
 			togglePurgeSelectedDeletedTodos();
 		}
+*/
 		if (event.target.name === 'purgeSelectedDeleted') {
 			purgeSelectedDeletedTodos(todos);
 		}
@@ -2636,13 +2658,14 @@ function setActionsBarDefaults() {
 }
 
 function startApp() {
-	// Start app with a new empty todo if the todolist is empty
+	renderTodolist();
+/*	// Start app with a new empty todo if the todolist is empty
 //	setActionsBarDefaults();
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
 	} else {						// 'else' because insertNewTodoLi already calls renderTodolist
 		renderTodolist();
-	}
+	} */
 }
 
 setUpEventListeners();
