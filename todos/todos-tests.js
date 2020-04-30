@@ -6728,64 +6728,23 @@ tests({
 	"Section: Actions bar -- other buttons": function() {
 
 	},
-	"The header actions bar should have an 'addTodo' button that adds a todo to the end of the list.": function() {
-		// In case filtering the list results in no displayed todos so that addSibling is unavailable.
-		eq(addTodoButton.nodeName, 'BUTTON');
-		eq(addTodoButton.disabled, false);
-		eq(addTodoButton.innerText, 'Add todo');
-		eq(addTodoButton.parentElement, actionsBar);
-		
-		todos = [];
-
-		// No todos to render, but need to clear out innerHTML from prior test
-		startApp();
-
-		addTodoButton.click();
-
-		todosUl = todolist.children[0];
-		todoLi1 = todosUl.children[0];
-		eq(todosUl.children.length, 1);
-		eq(todos.length, 1);
-		eq(todoLi1.id, todos[0].id);
-
-		addTodoButton.click();
-
-		todosUl = todolist.children[0];
-		todoLi2 = todosUl.children[1];
-		eq(todosUl.children.length, 2);
-		eq(todos.length, 2);
-		eq(todoLi2.id, todos[1].id);
-	},
-	"And also a disabled-by-default 'purgeSelectedDeleted' button to expunge selected deleted todos permanently.": function() {
+	"The header actions bar should have a 'purgeSelectedDeleted' button to expunge selected deleted todos permanently.": function() {
 		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
+		eq(purgeSelectedDeletedButton.name, 'purgeSelectedDeleted');
 		eq(purgeSelectedDeletedButton.disabled, true);
 		eq(purgeSelectedDeletedButton.textContent, 'Purge selected deleted todos');
 		eq(purgeSelectedDeletedButton.parentElement, actionsBar); 
 	}, 
-	"purgeSelectedDeletedButton should be disabled unless showDeletedButton text is '√ Deleted' and at least one todo is selected.": function() {
+	"purgeSelectedDeletedButton should be disabled unless a filtered-in deleted todo is selected.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
 		child1 = new Todo('Child 1');
 		todo1.addChild(child1);
 		grandchild1 = new Todo('Grandchild 1');
 		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
 
 		startApp();
-
-		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('select');
-		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
-		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
-		var todoLi1Ul = todoLi1.querySelector('ul');
-		var childLi1 = todoLi1Ul.children[0];
-		var childLi1SelectButton = childLi1.children.namedItem('select');
-		var childLi1DeleteButton = childLi1.children.namedItem('delete');
-		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
-		var childLi1DeleteSelectedChildrenButton = childLi1.children.namedItem('deleteSelectedChildren');
-		var childLi1Ul = childLi1.querySelector('ul');
-		var grandchildLi1 = childLi1Ul.children[0];
-		var grandchildLi1DeleteButton = grandchildLi1.children.namedItem('delete');
 
 		eq(todo1.selected, false);
 		eq(todo1.deleted, false);
@@ -6794,6 +6753,7 @@ tests({
 		eq(grandchild1.selected, false);
 		eq(grandchild1.deleted, false);
 		eq(showDeletedButton.textContent, 'Deleted');
+
 		eq(purgeSelectedDeletedButton.disabled, true);
 
 		selectAllButton.click();
@@ -6805,7 +6765,8 @@ tests({
 		eq(grandchild1.selected, true);
 		eq(grandchild1.deleted, false);
 		eq(showDeletedButton.textContent, 'Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+
+		eq(purgeSelectedDeletedButton.disabled, true);
 
 		deleteSelectedButton.click();
 
@@ -6816,42 +6777,10 @@ tests({
 		eq(grandchild1.selected, true);
 		eq(grandchild1.deleted, true);
 		eq(showDeletedButton.textContent, 'Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
 
-		// Case: trigger by showDeleted filter button
+		eq(purgeSelectedDeletedButton.disabled, true);
 
 		showDeletedButton.click();
-
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
-		
-		// Reset for next case
-		deleteSelectedButton.click();
-		selectAllButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		// Case: triggered by Delete selected button
-
-		selectAllButton.click();
-
-		eq(todo1.selected, true);
-		eq(todo1.deleted, false);
-		eq(child1.selected, true);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		deleteSelectedButton.click();
 
 		eq(todo1.selected, true);
 		eq(todo1.deleted, true);
@@ -6860,213 +6789,32 @@ tests({
 		eq(grandchild1.selected, true);
 		eq(grandchild1.deleted, true);
 		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
 
-		// Reset for next case
-		deleteSelectedButton.click();
-		selectAllButton.click();
+		eq(purgeSelectedDeletedButton.disabled, false);
 
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		// Case: triggered by Select children button
-		// Case: triggered by nested selected deleted todo
-
-		grandchildLi1DeleteButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, true);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		childLi1SelectChildrenButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, true);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
-
-		// Reset for next case
-		childLi1SelectChildrenButton.click();
+		todo1.markDeleted(false);
+		child1.markDeleted(false);
 		
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		grandchildLi1DeleteButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		// Case: triggered by Delete selected children button
-
-		childLi1SelectChildrenButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		childLi1DeleteSelectedChildrenButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, true);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
-
-		// Reset for next case
-		childLi1DeleteSelectedChildrenButton.click();
-
-		eq(grandchild1.deleted, false);
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		childLi1SelectChildrenButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-		
-		// Case: triggered by selectAll button
-
-		childLi1DeleteButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, true);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		selectAllButton.click();
+		renderTodolist();
 
 		eq(todo1.selected, true);
 		eq(todo1.deleted, false);
 		eq(child1.selected, true);
-		eq(child1.deleted, true);
-		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
-
-		// Reset for next case
-		selectAllButton.click();
-
-		eq(todo1.selected, false);
-		eq(child1.selected, false);
-		eq(grandchild1.selected, false)
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		childLi1DeleteButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
 		eq(child1.deleted, false);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-		
-		// Case: triggered by Select button
-
-		childLi1DeleteButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, true);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		selectAllButton.click();
-
-		eq(todo1.selected, true);
-		eq(todo1.deleted, false);
-		eq(child1.selected, true);
-		eq(child1.deleted, true);
 		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, false);
+		eq(grandchild1.deleted, true);
 		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
 
-		childLi1SelectButton.click();		// unselects the todo
-		
-		eq(todo1.selected, true);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, true);
-		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+		eq(purgeSelectedDeletedButton.disabled, false);
 
-		childLi1SelectButton.click();		// reselects the todo
-		
-		eq(todo1.selected, true);
-		eq(todo1.deleted, false);
-		eq(child1.selected, true);
-		eq(child1.deleted, true);
-		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), false);
+		grandchild1.markSelected(false);
 
-		// Reset for next case
-		selectAllButton.click();
+		renderTodolist();
 
-		eq(todo1.selected, false);
-		eq(child1.selected, false);
-		eq(grandchild1.selected, false)
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
-
-		childLi1DeleteButton.click();
-
-		eq(todo1.selected, false);
-		eq(todo1.deleted, false);
-		eq(child1.selected, false);
-		eq(child1.deleted, false);
-		eq(grandchild1.selected, false);
-		eq(grandchild1.deleted, false);
-		eq(showDeletedButton.textContent, '√ Deleted');
-		eq(purgeSelectedDeletedButton.classList.contains('inactive'), true);
+		eq(purgeSelectedDeletedButton.disabled, true);
 	},
 	"Clicking the purgeSelectedDeletedButton should remove selected deleted todos from storage and display.": function() {
-		// TODO disallow purging selected deleted todos that have undeleted nested todos
+		// TODO Warn against purging if any selected deleted todos have undeleted nested todos
 
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -7095,9 +6843,48 @@ tests({
 		eq(todos.length, 1);
 		eq(todolist.children[0].children.length, 1);
 	},
+	"The header actions bar should have an 'addTodo' button to add a new todo to the end of the list.": function() {
+		// In case filtering the list results in no displayed todos so that addSibling is unavailable.
+
+		todos = [];
+		startApp();		// restore defaults
+
+		eq(addTodoButton.nodeName, 'BUTTON');
+		eq(addTodoButton.name, 'addTodo');
+		eq(addTodoButton.disabled, false);
+		eq(addTodoButton.textContent, 'Add todo');
+		eq(addTodoButton.parentElement, actionsBar);
+	},
+	"Clicking addTodo button should add a new todo to the end of the list.": function() {
+		todos = [];
+		startApp();
+
+		eq(todos.length, 0);
+		
+		addTodoButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		
+		eq(todos.length, 1);
+		eq(todosUl.children.length, 1);
+		eq(todoLi1.id, todos[0].id);
+
+		addTodoButton.click();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi2 = todosUl.children[1];
+		
+		eq(todos.length, 2);
+		eq(todosUl.children.length, 2);
+		eq(todoLi1.id, todos[0].id);
+		eq(todoLi2.id, todos[1].id);
+	},
 	"Section: more button interactions": function() {
 	},
 	"If showCompleted button text is 'Completed', clicking a todoLi Complete button should add todoLi class 'completed-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7136,6 +6923,7 @@ tests({
 		eq(todo1.completed, true);
 	},
 	"If showActive button text is 'Active', clicking a todoLi Uncomplete button should add todoLi class 'active-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7171,6 +6959,7 @@ tests({
 		eq(todo1.completed, false);
 	},
 	"If showDeleted button text is 'Deleted', clicking a todoLi Delete button should add todoLi class 'deleted-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7193,6 +6982,7 @@ tests({
 		eq(todo1.deleted, true);
 	},
 	"If showDeleted button text is '√ Deleted', clicking a todoLi Delete button should not add todoLi class 'deleted-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7219,6 +7009,7 @@ tests({
 		eq(todo1.deleted, true);
 	},
 	"If showActive button text is 'Active', clicking a todoLi Undelete button should add todoLi class 'active-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7259,6 +7050,7 @@ tests({
 		eq(todo1.deleted, false);
 	},
 	"If showCompleted button text is 'Completed', clicking 'Complete selected' button should add todoLi class 'completed-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7283,6 +7075,7 @@ tests({
 		eq(todo1.completed, true);
 	},
 	"If showActive button text is 'Active', clicking 'Uncomplete selected' button should add todoLi class 'active-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7313,6 +7106,7 @@ tests({
 		eq(todo1.completed, false);
 	},
 	"If showDeleted button text is 'Deleted', clicking 'Delete selected' button should add todoLi class 'deleted-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7333,6 +7127,7 @@ tests({
 		eq(todo1.deleted, true);
 	},
 	"If showActive button text is 'Active', clicking 'Undelete selected' button should add todoLi class 'active-removed'.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7365,6 +7160,7 @@ tests({
 		eq(todo1.deleted, false);
 	},
 	"When selectAllButton text is 'Select all', it should toggle inactive when no todos are displayed.": function() {
+		remove();
 		// Display can become empty through 1) click on todoLi delete or complete button
 		// depending on state of filters
 		// Also through 2) click on filter button
@@ -7568,6 +7364,7 @@ tests({
 		eq(selectAllButton.classList.contains('inactive'), true);
 	},
 	"A todoLi's selectChildrenButton should toggle inactive when no child todos are displayed.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -7951,6 +7748,7 @@ tests({
 		childLi2CompleteButton.click();
 	},
 	"A todoLi's showChildrenButton should toggle inactive when no child todos are displayed.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -8334,6 +8132,7 @@ tests({
 		childLi2CompleteButton.click();
 	},
 	"If all todos become unselected due to a Select button click, the app should toggle buttons as if receiving a selectAll click event to unselect all.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -8979,6 +8778,7 @@ tests({
 		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	}, 
 	"If all todos become unselected due to a selectChildren button click, the app should toggle buttons as if receiving a selectAll click event to unselect all.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -9799,6 +9599,7 @@ tests({
 		eq(childLi2AddChildButton.classList.contains('inactive'), false);
 	}, 
 	"If a parent's nested todos become unselected due to a lower-level Select button click, the app should toggle showChildren buttons as if receiving a click on the parent selectChildren button.": function() {
+		remove();
 		fail();
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -9838,6 +9639,7 @@ tests({
 		eq(childLi1Ul.classList.contains('collapsed'), true);
 	},
 	"If a parent's nested todos become unselected due to a lower-level selectChildren button click, the app should toggle buttons as if receiving a click on the parent selectChildren button.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
