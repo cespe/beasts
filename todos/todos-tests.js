@@ -5805,8 +5805,8 @@ tests({
 		eq(grandchild1.deleted, false);
 		eq(deleteSelectedButton.textContent === 'Undelete selected', false);
 
-		todo1.setStage('deleted');
-		child1.setStage('deleted');
+		todo1.markDeleted(true);
+		child1.markDeleted(true);
 
 		renderTodolist();
 
@@ -5815,7 +5815,7 @@ tests({
 		eq(grandchild1.deleted, false);
 		eq(deleteSelectedButton.textContent === 'Undelete selected', false);
 
-		grandchild1.setStage('deleted');
+		grandchild1.markDeleted(true);
 
 		renderTodolist();
 
@@ -5842,8 +5842,8 @@ tests({
 		eq(grandchild1.deleted, false);
 		eq(deleteSelectedButton.textContent === 'Delete selected', true);
 
-		todo1.setStage('deleted');
-		child1.setStage('deleted');
+		todo1.markDeleted(true);
+		child1.markDeleted(true);
 
 		renderTodolist();
 
@@ -5852,7 +5852,7 @@ tests({
 		eq(grandchild1.deleted, false);
 		eq(deleteSelectedButton.textContent === 'Delete selected', true);
 
-		grandchild1.setStage('deleted');
+		grandchild1.markDeleted(true);
 
 		renderTodolist();
 
@@ -10379,6 +10379,7 @@ tests({
 		eq(selectAllButton.textContent, 'Select all');
 	},
 	"If todos array is empty at startup, the app should create a new todo and todoLi with entry field focused (close devtools to pass test).": function() {
+		remove();
 		todos = [];
 		startApp();
 		todosUl = todolist.children[0];
@@ -10390,5 +10391,52 @@ tests({
 		eq(todoLi1.querySelector('p').textContent, '');
 		eq(document.activeElement, todoLi1Entry);
 		eq(document.hasFocus(), true);
-	}
+	},
+	"The app should have a startup function to load todos, if any, and set initial button values.": function() {
+		todos = [];
+
+		startApp();
+
+		eq(todos.length, 0);
+		eq(selectAllButton.disabled, true);
+		eq(completeSelectedButton.disabled, true);
+		eq(deleteSelectedButton.disabled, true);
+		eq(purgeSelectedDeletedButton.disabled, true);
+		eq(showActiveButton.disabled, false);
+		eq(showCompletedButton.disabled, false);
+		eq(showDeletedButton.disabled, false);
+		eq(addTodoButton.disabled, false);
+		eq(showActiveButton.textContent, '√ Active');
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		todo2.markDeleted(true);
+		insertTodo(todos, tood2);
+
+		startApp();
+
+		eq(todos.length, 2);
+		eq(selectAllButton.disabled, false);
+		eq(completeSelectedButton.disabled, true);
+		eq(deleteSelectedButton.disabled, true);
+		eq(purgeSelectedDeletedButton.disabled, true);
+		eq(showActiveButton.disabled, false);
+		eq(showCompletedButton.disabled, false);
+		eq(showDeletedButton.disabled, false);
+		eq(addTodoButton.disabled, false);
+		eq(showActiveButton.textContent, '√ Active');
+		eq(showCompletedButton.textContent, '√ Completed');
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi2 = todosUl.children[1];
+
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2, null);
+	},
 });
