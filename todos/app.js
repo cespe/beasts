@@ -693,8 +693,11 @@ function updateActionsBar() {
 	} else {
 		// No todos are displayed
 		selectAllButton.disabled = true;
+		selectAllButton.textContent = 'Select all';
 		completeSelectedButton.disabled = true;
+		completeSelectedButton.textContent = 'Complete selected';
 		deleteSelectedButton.disabled = true;
+		deleteSelectedButton.textContent = 'Delete selected';
 	}
 }
 

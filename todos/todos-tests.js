@@ -6282,6 +6282,7 @@ tests({
 		eq(purgeSelectedDeletedButton.parentElement, actionsBar);
 	},
 	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
+		remove();
 		todos = [];
 		startApp();
 
@@ -10406,6 +10407,9 @@ tests({
 		eq(showCompletedButton.disabled, false);
 		eq(showDeletedButton.disabled, false);
 		eq(addTodoButton.disabled, false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(completeSelectedButton.textContent, 'Complete selected');
+		eq(deleteSelectedButton.textContent, 'Delete selected');
 		eq(showActiveButton.textContent, '√ Active');
 		eq(showCompletedButton.textContent, '√ Completed');
 		eq(showDeletedButton.textContent, 'Deleted');
@@ -10428,6 +10432,9 @@ tests({
 		eq(showCompletedButton.disabled, false);
 		eq(showDeletedButton.disabled, false);
 		eq(addTodoButton.disabled, false);
+		eq(selectAllButton.textContent, 'Select all');
+		eq(completeSelectedButton.textContent, 'Complete selected');
+		eq(deleteSelectedButton.textContent, 'Delete selected');
 		eq(showActiveButton.textContent, '√ Active');
 		eq(showCompletedButton.textContent, '√ Completed');
 		eq(showDeletedButton.textContent, 'Deleted');
