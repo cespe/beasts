@@ -5249,64 +5249,27 @@ tests({
 
 		renderTodolist();
 
-		eq(completeSelectedChildrenButton.disabled, true);
+		eq(completeSelectedButton.disabled, true);
 
 		grandchild1.markSelected(true);
 		grandchild1.markSelectMode(true);
 
 		renderTodolist();
 
-		eq(completeSelectedChildrenButton.disabled, true);
+		eq(completeSelectedButton.disabled, true);
 
 		child1.markSelected(true);
 		child1.markSelectMode(true);
 
 		renderTodolist();
 
-		eq(completeSelectedChildrenButton.disabled, true);
+		eq(completeSelectedButton.disabled, true);
 
 		todo1.markSelectMode(true);
 
 		renderTodolist();
 
-		eq(completeSelectedChildrenButton.disabled, false);
-	},
-	"If any selected filtered-in todos are not completed, completeSelected button text should be 'Complete selected'.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1');
-		child1 = new Todo('Child 1');
-		todo1.addChild(child1);
-		grandchild1 = new Todo('Grandchild 1');
-		child1.addChild(grandchild1);
-		insertTodo(todos, todo1);
-
-		renderTodolist();
-
-		selectAllButton.click();
-
-		eq(todo1.stage, 'active');
-		eq(child1.stage, 'active');
-		eq(grandchild1.stage, 'active');
-		eq(completeSelectedButton.textContent === 'Complete selected', true);
-
-		todo1.setStage('completed');
-		child1.setStage('completed');
-
-		renderTodolist();
-
-		eq(todo1.stage, 'completed');
-		eq(child1.stage, 'completed');
-		eq(grandchild1.stage, 'active');
-		eq(completeSelectedButton.textContent === 'Complete selected', true);
-
-		grandchild1.setStage('completed');
-
-		renderTodolist();
-
-		eq(todo1.stage, 'completed');
-		eq(child1.stage, 'completed');
-		eq(grandchild1.stage, 'completed');
-		eq(completeSelectedButton.textContent === 'Complete selected', false);
+		eq(completeSelectedButton.disabled, false);
 	},
 	"If all selected filtered-in todos are completed, completeSelected button text should be 'Uncomplete selected'.": function() {
 		todos = [];
@@ -5344,6 +5307,43 @@ tests({
 		eq(child1.stage, 'completed');
 		eq(grandchild1.stage, 'completed');
 		eq(completeSelectedButton.textContent === 'Uncomplete selected', true);
+	},
+	"If all selected filtered-in todos are not completed, completeSelected button text should be 'Complete selected'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		selectAllButton.click();
+
+		eq(todo1.stage, 'active');
+		eq(child1.stage, 'active');
+		eq(grandchild1.stage, 'active');
+		eq(completeSelectedButton.textContent === 'Complete selected', true);
+
+		todo1.setStage('completed');
+		child1.setStage('completed');
+
+		renderTodolist();
+
+		eq(todo1.stage, 'completed');
+		eq(child1.stage, 'completed');
+		eq(grandchild1.stage, 'active');
+		eq(completeSelectedButton.textContent === 'Complete selected', true);
+
+		grandchild1.setStage('completed');
+
+		renderTodolist();
+
+		eq(todo1.stage, 'completed');
+		eq(child1.stage, 'completed');
+		eq(grandchild1.stage, 'completed');
+		eq(completeSelectedButton.textContent === 'Complete selected', false);
 	},
 	"Clicking completeSelected button should toggle todo stage 'complete' or 'active' for all filtered-in selected todos.": function() {
 		todos = [];

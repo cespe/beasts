@@ -670,11 +670,19 @@ function updateActionsBar() {
 		selectAllButton.disabled = false;
 		if (anyRootTodosInSelectMode(todos)) {
 			selectAllButton.textContent = 'Unselect all';
+			completeSelectedButton.disabled = false;
+			if (allSelectedTodosCompleted(todos)) {
+				completeSelectedButton.textContent = 'Uncomplete selected';	
+			} else {
+				completeSelectedButton.textContent = 'Complete selected';	
+			}
 		} else {
 			selectAllButton.textContent = 'Select all';
+			completeSelectedButton.disabled = true;
 		}
 	} else {
 		selectAllButton.disabled = true;
+		completeSelectedButton.disabled = true;
 	}
 }
 
@@ -2501,6 +2509,15 @@ function actionsClickHandler(event) {
 		}
 */
 		if (event.target.name === 'completeSelected') {
+			if (completeSelectedButton.textContent === 'Complete selected') {
+				setSelectedTodosStage(todos, 'completed');
+			} else {
+				setSelectedTodosStage(todos, 'active');
+		
+			}
+			renderTodolist();
+		}
+/*
 			var completeSelectedButton = event.target;
 			var todosUl = todolist.children[0];
 			if (completeSelectedButton.textContent === 'Uncomplete selected') {
@@ -2541,6 +2558,7 @@ function actionsClickHandler(event) {
 				}
 			}
 		}
+*/
 		if (event.target.name === 'deleteSelected') {
 			var deleteSelectedButton = event.target;
 			var todosUl = todolist.children[0];
@@ -2619,7 +2637,7 @@ function setActionsBarDefaults() {
 
 function startApp() {
 	// Start app with a new empty todo if the todolist is empty
-	setActionsBarDefaults();
+//	setActionsBarDefaults();
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
 	} else {						// 'else' because insertNewTodoLi already calls renderTodolist
