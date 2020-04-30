@@ -5753,7 +5753,253 @@ tests({
 		eq(deleteSelectedButton.innerText, 'Delete selected');
 		eq(deleteSelectedButton.parentElement, actionsBar);
 	},
+	"The deleteSelected button should be disabled unless there are top-level todos in select mode.": function() {
+		// Same condition as setting selectAll button text to 'Unselect all'
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		eq(deleteSelectedButton.disabled, true);
+
+		grandchild1.markSelected(true);
+		grandchild1.markSelectMode(true);
+
+		renderTodolist();
+
+		eq(deleteSelectedButton.disabled, true);
+
+		child1.markSelected(true);
+		child1.markSelectMode(true);
+
+		renderTodolist();
+
+		eq(deleteSelectedButton.disabled, true);
+
+		todo1.markSelectMode(true);
+
+		renderTodolist();
+
+		eq(deleteSelectedButton.disabled, false);
+	},
+	"If all selected filtered-in todos are deleted, deleteSelected button text should be 'Undelete selected'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		selectAllButton.click();
+
+		eq(todo1.deleted, false);
+		eq(child1.deleted, false);
+		eq(grandchild1.deleted, false);
+		eq(deleteSelectedButton.textContent === 'Undelete selected', false);
+
+		todo1.setStage('deleted');
+		child1.setStage('deleted');
+
+		renderTodolist();
+
+		eq(todo1.deleted, true);
+		eq(child1.deleted, true);
+		eq(grandchild1.deleted, false);
+		eq(deleteSelectedButton.textContent === 'Undelete selected', false);
+
+		grandchild1.setStage('deleted');
+
+		renderTodolist();
+
+		eq(todo1.deleted, true);
+		eq(child1.deleted, true);
+		eq(grandchild1.deleted, true);
+		eq(deleteSelectedButton.textContent === 'Undelete selected', true);
+	},
+	"If all selected filtered-in todos are not deleted, deleteSelected button text should be 'Delete selected'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		insertTodo(todos, todo1);
+
+		renderTodolist();
+
+		selectAllButton.click();
+
+		eq(todo1.deleted, false);
+		eq(child1.deleted, false);
+		eq(grandchild1.deleted, false);
+		eq(deleteSelectedButton.textContent === 'Delete selected', true);
+
+		todo1.setStage('deleted');
+		child1.setStage('deleted');
+
+		renderTodolist();
+
+		eq(todo1.deleted, true);
+		eq(child1.deleted, true);
+		eq(grandchild1.deleted, false);
+		eq(deleteSelectedButton.textContent === 'Delete selected', true);
+
+		grandchild1.setStage('deleted');
+
+		renderTodolist();
+
+		eq(todo1.deleted, true);
+		eq(child1.deleted, true);
+		eq(grandchild1.deleted, true);
+		eq(deleteSelectedButton.textContent === 'Delete selected', false);
+	},
+	"Clicking deleteSelected button should toggle todo deleted or not deleted for all filtered-in selected todos.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		renderTodolist();
+
+		eq(todo1.deleted, false);
+		eq(todo2.deleted, false);
+		eq(child1.deleted, false);
+
+		selectAllButton.click();
+		deleteSelectedButton.click();
+
+		eq(todo1.deleted, true);
+		eq(todo2.deleted, true);
+		eq(child1.deleted, true);
+
+		deleteSelectedButton.click();
+
+		eq(todo1.deleted, false);
+		eq(todo2.deleted, false);
+		eq(child1.deleted, false);
+	},
+	"Clicking deleteSelected button should re-render todoLis.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		renderTodolist();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
+		var todoLi1Entry = todoLi1.querySelector('p');
+		var todoLi2Entry = todoLi2.querySelector('p');
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
+		var childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi2DeleteButton.textContent, 'Delete');
+		eq(childLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1DeleteButton.disabled, false);
+		eq(todoLi2DeleteButton.disabled, false);
+		eq(todoLi1Entry.classList.contains('highlighted'), false);
+		eq(todoLi2Entry.classList.contains('highlighted'), false);
+		eq(childLi1Entry.classList.contains('highlighted'), false);
+		eq(todoLi1Entry.classList.contains('faded-deleted'), false);
+		eq(todoLi2Entry.classList.contains('faded-deleted'), false);
+		eq(childLi1Entry.classList.contains('faded-deleted'), false);
+
+		selectAllButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		todoLi2DeleteButton = todoLi2.children.namedItem('delete');
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi2Entry = todoLi2.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1DeleteButton = childLi1.children.namedItem('delete');
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi2DeleteButton.textContent, 'Delete');
+		eq(childLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1DeleteButton.disabled, true);
+		eq(todoLi2DeleteButton.disabled, true);
+		eq(todoLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi2Entry.classList.contains('highlighted'), true);
+		eq(childLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi1Entry.classList.contains('faded-deleted'), false);
+		eq(todoLi2Entry.classList.contains('faded-deleted'), false);
+		eq(childLi1Entry.classList.contains('faded-deleted'), false);
+
+		deleteSelectedButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		todoLi2DeleteButton = todoLi2.children.namedItem('delete');
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi2Entry = todoLi2.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1DeleteButton = childLi1.children.namedItem('delete');
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1DeleteButton.textContent, 'Undelete');
+		eq(todoLi2DeleteButton.textContent, 'Undelete');
+		eq(childLi1DeleteButton.textContent, 'Undelete');
+		eq(todoLi1DeleteButton.disabled, true);
+		eq(todoLi2DeleteButton.disabled, true);
+		eq(todoLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi2Entry.classList.contains('highlighted'), true);
+		eq(childLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi1Entry.classList.contains('faded-deleted'), true);
+		eq(todoLi2Entry.classList.contains('faded-deleted'), true);
+		eq(childLi1Entry.classList.contains('faded-deleted'), true);
+
+		deleteSelectedButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi2 = todolist.children[0].children[1];
+		todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+		todoLi2DeleteButton = todoLi2.children.namedItem('delete');
+		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi2Entry = todoLi2.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1DeleteButton = childLi1.children.namedItem('delete');
+		childLi1Entry = childLi1.querySelector('p');
+
+		eq(todoLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi2DeleteButton.textContent, 'Delete');
+		eq(childLi1DeleteButton.textContent, 'Delete');
+		eq(todoLi1DeleteButton.disabled, true);
+		eq(todoLi2DeleteButton.disabled, true);
+		eq(todoLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi2Entry.classList.contains('highlighted'), true);
+		eq(childLi1Entry.classList.contains('highlighted'), true);
+		eq(todoLi1Entry.classList.contains('faded-deleted'), false);
+		eq(todoLi2Entry.classList.contains('faded-deleted'), false);
+		eq(childLi1Entry.classList.contains('faded-deleted'), false);
+	},
 	"Clicking the deleteSelected button should toggle its button text and toggle todo.deleted, todoLi deleted button text, and entry <p> class for selected todos.": function() {
+		remove();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -5847,6 +6093,7 @@ tests({
 		eq(todo3.deleted, false);
 },
 	"The deleteSelected button should also delete/undelete nested selected todos.": function() {
+		remove();
 		selectAllButton.textContent = 'Select all';
 		deleteSelectedButton.textContent = 'Delete selected';
 		todos = [];
@@ -5877,22 +6124,22 @@ tests({
 		var childLi3Ul = childLi3.querySelector('ul');
 		var grandchildLi3 = childLi3Ul.children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
-		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
 		var childLi1SelectButton = childLi1.children.namedItem('select');
-		var childLi1CompleteButton = childLi1.children.namedItem('complete');
+		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var childLi1DeleteButton = childLi1.children.namedItem('delete');
 		var todoLi2SelectButton = todoLi2.children.namedItem('select');
-		var todoLi2CompleteButton = todoLi2.children.namedItem('complete');
+		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
 		var todoLi2DeleteButton = todoLi2.children.namedItem('delete');
 		var todoLi3SelectButton = todoLi3.children.namedItem('select');
-		var todoLi3CompleteButton = todoLi3.children.namedItem('complete');
+		var todoLi3DeleteButton = todoLi3.children.namedItem('delete');
 		var todoLi3DeleteButton = todoLi3.children.namedItem('delete');
 		var childLi3SelectButton = childLi3.children.namedItem('select');
-		var childLi3CompleteButton = childLi3.children.namedItem('complete');
+		var childLi3DeleteButton = childLi3.children.namedItem('delete');
 		var childLi3DeleteButton = childLi3.children.namedItem('delete');
 		var grandchildLi3SelectButton = grandchildLi3.children.namedItem('select');
-		var grandchildLi3CompleteButton = grandchildLi3.children.namedItem('complete');
+		var grandchildLi3DeleteButton = grandchildLi3.children.namedItem('delete');
 		var grandchildLi3DeleteButton = grandchildLi3.children.namedItem('delete');
 		var todoLi1Entry = todoLi1.querySelector('p');
 		var todoLi2Entry = todoLi2.querySelector('p');
@@ -6027,12 +6274,6 @@ tests({
 		eq(grandchildLi3DeleteButton.textContent, 'Delete');
 		eq(grandchildLi3Entry.classList.contains('faded-deleted'), false);
 		eq(grandchild3.deleted, false);
-	},
-	"The header actions bar should have a 'deleteSelected' button to mark selected todos deleted.": function() {
-		eq(deleteSelectedButton.nodeName, 'BUTTON');
-		eq(deleteSelectedButton.name, 'deleteSelected');
-		eq(deleteSelectedButton.innerText, 'Delete selected');
-		eq(deleteSelectedButton.parentElement, actionsBar);
 	},
 	"The header actions bar should have a 'purgeSelectedDeleted' button to expunge selected deleted todos.": function() {
 		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
