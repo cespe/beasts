@@ -708,7 +708,7 @@ tests({
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
 
-		renderTodolist();
+		startApp();
 		
 		var todo1Li = document.getElementById(todo1.id);
 		var todo1LiEntry = todo1Li.querySelector('p').textContent;
@@ -735,7 +735,7 @@ tests({
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
 		
-		renderTodolist();
+		startApp();
 
 		var todo1Li = document.getElementById(todo1.id);
 		var todo1LiEntry = todo1Li.querySelector('p').textContent;
@@ -766,8 +766,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		setActionsBarDefaults();
-		renderTodolist();
+		startApp();
 		
 		var todo1Li = document.getElementById(todo1.id);
 		var todo1LiEntry = todo1Li.children[0];
@@ -785,8 +784,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		setActionsBarDefaults();
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1DeleteButton = todoLi1.children.namedItem('delete');
@@ -870,7 +868,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -909,7 +907,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -954,7 +952,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -970,7 +968,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -1050,7 +1048,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -1064,7 +1062,7 @@ tests({
 		todo1.stage = 'completed';
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -1077,7 +1075,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -1091,7 +1089,7 @@ tests({
 		todo1.stage = 'completed';
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -1104,7 +1102,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -1144,7 +1142,7 @@ tests({
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1199,7 +1197,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
@@ -1213,7 +1211,9 @@ tests({
 		todo1.markDeleted(true);
 		insertTodo(todos, todo1);
 		
-		showDeletedButton.textContent = '√ Deleted';		// required for renderTodolist to generate the todoLi
+		startApp();
+
+		showDeletedButton.click()		// required for renderTodolist to generate the todoLi
 
 		renderTodolist();
 
@@ -1228,7 +1228,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -1242,6 +1242,10 @@ tests({
 		todo1.markDeleted(true);
 		insertTodo(todos, todo1);
 
+		startApp();
+
+		showDeletedButton.click();
+
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
@@ -1254,6 +1258,10 @@ tests({
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
+
+		startApp();
+
+		showDeletedButton.click();
 
 		renderTodolist();
 
@@ -1291,7 +1299,10 @@ tests({
 		var child2 = new Todo('child 2');
 		todo1.addChild(child1);
 		todo1.addChild(child2);
-		
+
+		startApp();
+
+		showDeletedButton.click();
 
 		renderTodolist();
 
@@ -1328,7 +1339,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1AddSibling = todoLi1.children.namedItem('addSibling');
@@ -1345,7 +1356,7 @@ tests({
 		insertTodo(todos, todo1);
 		
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1394,7 +1405,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1AddChild = todoLi1.children.namedItem('addChild');
@@ -1408,7 +1419,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1446,7 +1457,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1499,7 +1510,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
@@ -1513,7 +1524,7 @@ tests({
 		todo1.markSelected(true);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
@@ -1529,7 +1540,7 @@ tests({
 		todo1.markSelectMode(true);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
@@ -1553,7 +1564,7 @@ tests({
 		todo1.markSelectMode(true);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
@@ -1594,7 +1605,7 @@ tests({
 		insertTodo(todos, todo1);
 		insertTodo(todos, todo2);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -1612,7 +1623,7 @@ tests({
 		todo1.markSelected(true);		// must start with todo selected, otherwise 'Select' button will be disabled for test
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
@@ -1653,7 +1664,7 @@ tests({
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1710,7 +1721,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1UndoEditButton = todoLi1.children.namedItem('undoEdit');
@@ -1727,7 +1738,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1UndoEditButton = todoLi.children.namedItem('undoEdit');
@@ -1769,7 +1780,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -1812,7 +1823,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -1842,7 +1853,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
@@ -1855,7 +1866,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 
@@ -1869,7 +1880,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1885,7 +1896,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1904,7 +1915,7 @@ tests({
 		insertTodo(todos, todo1);
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1931,7 +1942,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -1978,7 +1989,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -1991,7 +2002,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2006,7 +2017,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2020,7 +2031,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2037,7 +2048,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2053,7 +2064,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2069,7 +2080,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2094,7 +2105,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2128,7 +2139,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2170,7 +2181,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2236,7 +2247,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2276,7 +2287,6 @@ tests({
 		eq(child2LiEntry.classList.contains('highlighted'), false);
 	},
 	"The selectChildren button should operate on displayed (filtered-in) child todos only.": function() {
-		setActionsBarDefaults();
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -2288,7 +2298,7 @@ tests({
 		todo1.addChild(child3);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2369,7 +2379,7 @@ tests({
 		child3.addChild(grandchild3);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2483,7 +2493,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2499,7 +2509,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2516,7 +2526,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2532,7 +2542,7 @@ tests({
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -2560,7 +2570,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2578,7 +2588,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2609,7 +2619,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2639,7 +2649,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2691,7 +2701,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2763,7 +2773,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2816,7 +2826,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -2908,7 +2918,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2922,7 +2932,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2937,7 +2947,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -2953,7 +2963,7 @@ tests({
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
@@ -2982,7 +2992,7 @@ tests({
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -3001,7 +3011,8 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		setActionsBarDefaults();
+		startApp();
+
 		showDeletedButton.click();		// need to display deleted todos
 
 		renderTodolist();
@@ -3037,7 +3048,8 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		setActionsBarDefaults();
+		startApp();
+
 		showDeletedButton.click();		// need to display deleted todos
 
 		renderTodolist();
@@ -3071,6 +3083,10 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
+
+		startApp();
+
+		showDeletedButton.click();
 
 		renderTodolist();
 
@@ -3128,6 +3144,10 @@ tests({
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
+
+		startApp();
+
+		showDeletedButton.click();
 
 		renderTodolist();
 
@@ -3207,7 +3227,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3260,8 +3280,10 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		setActionsBarDefaults();
+		startApp();
+
 		showDeletedButton.click();			// need to display deleted todos
+
 		renderTodolist();
 
 		todoLi1 = todolist.children[0].children[0];
@@ -3362,7 +3384,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -3387,7 +3409,7 @@ tests({
 		insertTodo(todos, todo1);
 		
 
-		renderTodolist();
+		startApp();
 
 		todosUl = todolist.children[0];
 		todoLi1 = todosUl.children[0];
@@ -3423,7 +3445,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3469,7 +3491,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 
@@ -3555,7 +3577,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3586,7 +3608,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3629,7 +3651,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3671,7 +3693,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3714,7 +3736,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3757,7 +3779,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3796,7 +3818,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -3849,7 +3871,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		
@@ -3940,7 +3962,7 @@ tests({
 		insertTodo(todos, todo1);
 		
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		
@@ -4031,7 +4053,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		
@@ -4157,7 +4179,7 @@ tests({
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 
@@ -4183,7 +4205,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		
@@ -4294,7 +4316,7 @@ tests({
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		
@@ -4399,7 +4421,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		eq(selectAllButton.disabled, false);
 
@@ -4418,7 +4440,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		eq(selectAllButton.textContent, 'Unselect all');
 	},
@@ -4429,7 +4451,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		eq(selectAllButton.textContent, 'Select all');
 
@@ -4451,7 +4473,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
@@ -4519,7 +4541,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
@@ -4559,7 +4581,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
@@ -4638,7 +4660,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
@@ -4689,7 +4711,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -4747,7 +4769,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -4786,7 +4808,7 @@ tests({
 		todo2.markCompleted(true);
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -4827,7 +4849,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -4869,7 +4891,7 @@ tests({
 		todo2.markDeleted(true);
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -4922,7 +4944,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -4954,7 +4976,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi1HideChildrenButton = todoLi1.children.namedItem('showChildren');
@@ -5050,7 +5072,7 @@ tests({
 		child1 = new Todo('Child 1');
 		todo1.addChild(child1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		childLi1 = todoLi1.querySelector('ul').children[0];
@@ -5135,7 +5157,7 @@ tests({
 		child1 = new Todo('Child 1');
 		todo1.addChild(child1);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		childLi1 = todoLi1.querySelector('ul').children[0];
@@ -5247,7 +5269,7 @@ tests({
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		eq(completeSelectedButton.disabled, true);
 
@@ -5280,7 +5302,7 @@ tests({
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		selectAllButton.click();
 
@@ -5317,7 +5339,7 @@ tests({
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		selectAllButton.click();
 
@@ -5354,7 +5376,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		eq(todo1.stage, 'active');
 		eq(todo2.stage, 'active');
@@ -5382,7 +5404,7 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
@@ -5493,7 +5515,7 @@ tests({
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -5584,7 +5606,7 @@ tests({
 		insertTodo(todos, todo3);
 		
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -5763,7 +5785,7 @@ tests({
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
 
-		renderTodolist();
+		startApp();
 
 		eq(deleteSelectedButton.disabled, true);
 
@@ -5795,6 +5817,10 @@ tests({
 		grandchild1 = new Todo('Grandchild 1');
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
+
+		startApp();
+
+		showDeletedButton.click();
 
 		renderTodolist();
 
@@ -5833,6 +5859,10 @@ tests({
 		child1.addChild(grandchild1);
 		insertTodo(todos, todo1);
 
+		startApp();
+
+		showDeletedButton.click();
+
 		renderTodolist();
 
 		selectAllButton.click();
@@ -5870,6 +5900,10 @@ tests({
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
+		startApp();
+
+		showDeletedButton.click();		// needed to enable deleteSelectedButton below
+
 		renderTodolist();
 
 		eq(todo1.deleted, false);
@@ -5897,6 +5931,10 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
+
+		startApp(); 
+
+		showDeletedButton.click();
 
 		renderTodolist();
 
@@ -6009,7 +6047,7 @@ tests({
 		insertTodo(todos, todo3);
 		
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -6111,7 +6149,7 @@ tests({
 		insertTodo(todos, todo3);
 		
 
-		renderTodolist();
+		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
 		todoLi2 = todolist.children[0].children[1];
@@ -6298,28 +6336,32 @@ tests({
 		// Choose to display todos based on their stage in life or whether or not they are deleted.
 	},
 	"The header actions bar should have a showActive button to toggle the display of active todos.": function() {
-		// active todos are not completed or canceled
-//		renderActionsBar();
-//		var actionsBar = document.getElementById('actions');
-//		var showActiveButton = actionsBar.children.namedItem('showActive');
+		todos = [];
+		startApp();		// restore defaults
 
 		eq(showActiveButton.nodeName, 'BUTTON');
-		eq(showActiveButton.innerText, '√ Active');
+		eq(showActiveButton.name, 'showActive');
+		eq(showActiveButton.textContent, '√ Active');
 		eq(showActiveButton.parentElement, actionsBar);
 	},
 	"The header actions bar should have a showCompleted button to toggle the display of completed todos.": function() {
 		eq(showCompletedButton.nodeName, 'BUTTON');
-		eq(showCompletedButton.innerText, '√ Completed');
+		eq(showCompletedButton.name, 'showCompleted');
+		eq(showCompletedButton.textContent, '√ Completed');
 		eq(showCompletedButton.parentElement, actionsBar);
 	},
 	"The header actions bar should have a showDeleted button to toggle the display of deleted todos.": function() {
 		eq(showDeletedButton.nodeName, 'BUTTON');
-		eq(showDeletedButton.innerText, 'Deleted');
+		eq(showDeletedButton.name, 'showDeleted');
+		eq(showDeletedButton.textContent, 'Deleted');
 		eq(showDeletedButton.parentElement, actionsBar);
 	},
 	"The app should have a way to generate a set of filter tags from showActive, showCompleted, and showDeleted button text.": function() {
 		// Tests generateFilterSet()
 		
+		todos = [];
+		startApp();		// restore defaults
+
 		// Case: default set at startup
 		eq(showActiveButton.textContent, '√ Active');
 		eq(showCompletedButton.textContent, '√ Completed');
@@ -6495,7 +6537,7 @@ tests({
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
@@ -6562,7 +6604,7 @@ tests({
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
@@ -6629,7 +6671,7 @@ tests({
 		todo2Child.addChild(todo2Grandchild);
 		insertTodo(todos, todo2);
 
-		renderTodolist();
+		startApp();
 
 		todoUl = todolist.children[0];
 		todoLi1 = todoUl.children[0];
@@ -6696,7 +6738,7 @@ tests({
 		todos = [];
 
 		// No todos to render, but need to clear out innerHTML from prior test
-		renderTodolist();
+		startApp();
 
 		addTodoButton.click();
 
@@ -6729,7 +6771,7 @@ tests({
 		grandchild1 = new Todo('Grandchild 1');
 		child1.addChild(grandchild1);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
@@ -7036,7 +7078,7 @@ tests({
 		todo3 = new Todo('Item 3');
 		insertTodo(todos, todo3);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi2 = todolist.children[0].children[1];
 		var todoLi2SelectButton = todoLi2.children.namedItem('select');
@@ -7060,7 +7102,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -7098,7 +7140,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -7133,7 +7175,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
@@ -7155,7 +7197,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
@@ -7181,7 +7223,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
@@ -7221,7 +7263,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 
@@ -7245,7 +7287,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -7275,7 +7317,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 
@@ -7295,7 +7337,7 @@ tests({
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
-		renderTodolist();
+		startApp();
 		
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -7331,7 +7373,7 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		renderTodolist();
+		startApp();
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi2 = todolist.children[0].children[1];
 		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
@@ -8303,7 +8345,7 @@ tests({
 		insertTodo(todos, todo2);
 		
 
-		renderTodolist();
+		startApp();
 
 
 		var todoLi1 = todolist.children[0].children[0];
@@ -8950,7 +8992,7 @@ tests({
 		child1.addChild(grandchild2);
 		
 
-		renderTodolist();
+		startApp();
 
 
 		var todoLi1 = todolist.children[0].children[0];
@@ -9766,7 +9808,7 @@ tests({
 		todo1.addChild(child1);
 		child1.addChild(grandchild1);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
@@ -9806,7 +9848,7 @@ tests({
 		child1.addChild(grandchild1);
 		todo1.addChild(child2);
 
-		renderTodolist();
+		startApp();
 
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1SelectButton = todoLi1.children.namedItem('select');
@@ -10189,7 +10231,7 @@ tests({
 		child1.addChild(grandchild2);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
-		renderTodolist();		// sets up Actions bar buttons
+		startApp();		// sets up Actions bar buttons
 		var todoLi1 = todolist.children[0].children[0];
 		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
 		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
@@ -10273,7 +10315,7 @@ tests({
 		manual();
 		godolist.innerHTML = '';
 		todos = [];
-		renderTodolist();		// Initiate app with a blank focused todo
+		startApp();		// Initiate app with a blank focused todo
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
@@ -10419,7 +10461,7 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		todo2.markDeleted(true);
-		insertTodo(todos, tood2);
+		insertTodo(todos, todo2);
 
 		startApp();
 
@@ -10444,6 +10486,10 @@ tests({
 		todoLi2 = todosUl.children[1];
 
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi2, null);
+		eq(todoLi2, undefined);
+
+		// Restore defaults after last test
+		todos = [];
+		startApp();
 	},
 });

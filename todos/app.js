@@ -698,6 +698,9 @@ function updateActionsBar() {
 		completeSelectedButton.textContent = 'Complete selected';
 		deleteSelectedButton.disabled = true;
 		deleteSelectedButton.textContent = 'Delete selected';
+		purgeSelectedDeletedButton.disabled = true;
+		purgeSelectedDeletedButton.textContent = 'Purge selected deleted todos';
+		addTodoButton.disabled = false;
 	}
 }
 
@@ -2661,6 +2664,10 @@ function setActionsBarDefaults() {
 }
 
 function startApp() {
+	showActiveButton.textContent = '√ Active';
+	showCompletedButton.textContent = '√ Completed';
+	showDeletedButton.textContent = 'Deleted';
+
 	renderTodolist();
 /*	// Start app with a new empty todo if the todolist is empty
 //	setActionsBarDefaults();
