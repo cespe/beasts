@@ -340,6 +340,28 @@ tests({
 		eq(grandchild1.filteredOutParentOfFilteredIn, false);
 		eq(grandchild2.filteredOutParentOfFilteredIn, false);
 	},
+	"When applying filter tags, the app should mark filtered-out todos not selected.": function() {
+		// By design don't let hidden todos be changed.
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelected(true);
+		todo2 = new Todo('Item 2');
+		todo2.setStage('completed');
+		todo2.markSelected(true);
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+
+		var filterSet = new Set();
+		filterSet.add('#active');
+		filterSet.add('#deleted');
+
+		applyDisplayTags(filterSet);
+
+		eq(todo1.filteredIn, true);
+		eq(todo1.selected, true);
+		eq(todo2.filteredIn, false);
+		eq(todo2.selected, false);
+	},
 	"Section: todo array helper functions": function() {
 	},
 	"The app should have a way to return a todo when given its id.": function() {
@@ -1400,6 +1422,9 @@ tests({
 		eq(document.activeElement, todoLi1Child2Entry);
 		eq(document.hasFocus(), true);				// doesn't pass unless console is closed
 	},
+	"If the todo is in select mode, the new todo added by addSibling should be created in select mode.": function() {
+		fail();
+	},
 	"Each todo li should have an 'addChild' button to add a child todo underneath it.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1451,6 +1476,9 @@ tests({
 		eq(todoLi1Child1Entry.textContent, "");
 		eq(document.activeElement, todoLi1Child1Entry);
 		eq(document.hasFocus(), true);					// doesn't pass unless console is closed
+	},
+	"If the todo is in select mode, the new todo added by addChild should be created in select mode.": function() {
+		fail();
 	},
 	"Clicking an addChild button should set todo.collapsed false and display nested todos on re-render.": function() {
 		todos = [];
@@ -2955,6 +2983,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton, null);
 	},
 	"If a todo is in select mode, its todoLi should not have a 'deleteSelectedChildren' button.": function() {
+		// Because it is a 'branch' todo controlled by a 'root' todo higher in the tree
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -3076,6 +3105,7 @@ tests({
 		eq(todoLi1DeleteSelectedChildrenButton.textContent, 'Delete selected children');
 	},
 	"Clicking 'Delete selected children' button should mark nested selected todos deleted and re-render todoLis.": function() {
+		// No need to check for filtered in or out because all filtered-out todos have select marked false.
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -3137,6 +3167,7 @@ tests({
 		eq(child2LiDeleteButton.textContent, 'Undelete');
 	},
 	"Clicking 'Undelete selected children' button should mark nested selected todos undeleted and re-render todoLis.": function() {
+		// No need to check for filtered in or out because all filtered-out todos have select marked false.
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -5375,25 +5406,108 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo3);
 
 		startApp();
 
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, true);
+		eq(todo1.selected, false);
+		eq(child1.selected, false);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
 		eq(todo1.stage, 'active');
-		eq(todo2.stage, 'active');
 		eq(child1.stage, 'active');
+		eq(todo2.stage, 'active');
+		eq(todo3.stage, 'active');
+
+		var todoLi3 = todolist.children[0].children[2];
+		var todoLi3DeleteButton = todoLi3.children.namedItem('delete');
+
+		todoLi3DeleteButton.click();	// Delete
+
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, false);
+		eq(child1.selected, false);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
+		eq(todo1.stage, 'active');
+		eq(child1.stage, 'active');
+		eq(todo2.stage, 'active');
+		eq(todo3.stage, 'active');
+		eq(todo3.deleted, true);
 
 		selectAllButton.click();
-		completeSelectedButton.click();
 
-		eq(todo1.stage, 'completed');
-		eq(todo2.stage, 'completed');
-		eq(child1.stage, 'completed');
-
-		completeSelectedButton.click();
-
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(todo2.selected, true);
+		eq(todo3.selected, false);
 		eq(todo1.stage, 'active');
-		eq(todo2.stage, 'active');
 		eq(child1.stage, 'active');
+		eq(todo2.stage, 'active');
+		eq(todo3.stage, 'active');
+
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+
+		todoLi2SelectButton.click();	// Unselect
+
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
+		eq(todo1.stage, 'active');
+		eq(child1.stage, 'active');
+		eq(todo2.stage, 'active');
+		eq(todo3.stage, 'active');
+
+		// It should not mark todos that are filtered out 
+		// It should not mark todos that are not selected
+
+		completeSelectedButton.click();	// Complete selected
+		
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
+		eq(todo1.stage, 'completed');
+		eq(child1.stage, 'completed');
+		eq(todo2.stage, 'active');
+		eq(todo3.stage, 'active');
+
+		completeSelectedButton.click();	// Uncomplete selected
+		
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
+		eq(todo1.stage, 'active');
+		eq(child1.stage, 'active');
+		eq(todo2.stage, 'active');
+		eq(todo3.stage, 'active');
 	},
 	"Clicking completeSelected button should re-render todoLis.": function() {
 		todos = [];
@@ -5850,7 +5964,7 @@ tests({
 		eq(grandchild1.deleted, true);
 		eq(deleteSelectedButton.textContent === 'Undelete selected', true);
 	},
-	"If all selected filtered-in todos are not deleted, deleteSelected button text should be 'Delete selected'.": function() {
+	"If not all selected filtered-in todos are deleted, deleteSelected button text should be 'Delete selected'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -5986,8 +6100,8 @@ tests({
 		eq(todo3.selected, false);
 		eq(todo1.deleted, true);
 		eq(child1.deleted, true);
-		eq(todo2.deleted, false);	// TODO fails because it marks an unselected todo
-		eq(todo3.deleted, false);
+		eq(todo2.deleted, false);	// false because it is unselected 
+		eq(todo3.deleted, false);	// false because it is filtered out
 
 		deleteSelectedButton.click();	// Undelete selected
 
@@ -6393,25 +6507,6 @@ tests({
 		eq(grandchildLi3DeleteButton.textContent, 'Delete');
 		eq(grandchildLi3Entry.classList.contains('faded-deleted'), false);
 		eq(grandchild3.deleted, false);
-	},
-	"The header actions bar should have a 'purgeSelectedDeleted' button to expunge selected deleted todos.": function() {
-		eq(purgeSelectedDeletedButton.nodeName, 'BUTTON');
-		eq(purgeSelectedDeletedButton.name, 'purgeSelectedDeleted');
-		eq(purgeSelectedDeletedButton.innerText, 'Purge selected deleted todos');
-		eq(purgeSelectedDeletedButton.parentElement, actionsBar);
-	},
-	"When the app starts up, actions bar selection-related button names should be set to default values.": function() {
-		remove();
-		todos = [];
-		startApp();
-
-		eq(selectAllButton.textContent, 'Select all');
-		eq(selectAllButton.disabled, false);
-		eq(completeSelectedButton.textContent, 'Complete selected');
-		eq(completeSelectedButton.disabled, true);
-		eq(deleteSelectedButton.textContent, 'Delete selected');
-		eq(deleteSelectedButton.disabled, true);
-		eq(purgeSelectedDeletedButton.disabled, true);
 	},
 	"Section: Actions bar -- filters": function() {
 		// Choose to display todos based on their stage in life or whether or not they are deleted.
@@ -6985,6 +7080,9 @@ tests({
 		eq(todosUl.children.length, 2);
 		eq(todoLi1.id, todos[0].id);
 		eq(todoLi2.id, todos[1].id);
+	},
+	"If any root todos are in select mode, the new todo created by addTodo should also be in select mode.": function() {
+		fail();
 	},
 	"Section: more button interactions": function() {
 	},
