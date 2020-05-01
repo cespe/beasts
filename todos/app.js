@@ -285,7 +285,9 @@ function markSelectedTodosDeleted(todosArray, bool) {
 		if (todo.children.length > 0) {
 			markSelectedTodosDeleted(todo.children, bool);
 		}
+		if (todo.selected) {
 		todo.deleted = bool;
+		}
 	}
 }
 
@@ -408,6 +410,17 @@ function anyRootTodosInSelectMode(array) {
 	return false;
 }
 
+// Return true if any filtered-in todos at root level of array are in select mode
+function anyFilteredInRootTodosInSelectMode(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.selectMode && todo.filteredIn) {
+			return true;
+		}
+	}
+	return false;
+}
+
 // Return true if any todos, including nested todos, are filtered in for display
 function anyFilteredInTodos(array) {
 	for (var i = 0; i < array.length; i++) {
@@ -475,6 +488,22 @@ function anySelectedCompletedTodos(array) {
 	}
 }
 
+// Return true if any filtered-in todos, including nested todos, are both completed and selected
+function anySelectedFilteredInTodosCompleted(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.stage === 'completed' && todo.selected && todo.filteredIn) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			var todoSelectedCompleted = anySelectedCompletedTodos(todo.children);
+			if (todoSelectedCompleted) {
+				return true;
+			} 
+		}
+	}
+}
+
 // Return true if any todos, including nested todos, are both deleted and selected
 function anySelectedDeletedTodos(array) {
 	for (var i = 0; i < array.length; i++) {
@@ -491,6 +520,21 @@ function anySelectedDeletedTodos(array) {
 	}
 }
 
+// Return true if any filtered-in todos, including nested todos, are both deleted and selected
+function anySelectedFilteredInTodosDeleted(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.deleted && todo.selected && todo.filteredIn) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			var todoSelectedDeleted = anySelectedFilteredInTodosDeleted(todo.children);
+			if (todoSelectedDeleted) {
+				return true;
+			} 
+		}
+	}
+}
 
 // Return true if all selected todos, including nested todos, are completed
 function allSelectedTodosCompleted(array) {
@@ -522,6 +566,36 @@ function allSelectedTodosCompleted(array) {
 	}
 }
 
+// Return true if all selected filtered-in todos, including nested todos, are completed
+function allSelectedFilteredInTodosCompleted(array) {
+	var selected = 0;
+	var andCompleted = 0;
+
+	function runTest(array) {
+		for (var i = 0; i < array.length; i++) {
+			var todo = array[i];
+			if (todo.selected && todo.filteredIn) {
+				selected++;
+				if (todo.stage === 'completed') {
+					andCompleted++;
+				}
+			} 
+
+			if (todo.children.length > 0) {
+				runTest(todo.children);
+			}
+		}
+	}
+
+	runTest(array);
+
+	if (selected > 0 && selected === andCompleted) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 // Return true if all selected todos, including nested todos, are deleted
 function allSelectedTodosDeleted(array) {
 	var selected = 0;
@@ -531,6 +605,36 @@ function allSelectedTodosDeleted(array) {
 		for (var i = 0; i < array.length; i++) {
 			var todo = array[i];
 			if (todo.selected) {
+				selected++;
+				if (todo.deleted === true) {
+					andDeleted++;
+				}
+			} 
+
+			if (todo.children.length > 0) {
+				runTest(todo.children);
+			}
+		}
+	}
+
+	runTest(array);
+
+	if (selected > 0 && selected === andDeleted) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+// Return true if all selected filtered-in todos, including nested todos, are deleted
+function allSelectedFilteredInTodosDeleted(array) {
+	var selected = 0;
+	var andDeleted = 0;
+
+	function runTest(array) {
+		for (var i = 0; i < array.length; i++) {
+			var todo = array[i];
+			if (todo.selected && todo.filteredIn) {
 				selected++;
 				if (todo.deleted === true) {
 					andDeleted++;
@@ -666,41 +770,66 @@ function renderTodolist() {
 }
 
 function updateActionsBar() {
-	if (anyFilteredInTodos(todos)) {
-		// Todos are displayed
+	
+	// TODO check for filtered-in todos or rely on selection handlers to only operate on filtered-in todos?
+	
+	// Get conditionals for updating buttons
+	var oneOrMoreFilteredInTodos = anyFilteredInTodos(todos);
+	var oneOrMoreFilteredInRootTodosInSelectMode = anyFilteredInRootTodosInSelectMode(todos);
+	var allSelectedFilteredInCompleted = allSelectedFilteredInTodosCompleted(todos);
+	var allSelectedFilteredInDeleted = allSelectedFilteredInTodosDeleted(todos);
+	var oneOrMoreSelectedFilteredInTodosDeleted = anySelectedFilteredInTodosDeleted(todos);
+
+	if (oneOrMoreFilteredInTodos) {
 		selectAllButton.disabled = false;
-		if (anyRootTodosInSelectMode(todos)) {
-			// selectAll put todos in select mode, time to enable completeSelected and deleteSelected
-			selectAllButton.textContent = 'Unselect all';
-			completeSelectedButton.disabled = false;
-			deleteSelectedButton.disabled = false;
-			if (allSelectedTodosCompleted(todos)) {
-				completeSelectedButton.textContent = 'Uncomplete selected';	
-			} else {
-				completeSelectedButton.textContent = 'Complete selected';	
-			}
-			if (allSelectedTodosDeleted(todos)) {
-				deleteSelectedButton.textContent = 'Undelete selected';	
-			} else {
-				deleteSelectedButton.textContent = 'Delete selected';	
-			}
-		} else {
-			// selectAll hasn't put todos in select mode, time to disable completeSelected and deleteSelected
-			selectAllButton.textContent = 'Select all';
-			completeSelectedButton.disabled = true;
-			deleteSelectedButton.disabled = true;
-		}
 	} else {
-		// No todos are displayed
 		selectAllButton.disabled = true;
+//		selectAllButton.textContent = 'Select all';
+		completeSelectedButton.disabled = true;
+//		completeSelectedButton.textContent = 'Complete selected';
+		deleteSelectedButton.disabled = true;
+//		deleteSelectedButton.textContent = 'Delete selected';
+		purgeSelectedDeletedButton.disabled = true;
+	}
+
+	if (oneOrMoreFilteredInRootTodosInSelectMode) {
+		selectAllButton.textContent = 'Unselect all';
+		completeSelectedButton.disabled = false;
+		deleteSelectedButton.disabled = false;
+	} else {
 		selectAllButton.textContent = 'Select all';
 		completeSelectedButton.disabled = true;
-		completeSelectedButton.textContent = 'Complete selected';
 		deleteSelectedButton.disabled = true;
-		deleteSelectedButton.textContent = 'Delete selected';
-		purgeSelectedDeletedButton.disabled = true;
-		purgeSelectedDeletedButton.textContent = 'Purge selected deleted todos';
-		addTodoButton.disabled = false;
+	}
+
+	if (oneOrMoreFilteredInRootTodosInSelectMode && allSelectedFilteredInCompleted) {
+		completeSelectedButton.textContent = 'Uncomplete selected';	
+	} else {
+		completeSelectedButton.textContent = 'Complete selected';	
+	}
+
+	if (oneOrMoreFilteredInRootTodosInSelectMode && allSelectedFilteredInDeleted) {
+		deleteSelectedButton.textContent = 'Undelete selected';	
+	} else {
+		deleteSelectedButton.textContent = 'Delete selected';	
+	}
+
+	if (oneOrMoreSelectedFilteredInTodosDeleted) {
+		purgeSelectedDeletedButton.disabled = false;	
+	} else {
+		purgeSelectedDeletedButton.disabled = true;	
+	}
+
+///	if (showDeletedButton.textContent === 'Deleted') {
+//		purgeSelectedDeletedButton.disabled = true;	
+//	} else {
+//		purgeSelectedDeletedButton.disabled = false;	
+//	}
+
+	if (showActiveButton.textContent === 'Active') {
+		addTodoButton.disabled = true;	
+	} else {
+		addTodoButton.disabled = false;	
 	}
 }
 
@@ -1025,9 +1154,9 @@ function altSelectChildren(todoLi) {
 	//
 	// Root has completeSelectedChildren and deleteSelectedChildren buttons active. Branches do not.
 	//
-	// If root 'Unselect children' is clicked, the todoLi and all children return to normal.
-	// If branch 'Unselect children' is clicked, the todoLi and all children stay in selection mode
-	// TODO unless it makes all the root children unselected, in which case root children return to normal.
+	// If root 'Unselect children' is clicked, the todoLi and  children return to normal.
+	// If branch 'Unselect children' is clicked, the todoLi and  children stay in selection mode
+	// TODO unless it makes  the root children unselected, in which case root children return to normal.
 
 	var clickedTodoLi = todoLi;
 	var clickedTodo = findTodo(todos, clickedTodoLi.id);
@@ -1041,7 +1170,7 @@ function altSelectChildren(todoLi) {
 	var childrenUndeletedCount = 0;
 
 	// Handle the three possible cases: root button clicked, branch button clicked, selectAll button clicked
-	// although TODO the selectAll handler currently uses the old selectChildren function via a call to selectAllChildren
+	// although TODO the selectAll handler currently uses the old selectChildren function via a c to selectAllChildren
 
 	if (clickedTodoLiSelectButton.classList.contains('inactive')) {
 		// root button clicked
@@ -1053,14 +1182,14 @@ function altSelectChildren(todoLi) {
 		var rootTodo = findSelectChildrenRootTodo(clickedTodo);
 		if (rootTodo) {
 			if (!anySelectedTodos(rootTodo.children)) {
-				// restore all normal buttons under rootTodoLi
+				// restore  normal buttons under rootTodoLi
 				var rootTodoLi = document.getElementById(rootTodo.id);
 				unselectAllChildren(rootTodoLi);
 			}	
 		} else {
 			// root button is selectAll
 			if (!anySelectedTodos(todos)) {
-				// restore all normal buttons
+				// restore  normal buttons
 				unselectAll();
 			}
 		}
@@ -1610,7 +1739,7 @@ function selectChildren(todoLi) {
 	}
 }
 
-// Called from selectAll button click. Differs from selectChildren in hiding complete/deleteSelectedChildren buttons.
+// Ced from selectAll button click. Differs from selectChildren in hiding complete/deleteSelectedChildren buttons.
 function selectAllChildren(todoLi) {
 	var todoLiSelectChildrenButton = todoLi.children.namedItem('selectChildren');
 	var todoLiCompleteButton = todoLi.children.namedItem('complete');
@@ -1701,7 +1830,7 @@ function selectAllChildren(todoLi) {
 	}
 }
 
-// called from unselectAll
+// ced from unselectAll
 function unselectAllChildren(todoLi) {
 	var todoLiSelectChildrenButton = todoLi.children.namedItem('selectChildren');
 	var todoLiCompleteButton = todoLi.children.namedItem('complete');
@@ -2041,7 +2170,7 @@ function keyDownHandler(event) {
 		// target is a todo entry
 		if (event.key === "Enter") {
 			event.preventDefault();		// Prevents an unwanted return character from being added to the entry
-										// Calling event.preventDefault() on keyUp event is too late to do the job
+										// Cing event.preventDefault() on keyUp event is too late to do the job
 		}
 	}
 }
@@ -2124,7 +2253,7 @@ function todoClickHandler(event) {
 /*			if (todo.selected) {	// Select button was clicked, todo now selected
 				todoLiSelectButton.textContent = 'Unselect';
 				todoLiEntry.classList.add('highlighted');
-				// if all children in branch are now selected, set parent selectChildren button to Unselect children
+				// if  children in branch are now selected, set parent selectChildren button to Unselect children
 				if (parentTodo && !anyUnselectedTodos(parentTodo.children)) {
 					var parentTodoLi = document.getElementById(parentTodo.id);
 					var parentTodoLiSelectChildrenButton = parentTodoLi.children.namedItem('selectChildren');
@@ -2136,7 +2265,7 @@ function todoClickHandler(event) {
 				} else {
 					todoLiSelectButton.textContent = 'Select';
 					todoLiEntry.classList.remove('highlighted');
-					// if all children in branch are now unselected, set parent selectChildren button to Select children
+					// if  children in branch are now unselected, set parent selectChildren button to Select children
 					if (parentTodo && !anySelectedTodos(parentTodo.children)) {
 						var parentTodoLi = document.getElementById(parentTodo.id);
 						var parentTodoLiSelectChildrenButton = parentTodoLi.children.namedItem('selectChildren');
@@ -2347,7 +2476,7 @@ function actionsClickHandler(event) {
 //			var showActiveButton = event.target;
 			if (showActiveButton.textContent === '√ Active') {
 				showActiveButton.textContent = 'Active';
-				addTodoButton.classList.add('inactive');	// disallow new todos when actives are hidden
+//				addTodoButton.disabled = true;	// disow new todos when actives are hidden
 //				setTodoLiClass(todosUl, 'active-removed', 'add');
 				// if no todoLis are displayed, set selectAllButton inactive
 //				if (selectAllButton.textContent === 'Select all'); {
@@ -2359,7 +2488,7 @@ function actionsClickHandler(event) {
 
 			} else {
 				showActiveButton.textContent = '√ Active';
-				addTodoButton.classList.remove('inactive');
+//				addTodoButton.classList.remove('inactive');
 //				setTodoLiClass(todosUl, 'active-removed', 'remove');
 //				if (selectAllButton.textContent === 'Select all') {
 //					if (todoLiDisplayed(todos)) {
@@ -2418,7 +2547,7 @@ function actionsClickHandler(event) {
 //				}
 			}
 			renderTodolist();
-			togglePurgeSelectedDeletedTodos();
+//			togglePurgeSelectedDeletedTodos();
 		}
 		if (event.target.name === "selectAll") {
 			if (selectAllButton.textContent === 'Select all') {
@@ -2649,6 +2778,7 @@ function setUpEventListeners() {
 	todolist.addEventListener('keyup', keyUpHandler);
 }
 
+/*
 function setActionsBarDefaults() {
 	selectAllButton.textContent = 'Select all';
 	selectAllButton.disabled = false;
@@ -2661,7 +2791,7 @@ function setActionsBarDefaults() {
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
 	addTodoButton.disabled = false;	
-}
+} */
 
 function startApp() {
 	showActiveButton.textContent = '√ Active';
@@ -2673,7 +2803,7 @@ function startApp() {
 //	setActionsBarDefaults();
 	if (todos.length === 0) {
 		insertNewTodoLi(todos);
-	} else {						// 'else' because insertNewTodoLi already calls renderTodolist
+	 else {						// 'else' because insertNewTodoLi already cs renderTodolist
 		renderTodolist();
 	} */
 }
