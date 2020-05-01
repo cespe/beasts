@@ -4413,7 +4413,7 @@ tests({
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.name, 'selectAll');
-		eq(selectAllButton.innerText, 'Select all');
+		eq(selectAllButton.textContent, 'Select all');
 		eq(selectAllButton.parentElement, actionsBar);
 	},
 	"The selectAll button should be enabled if there are any todos displayed but otherwise disabled.": function() {
@@ -5899,29 +5899,110 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo3);
 
 		startApp();
 
-		showDeletedButton.click();		// needed to enable deleteSelectedButton below
+		showDeletedButton.click();		// Deleted --> √ Deleted to filter in deleted todos
+		showCompletedButton.click();	// √ Completed --> Completed to filter out completed todos
 
-		renderTodolist();
-
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, true);
+		eq(todo1.selected, false);
+		eq(child1.selected, false);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
 		eq(todo1.deleted, false);
-		eq(todo2.deleted, false);
 		eq(child1.deleted, false);
+		eq(todo2.deleted, false);
+		eq(todo3.deleted, false);
+
+		var todoLi3 = todolist.children[0].children[2];
+		var todoLi3CompleteButton = todoLi3.children.namedItem('complete');
+
+		todoLi3CompleteButton.click();	// Complete
+
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, false);
+		eq(child1.selected, false);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
+		eq(todo1.deleted, false);
+		eq(child1.deleted, false);
+		eq(todo2.deleted, false);
+		eq(todo3.deleted, false);
 
 		selectAllButton.click();
-		deleteSelectedButton.click();
 
-		eq(todo1.deleted, true);
-		eq(todo2.deleted, true);
-		eq(child1.deleted, true);
-
-		deleteSelectedButton.click();
-
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(todo2.selected, true);
+		eq(todo3.selected, false);
 		eq(todo1.deleted, false);
-		eq(todo2.deleted, false);
 		eq(child1.deleted, false);
+		eq(todo2.deleted, false);
+		eq(todo3.deleted, false);
+
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+
+		todoLi2SelectButton.click();	// Unselect
+
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
+		eq(todo1.deleted, false);
+		eq(child1.deleted, false);
+		eq(todo2.deleted, false);
+		eq(todo3.deleted, false);
+
+		// It should not mark todos that are filtered out 
+		// It should not mark todos that are not selected
+
+		deleteSelectedButton.click();	// Delete selected
+
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
+		eq(todo1.deleted, true);
+		eq(child1.deleted, true);
+		eq(todo2.deleted, false);	// TODO fails because it marks an unselected todo
+		eq(todo3.deleted, false);
+
+		deleteSelectedButton.click();	// Undelete selected
+
+		eq(todo1.filteredIn, true);
+		eq(child1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(todo2.selected, false);
+		eq(todo3.selected, false);
+		eq(todo1.deleted, false);
+		eq(child1.deleted, false);
+		eq(todo2.deleted, false);
+		eq(todo3.deleted, false);
 	},
 	"Clicking deleteSelected button should re-render todoLis.": function() {
 		todos = [];
@@ -6756,7 +6837,7 @@ tests({
 
 		eq(purgeSelectedDeletedButton.disabled, true);
 
-		selectAllButton.click();
+		selectAllButton.click();							// all selected
 
 		eq(todo1.selected, true);
 		eq(todo1.deleted, false);
@@ -6768,7 +6849,7 @@ tests({
 
 		eq(purgeSelectedDeletedButton.disabled, true);
 
-		deleteSelectedButton.click();
+		deleteSelectedButton.click();						// all deleted and selected, but all filtered out
 
 		eq(todo1.selected, true);
 		eq(todo1.deleted, true);
@@ -6780,7 +6861,7 @@ tests({
 
 		eq(purgeSelectedDeletedButton.disabled, true);
 
-		showDeletedButton.click();
+		showDeletedButton.click();							// all filtered in, selected and deleted
 
 		eq(todo1.selected, true);
 		eq(todo1.deleted, true);
@@ -6792,26 +6873,50 @@ tests({
 
 		eq(purgeSelectedDeletedButton.disabled, false);
 
-		todo1.markDeleted(false);
-		child1.markDeleted(false);
-		
-		renderTodolist();
+		deleteSelectedButton.click();						// all filtered in, all selected, none deleted
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		todoLi1SelectChildrenButton.click();				// all filtered in, none deleted, one selected
 
 		eq(todo1.selected, true);
 		eq(todo1.deleted, false);
-		eq(child1.selected, true);
+		eq(child1.selected, false);
 		eq(child1.deleted, false);
-		eq(grandchild1.selected, true);
-		eq(grandchild1.deleted, true);
+		eq(grandchild1.selected, false);
+		eq(grandchild1.deleted, false);
+		eq(showDeletedButton.textContent, '√ Deleted');
+
+		eq(purgeSelectedDeletedButton.disabled, true);
+
+		deleteSelectedButton.click();						// all filtered in, one deleted and selected
+
+		eq(todo1.selected, true);
+		eq(todo1.deleted, true);
+		eq(child1.selected, false);
+		eq(child1.deleted, false);
+		eq(grandchild1.selected, false);
+		eq(grandchild1.deleted, false);
 		eq(showDeletedButton.textContent, '√ Deleted');
 
 		eq(purgeSelectedDeletedButton.disabled, false);
 
-		grandchild1.markSelected(false);
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
 
-		renderTodolist();
+		todoLi1SelectButton.click();						// all filtered in. one deleted but not selected
+
+		eq(todo1.selected, false);
+		eq(todo1.deleted, true);
+		eq(child1.selected, false);
+		eq(child1.deleted, false);
+		eq(grandchild1.selected, false);
+		eq(grandchild1.deleted, false);
+		eq(showDeletedButton.textContent, '√ Deleted');
 
 		eq(purgeSelectedDeletedButton.disabled, true);
+
 	},
 	"Clicking the purgeSelectedDeletedButton should remove selected deleted todos from storage and display.": function() {
 		// TODO Warn against purging if any selected deleted todos have undeleted nested todos
