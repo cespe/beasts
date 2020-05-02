@@ -340,27 +340,26 @@ tests({
 		eq(grandchild1.filteredOutParentOfFilteredIn, false);
 		eq(grandchild2.filteredOutParentOfFilteredIn, false);
 	},
-	"When applying filter tags, the app should mark filtered-out todos not selected.": function() {
-		// By design don't let hidden todos be changed.
+	"When applying filter tags, the app should mark selected todos filtered in.": function() {
+		// By design, freeze display of selected todos so it is clear which todos are
+		// affected by deleteSelected or completeSelected. 
 		todos = [];
 		todo1 = new Todo('Item 1');
-		todo1.markSelected(true);
 		todo2 = new Todo('Item 2');
-		todo2.setStage('completed');
+		todo2.setStage('deleted');
 		todo2.markSelected(true);
 		insertTodo(todos, todo1);
 		insertTodo(todos, todo2);
 
 		var filterSet = new Set();
 		filterSet.add('#active');
-		filterSet.add('#deleted');
+		filterSet.add('#completed');
 
 		applyDisplayTags(filterSet);
 
 		eq(todo1.filteredIn, true);
-		eq(todo1.selected, true);
-		eq(todo2.filteredIn, false);
-		eq(todo2.selected, false);
+		eq(todo2.selected, true);
+		eq(todo2.filteredIn, true);		// filtered in even though deleted because it is selected
 	},
 	"Section: todo array helper functions": function() {
 	},
