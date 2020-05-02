@@ -807,6 +807,11 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 		addChildButton.disabled = true;
 		selectButton.disabled = false;
 	}
+
+	if (showActiveButton.textContent === 'Active') {
+		addSiblingButton.disabled = true;
+		addChildButton.disabled = true;
+	}
 		
 	todoLi.appendChild(selectButton);
 	todoLi.appendChild(completeButton);
@@ -952,7 +957,7 @@ function keyDownHandler(event) {
 		// target is a todo entry
 		if (event.key === "Enter") {
 			event.preventDefault();		// Prevents an unwanted return character from being added to the entry
-										// Cing event.preventDefault() on keyUp event is too late to do the job
+										// Calling event.preventDefault() on keyUp event is too late to do the job
 		}
 	}
 }
@@ -969,9 +974,13 @@ function keyUpHandler(event) {
 				todo.update(editedEntry);			// Must update entry before re-rendering
 			}
 			if (event.shiftKey) {
-				appendNewChildTodoLi(todo)			// Shift-return appends a new child todo
+				if (todo.selectMode === false && showActiveButton.textContent === '√ Active') {
+					appendNewChildTodoLi(todo)			// Shift-return appends a new child todo
+				}
 			} else {
-				insertNewTodoLi(todoArray, todo);	// Return inserts a new sibling todo
+				if (todo.selectMode === false && showActiveButton.textContent === '√ Active') {
+					insertNewTodoLi(todoArray, todo);	// Return inserts a new sibling todo
+				}
 			}
 		} else if (event.key === "Escape") {
 			// these lines lifted from undoEdit event handler, TODO consolidate

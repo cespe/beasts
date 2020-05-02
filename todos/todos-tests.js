@@ -1421,9 +1421,6 @@ tests({
 		eq(document.activeElement, todoLi1Child2Entry);
 		eq(document.hasFocus(), true);				// doesn't pass unless console is closed
 	},
-	"If the todo is in select mode, the new todo added by addSibling should be created in select mode.": function() {
-		fail();
-	},
 	"Each todo li should have an 'addChild' button to add a child todo underneath it.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -1475,9 +1472,6 @@ tests({
 		eq(todoLi1Child1Entry.textContent, "");
 		eq(document.activeElement, todoLi1Child1Entry);
 		eq(document.hasFocus(), true);					// doesn't pass unless console is closed
-	},
-	"If the todo is in select mode, the new todo added by addChild should be created in select mode.": function() {
-		fail();
 	},
 	"Clicking an addChild button should set todo.collapsed false and display nested todos on re-render.": function() {
 		todos = [];
@@ -1932,6 +1926,11 @@ tests({
 		eq(todo1.collapsed, false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 },
+	"If a todo has any nested filtered-in todos in select mode, todoLi should be created without a showChildren button.": function() {
+		// By design, don't allow todos to be removed from the display while they are in select mode. This is the same design
+		// decision that governs not allowing new todos while in select mode.
+		fail();
+},
 	"If showChildren button text is 'Show children', css should preserve spacing above the following entry if it exists.": function() {
 		manual();
 		todos = [];
@@ -2003,11 +2002,6 @@ tests({
 		eq(todo1.collapsed, false);
 		eq(child1.id, childLi1.id);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
-	},
-	"Clicking a 'Hide children' button should unselect any selected nested todos.": function() {
-		// This is a design decision. It seems likely a user would naturally expect hiding children
-		// to unselect them too.
-		fail();
 	},
 	"If a todo has children, its todoLi should have a 'selectChildren' button to select them.": function() {
 		todos = [];
@@ -4369,6 +4363,37 @@ tests({
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi.id, todo2Grandchild.id);
 	},
+	"If showActive button is 'Active', addTodo button and todoLi addSibling and addChild buttons should be disabled.": function() {
+		// Because by definition a new todo is active
+		todos = [];
+		startApp();
+
+		eq(addTodoButton.disabled, false);
+
+		addTodoButton.click();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompleteButton = todoLi1.children.namedItem('complete');
+
+		todoLi1CompleteButton.click();
+		showActiveButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
+		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
+		eq(addTodoButton.disabled, true);
+		eq(todoLi1AddSiblingButton.disabled, true);
+		eq(todoLi1AddChildButton.disabled, true);
+
+		showActiveButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
+		todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
+		eq(addTodoButton.disabled, false);
+		eq(todoLi1AddSiblingButton.disabled, false);
+		eq(todoLi1AddChildButton.disabled, false);
+	},
 	"Clicking the showCompleted button should toggle button text and re-render todolist.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1 active');
@@ -4679,106 +4704,13 @@ tests({
 		eq(todoLi1.id, todos[0].id);
 		eq(todoLi2.id, todos[1].id);
 	},
-	"If any root todos are in select mode, the new todo created by addTodo should also be in select mode.": function() {
+	"If any root todos are in select mode, the addTodo button should be disabled.": function() {
+		// No new todos allowed while in select mode.
 		fail();
-	},
-	"Section: more button interactions": function() {
-	},
-	"If showActive button is 'Active', addTodo button and todoLi addSibling and addChild buttons should be inactive.": function() {
-		// Because by definition a new todo is active
-		todos = [];
-		todo1 = new Todo('Item 1');
-		insertTodo(todos, todo1);
-		child1 = new Todo('Child 1');
-		child2 = new Todo('Child 2');
-		todo1.addChild(child1);
-		todo1.addChild(child2);
-		grandchild1 = new Todo('Grandchild 1');
-		grandchild2 = new Todo('Grandchild 2');
-		child1.addChild(grandchild1);
-		child1.addChild(grandchild2);
-		todo2 = new Todo('Item 2');
-		insertTodo(todos, todo2);
-		startApp();		// sets up Actions bar buttons
-		var todoLi1 = todolist.children[0].children[0];
-		var todoLi1AddSiblingButton = todoLi1.children.namedItem('addSibling');
-		var todoLi1AddChildButton = todoLi1.children.namedItem('addChild');
-		var todoLi1Ul = todoLi1.querySelector('ul');
-		var childLi1 = todoLi1Ul.children[0];
-		var childLi1AddSiblingButton = childLi1.children.namedItem('addSibling');
-		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
-		var childLi1Ul = childLi1.querySelector('ul');
-		var grandchildLi1 = childLi1Ul.children[0];
-		var grandchildLi1AddSiblingButton = grandchildLi1.children.namedItem('addSibling');
-		var grandchildLi1AddChildButton = grandchildLi1.children.namedItem('addChild');
-		var grandchildLi2 = childLi1Ul.children[1];
-		var grandchildLi2AddSiblingButton = grandchildLi2.children.namedItem('addSibling');
-		var grandchildLi2AddChildButton = grandchildLi2.children.namedItem('addChild');
-		var childLi2 = todoLi1Ul.children[1];
-		var childLi2AddSiblingButton = childLi2.children.namedItem('addSibling');
-		var childLi2AddChildButton = childLi2.children.namedItem('addChild');
-		var todoLi2 = todolist.children[0].children[1];
-		var todoLi2AddSiblingButton = todoLi2.children.namedItem('addSibling');
-		var todoLi2AddChildButton = todoLi2.children.namedItem('addChild');
-
-		eq(showActiveButton.textContent, '√ Active');
-
-		eq(addTodoButton.classList.contains('inactive'), false);
-
-		eq(todoLi1AddSiblingButton.classList.contains('inactive'), false);
-		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
-		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
-		eq(childLi1AddChildButton.classList.contains('inactive'), false);
-		eq(grandchildLi1AddSiblingButton.classList.contains('inactive'), false);
-		eq(grandchildLi1AddChildButton.classList.contains('inactive'), false);
-		eq(grandchildLi2AddSiblingButton.classList.contains('inactive'), false);
-		eq(grandchildLi2AddChildButton.classList.contains('inactive'), false);
-		eq(childLi2AddSiblingButton.classList.contains('inactive'), false);
-		eq(childLi2AddChildButton.classList.contains('inactive'), false);
-		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
-		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
-
-		selectAllButton.click();
-		completeSelectedButton.click();
-		selectAllButton.click();
-
-		showActiveButton.click();
-
-		eq(addTodoButton.classList.contains('inactive'), true);
-
-		eq(todoLi1AddSiblingButton.classList.contains('inactive'), true);
-		eq(todoLi1AddChildButton.classList.contains('inactive'), true);
-		eq(childLi1AddSiblingButton.classList.contains('inactive'), true);
-		eq(childLi1AddChildButton.classList.contains('inactive'), true);
-		eq(grandchildLi1AddSiblingButton.classList.contains('inactive'), true);
-		eq(grandchildLi1AddChildButton.classList.contains('inactive'), true);
-		eq(grandchildLi2AddSiblingButton.classList.contains('inactive'), true);
-		eq(grandchildLi2AddChildButton.classList.contains('inactive'), true);
-		eq(childLi2AddSiblingButton.classList.contains('inactive'), true);
-		eq(childLi2AddChildButton.classList.contains('inactive'), true);
-		eq(todoLi2AddSiblingButton.classList.contains('inactive'), true);
-		eq(todoLi2AddChildButton.classList.contains('inactive'), true);
-
-		showActiveButton.click();
-
-		eq(addTodoButton.classList.contains('inactive'), false);
-
-		eq(todoLi1AddSiblingButton.classList.contains('inactive'), false);
-		eq(todoLi1AddChildButton.classList.contains('inactive'), false);
-		eq(childLi1AddSiblingButton.classList.contains('inactive'), false);
-		eq(childLi1AddChildButton.classList.contains('inactive'), false);
-		eq(grandchildLi1AddSiblingButton.classList.contains('inactive'), false);
-		eq(grandchildLi1AddChildButton.classList.contains('inactive'), false);
-		eq(grandchildLi2AddSiblingButton.classList.contains('inactive'), false);
-		eq(grandchildLi2AddChildButton.classList.contains('inactive'), false);
-		eq(childLi2AddSiblingButton.classList.contains('inactive'), false);
-		eq(childLi2AddChildButton.classList.contains('inactive'), false);
-		eq(todoLi2AddSiblingButton.classList.contains('inactive'), false);
-		eq(todoLi2AddChildButton.classList.contains('inactive'), false);
 	},
 	"Section: Keyboard shortcuts": function() {
 	},
-	"When editing, Return should be a shortcut for Add Sibling.": function() {
+	"When editing, Return should be a shortcut for 'Add Sibling'.": function() {
 		// Limit a todo to one line.
 		manual();
 		godolist.innerHTML = '';
@@ -4820,11 +4752,22 @@ tests({
 		eq(todoLi2Entry, activeElement);
 		eq(todoLi2Entry, focusedElement);
 	},
-	"When editing, Shift-Return should be a shortcut for Add Child.": function() {
+	"Return as a shortcut for 'Add Sibling' should be disabled if the todo is selected.": function() {
+		// Adding todos not allowed in select mode
+		manual();
+	},
+	"When editing, Shift-Return should be a shortcut for 'Add Child'.": function() {
 		// Limit a todo to one line.
 		manual();
 	},
-	"When editing, Esc should be a shortcut for Undo Edit.": function() {
+	"Shift-Return as a shortcut for 'Add Child' should be disabled if the todo is selected.": function() {
+		// Adding todos not allowed in select mode
+		manual();
+	},
+	"If showActive button is not '√ Active', the addSibling and addChild keyboard shortcuts should also be disabled.": function() {
+		manual();
+	},
+	"When editing, Esc should be a shortcut for 'Undo Edit'.": function() {
 		manual();
 	},
 	"Esc should apply only to the current todoLi entry.": function() {
