@@ -178,8 +178,8 @@ function applyDisplayTags(filterSet) {					// TODO Combine these into one functi
 				markFilteredInTodos(todo.children);
 			}
 			todo.markFilteredIn(filterSet);
-			if (!todo.filteredIn) {
-				todo.markSelected(false);
+			if (todo.selected) {
+				todo.filteredIn = true;
 			}
 		}
 	}
