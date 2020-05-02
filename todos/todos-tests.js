@@ -5472,7 +5472,7 @@ tests({
 		eq(todo2.selected, false);
 		eq(todo3.selected, false);
 		eq(todo1.stage, 'active');
-		eq(child1.stage, 'activ6');
+		eq(child1.stage, 'active');
 		eq(todo2.stage, 'active');
 		eq(todo3.stage, 'active');
 
@@ -7009,6 +7009,8 @@ tests({
 	},
 	"Clicking the purgeSelectedDeletedButton should remove selected deleted todos from storage and display.": function() {
 		// TODO Warn against purging if any selected deleted todos have undeleted nested todos
+		// TODO Consider applying this very focused style of code to other tests. No unnecessary assertions, easy to see
+		// the sequence of clicks.
 
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -7022,15 +7024,15 @@ tests({
 
 		startApp();
 
-		var todoLi2 = todolist.children[0].children[1];
-		var todoLi2SelectButton = todoLi2.children.namedItem('select');
 		eq(todos.length, 3);
 		eq(todolist.children[0].children.length, 3);
 
-		showDeletedButton.click();
-		selectAllButton.click();
-		todoLi2SelectButton.click();
-		deleteSelectedButton.click();
+		showDeletedButton.click();										// Deleted --> √ Deleted
+		selectAllButton.click();										// Select all
+		var todoLi2 = todolist.children[0].children[1];
+		var todoLi2SelectButton = todoLi2.children.namedItem('select');
+		todoLi2SelectButton.click();									// Unselect Item 2
+		deleteSelectedButton.click();									// Delete selected
 
 		purgeSelectedDeletedButton.click();
 
