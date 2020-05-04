@@ -383,13 +383,58 @@ function anyFilteredInTodos(array) {
 			return true;
 		}
 		if (todo.children.length > 0) {
-			var todoFilteredIn = anyFilteredInTodos(todo.children);
-			if (todoFilteredIn) {
+			if (anyFilteredInTodos(todo.children)) {
 				return true;
 			}
 		}
 	}
 	return false;
+}
+
+// Return true if any filtered-in todos, including nested todos, are in select mode
+function anyFilteredInTodosInSelectMode(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.filteredIn && todo.selectMode) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			if (anyFilteredInTodosInSelectMode(todo.children)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+// Return true if all filtered-in todos, including nested todos, are in select mode
+function allFilteredInTodosInSelectMode(array) {
+	var selectModeCount = 0;
+	var filteredInCount = 0;
+
+	function runTest(array) {
+		for (var i = 0; i < array.length; i++) {
+			var todo = array[i];
+			if (todo.selectMode) {
+				selectModeCount++;
+			}
+			if (todo.filteredIn) {
+				filteredInCount++;
+			} 
+
+			if (todo.children.length > 0) {
+				runTest(todo.children);
+			}
+		}
+	}
+
+	runTest(array);
+
+	if (filteredInCount > 0 && filteredInCount === selectModeCount) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 // Return true if any todos, including nested todos, are both selected and filtered in for display
@@ -400,8 +445,7 @@ function anySelectedFilteredInTodos(array) {
 			return true;
 		}
 		if (todo.children.length > 0) {
-			var todoSelectedFilteredIn = anySelectedFilteredInTodos(todo.children);
-			if (todoSelectedFilteredIn) {
+			if (anySelectedFilteredInTodos(todo.children)) {
 				return true;
 			}
 		}
@@ -622,6 +666,11 @@ function purgeSelectedDeletedTodos(array) {
 	}
 	startApp();
 }
+
+// Remove selectMode from todos under select-mode-root if all are unselected
+function updateSelecMode(todo) {
+}
+
 /************************************* DOM manipulation ********************************/
 
 // Fixed page elements
@@ -834,36 +883,71 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 	}
 	todoLi.appendChild(entry);
 	
+	// Some terminology to guide decisions on how to create selection-related buttons
+	//
+	//    A select-mode-root todo is the one on which a controlling 'Select children' button was clicked.
+	//       todo.selectMode === false && allFilteredInTodosInSelectMode(todo.children) === true
+	//
+	//    A select-mode-root-ancestor is higher in the tree.
+	//       todo.selectMode === false && allFilteredInTodosInSelectMode(todo.children) === false &&
+	//       anyFilteredInTodosInSelectMode(todo.children === true
+	//
+	//    A select-mode-root-descendant is lower in the tree.
+	//       todo.selectMode === true && allFilteredInTodosInSelectMode(todo.children) === true
+	//
+	//    A potential-select-mode-root todo is a candidate to receive a controlling 'Select children' click.
+	//       todo.selectMode === false && anyFilteredInTodosInSelectMode(todo.children) === false
+	
 	// Only create last four buttons if there are children
+	
 	if (todo.children.length > 0) {		
+
+		var selectModeRoot = !todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
+		var rootAncestor = !todo.selectMode && !allFilteredInTodosInSelectMode(todo.children) && anyFilteredInTodosInSelectMode(todo.children);
+		var rootDescendant = todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
+		// potentialRoot = !todo.selectMode && !anyFilteredInTodosInSelectMode(todo.children);
+
+		var anyInSelectMode = anyFilteredInTodosInSelectMode(todo.children);
 
 		var showChildrenButton = document.createElement('button');
 		showChildrenButton.name = 'showChildren';
 		showChildrenButton.type = 'button';
+
 		if (todo.collapsed) {
 			showChildrenButton.textContent = 'Show children';
 		} else {
 			showChildrenButton.textContent = 'Hide children';
 		}
+		if (selectModeRoot || rootAncestor) {
+			showChildrenButton.disabled = true;
+		}
 		todoLi.appendChild(showChildrenButton);
 		
 		// Only create last three buttons if there are children showing
+
 		if (!todo.collapsed) {
+
+			var anySelected = anySelectedFilteredInTodos(todo.children);
+
 			var selectChildrenButton = document.createElement('button');
 			selectChildrenButton.name = 'selectChildren';
 			selectChildrenButton.type = 'button';
 			selectChildrenButton.disabled = false;
 
-			var anySelectedFilteredInChildren = anySelectedFilteredInTodos(todo.children);
-			if (anySelectedFilteredInChildren) {
-				selectChildrenButton.textContent = 'Unselect children';
-			} else {
+			if (anySelected) {
+				if (selectModeRoot || rootDescendant) {
+					selectChildrenButton.textContent = 'Unselect children';
+				} else /* rootAncestor */ {
+					selectChildrenButton.textContent = 'Select children';
+				}
+			}
+			else /* none selected */ {
 				selectChildrenButton.textContent = 'Select children';
 			}
 			todoLi.appendChild(selectChildrenButton);
 
-			// Only create last two buttons for a root todoLi with todos selected
-			if (!todo.selectMode && anySelectedFilteredInChildren) {
+			// Only create last two buttons for a select-mode-root todoLi with todos selected
+			if (selectModeRoot && anySelected) {
 				var completeSelectedChildrenButton = document.createElement('button');
 				completeSelectedChildrenButton.name = 'completeSelectedChildren';
 				completeSelectedChildrenButton.type = 'button';
@@ -1039,6 +1123,9 @@ function todoClickHandler(event) {
 
 		if (event.target.name === "select") {
 			todo.selected = !todo.selected;
+			if (!todo.selected) {
+				updateSelectMode(todo);
+			}
 			renderTodolist();
 		}
 		if (event.target.name === "complete") {

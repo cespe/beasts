@@ -569,13 +569,56 @@ tests({
 		todo2Grandchild1.selected = true;
 		eq(anyUnselectedTodos(todo2.children), false);
 	},
+	"The app should have a way to determine if any filtered-in descendants are in select mode.": function() {
+		// Tests anyFilteredInTodosInSelectMode(array)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		grandchild1.markSelectMode(true);
+
+		eq(anyFilteredInTodosInSelectMode(todo1.children), true);
+		eq(anyFilteredInTodosInSelectMode(child1.children), true);
+	},
+	"The app should have a way to determine if all filtered-in descendants are in select mode.": function() {
+		// Tests allFilteredInTodosInSelectMode(array)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		grandchild1.markSelectMode(true);
+//		grandchild1.markSelected(true);
+
+		eq(allFilteredInTodosInSelectMode(todo1.children), false);
+		eq(allFilteredInTodosInSelectMode(child1.children), true);
+	},
 	"The app should have a way to determine if any todos at a root array level are selected.": function() {
 		// Tests anySelectedRootTodos(array)
 		fail();
 	},
 	"The app should have a way to check if any todos, including nested todos, are both selected and filtered in for display.": function() {
 		// Tests anySelectedFilteredInTodos(array)
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		grandchild1.markSelectMode(true);
+		grandchild1.markSelected(true);
+
+		eq(anySelectedFilteredInTodos(todo1.children), true);
+		eq(anySelectedFilteredInTodos(child1.children), true);
 	},
 	"The app should have a way to check if any todos, including nested todos, are deleted.": function() {
 		// Tests anyDeletedTodos(array)
@@ -1638,42 +1681,52 @@ tests({
 		eq(todo2.selected, false);
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 	},
-	"Clicking a 'select' button should toggle button text and todo.selected and re-render todoLi": function() {
+	"Clicking a 'select' button should toggle todo.selected and re-render todoLi, toggling button text": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
-		todo1.markSelected(true);		// must start with todo selected, otherwise 'Select' button will be disabled for test
+		child1 = new Todo('Child 1');
+		child2 = new Todo('Child 2');
+		child1.markSelected(true);
+		child2.markSelected(true);
+		todo1.addChild(child1);
+		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 
 		startApp();
 
 		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectButton = todoLi1.children.namedItem('select');
-		var todoLi1Entry = todoLi1.querySelector('p');
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi2 = todoLi1Ul.children[1];
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi2SelectButton = childLi2.children.namedItem('select');
+		var childLi1Entry = childLi1.querySelector('p');
+		var childLi2Entry = childLi2.querySelector('p');
 
-		eq(todoLi1SelectButton.textContent, 'Unselect');
-		eq(todoLi1Entry.classList.contains('highlighted'), true);
-		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(childLi1SelectButton.textContent, 'Unselect');
+		eq(childLi2SelectButton.textContent, 'Unselect');
+		eq(childLi1Entry.classList.contains('highlighted'), true);
+		eq(childLi2Entry.classList.contains('highlighted'), true);
 
-		todoLi1SelectButton.click();
-
-		todoLi1 = todolist.children[0].children[0];
-		todoLi1SelectButton = todoLi1.children.namedItem('select');
-		todoLi1Entry = todoLi1.querySelector('p');
-		
-		eq(todoLi1SelectButton.textContent, 'Select');
-		eq(todoLi1Entry.classList.contains('highlighted'), false);
-		eq(todo1.selected, false);
-
-/*		todoLi1SelectButton.click();		// button is disabled, can't click it so can't test toggling again
+		childLi1SelectButton.click();
 
 		todoLi1 = todolist.children[0].children[0];
-		todoLi1SelectButton = todoLi1.children.namedItem('select');
-		todoLi1Entry = todoLi1.querySelector('p');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi2 = todoLi1Ul.children[1];
+		childLi1SelectButton = childLi1.children.namedItem('select');
+		childLi2SelectButton = childLi2.children.namedItem('select');
+		childLi1Entry = childLi1.querySelector('p');
+		childLi2Entry = childLi2.querySelector('p');
 
-		eq(todoLi1SelectButton.textContent, 'Select');
-		eq(todoLi1Entry.classList.contains('highlighted'), false);
-		eq(todo1.selected, false);
-*/
+		eq(child1.selected, false);
+		eq(child2.selected, true);
+		eq(childLi1SelectButton.textContent, 'Select');
+		eq(childLi2SelectButton.textContent, 'Unselect');
+		eq(childLi1Entry.classList.contains('highlighted'), false);
+		eq(childLi2Entry.classList.contains('highlighted'), true);
 	},
 	"Selecting a todo should not select its children.": function() {
 		todos = [];
@@ -1926,10 +1979,35 @@ tests({
 		eq(todo1.collapsed, false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 },
-	"If a todo has any nested filtered-in todos in select mode, todoLi should be created without a showChildren button.": function() {
+	"If a todo has any filtered-in descendants in select mode, showChildren button should be disabled.": function() {
 		// By design, don't allow todos to be removed from the display while they are in select mode. This is the same design
 		// decision that governs not allowing new todos while in select mode.
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1Ul = childLi1.querySelector('ul');
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+		
+		childLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
+		childLi1 = todoLi1Ul.children[0];
+		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
+
+		eq(todoLi1ShowChildrenButton.disabled, true);
+		eq(childLi1ShowChildrenButton.disabled, true);
 },
 	"If showChildren button text is 'Show children', css should preserve spacing above the following entry if it exists.": function() {
 		manual();
@@ -2059,24 +2137,7 @@ tests({
 
 		eq(todoLi1SelectChildrenButton.disabled, false);
 	},
-	"If any filtered-in nested todos are selected, todoLi 'selectChildren' button text should be 'Unselect children'.": function() {
-		todos = [];
-		todo1 = new Todo('Item 1');
-		child1 = new Todo('Child 1');
-		child1.markSelected(true);
-		todo1.addChild(child1);
-		child2 = new Todo('Child 2');
-		todo1.addChild(child2);
-		insertTodo(todos, todo1);
-
-		startApp();
-
-		todoLi1 = todolist.children[0].children[0];
-		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
-
-		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
-	},
-	"Otherwise, todoLi 'selectChildren' button text should be 'Select children'.": function() {
+	"If no filtered-in descendants are in select mode, button should read 'Select children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -2091,6 +2152,111 @@ tests({
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 
 		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+	},
+	"If todo has any filtered-in descendants not in select mode, todoLi selectChildren button should read 'Select children'.": function() {
+		// select-mode-root-ancestor
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1Ul = childLi1.querySelector('ul');
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+		
+		childLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(childLi1SelectChildrenButton.textContent, 'Unselect children');
+	}, 
+	"If all filtered-in descendants are in select mode and any are selected, button should read 'Unselect children'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		
+		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(childLi1SelectChildrenButton.textContent, 'Unselect children');
+	},
+	"If all filtered-in descendants are in select mode and none are selected, button should read 'Select children'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		
+		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+		var childLi1Ul = childLi1.querySelector('ul');
+		var grandchildLi1 = childLi1Ul.children[0];
+		var grandchildLi1SelectButton = grandchildLi1.children.namedItem('select');
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(childLi1SelectChildrenButton.textContent, 'Unselect children');
+
+		grandchildLi1SelectButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+		eq(childLi1SelectChildrenButton.textContent, 'Select children');
+
+		childLi1SelectButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+		eq(childLi1SelectChildrenButton.textContent, 'Select children');
 	},
 	"Clicking 'Select children' button should select nested filtered-in todos and re-render todoLis, toggling button text.": function() {
 		todos = [];
@@ -2191,7 +2357,120 @@ tests({
 		eq(child2.selected, false);
 		eq(child2.selectMode, false);
 	},
-	"If selectChildren is a branch button (Select button enabled), it should not toggle selectMode on filtered-in nested todos.": function() {
+	"If all todos under a select-mode-root todo become unselected, all should set selectMode false.": function() {
+		// Case: clicked 'Unselect' button unselects last todo under a select-mode root
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child2 = new Todo('Child 2');
+		child1.markSelected(true);
+		child2.markSelected(true);
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+
+		childLi1SelectButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi2 = todoLi1Ul.children[1];
+		var childLi2SelectButton = childLi2.children.namedItem('select');
+
+		eq(child1.selected, false);
+		eq(child2.selected, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+
+		childLi2SelectButton.click();
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(child1.selectMode, false);
+		eq(child2.selectMode, false);
+
+		// Case: clicked 'Unselect children' button unselects last todo under a select-mode root
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
+
+		childLi1AddChildButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		todoLI1SelectChildrenButton.click();
+
+		var grandchild1 = todo1.children[0].children[0];
+
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(grandchild1.selected, true);
+
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+		eq(grandchild1.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi2 = todoLi1Ul.children[1];
+		childLi2SelectButton = childLi2.children.namedItem('select');
+
+		childLi2SelectButton.click();	// Unselect
+		
+		eq(child1.selected, true);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, true);
+
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+		eq(grandchild1.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1SelectButton = childLi1.children.namedItem('select');
+
+		childLi1SelectButton.click();	// Unselect
+		
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, true);
+
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+		eq(grandchild1.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+
+		childLi1SelectChildrenButton.click();	// Unselect children
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, false);
+
+		eq(child1.selectMode, false);
+		eq(child2.selectMode, false);
+		eq(grandchild1.selectMode, false);
+	},
+	"If selectChildren is a root-descendant button (Select button enabled), it should not toggle selectMode on nested todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -2489,7 +2768,7 @@ tests({
 
 		eq(todoLi1CompleteSelectedChildrenButton, null);
 	},
-	"If a todo has no selected children, its todoLi should not have a 'completeSelectedChildren' button.": function() {
+	"If a todo has no selected descendants, its todoLi should not have a 'completeSelectedChildren' button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -2534,19 +2813,46 @@ tests({
 		eq(childLi1SelectChildrenButton.textContent, 'Unselect children');
 		eq(childLi1CompleteSelectedChildrenButton, null);
 	},
-	"Otherwise, a 'completeSelectedChildren' button should be enabled.": function() {
+	"If a todo has filtered-in descendants not in select mode, its todoLi shouldn't have a 'completeSelectedChildren' button.": function() {
+		// select-mode-root-ancestor
 		todos = [];
 		todo1 = new Todo('Item 1');
-		child1 = new Todo('Item 1 child 1');
-		child1.markSelected(true);
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
 		startApp();
 
-		todosUl = todolist.children[0];
-		todoLi1 = todosUl.children[0];
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+		
+		childLi1SelectChildrenButton.click();
 
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1CompleteSelectedChildrenButton = todoLi1.children.namedItem('completeSelectedChildren');
+
+		eq(todoLi1CompleteSelectedChildrenButton, null);
+	},
+	"Otherwise, a 'completeSelectedChildren' button should be enabled.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		todoLi1SelectChildrenButton.click();
+
+		var todoLi1 = todolist.children[0].children[0];
+		
 		eq(todoLi1.children.namedItem('completeSelectedChildren').disabled, false);
 	},
 	"If all selected nested todos are completed, 'completeSelectedChildren' button should read 'Uncomplete selected children'.": function() {
@@ -2903,6 +3209,31 @@ tests({
 		eq(grandchild1.selected, true);
 		eq(childLi1SelectChildrenButton.textContent, 'Unselect children');
 		eq(childLi1DeleteSelectedChildrenButton, null);
+	},
+	"If a todo has filtered-in descendants not in select mode, its todoLi shouldn't have a 'deleteSelectedChildren' button.": function() {
+		// select-mode-root-ancestor
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+		
+		childLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
+
+		eq(todoLi1DeleteSelectedChildrenButton, null);
+
 	},
 	"Otherwise, a 'deleteSelectedChildren' button should be enabled.": function() {
 		todos = [];
