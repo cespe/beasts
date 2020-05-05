@@ -442,6 +442,48 @@ tests({
 		var result = findParent(grandchild2);
 		eq(result, item2Child1);
 	},
+	"The app should have a way to return the select-mode root of a given todo in select mode.": function() {
+		// Tests findSelectModeRoot(todo)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Child 2');
+		todo1.addChild(child2);
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		
+		todo1.markSelectMode(true);
+		todo2.markSelectMode(true);
+
+		var result = findSelectModeRoot(todo1);
+		eq(result, undefined);
+		var result = findSelectModeRoot(todo2);
+		eq(result, undefined);
+
+		todo1.markSelectMode(false);
+		todo2.markSelectMode(false);
+		child1.markSelectMode(true);
+		child2.markSelectMode(true);
+
+		var result = findSelectModeRoot(child1);
+		eq(result, todo1);
+		var result = findSelectModeRoot(child2);
+		eq(result, todo1);
+
+		grandchild1.markSelectMode(true);
+
+		var result = findSelectModeRoot(grandchild1);
+		eq(result, todo1);
+
+		todo1.markSelectMode(true);
+
+		var result = findSelectModeRoot(grandchild1);
+		eq(result, undefined);
+	},
 	"The app should have a way to determine if any todos, including nested todos, are selected.": function() {
 		// Tests anySelectedTodos(array)
 		todos = [];
@@ -2365,6 +2407,8 @@ tests({
 		child2 = new Todo('Child 2');
 		child1.markSelected(true);
 		child2.markSelected(true);
+		child1.markSelectMode(true);
+		child2.markSelectMode(true);
 		todo1.addChild(child1);
 		todo1.addChild(child2);
 		insertTodo(todos, todo1);
@@ -2413,7 +2457,7 @@ tests({
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 
-		todoLI1SelectChildrenButton.click();
+		todoLi1SelectChildrenButton.click();
 
 		var grandchild1 = todo1.children[0].children[0];
 
@@ -3752,6 +3796,160 @@ tests({
 		eq(todoLi1Entry.classList.contains('highlighted'), false);
 		eq(todoLi2Entry.classList.contains('highlighted'), false);
 		eq(childLi1Entry.classList.contains('highlighted'), false);
+	},
+	"If all todos become unselected, all should set selectMode false.": function() {
+		// Case: clicked 'Unselect' button unselects last todo
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child2 = new Todo('Child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		startApp();
+
+		selectAllButton.click();
+
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+
+		eq(todo1.selectMode, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectButton = todoLi1.children.namedItem('select');
+
+		todoLi1SelectButton.click();
+
+		eq(todo1.selected, false);
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+
+		eq(todo1.selectMode, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi1 = todoLi1Ul.children[0];
+		var childLi1SelectButton = childLi1.children.namedItem('select');
+
+		childLi1SelectButton.click();
+
+		eq(todo1.selected, false);
+		eq(child1.selected, false);
+		eq(child2.selected, true);
+
+		eq(todo1.selectMode, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		var childLi2 = todoLi1Ul.children[1];
+		var childLi2SelectButton = childLi2.children.namedItem('select');
+
+		childLi2SelectButton.click();
+
+		eq(todo1.selected, false);
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+
+		eq(todo1.selectMode, false);
+		eq(child1.selectMode, false);
+		eq(child2.selectMode, false);
+
+		// Case: clicked 'Unselect children' button unselects last todo
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		var childLi1AddChildButton = childLi1.children.namedItem('addChild');
+
+		childLi1AddChildButton.click();
+
+		selectAllButton.click();
+
+		var grandchild1 = todo1.children[0].children[0];
+
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(grandchild1.selected, true);
+
+		eq(todo1.selectMode, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+		eq(grandchild1.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi2 = todoLi1Ul.children[1];
+		childLi2SelectButton = childLi2.children.namedItem('select');
+
+		childLi2SelectButton.click();	// Unselect
+		
+		eq(todo1.selected, true);
+		eq(child1.selected, true);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, true);
+
+		eq(todo1.selectMode, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+		eq(grandchild1.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1SelectButton = childLi1.children.namedItem('select');
+
+		childLi1SelectButton.click();	// Unselect
+		
+		eq(todo1.selected, true);
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, true);
+
+		eq(todo1.selectMode, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+		eq(grandchild1.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectButton = todoLi1.children.namedItem('select');
+
+		todoLi1SelectButton.click();
+
+		eq(todo1.selected, false);
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, true);
+
+		eq(todo1.selectMode, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);
+		eq(grandchild1.selectMode, true);
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		childLi1 = todoLi1Ul.children[0];
+		childLi1SelectChildrenButton = childLi1.children.namedItem('selectChildren');
+
+		childLi1SelectChildrenButton.click();	// Unselect children
+
+		eq(todo1.selected, false);
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, false);
+
+		eq(todo1.selectMode, false);
+		eq(child1.selectMode, false);
+		eq(child2.selectMode, false);
+		eq(grandchild1.selectMode, false);
 	},
 	"The header actions bar should have a 'completeSelected' button to mark selected todos completed.": function() {
 		eq(completeSelectedButton.nodeName, 'BUTTON');

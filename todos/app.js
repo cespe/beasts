@@ -245,6 +245,34 @@ function markSelectedTodosDeleted(todosArray, bool) {
 	}
 }
 
+function purgeSelectedDeletedTodos(array) {
+	var counter = array.length;
+	for (var i = counter - 1; i >= 0; i--) {
+		var todo = array[i];
+		if (todo.deleted && todo.selected) {
+			deleteTodo(array, todo);
+		} else if (todo.children.length > 0) {
+			purgeSelectedDeletedTodos(todo.children);
+		}
+	}
+	startApp();
+}
+
+// Remove selectMode from todos under select-mode-root if all are unselected
+function leaveSelectModeIfNoneSelected(todo) {
+	var startingLevel = todos;
+	var selectModeRoot = findSelectModeRoot(todo)
+	if (!selectModeRoot) {
+		// selectAll is the controlling root
+		var startingLevel = todos;
+	} else {
+		startingLevel = selectModeRoot.children;
+	}
+	if (!anySelectedTodos(startingLevel)) {
+		markTodosSelectMode(startingLevel, false);
+	}
+}
+
 /*********************************** Data selection **************************************/
 // Return the todo with the given id
 function findTodo(array, id) {
@@ -306,6 +334,21 @@ function findParent(childTodo) {
 	}
 
 	return parent;
+}
+
+// Return the ancestor of todo that is its select-mode root or return undefined
+function findSelectModeRoot(todo) {
+	var candidate = findParent(todo);
+
+	if (candidate === undefined || candidate.selectMode === false) {
+		return candidate;
+	} else /* selectMode === true */ {
+		candidate = findSelectModeRoot(candidate);	
+		if (candidate) {
+			return candidate;
+		}
+	}
+	return undefined;
 }
 
 // Return true if any todos, including nested todos, are selected
@@ -654,22 +697,6 @@ function allSelectedFilteredInTodosDeleted(array) {
 	}
 }
 
-function purgeSelectedDeletedTodos(array) {
-	var counter = array.length;
-	for (var i = counter - 1; i >= 0; i--) {
-		var todo = array[i];
-		if (todo.deleted && todo.selected) {
-			deleteTodo(array, todo);
-		} else if (todo.children.length > 0) {
-			purgeSelectedDeletedTodos(todo.children);
-		}
-	}
-	startApp();
-}
-
-// Remove selectMode from todos under select-mode-root if all are unselected
-function updateSelecMode(todo) {
-}
 
 /************************************* DOM manipulation ********************************/
 
@@ -1123,8 +1150,8 @@ function todoClickHandler(event) {
 
 		if (event.target.name === "select") {
 			todo.selected = !todo.selected;
-			if (!todo.selected) {
-				updateSelectMode(todo);
+			if (!todo.selected) {						// 'Unselect' clicked
+				leaveSelectModeIfNoneSelected(todo);
 			}
 			renderTodolist();
 		}
@@ -1159,10 +1186,12 @@ function todoClickHandler(event) {
 		if (event.target.name === "selectChildren") {
 			if (anySelectedTodos(todo.children)) {
 				// 'Unselect children' clicked
-				markFilteredInTodosSelected(todo.children, false);
+				markFilteredInTodosSelected(todo.children, false);	// TODO figure out marking filteredIn vs all
 				if (!todo.selectMode) {
 					// Root button clicked, remove selectMode flag so normal buttons are restored
 					markFilteredInTodosSelectMode(todo.children, false);
+				} else /* root-descendant button clicked */ {
+					leaveSelectModeIfNoneSelected(todo);
 				}
 			} else {
 				// 'Select children' clicked
