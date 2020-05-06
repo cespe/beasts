@@ -496,22 +496,6 @@ function anySelectedFilteredInTodos(array) {
 	return false;
 }
 
-// Return true if any todos, including nested todos, are both completed and selected
-function anySelectedCompletedTodos(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.stage === 'completed' && todo.selected) {
-			return true;
-		}
-		if (todo.children.length > 0) {
-			var todoSelectedCompleted = anySelectedCompletedTodos(todo.children);
-			if (todoSelectedCompleted) {
-				return true;
-			} 
-		}
-	}
-}
-
 // Return true if any filtered-in todos, including nested todos, are both completed and selected
 function anySelectedFilteredInTodosCompleted(array) {
 	for (var i = 0; i < array.length; i++) {
@@ -520,7 +504,7 @@ function anySelectedFilteredInTodosCompleted(array) {
 			return true;
 		}
 		if (todo.children.length > 0) {
-			var todoSelectedCompleted = anySelectedCompletedTodos(todo.children);
+			var todoSelectedCompleted = anySelectedFilteredInCompletedTodos(todo.children);
 			if (todoSelectedCompleted) {
 				return true;
 			} 
