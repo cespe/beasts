@@ -5221,9 +5221,18 @@ tests({
 		eq(todoLi1.id, todos[0].id);
 		eq(todoLi2.id, todos[1].id);
 	},
-	"If any root todos are in select mode, the addTodo button should be disabled.": function() {
+	"If root todos are in select mode, the addTodo button should be disabled.": function() {
 		// No new todos allowed while in select mode.
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo2 = new Todo('Item 2');
+		todo1.markSelectMode(true);
+		todo2.markSelected(true);
+		todo2.markSelectMode(true);
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+		startApp();
+		eq(addTodoButton.disabled, true);
 	},
 	"Section: Keyboard shortcuts": function() {
 	},
@@ -5232,7 +5241,8 @@ tests({
 		manual();
 		godolist.innerHTML = '';
 		todos = [];
-		startApp();		// Initiate app with a blank focused todo
+		startApp();
+		addTodo();
 		var todosUl = todolist.children[0];
 		var todoLi1 = todosUl.children[0];
 		var todoLi1Entry = todoLi1.querySelector('p');
