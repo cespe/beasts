@@ -512,22 +512,6 @@ function anySelectedFilteredInTodosCompleted(array) {
 	}
 }
 
-// Return true if any todos, including nested todos, are both deleted and selected
-function anySelectedDeletedTodos(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.deleted && todo.selected) {
-			return true;
-		}
-		if (todo.children.length > 0) {
-			var todoSelectedDeleted = anySelectedDeletedTodos(todo.children);
-			if (todoSelectedDeleted) {
-				return true;
-			} 
-		}
-	}
-}
-
 // Return true if any filtered-in todos, including nested todos, are both deleted and selected
 function anySelectedFilteredInTodosDeleted(array) {
 	for (var i = 0; i < array.length; i++) {

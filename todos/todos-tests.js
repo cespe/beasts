@@ -703,10 +703,6 @@ tests({
 
 		eq(allSelectedTodosCompleted(todo1.children), true);	// three of three selected, three of three completed
 	},
-	"The app should have a way to check if any todos, including nested todos, are both selected and deleted.": function() {
-		// Tests anySelectedDeletedTodos(array)
-		fail();
-	},
 	"Section: todoLi elements": function() {
 	},
 	"The app should have a way to build a todoLi element from a todo object.": function() {
