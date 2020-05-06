@@ -1011,6 +1011,15 @@ function appendNewChildTodoLi(todo) {
 	newChildLi.querySelector('p').focus();
 }
 
+// Handle undoEdit button click or 'esc' key shortcut
+function undoEntryEdit(todo, todoLi) {
+	var todoLiEntry = todoLi.querySelector('p');
+	var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
+	
+	todo.entry = originalEntry;
+	todoLiEntry.textContent = originalEntry;
+	todoLiUndoEditButton.disabled = true;
+}
 
 /************************************* Event handling ***********************************/
 
@@ -1047,12 +1056,7 @@ function keyUpHandler(event) {
 		} else if (event.key === "Escape") {
 			var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
 			if (todoLiUndoEditButton.disabled === false) /* prevent restoring the wrong entry */ {
-				// these lines lifted from undoEdit event handler, TODO consolidate
-				todo.entry = originalEntry
-				var todoLiEntry = todoLi.querySelector('p');
-				todoLiEntry.textContent = originalEntry
-				var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
-				todoLiUndoEditButton.disabled = true;
+				undoEntryEdit(todo, todoLi);
 				todoLiEntry.blur();		// Blur to match result of clicking undoEdit button
 			}
 		}
@@ -1097,7 +1101,6 @@ function editHandler(event) {
 
 function todoClickHandler(event) {
 	var todoLi = event.target.parentElement;
-	var todoLiEntry = todoLi.querySelector('p');
 	var todo = findTodo(todos, todoLi.id)
 	var todoArray = findArray(todos, todoLi.id);	// todos or a todo.children array
 
@@ -1127,10 +1130,7 @@ function todoClickHandler(event) {
 		appendNewChildTodoLi(todo)
 
 	} else if (event.target.name === "undoEdit") {
-		todo.entry = originalEntry;
-		todoLiEntry.textContent = originalEntry;
-		var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
-		todoLiUndoEditButton.disabled = true;
+		undoEntryEdit(todo, todoLi);
 
 	} else if (event.target.name === "showChildren") {
 		todo.collapsed = !todo.collapsed;
