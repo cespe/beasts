@@ -662,10 +662,6 @@ tests({
 		eq(anySelectedFilteredInTodos(todo1.children), true);
 		eq(anySelectedFilteredInTodos(child1.children), true);
 	},
-	"The app should have a way to check if any todos, including nested todos, are deleted.": function() {
-		// Tests anyDeletedTodos(array)
-		fail();
-	},
 	"The app should have a way to check if any todos, including nested todos, are both selected and completed.": function() {
 		// Tests anySelectedCompletedTodos(array)
 		fail();

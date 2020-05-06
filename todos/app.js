@@ -496,23 +496,6 @@ function anySelectedFilteredInTodos(array) {
 	return false;
 }
 
-// Return true if any todos, including nested todos, are deleted
-// TODO this function might be orphaned
-function anyDeletedTodos(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.deleted) {
-			return true;
-		}
-		if (todo.children.length > 0) {
-			var todoDeleted = anyDeletedTodos(todo.children);
-			if (todoDeleted) {
-				return true;
-			} 
-		}
-	}
-}
-
 // Return true if any todos, including nested todos, are both completed and selected
 function anySelectedCompletedTodos(array) {
 	for (var i = 0; i < array.length; i++) {
