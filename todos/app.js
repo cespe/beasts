@@ -1184,52 +1184,44 @@ function actionsClickHandler(event) {
 				showActiveButton.textContent = '√ Active';
 			}
 			renderTodolist();
-		}
-		if (event.target.name === "showCompleted") {
+		} else if (event.target.name === "showCompleted") {
 			if (showCompletedButton.textContent === '√ Completed') {
 				showCompletedButton.textContent = 'Completed';
 			} else {
 				showCompletedButton.textContent = '√ Completed';
 			}
 			renderTodolist();
-		}
-		if (event.target.name === "showDeleted") {
+		} else if (event.target.name === "showDeleted") {
 			if (showDeletedButton.textContent === '√ Deleted') {
 				showDeletedButton.textContent = 'Deleted';
 			} else {
 				showDeletedButton.textContent = '√ Deleted';
 			}
 			renderTodolist();
-		}
-		if (event.target.name === "selectAll") {
+		} else if (event.target.name === "selectAll") {
 			if (selectAllButton.textContent === 'Select all') {
 				markSelectedAndSelectModeForFilteredInTodos(todos, true);	
 			} else {
 				markSelectedAndSelectModeForFilteredInTodos(todos, false);	
-		
 			}
 			renderTodolist();
-		}
-		if (event.target.name === 'completeSelected') {
+		} else if (event.target.name === 'completeSelected') {
 			if (completeSelectedButton.textContent === 'Complete selected') {
 				setSelectedTodosStage(todos, 'completed');
 			} else {
 				setSelectedTodosStage(todos, 'active');
 			}
 			renderTodolist();
-		}
-		if (event.target.name === 'deleteSelected') {
+		} else if (event.target.name === 'deleteSelected') {
 			if (deleteSelectedButton.textContent === 'Delete selected') {
 				markSelectedTodosDeleted(todos, true);
 			} else {
 				markSelectedTodosDeleted(todos, false);
 			}
 			renderTodolist();
-		}
-		if (event.target.name === 'purgeSelectedDeleted') {
+		} else if (event.target.name === 'purgeSelectedDeleted') {
 			purgeSelectedDeletedTodos(todos);
-		}
-		if (event.target.name === 'addTodo') {
+		} else if (event.target.name === 'addTodo') {
 			insertNewTodoLi(todos);
 		}
 	}
