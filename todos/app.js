@@ -1169,61 +1169,53 @@ function todoClickHandler(event) {
 }
 
 function actionsClickHandler(event) {
-	if (event.target.nodeName === "BUTTON") {		// TODO is this conditional needed?
-		var todosUl = todolist.children[0];
-		// handle case (just for tests?) where todosUl is not defined
-		var todoLiCount = 0;
-		if (todosUl) {
-			todoLiCount = todosUl.children.length;	
-		}
 
-		if (event.target.name === "showActive") {
-			if (showActiveButton.textContent === '√ Active') {
-				showActiveButton.textContent = 'Active';
-			} else {
-				showActiveButton.textContent = '√ Active';
-			}
-			renderTodolist();
-		} else if (event.target.name === "showCompleted") {
-			if (showCompletedButton.textContent === '√ Completed') {
-				showCompletedButton.textContent = 'Completed';
-			} else {
-				showCompletedButton.textContent = '√ Completed';
-			}
-			renderTodolist();
-		} else if (event.target.name === "showDeleted") {
-			if (showDeletedButton.textContent === '√ Deleted') {
-				showDeletedButton.textContent = 'Deleted';
-			} else {
-				showDeletedButton.textContent = '√ Deleted';
-			}
-			renderTodolist();
-		} else if (event.target.name === "selectAll") {
-			if (selectAllButton.textContent === 'Select all') {
-				markSelectedAndSelectModeForFilteredInTodos(todos, true);	
-			} else {
-				markSelectedAndSelectModeForFilteredInTodos(todos, false);	
-			}
-			renderTodolist();
-		} else if (event.target.name === 'completeSelected') {
-			if (completeSelectedButton.textContent === 'Complete selected') {
-				setSelectedTodosStage(todos, 'completed');
-			} else {
-				setSelectedTodosStage(todos, 'active');
-			}
-			renderTodolist();
-		} else if (event.target.name === 'deleteSelected') {
-			if (deleteSelectedButton.textContent === 'Delete selected') {
-				markSelectedTodosDeleted(todos, true);
-			} else {
-				markSelectedTodosDeleted(todos, false);
-			}
-			renderTodolist();
-		} else if (event.target.name === 'purgeSelectedDeleted') {
-			purgeSelectedDeletedTodos(todos);
-		} else if (event.target.name === 'addTodo') {
-			insertNewTodoLi(todos);
+	if (event.target.name === "showActive") {
+		if (showActiveButton.textContent === '√ Active') {
+			showActiveButton.textContent = 'Active';
+		} else {
+			showActiveButton.textContent = '√ Active';
 		}
+		renderTodolist();
+	} else if (event.target.name === "showCompleted") {
+		if (showCompletedButton.textContent === '√ Completed') {
+			showCompletedButton.textContent = 'Completed';
+		} else {
+			showCompletedButton.textContent = '√ Completed';
+		}
+		renderTodolist();
+	} else if (event.target.name === "showDeleted") {
+		if (showDeletedButton.textContent === '√ Deleted') {
+			showDeletedButton.textContent = 'Deleted';
+		} else {
+			showDeletedButton.textContent = '√ Deleted';
+		}
+		renderTodolist();
+	} else if (event.target.name === "selectAll") {
+		if (selectAllButton.textContent === 'Select all') {
+			markSelectedAndSelectModeForFilteredInTodos(todos, true);	
+		} else {
+			markSelectedAndSelectModeForFilteredInTodos(todos, false);	
+		}
+		renderTodolist();
+	} else if (event.target.name === 'completeSelected') {
+		if (completeSelectedButton.textContent === 'Complete selected') {
+			setSelectedTodosStage(todos, 'completed');
+		} else {
+			setSelectedTodosStage(todos, 'active');
+		}
+		renderTodolist();
+	} else if (event.target.name === 'deleteSelected') {
+		if (deleteSelectedButton.textContent === 'Delete selected') {
+			markSelectedTodosDeleted(todos, true);
+		} else {
+			markSelectedTodosDeleted(todos, false);
+		}
+		renderTodolist();
+	} else if (event.target.name === 'purgeSelectedDeleted') {
+		purgeSelectedDeletedTodos(todos);
+	} else if (event.target.name === 'addTodo') {
+		insertNewTodoLi(todos);
 	}
 }
 
