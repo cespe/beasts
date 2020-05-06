@@ -644,7 +644,24 @@ tests({
 	},
 	"The app should have a way to determine if any todos at a root array level are selected.": function() {
 		// Tests anySelectedRootTodos(array)
-		fail();
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child2 = new Todo('Child 2');
+		todo1.addChild(child1);
+		todo1.addChild(child2);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+
+		eq(anySelectedRootTodos(todos), false);
+		eq(anySelectedRootTodos(todo1.children), false);
+		
+		todo2.markSelected(true);
+		eq(anySelectedRootTodos(todos), true);
+
+		child2.markSelected(true);
+		eq(anySelectedRootTodos(todo1.children), true);
 	},
 	"The app should have a way to check if any todos, including nested todos, are both selected and filtered in for display.": function() {
 		// Tests anySelectedFilteredInTodos(array)
@@ -5239,7 +5256,7 @@ tests({
 	"When editing, Return should be a shortcut for 'Add Sibling'.": function() {
 		// Limit a todo to one line.
 		manual();
-		godolist.innerHTML = '';
+
 		todos = [];
 		startApp();
 		addTodo();
@@ -5298,8 +5315,18 @@ tests({
 		manual();
 	},
 	"Esc should apply only to the current todoLi entry.": function() {
-		// TODO There is a bug such that Esc will restore originalEntry from the wrong todoLi
-		fail();
+		// There was a bug such that Esc would restore originalEntry from the wrong todoLi.
+		// Fixed by adding a check on undoEdit button.
+		manual();
+
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+		startApp();
+
+		// Edit Item 2, then click on Item 1 entry, then hit 'esc' key. Nothing should happen.
 	},
 	"Section: more features": function() {
 

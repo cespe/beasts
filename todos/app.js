@@ -703,13 +703,13 @@ function updateActionsBar() {
 	// TODO check for filtered-in todos or rely on selection handlers to only operate on filtered-in todos?
 	
 	// Get conditionals for updating buttons
-	var oneOrMoreFilteredInTodos = anyFilteredInTodos(todos);
-	var oneOrMoreFilteredInRootTodosInSelectMode = anyFilteredInRootTodosInSelectMode(todos);
+	var filteredInTodos = anyFilteredInTodos(todos);
+	var filteredInRootTodosInSelectMode = anyFilteredInRootTodosInSelectMode(todos);
 	var allSelectedFilteredInCompleted = allSelectedFilteredInTodosCompleted(todos);
 	var allSelectedFilteredInDeleted = allSelectedFilteredInTodosDeleted(todos);
-	var oneOrMoreSelectedFilteredInTodosDeleted = anySelectedFilteredInTodosDeleted(todos);
+	var selectedFilteredInTodosDeleted = anySelectedFilteredInTodosDeleted(todos);
 
-	if (oneOrMoreFilteredInTodos) {
+	if (filteredInTodos) {
 		selectAllButton.disabled = false;
 	} else {
 		selectAllButton.disabled = true;
@@ -721,7 +721,7 @@ function updateActionsBar() {
 		purgeSelectedDeletedButton.disabled = true;
 	}
 
-	if (oneOrMoreFilteredInRootTodosInSelectMode) {
+	if (filteredInRootTodosInSelectMode) {
 		selectAllButton.textContent = 'Unselect all';
 		completeSelectedButton.disabled = false;
 		deleteSelectedButton.disabled = false;
@@ -731,25 +731,25 @@ function updateActionsBar() {
 		deleteSelectedButton.disabled = true;
 	}
 
-	if (oneOrMoreFilteredInRootTodosInSelectMode && allSelectedFilteredInCompleted) {
+	if (filteredInRootTodosInSelectMode && allSelectedFilteredInCompleted) {
 		completeSelectedButton.textContent = 'Uncomplete selected';	
 	} else {
 		completeSelectedButton.textContent = 'Complete selected';	
 	}
 
-	if (oneOrMoreFilteredInRootTodosInSelectMode && allSelectedFilteredInDeleted) {
+	if (filteredInRootTodosInSelectMode && allSelectedFilteredInDeleted) {
 		deleteSelectedButton.textContent = 'Undelete selected';	
 	} else {
 		deleteSelectedButton.textContent = 'Delete selected';	
 	}
 
-	if (oneOrMoreSelectedFilteredInTodosDeleted) {
+	if (selectedFilteredInTodosDeleted) {
 		purgeSelectedDeletedButton.disabled = false;	
 	} else {
 		purgeSelectedDeletedButton.disabled = true;	
 	}
 
-	if (showActiveButton.textContent === 'Active' || oneOrMoreFilteredInRootTodosInSelectMode) {
+	if (showActiveButton.textContent === 'Active' || filteredInRootTodosInSelectMode) {
 		addTodoButton.disabled = true;	
 	} else {
 		addTodoButton.disabled = false;	
@@ -1045,13 +1045,16 @@ function keyUpHandler(event) {
 				}
 			}
 		} else if (event.key === "Escape") {
-			// these lines lifted from undoEdit event handler, TODO consolidate
-			todo.entry = originalEntry
-			var todoLiEntry = todoLi.querySelector('p');
-			todoLiEntry.textContent = originalEntry
 			var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
-			todoLiUndoEditButton.disabled = true;
-			todoLiEntry.blur();		// Blur to match result of clicking undoEdit button
+			if (todoLiUndoEditButton.disabled === false) /* prevent restoring the wrong entry */ {
+				// these lines lifted from undoEdit event handler, TODO consolidate
+				todo.entry = originalEntry
+				var todoLiEntry = todoLi.querySelector('p');
+				todoLiEntry.textContent = originalEntry
+				var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
+				todoLiUndoEditButton.disabled = true;
+				todoLiEntry.blur();		// Blur to match result of clicking undoEdit button
+			}
 		}
 	}
 }
@@ -1104,6 +1107,7 @@ function todoClickHandler(event) {
 			leaveSelectModeIfNoneSelected(todo);
 		}
 		renderTodolist();
+
 	} else if (event.target.name === "complete") {
 		if (todo.stage === 'completed') {
 			todo.stage = 'active';
@@ -1111,21 +1115,27 @@ function todoClickHandler(event) {
 			todo.stage = 'completed';
 		}
 		renderTodolist();
+
 	} else if (event.target.name === "delete") {
 		todo.deleted = !todo.deleted;
 		renderTodolist();
+
 	} else if (event.target.name === "addSibling") {
 		insertNewTodoLi(todoArray, todo)		// todoArray and todo are set above by clickHandler
+
 	} else if (event.target.name === "addChild") {
 		appendNewChildTodoLi(todo)
+
 	} else if (event.target.name === "undoEdit") {
 		todo.entry = originalEntry;
 		todoLiEntry.textContent = originalEntry;
 		var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
 		todoLiUndoEditButton.disabled = true;
+
 	} else if (event.target.name === "showChildren") {
 		todo.collapsed = !todo.collapsed;
 		renderTodolist();
+
 	} else if (event.target.name === "selectChildren") {
 		if (anySelectedTodos(todo.children)) {
 			// 'Unselect children' clicked
@@ -1145,6 +1155,7 @@ function todoClickHandler(event) {
 			}
 		}
 		renderTodolist();
+
 	} else if (event.target.name === "completeSelectedChildren") {
 		if (allSelectedTodosCompleted(todo.children)) {
 			// 'Uncomplete selected children' clicked
@@ -1154,6 +1165,7 @@ function todoClickHandler(event) {
 			setSelectedTodosStage(todo.children, 'completed');
 		}
 		renderTodolist();
+
 	} else if (event.target.name === "deleteSelectedChildren") {
 		if (allSelectedTodosDeleted(todo.children)) {
 			// 'Undelete selected children' clicked
