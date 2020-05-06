@@ -1105,36 +1105,29 @@ function todoClickHandler(event) {
 				leaveSelectModeIfNoneSelected(todo);
 			}
 			renderTodolist();
-		}
-		if (event.target.name === "complete") {
+		} else if (event.target.name === "complete") {
 			if (todo.stage === 'completed') {
 				todo.stage = 'active';
 			} else {
 				todo.stage = 'completed';
 			}
 			renderTodolist();
-		}
-		if (event.target.name === "delete") {
+		} else if (event.target.name === "delete") {
 			todo.deleted = !todo.deleted;
 			renderTodolist();
-		}
-		if (event.target.name === "addSibling") {
+		} else if (event.target.name === "addSibling") {
 			insertNewTodoLi(todoArray, todo)		// todoArray and todo are set above by clickHandler
-		}
-		if (event.target.name === "addChild") {
+		} else if (event.target.name === "addChild") {
 			appendNewChildTodoLi(todo)
-		}
-		if (event.target.name === "undoEdit") {
+		} else if (event.target.name === "undoEdit") {
 			todo.entry = originalEntry;
 			todoLiEntry.textContent = originalEntry;
 			var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
 			todoLiUndoEditButton.disabled = true;
-		}
-		if (event.target.name === "showChildren") {
+		} else if (event.target.name === "showChildren") {
 			todo.collapsed = !todo.collapsed;
 			renderTodolist();
-		}
-		if (event.target.name === "selectChildren") {
+		} else if (event.target.name === "selectChildren") {
 			if (anySelectedTodos(todo.children)) {
 				// 'Unselect children' clicked
 				markFilteredInTodosSelected(todo.children, false);	// TODO figure out marking filteredIn vs all
@@ -1153,8 +1146,7 @@ function todoClickHandler(event) {
 				}
 			}
 			renderTodolist();
-		}
-		if (event.target.name === "completeSelectedChildren") {
+		} else if (event.target.name === "completeSelectedChildren") {
 			if (allSelectedTodosCompleted(todo.children)) {
 				// 'Uncomplete selected children' clicked
 				setSelectedTodosStage(todo.children, 'active');
@@ -1163,8 +1155,7 @@ function todoClickHandler(event) {
 				setSelectedTodosStage(todo.children, 'completed');
 			}
 			renderTodolist();
-		}
-		if (event.target.name === "deleteSelectedChildren") {
+		} else if (event.target.name === "deleteSelectedChildren") {
 			if (allSelectedTodosDeleted(todo.children)) {
 				// 'Undelete selected children' clicked
 				markSelectedTodosDeleted(todo.children, false);
