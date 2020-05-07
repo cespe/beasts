@@ -5322,13 +5322,44 @@ tests({
 
 		// Edit Item 2, then click on Item 1 entry, then hit 'esc' key. Nothing should happen.
 	},
-	"Section: more features": function() {
-
+	"Section: localStorage": function() {
 	},
-	"There should be a 'canceled' stage to complement 'active' and 'completed'.": function() {
+	"If localStorage is not set up, the app should do so.": function() {
+		localStorage.removeItem('todos');
+		eq(localStorage.getItem('todos'), null);
+		startApp();
+		neq(localStorage.getItem('todos'), null);
+	},
+	"Changes to todos should be saved to localStorage.": function() {
+		todos = [];
+		localStorage.removeItem('todos');
+		eq(localStorage.getItem('todos'), null);
+		startApp();
+		var todosBefore = JSON.parse(localStorage.getItem('todos'));
+		eq(todosBefore.length, 0);
+		addTodobutton.click();
+		localStorage.setItem('todos', JSON.stringify(todos));
+		todos = [];
+		var todosAfter = JSON.parse(localStorage.getItem('todos'));
+		eq(todosAfter.length, 1);
+	},
+	"To save storage space, the app should not save ephemeral properties of todos in storage.": function() {
+		// filteredIn and filteredOutParentOfFilteredIn can be excluded by using a referrer array argument with JSON.stringify
 		future();
 	},
-	"Todos should be read from and written to local storage.": function() {
+	"On page load, saved todos should be retrieved from localStorage.": function() {
+		localStorage.removeItem('todos');
+		todos = [];
+		startApp();
+		addTodoButton.click();
+		todos = [];
+		// location.reload();	// unusable because it runs all the tests again, over and over...
+		startApp();
+		eq(todos.length, 1);
+	},
+	"Section: more features": function() {
+	},
+	"There should be a 'canceled' stage to complement 'active' and 'completed'.": function() {
 		future();
 	},
 	"Todos in local storage should be synchronized with remote storage.": function() {
