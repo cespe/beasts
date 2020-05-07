@@ -740,19 +740,13 @@ tests({
 	},
 	"The app should build a parent-placeholder todoLi when a todo's filteredOutParent property is true.": function() {
 		// Tests createParentPlaceholderLi(todo)
-		var todo1 = new Todo('Item 1 filtered-out parent');
-//		todo1.tagDeleted(true);
-//		var filterSet = new Set();
-//		filterSet.add('#active');
-//		todo1.markFilteredIn(filterSet);
-//		child1 = new Todo('Item 1 child 1 filtered in');
-//		todo1.addChild(child1);
-//		child1.markFilteredIn(filterSet);
-//		todo1.markFilteredOutParentOfFilteredIn();
+		
+		// Solves the problem of showing nested filtered-in todos when parents are hidden.
+		// E.g. currently, if only the Completed filter is checked (√ Completed), then completed todos that are children
+		// of active or deleted todos will not be shown. There should be a way to find all the completed todos and
+		// show them in a special display that indicates nesting but does not show parents that are filtered out.
 
-//		eq(todo1.filteredIn, true);
-//		eq(todo1.filteredOutParentOfFilteredIn, true);
-//		eq(child1.filteredIn, true);
+		var todo1 = new Todo('Item 1 filtered-out parent');
 
 		var todo1ParentPlaceholderLi = createParentPlaceholderLi(todo1);
 
@@ -5331,34 +5325,31 @@ tests({
 	"Section: more features": function() {
 
 	},
+	"There should be a 'canceled' stage to complement 'active' and 'completed'.": function() {
+		future();
+	},
 	"Todos should be read from and written to local storage.": function() {
 		future();
 	},
 	"Todos in local storage should be synchronized with remote storage.": function() {
 		future();
 	},
-	"There should be a way to show nested filtered todos when parents are hidden.": function() {
-		// E.g. currently, if only the Completed filter is checked (√ Completed), then completed todos that are children
-		// of active or deleted todos will not be shown. There should be a way to find all the completed todos and
-		// show them in a special display that indicates nesting but does not show parents that are filtered out.
-		future();	
-	},
-	"There should be a way to move a todo up in the list, for example to the top of the list.": function() {
-		// An 'Add above' button? 'Shift-up/down' button? Drag to new position?
+	"There should be a way to move a todo in the list, for example to the top of the list.": function() {
+		// 'Shift up' and 'Shift down' buttons.
+		// 'Shift to top' and 'Shift to bottom' buttons.
+		// 'Indent' and 'Outdent' buttons.
+		// Keyboard shortcuts opt+arrow.
+		// Keyboard shortcuts shift-opt-up/down arrow for shift to top/bottom.
+		// Drag to new position?
 		future();
 	},
 	"There should be a 'find' input to filter the display according to keywords or entry text.": function() {
 		future();
 	}, 
 	"Each todoLi should have a 'zoom in/out' button to filter the display to just that todoLi.": function() {
-		// Simplifies the UI: can remove selectChildren, which currently has no buttons to operate on the selection.
-		// Simplifies the filtered todo displays, which don't have to take child todos into account.
 		future();
 	},
-	"When todoLi zoom button is clicked, other buttons should be hidden, class should toggle 'zoomed' and all other todoLis should toggle class 'unzoomed'.": function() {
-		future();
-	},
-	"When a todoLi is zoomed in, the actions bar buttons should apply only to the todoLi's children.": function() {
+	"Todos should log events, e.g. created, edited, stage-change, work-progress, deadline-approaching, urgency.": function() {
 		future();
 	},
 	"Section: On startup": function() {
