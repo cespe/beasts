@@ -20,14 +20,10 @@ function Todo(entry) {
 	this.children = [];
 	this.collapsed = false;
 	this.deleted = false;
-//	this.completed = false;	
 	this.stage = 'active';				// stages are active, completed, canceled
 	
 	this.selected = false;
 	this.selectMode = false;
-
-//	this.displayTags = new Set();
-//	this.displayTags.add('#active');	// new todo is active on creation
 
 	this.filteredIn = true;						// new todo is filtered in for display on creation 
 	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
@@ -255,7 +251,6 @@ function purgeSelectedDeletedTodos(array) {
 			purgeSelectedDeletedTodos(todo.children);
 		}
 	}
-	startApp();
 }
 
 // Remove selectMode from todos under select-mode-root if all are unselected
@@ -270,6 +265,109 @@ function leaveSelectModeIfNoneSelected(todo) {
 	}
 	if (!anySelectedTodos(startingLevel)) {
 		markTodosSelectMode(startingLevel, false);
+	}
+}
+
+/************************************ Data storage ***************************************/
+
+function writeTodosToStorage() {
+	localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+// Constructor to put saved todo data back into a 'real' todo object i.e. one with methods.
+function RestoredTodo(savedTodo) {
+	this.entry = savedTodo.entry;
+	this.children = savedTodo.children;
+	this.collapsed = savedTodo.collapsed;
+	this.deleted = savedTodo.deleted;
+	this.stage = savedTodo.stage;				// stages are active, completed, canceled
+	
+	this.selected = savedTodo.selected;
+	this.selectMode = savedTodo.selectMode;
+
+	this.filteredIn = savedTodo.filteredIn;
+	this.filteredOutParentOfFilteredIn = savedTodo.filteredOutParentOfFilteredIn;
+    this.id = savedTodo.id;
+}
+
+RestoredTodo.prototype.changeId = function() {
+	this.id = Math.random().toString(36).slice(2);
+}
+
+// TODO These setters are not used consistently in the code -- do I need them? What's the point?
+
+RestoredTodo.prototype.update = function(changedEntry) {
+	this.entry = changedEntry;
+}
+
+RestoredTodo.prototype.markSelected = function(bool) {
+	this.selected = bool;
+}
+
+RestoredTodo.prototype.markSelectMode = function(bool) {
+	this.selectMode = bool;
+}
+
+RestoredTodo.prototype.markDeleted = function(bool) {
+	this.deleted = bool;
+}
+RestoredTodo.prototype.setStage = function(stage) {
+	if (todoStages.has(stage)) {		// TODO throw error if not an allowed value?
+		this.stage = stage;
+	}
+}
+RestoredTodo.prototype.addChild = function(child) {
+	this.children.push(child);
+}
+RestoredTodo.prototype.markCollapsed = function(bool) {
+	this.collapsed = bool;
+}
+RestoredTodo.prototype.markFilteredIn = function(filterSet) {
+	this.filteredIn = false;
+	var stageTag = '#' + this.stage;
+	if (filterSet.has(stageTag)) {
+		this.filteredIn = true;	
+		if (this.deleted && !filterSet.has('#deleted')) {
+			this.filteredIn = false;
+		}
+	}
+}
+RestoredTodo.prototype.markFilteredOutParentOfFilteredIn = function() {
+	this.filteredOutParentOfFilteredIn = false;		// re-set to baseline value
+	if (this.filteredIn === false && this.children.length > 0) {
+		for (var i = 0; i < this.children.length; i++) {
+			var child = this.children[i];
+			if (child.filteredIn || child.filteredOutParentOfFilteredIn) {
+				this.filteredOutParentOfFilteredIn = true;
+				return;
+			} 
+		}
+	}
+}
+// JSON saves data, not methods, so methods must be restored to todo objects upon retrieval.
+// This is a hard-wired function that assumes var todos and storage key "todos".
+// It restores todos or sets todos = [] if none were stored.
+
+function restoreTodosFromLocalStorage() {
+
+	function restoreInPlace(dataArray) {
+		for (var i = 0; i < dataArray.length; i++) {
+			var todo = dataArray[i];
+			restoredTodo = new RestoredTodo(todo);
+			dataArray[i] = restoredTodo;
+		
+			if (todo.children.length > 0) {
+				restoreInPlace(todo.children);
+			}
+		}
+	}
+	
+	var savedData = JSON.parse(localStorage.getItem('todos'));
+	if (savedData) {
+		restoreInPlace(savedData);
+		todos = savedData;
+	} else {
+		todos = [];
 	}
 }
 
@@ -996,6 +1094,7 @@ function createTodosUl(todosArray) {
 function insertNewTodoLi(todoArray, todo) {
 	var newTodo = new Todo();
 	insertTodo(todoArray, newTodo, todo);
+	writeTodosToStorage();
 	renderTodolist();
 	newTodoLi = document.getElementById(newTodo.id);
 	newTodoLi.querySelector('p').focus();
@@ -1006,6 +1105,7 @@ function appendNewChildTodoLi(todo) {
 	todo.markCollapsed(false);
 	var newChild = new Todo();
 	insertTodo(todo.children, newChild);
+	writeTodosToStorage();
 	renderTodolist();
 	newChildLi= document.getElementById(newChild.id);
 	newChildLi.querySelector('p').focus();
@@ -1109,6 +1209,7 @@ function todoClickHandler(event) {
 		if (!todo.selected) {						// 'Unselect' clicked
 			leaveSelectModeIfNoneSelected(todo);
 		}
+		writeTodosToStorage();
 		renderTodolist();
 
 	} else if (event.target.name === "complete") {
@@ -1117,10 +1218,12 @@ function todoClickHandler(event) {
 		} else {
 			todo.stage = 'completed';
 		}
+		writeTodosToStorage();
 		renderTodolist();
 
 	} else if (event.target.name === "delete") {
 		todo.deleted = !todo.deleted;
+		writeTodosToStorage();
 		renderTodolist();
 
 	} else if (event.target.name === "addSibling") {
@@ -1134,6 +1237,7 @@ function todoClickHandler(event) {
 
 	} else if (event.target.name === "showChildren") {
 		todo.collapsed = !todo.collapsed;
+		writeTodosToStorage();
 		renderTodolist();
 
 	} else if (event.target.name === "selectChildren") {
@@ -1154,6 +1258,7 @@ function todoClickHandler(event) {
 				markFilteredInTodosSelectMode(todo.children, true);
 			}
 		}
+		writeTodosToStorage();
 		renderTodolist();
 
 	} else if (event.target.name === "completeSelectedChildren") {
@@ -1164,6 +1269,7 @@ function todoClickHandler(event) {
 			// 'Complete selected children' clicked
 			setSelectedTodosStage(todo.children, 'completed');
 		}
+		writeTodosToStorage();
 		renderTodolist();
 
 	} else if (event.target.name === "deleteSelectedChildren") {
@@ -1174,6 +1280,7 @@ function todoClickHandler(event) {
 			// 'Delete selected children' clicked
 			markSelectedTodosDeleted(todo.children, true);
 		}
+		writeTodosToStorage();
 		renderTodolist();
 	}
 }
@@ -1186,6 +1293,7 @@ function actionsClickHandler(event) {
 		} else {
 			showActiveButton.textContent = '√ Active';
 		}
+		writeTodosToStorage();
 		renderTodolist();
 	} else if (event.target.name === "showCompleted") {
 		if (showCompletedButton.textContent === '√ Completed') {
@@ -1193,6 +1301,7 @@ function actionsClickHandler(event) {
 		} else {
 			showCompletedButton.textContent = '√ Completed';
 		}
+		writeTodosToStorage();
 		renderTodolist();
 	} else if (event.target.name === "showDeleted") {
 		if (showDeletedButton.textContent === '√ Deleted') {
@@ -1200,6 +1309,7 @@ function actionsClickHandler(event) {
 		} else {
 			showDeletedButton.textContent = '√ Deleted';
 		}
+		writeTodosToStorage();
 		renderTodolist();
 	} else if (event.target.name === "selectAll") {
 		if (selectAllButton.textContent === 'Select all') {
@@ -1207,6 +1317,7 @@ function actionsClickHandler(event) {
 		} else {
 			markSelectedAndSelectModeForFilteredInTodos(todos, false);	
 		}
+		writeTodosToStorage();
 		renderTodolist();
 	} else if (event.target.name === 'completeSelected') {
 		if (completeSelectedButton.textContent === 'Complete selected') {
@@ -1214,6 +1325,7 @@ function actionsClickHandler(event) {
 		} else {
 			setSelectedTodosStage(todos, 'active');
 		}
+		writeTodosToStorage();
 		renderTodolist();
 	} else if (event.target.name === 'deleteSelected') {
 		if (deleteSelectedButton.textContent === 'Delete selected') {
@@ -1221,9 +1333,12 @@ function actionsClickHandler(event) {
 		} else {
 			markSelectedTodosDeleted(todos, false);
 		}
+		writeTodosToStorage();
 		renderTodolist();
 	} else if (event.target.name === 'purgeSelectedDeleted') {
 		purgeSelectedDeletedTodos(todos);
+		writeTodosToStorage();
+		renderTodolist();
 	} else if (event.target.name === 'addTodo') {
 		insertNewTodoLi(todos);
 	}
@@ -1243,6 +1358,7 @@ function startApp() {
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
 
+	restoreTodosFromLocalStorage();
 	renderTodolist();
 }
 
