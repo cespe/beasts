@@ -1362,4 +1362,13 @@ function startApp() {
 	renderTodolist();
 }
 
+// Start app without loading todos from storage
+function startTestApp() {
+	showActiveButton.textContent = '√ Active';
+	showCompletedButton.textContent = '√ Completed';
+	showDeletedButton.textContent = 'Deleted';
+
+	renderTodolist();
+}
+
 setUpEventListeners();
