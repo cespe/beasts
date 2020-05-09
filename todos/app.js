@@ -20,12 +20,12 @@ function Todo(entry) {
 	this.children = [];
 	this.collapsed = false;
 	this.deleted = false;
-	this.stage = 'active';				// stages are active, completed, canceled
+	this.stage = 'active';							// stages are active, completed, canceled
 	
 	this.selected = false;
 	this.selectMode = false;
 
-	this.filteredIn = true;						// new todo is filtered in for display on creation 
+	this.filteredIn = true;							// new todo is filtered in for display on creation 
 	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
 }
 
@@ -51,7 +51,7 @@ Todo.prototype.markDeleted = function(bool) {
 	this.deleted = bool;
 }
 Todo.prototype.setStage = function(stage) {
-	if (todoStages.has(stage)) {		// TODO throw error if not an allowed value?
+	if (todoStages.has(stage)) {					// TODO throw error if not an allowed value?
 		this.stage = stage;
 	}
 }
@@ -116,7 +116,7 @@ function deleteTodo(array, todo) {
 	array.splice(position, 1);
 }
 
-function applyDisplayTags(filterSet) {					// TODO Combine these into one function to avoid two recursions
+function applyDisplayTags(filterSet) {				// TODO Combine these into one function to avoid two recursions
 
 	function markFilteredInTodos(todosArray) {
 		for (var i = 0; i < todosArray.length; i++) {
@@ -178,7 +178,7 @@ function markFilteredInTodosSelected(todosArray, bool) {
 		if (todo.filteredIn) {
 			todo.selected = bool;
 		} else {
-			todo.selected = false;		// excludes filtered-out todos
+			todo.selected = false;				// excludes filtered-out todos
 		}
 	}
 }
@@ -270,8 +270,41 @@ function leaveSelectModeIfNoneSelected(todo) {
 
 /************************************ Data storage ***************************************/
 
-function writeTodosToStorage() {
-	localStorage.setItem('todos', JSON.stringify(todos));
+// localStorage has a quirk: undefined can be a key.
+
+function writeFiltersToStorage() {
+
+}
+
+var storageKey = undefined;		// Key will be passed in by startApp(key)
+
+// Write serialized todos to the specified key in localStorage
+function writeTodosToStorage(key) {
+	localStorage.setItem(key, JSON.stringify(todos));
+}
+
+// Restore todos or sets todos = [] if none were stored at key.
+function restoreTodosFromLocalStorage(key) {
+
+	function restoreInPlace(dataArray) {
+		for (var i = 0; i < dataArray.length; i++) {
+			var todo = dataArray[i];
+			restoredTodo = new RestoredTodo(todo);
+			dataArray[i] = restoredTodo;
+		
+			if (todo.children.length > 0) {
+				restoreInPlace(todo.children);
+			}
+		}
+	}
+	
+	var savedData = JSON.parse(localStorage.getItem(key));
+	if (savedData) {
+		restoreInPlace(savedData);
+		todos = savedData;
+	} else {
+		todos = [];
+	}
 }
 
 // Constructor to put saved todo data back into a 'real' todo object i.e. one with methods.
@@ -280,7 +313,7 @@ function RestoredTodo(savedTodo) {
 	this.children = savedTodo.children;
 	this.collapsed = savedTodo.collapsed;
 	this.deleted = savedTodo.deleted;
-	this.stage = savedTodo.stage;				// stages are active, completed, canceled
+	this.stage = savedTodo.stage;
 	
 	this.selected = savedTodo.selected;
 	this.selectMode = savedTodo.selectMode;
@@ -342,32 +375,6 @@ RestoredTodo.prototype.markFilteredOutParentOfFilteredIn = function() {
 				return;
 			} 
 		}
-	}
-}
-// JSON saves data, not methods, so methods must be restored to todo objects upon retrieval.
-// This is a hard-wired function that assumes var todos and storage key "todos".
-// It restores todos or sets todos = [] if none were stored.
-
-function restoreTodosFromLocalStorage() {
-
-	function restoreInPlace(dataArray) {
-		for (var i = 0; i < dataArray.length; i++) {
-			var todo = dataArray[i];
-			restoredTodo = new RestoredTodo(todo);
-			dataArray[i] = restoredTodo;
-		
-			if (todo.children.length > 0) {
-				restoreInPlace(todo.children);
-			}
-		}
-	}
-	
-	var savedData = JSON.parse(localStorage.getItem('todos'));
-	if (savedData) {
-		restoreInPlace(savedData);
-		todos = savedData;
-	} else {
-		todos = [];
 	}
 }
 
@@ -1094,7 +1101,7 @@ function createTodosUl(todosArray) {
 function insertNewTodoLi(todoArray, todo) {
 	var newTodo = new Todo();
 	insertTodo(todoArray, newTodo, todo);
-	writeTodosToStorage();
+	writeTodosToStorage(storageKey);
 	renderTodolist();
 	newTodoLi = document.getElementById(newTodo.id);
 	newTodoLi.querySelector('p').focus();
@@ -1105,7 +1112,7 @@ function appendNewChildTodoLi(todo) {
 	todo.markCollapsed(false);
 	var newChild = new Todo();
 	insertTodo(todo.children, newChild);
-	writeTodosToStorage();
+	writeTodosToStorage(storageKey);
 	renderTodolist();
 	newChildLi= document.getElementById(newChild.id);
 	newChildLi.querySelector('p').focus();
@@ -1209,7 +1216,7 @@ function todoClickHandler(event) {
 		if (!todo.selected) {						// 'Unselect' clicked
 			leaveSelectModeIfNoneSelected(todo);
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 
 	} else if (event.target.name === "complete") {
@@ -1218,12 +1225,12 @@ function todoClickHandler(event) {
 		} else {
 			todo.stage = 'completed';
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 
 	} else if (event.target.name === "delete") {
 		todo.deleted = !todo.deleted;
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 
 	} else if (event.target.name === "addSibling") {
@@ -1237,7 +1244,7 @@ function todoClickHandler(event) {
 
 	} else if (event.target.name === "showChildren") {
 		todo.collapsed = !todo.collapsed;
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 
 	} else if (event.target.name === "selectChildren") {
@@ -1258,7 +1265,7 @@ function todoClickHandler(event) {
 				markFilteredInTodosSelectMode(todo.children, true);
 			}
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 
 	} else if (event.target.name === "completeSelectedChildren") {
@@ -1269,7 +1276,7 @@ function todoClickHandler(event) {
 			// 'Complete selected children' clicked
 			setSelectedTodosStage(todo.children, 'completed');
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 
 	} else if (event.target.name === "deleteSelectedChildren") {
@@ -1280,7 +1287,7 @@ function todoClickHandler(event) {
 			// 'Delete selected children' clicked
 			markSelectedTodosDeleted(todo.children, true);
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 	}
 }
@@ -1293,7 +1300,7 @@ function actionsClickHandler(event) {
 		} else {
 			showActiveButton.textContent = '√ Active';
 		}
-		writeTodosToStorage();
+		writeFiltersToStorage();
 		renderTodolist();
 	} else if (event.target.name === "showCompleted") {
 		if (showCompletedButton.textContent === '√ Completed') {
@@ -1301,7 +1308,7 @@ function actionsClickHandler(event) {
 		} else {
 			showCompletedButton.textContent = '√ Completed';
 		}
-		writeTodosToStorage();
+		writeFiltersToStorage();
 		renderTodolist();
 	} else if (event.target.name === "showDeleted") {
 		if (showDeletedButton.textContent === '√ Deleted') {
@@ -1309,7 +1316,7 @@ function actionsClickHandler(event) {
 		} else {
 			showDeletedButton.textContent = '√ Deleted';
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 	} else if (event.target.name === "selectAll") {
 		if (selectAllButton.textContent === 'Select all') {
@@ -1317,7 +1324,7 @@ function actionsClickHandler(event) {
 		} else {
 			markSelectedAndSelectModeForFilteredInTodos(todos, false);	
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 	} else if (event.target.name === 'completeSelected') {
 		if (completeSelectedButton.textContent === 'Complete selected') {
@@ -1325,7 +1332,7 @@ function actionsClickHandler(event) {
 		} else {
 			setSelectedTodosStage(todos, 'active');
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 	} else if (event.target.name === 'deleteSelected') {
 		if (deleteSelectedButton.textContent === 'Delete selected') {
@@ -1333,11 +1340,11 @@ function actionsClickHandler(event) {
 		} else {
 			markSelectedTodosDeleted(todos, false);
 		}
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 	} else if (event.target.name === 'purgeSelectedDeleted') {
 		purgeSelectedDeletedTodos(todos);
-		writeTodosToStorage();
+		writeTodosToStorage(storageKey);
 		renderTodolist();
 	} else if (event.target.name === 'addTodo') {
 		insertNewTodoLi(todos);
@@ -1353,12 +1360,13 @@ function setUpEventListeners() {
 	todolist.addEventListener('keyup', keyUpHandler);
 }
 
-function startApp() {
+function startApp(key) {
+	storageKey = key;										// Tell the app where to store data
 	showActiveButton.textContent = '√ Active';
 	showCompletedButton.textContent = '√ Completed';
 	showDeletedButton.textContent = 'Deleted';
 
-	restoreTodosFromLocalStorage();
+	restoreTodosFromLocalStorage(key);
 	renderTodolist();
 }
 

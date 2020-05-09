@@ -1,6 +1,9 @@
 // Beasts 8. Nested todos 
 //
-// Protect properties of todo object in a closure?
+// TODO Protect properties of todo object in a closure?
+// buglist
+// With delete filter 'Delete', delete a child todo. It disappears, but its parent 'Hide children' and 'Select children' buttons
+//    mistakenly stays active.
 
 tests({
 	"The app should have a 'todos' array for storing todos.": function() {
@@ -5325,7 +5328,8 @@ tests({
 	"Section: localStorage": function() {
 	},
 	"The app should have a way to save todos array to localStorage.": function() {
-		// Tests writeTodosToStorage()
+		// Tests writeTodosToStorage(key)
+		localStorage.removeItem('test-todos');
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo2 = new Todo('Item 2');
@@ -5338,17 +5342,50 @@ tests({
 		eq(todos[1].id, todo2.id);	
 		eq(todos[2].id, todo3.id);	
 
-		localStorage.clear();
-		writeTodosToStorage();
-		var stored = JSON.parse(localStorage.getItem('todos'));
+		writeTodosToStorage('test-todos');
+		var stored = JSON.parse(localStorage.getItem('test-todos'));
 		
 		eq(stored.length, todos.length);
 		eq(stored[0].id, todo1.id);	
 		eq(stored[1].id, todo2.id);	
 		eq(stored[2].id, todo3.id);	
 	},
+	"The app should allow for saving the todos array to more than one localStorage key.": function() {
+		// Facilitates testing and perhaps backup -- it is very easy to wipe out saved todos.
+		localStorage.removeItem('test-todos');
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo2 = new Todo('Item 2');
+		todo3 = new Todo('Item 3');
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+		insertTodo(todos, todo3);
+
+		eq(todos[0].id, todo1.id);	
+		eq(todos[1].id, todo2.id);	
+		eq(todos[2].id, todo3.id);	
+
+		writeTodosToStorage('test-todos');
+		var stored = JSON.parse(localStorage.getItem('test-todos'));
+		
+		eq(stored.length, todos.length);
+		eq(stored[0].id, todo1.id);	
+		eq(stored[1].id, todo2.id);	
+		eq(stored[2].id, todo3.id);	
+
+		writeTodosToStorage('test-todos-2');
+		var stored2 = JSON.parse(localStorage.getItem('test-todos-2'));
+		
+		eq(stored2.length, todos.length);
+		eq(stored2[0].id, todo1.id);	
+		eq(stored2[1].id, todo2.id);	
+		eq(stored2[2].id, todo3.id);	
+
+		localStorage.removeItem('test-todos-2');
+	},
 	"The app should have a way to convert todo data from localStorage back to todo objects with methods": function() {
 		// Tests restoreTodosFromLocalStorage(dataArray)
+		localStorage.removeItem('test-todos');
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -5365,10 +5402,9 @@ tests({
 		eq(grandchild1.id, child1.children[0].id);
 		eq(todo2.id, todos[1].id);
 
-		localStorage.clear();
-		localStorage.setItem('todos', JSON.stringify(todos));
+		writeTodosToStorage('test-todos');
 		todos = [];
-		restoreTodosFromLocalStorage();
+		restoreTodosFromLocalStorage('test-todos');
 
 		eq(todos.length, 2);
 		eq(todo1.id, todos[0].id);
@@ -5378,19 +5414,20 @@ tests({
 	},
 //	"If localStorage is not set up, the app should do so.": function() {
 //		todos = [];
-//		localStorage.clear();
-//		eq(localStorage.getItem('todos'), null);
+//		localStorage.removeItem('test-todos');
+//		eq(localStorage.getItem('test-todos'), null);
 //		startTestApp();
-//		neq(localStorage.getItem('todos'), null);
+//		neq(localStorage.getItem('test-todos'), null);
 //	},
 	"Changes to todos should be saved to localStorage.": function() {
+		localStorage.removeItem('test-todos');
 		todos = [];
-		localStorage.clear();
-		eq(localStorage.getItem('todos'), null);
-		startApp();
+		storageKey = 'test-todos';
+		eq(localStorage.getItem('test-todos'), null);
+		startApp('test-todos');
 		addTodoButton.click();
 		var todo1 = todos[0];
-		var stored = JSON.parse(localStorage.getItem('todos'));
+		var stored = JSON.parse(localStorage.getItem('test-todos'));
 
 		eq(stored[0].id, todo1.id);
 	},
@@ -5399,18 +5436,18 @@ tests({
 		future();
 	},
 	"On page load, saved todos should be retrieved from localStorage.": function() {
+		localStorage.removeItem('test-todos');
 		todos = [];
-		localStorage.clear();
-		startApp();
+		startApp('test-todos');
 		addTodoButton.click();
 		var todo1 = todos[0];
-		var stored = JSON.parse(localStorage.getItem('todos'));
+		var stored = JSON.parse(localStorage.getItem('test-todos'));
 
 		eq(stored[0].id, todo1.id);
 		
 		todos = [];
 	
-		startApp();				// location.reload() is unusable because it runs all the tests again, over and over...
+		startApp('test-todos');				// location.reload() is unusable because it runs all the tests again, over and over...
 		
 		eq(todos.length, 1);
 		eq(todos[0].id, todo1.id);
@@ -5446,9 +5483,9 @@ tests({
 	},
 	"The app should have a startup function to load todos, if any, and set initial button values.": function() {
 		todos = [];
-		localStorage.clear();
+		localStorage.removeItem('test-todos');
 
-		startApp();
+		startApp('test-todos');
 
 		eq(todos.length, 0);
 		eq(selectAllButton.disabled, true);
@@ -5471,9 +5508,9 @@ tests({
 		todo2 = new Todo('Item 2');
 		todo2.markDeleted(true);
 		insertTodo(todos, todo2);
-		writeTodosToStorage();
+		writeTodosToStorage('test-todos');
 
-		startApp();
+		startApp('test-todos');
 
 		todo1 = todos[0];
 		todo2 = todos[1];
@@ -5502,8 +5539,8 @@ tests({
 		eq(todoLi2, undefined);
 
 		// Restore defaults after last test
-		localStorage.clear();
+		localStorage.removeItem('test-todos');
 		todos = [];
-		startApp();
+		startApp('todos');
 	},
 });
