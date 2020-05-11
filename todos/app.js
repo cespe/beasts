@@ -138,6 +138,9 @@ function applyDisplayTags(filterSet) {				// TODO Combine these into one functio
 				markFilteredOutParentsOfFilteredInTodos(todo.children);
 			}
 			todo.markFilteredOutParentOfFilteredIn();
+			if (todo.filteredOutParentOfFilteredIn) {
+				todo.collapsed = false;			// ensure that filtered-in children are visible
+			}
 		}
 
 	}
@@ -877,7 +880,7 @@ function createParentPlaceholderLi(todo) {
 	}
 	todoLi.appendChild(entry);
 
-	if (todo.children.length > 0) {		
+/*	if (todo.children.length > 0) {		
 
 		var selectModeRoot = !todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
 		var rootAncestor = !todo.selectMode && !allFilteredInTodosInSelectMode(todo.children) && anyFilteredInTodosInSelectMode(todo.children);
@@ -900,7 +903,7 @@ function createParentPlaceholderLi(todo) {
 		}
 		todoLi.appendChild(showChildrenButton);
 		
-	}
+	} */
 	return todoLi;
 }
 
@@ -1007,7 +1010,7 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 	
 	// Only create last four buttons if there are children
 	
-	if (todo.children.length > 0) {		
+	if (todo.children.length > 0 && anyFilteredInTodos(todo.children)) {		
 
 		var selectModeRoot = !todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
 		var rootAncestor = !todo.selectMode && !allFilteredInTodosInSelectMode(todo.children) && anyFilteredInTodosInSelectMode(todo.children);
