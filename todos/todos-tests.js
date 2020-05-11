@@ -2,9 +2,6 @@
 //
 // TODO Protect properties of todo object in a closure?
 // buglist
-// With delete filter 'Delete', delete a child todo. It disappears, but its parent 'Hide children' and 'Select children' buttons
-//    mistakenly stays active. Same behavior for toggling other filters.
-//
 // filteredOutParent should have showChildren, SelectChildren, completeSelected, deleteSelected buttons.
 //
 // selectAll does not toggle properly when todos are under a filteredOutParent
@@ -1985,6 +1982,22 @@ tests({
 		eq(todoLi1ShowChildrenButton.nodeName, 'BUTTON');
 		eq(todoLi1ShowChildrenButton.name, 'showChildren');
 	},
+	"Each parent-placeholder Li with children should have a showChildren button to expand/collapse nested todos.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markDeleted(true);
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+		
+		startTestApp();
+
+		placeholderLi1 = todolist.children[0].children[0];
+		var placeholderLi1ShowChildrenButton = placeholderLi1.children.namedItem('showChildren');
+
+		eq(placeholderLi1ShowChildrenButton.nodeName, 'BUTTON');
+		eq(placeholderLi1ShowChildrenButton.name, 'showChildren');
+	},
 	"If a todo has no children, todoLi should be created without a showChildren button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2026,7 +2039,27 @@ tests({
 
 		eq(todo1.collapsed, true);
 		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
-},
+	},
+	"If todo is a filtered-out parent and todo.collapsed true, placeholderLi showChildren button text should be 'Show children'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markCollapsed(true);
+		todo1.markDeleted(true);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startTestApp();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
+
+		eq(todo1.collapsed, true);
+		eq(todo1.filteredOutParentOfFilteredIn, true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
+	},
+
 	"If a todo has children and todo.collapsed is false, todoLi should be created with showChildren button text 'Hide children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2042,7 +2075,25 @@ tests({
 
 		eq(todo1.collapsed, false);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
-},
+	},
+	"If todo is filtered-out parent and todo.collapsed false, placeholderLi showChildren button text should be 'Hide children'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markDeleted(true);
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startTestApp();
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
+
+		eq(todo1.collapsed, false);
+		eq(todo1.filteredOutParentOfFilteredIn, true);
+		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
+	},
 	"If a todo has any filtered-in descendants in select mode, showChildren button should be disabled.": function() {
 		// By design, don't allow todos to be removed from the display while they are in select mode. This is the same design
 		// decision that governs not allowing new todos while in select mode.
@@ -2072,7 +2123,34 @@ tests({
 
 		eq(todoLi1ShowChildrenButton.disabled, true);
 		eq(childLi1ShowChildrenButton.disabled, true);
-},
+	},
+	"If filtered-out parent todo has any filtered-in descendants in select mode, showChildren button should be disabled.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markDeleted(true);
+		child1 = new Todo('Child 1');
+		child1.markDeleted(true);
+		grandchild1 = new Todo('Grandchild 1');
+		grandchild1.markSelected(true);
+		grandchild1.markSelectMode(true);
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startTestApp();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1Ul = todoLi1.querySelector('ul');
+		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
+		childLi1 = todoLi1Ul.children[0];
+		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
+
+		eq(todo1.filteredOutParentOfFilteredIn, true);
+		eq(todo2.filteredOutParentOfFilteredIn, true);
+		eq(todoLi1ShowChildrenButton.disabled, true);
+		eq(childLi1ShowChildrenButton.disabled, true);
+	},
+
 	"If showChildren button text is 'Show children', css should preserve spacing above the following entry if it exists.": function() {
 		fail();
 		manual();
@@ -2103,7 +2181,7 @@ tests({
 		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
 
 		// css on button with text 'Show children' should add space below
-},
+	},
 	"Clicking a showChildren button should toggle todo.collapsed and re-render todoLis, toggling button text.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
