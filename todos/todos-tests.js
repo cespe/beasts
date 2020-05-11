@@ -1996,6 +1996,20 @@ tests({
 
 		eq(todoLi1.children.namedItem('showChildren'), null);
 	},
+	"If a todo has children that are all filtered out of the display, todoLi should be created without a showChildren button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child1.markDeleted(true);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startTestApp();
+
+		todoLi1 = todolist.children[0].children[0];
+
+		eq(todoLi1.children.namedItem('showChildren'), null);
+	},
 	"If a todo has children and todo.collapsed is true, todoLi should be created with showChildren button text 'Show children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2158,6 +2172,20 @@ tests({
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 
 		eq(todoLi1SelectChildrenButton, null);
+	},
+	"If a todo has children that are all filtered out of the display, todoLi should not have a selectChildren button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child1.markDeleted(true);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startTestApp();
+
+		todoLi1 = todolist.children[0].children[0];
+
+		eq(todoLi1.children.namedItem('selectChildren'), null);
 	},
 	"If todo.collapsed is true, its todoLi should be created without a selectChildren button.": function() {
 		todos = [];
@@ -2821,6 +2849,20 @@ tests({
 
 		eq(todoLi1CompleteSelectedChildrenButton, null);
 	},
+	"If a todo has children that are all filtered out of the display, todoLi should not have a completeSelectChildren button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child1.markDeleted(true);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startTestApp();
+
+		todoLi1 = todolist.children[0].children[0];
+
+		eq(todoLi1.children.namedItem('completeSelectChildren'), null);
+	},
 	"If a todo has no selected descendants, its todoLi should not have a 'completeSelectedChildren' button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -3218,6 +3260,20 @@ tests({
 		todoLi1DeleteSelectedChildrenButton = todoLi1.children.namedItem('deleteSelectedChildren');
 
 		eq(todoLi1DeleteSelectedChildrenButton, null);
+	},
+	"If a todo has children that are all filtered out of the display, todoLi should not have a completeSelectChildren button.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child1.markDeleted(true);
+		todo1.addChild(child1);
+		insertTodo(todos, todo1);
+
+		startTestApp();
+
+		todoLi1 = todolist.children[0].children[0];
+
+		eq(todoLi1.children.namedItem('deleteSelectChildren'), null);
 	},
 	"If a todo has no selected children, its todoLi should not have a 'deleteSelectedChildren' button.": function() {
 		todos = [];
