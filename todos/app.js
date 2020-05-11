@@ -877,6 +877,30 @@ function createParentPlaceholderLi(todo) {
 	}
 	todoLi.appendChild(entry);
 
+	if (todo.children.length > 0) {		
+
+		var selectModeRoot = !todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
+		var rootAncestor = !todo.selectMode && !allFilteredInTodosInSelectMode(todo.children) && anyFilteredInTodosInSelectMode(todo.children);
+		var rootDescendant = todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
+		// potentialRoot = !todo.selectMode && !anyFilteredInTodosInSelectMode(todo.children);
+
+		var anyInSelectMode = anyFilteredInTodosInSelectMode(todo.children);
+
+		var showChildrenButton = document.createElement('button');
+		showChildrenButton.name = 'showChildren';
+		showChildrenButton.type = 'button';
+
+		if (todo.collapsed) {
+			showChildrenButton.textContent = 'Show children';
+		} else {
+			showChildrenButton.textContent = 'Hide children';
+		}
+		if (selectModeRoot || rootAncestor) {
+			showChildrenButton.disabled = true;
+		}
+		todoLi.appendChild(showChildrenButton);
+		
+	}
 	return todoLi;
 }
 
