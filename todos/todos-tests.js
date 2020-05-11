@@ -3,7 +3,13 @@
 // TODO Protect properties of todo object in a closure?
 // buglist
 // With delete filter 'Delete', delete a child todo. It disappears, but its parent 'Hide children' and 'Select children' buttons
-//    mistakenly stays active.
+//    mistakenly stays active. Same behavior for toggling other filters.
+//
+// filteredOutParent should have showChildren, SelectChildren, completeSelected, deleteSelected buttons.
+//
+// selectAll does not toggle properly when todos are under a filteredOutParent
+//
+// Toggling a filter on (e.g. Active --> √ Active) does not render newly displayed todos in select mode
 
 tests({
 	"The app should have a 'todos' array for storing todos.": function() {
@@ -2054,6 +2060,7 @@ tests({
 		eq(childLi1ShowChildrenButton.disabled, true);
 },
 	"If showChildren button text is 'Show children', css should preserve spacing above the following entry if it exists.": function() {
+		fail();
 		manual();
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -5451,6 +5458,15 @@ tests({
 		
 		eq(todos.length, 1);
 		eq(todos[0].id, todo1.id);
+	},
+	"There should be a way to save the state of the Actions bar filter buttons to a given localStorage key.": function() {
+		fail();
+	},
+	"The app should save the state of the filter buttons to localStorage whenever they change.": function() {
+		fail();
+	},
+	"When the page is loaded, the app should retrieve the state of the filter buttons from localStorage.": function() {
+		fail();
 	},
 	"Section: more features": function() {
 	},
