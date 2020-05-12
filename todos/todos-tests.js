@@ -5760,7 +5760,7 @@ tests({
 		localStorage.removeItem('test-todos-2');
 	},
 	"The app should have a way to convert todo data from localStorage back to todo objects with methods": function() {
-		// Tests restoreTodosFromLocalStorage(dataArray)
+		// Tests restoreTodosFromLocalStorage(key)
 		localStorage.removeItem('test-todos');
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -5788,17 +5788,9 @@ tests({
 		eq(grandchild1.id, child1.children[0].id);
 		eq(todo2.id, todos[1].id);
 	},
-//	"If localStorage is not set up, the app should do so.": function() {
-//		todos = [];
-//		localStorage.removeItem('test-todos');
-//		eq(localStorage.getItem('test-todos'), null);
-//		startTestApp();
-//		neq(localStorage.getItem('test-todos'), null);
-//	},
 	"Changes to todos should be saved to localStorage.": function() {
 		localStorage.removeItem('test-todos');
 		todos = [];
-		storageKey = 'test-todos';
 		eq(localStorage.getItem('test-todos'), null);
 		startApp('test-todos');
 		addTodoButton.click();
@@ -5808,7 +5800,8 @@ tests({
 		eq(stored[0].id, todo1.id);
 	},
 	"To save storage space, the app should not save ephemeral properties of todos in storage.": function() {
-		// filteredIn and filteredOutParentOfFilteredIn can be excluded by using a referrer array argument with JSON.stringify
+		// filteredIn and filteredOutParentOfFilteredIn can be excluded by using a referrer array
+		// argument with JSON.stringify
 		future();
 	},
 	"On page load, saved todos should be retrieved from localStorage.": function() {
@@ -5823,14 +5816,14 @@ tests({
 		
 		todos = [];
 	
-		startApp('test-todos');				// location.reload() is unusable because it runs all the tests again, over and over...
+		startApp('test-todos');		// location.reload() is unusable because it runs all the tests again, over and over...
 		
 		eq(todos.length, 1);
 		eq(todos[0].id, todo1.id);
 	},
 	"There should be a way to save the state of the Actions bar filter buttons to a given localStorage key.": function() {
 		// Tests writeFiltersToStorage(key)
-		localStorage.removeItem('test-todos-filters');
+		localStorage.removeItem('test-todos-filters');		// filter key hardwired as storageKey + '-filters'
 
 		showActiveButton.textContent = 'Active';
 		showCompletedButton.textContent = '√ Completed';
@@ -5845,7 +5838,7 @@ tests({
 		eq(buttonText[2], '√ Deleted');
 	},
 	"The app should save the state of the filter buttons to localStorage whenever they change.": function() {
-		localStorage.removeItem('test-todos-filters');
+		localStorage.removeItem('test-todos-filters');		// filter key hardwired as storageKey + '-filters'
 
 		showActiveButton.textContent = 'Active';
 		showCompletedButton.textContent = '√ Completed';
@@ -5908,9 +5901,10 @@ tests({
 	"Section: On startup": function() {
 
 	},
-	"The app should have a startup function to load todos, if any, and set initial button values.": function() {
+	"The app should have a startup function to load todos, if any, and set filter button values.": function() {
 		todos = [];
 		localStorage.removeItem('test-todos');
+		localStorage.removeItem('test-todos-filters');
 
 		startApp('test-todos');
 
