@@ -25,6 +25,8 @@ function Todo(entry) {
 	this.selected = false;
 	this.selectMode = false;
 
+//	this.mode = "entry";							// modes are entry and selection
+
 	this.filteredIn = true;							// new todo is filtered in for display on creation 
 	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
 }
