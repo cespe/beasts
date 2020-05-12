@@ -277,8 +277,26 @@ function leaveSelectModeIfNoneSelected(todo) {
 
 // localStorage has a quirk: undefined can be a key.
 
-function writeFiltersToStorage() {
+// filter storage key is hard-wired to storageKey + '-filters'
+function writeFiltersToStorage(key) {
+	var filterKey = key + '-filters';
+	var buttonText = [showActiveButton.textContent, showCompletedButton.textContent, showDeletedButton.textContent];
+	localStorage.setItem(filterKey, JSON.stringify(buttonText)); 
+}
 
+// Restore filter button text or set to defaults
+function restoreFiltersFromLocalStorage(key) {
+	var filterKey = key + '-filters';
+	var buttonText = JSON.parse(localStorage.getItem(filterKey));
+	if (buttonText) {
+		showActiveButton.textContent = buttonText[0];
+		showCompletedButton.textContent = buttonText[1];
+		showDeletedButton.textContent = buttonText[2];
+	} else {
+		showActiveButton.textContent = '√ Active';
+		showCompletedButton.textContent = '√ Completed';
+		showDeletedButton.textContent = 'Deleted';
+	}
 }
 
 var storageKey = undefined;		// Key will be passed in by startApp(key)
@@ -1391,11 +1409,13 @@ function setUpEventListeners() {
 
 function startApp(key) {
 	storageKey = key;										// Tell the app where to store data
-	showActiveButton.textContent = '√ Active';
-	showCompletedButton.textContent = '√ Completed';
-	showDeletedButton.textContent = 'Deleted';
+
+//	showActiveButton.textContent = '√ Active';
+//	showCompletedButton.textContent = '√ Completed';
+//	showDeletedButton.textContent = 'Deleted';
 
 	restoreTodosFromLocalStorage(key);
+	restoreFiltersFromLocalStorage(key);
 	renderTodolist();
 }
 

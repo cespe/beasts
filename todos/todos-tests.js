@@ -5830,22 +5830,22 @@ tests({
 	},
 	"There should be a way to save the state of the Actions bar filter buttons to a given localStorage key.": function() {
 		// Tests writeFiltersToStorage(key)
-		localStorage.removeItem('test-filters');
+		localStorage.removeItem('test-todos-filters');
 
 		showActiveButton.textContent = 'Active';
 		showCompletedButton.textContent = '√ Completed';
 		showDeletedButton.textContent = '√ Deleted';
 		
-		writeFiltersToStorage('test-filters');
+		writeFiltersToStorage('test-todos');
 
-		var testSet = JSON.parse(localStorage.getItem('test-filters'));
+		var buttonText = JSON.parse(localStorage.getItem('test-todos-filters'));
 
-		eq(testSet.has('#active'), false);
-		eq(testSet.has('#completed'), true);
-		eq(testSet.has('#deleted'), true);
+		eq(buttonText[0], 'Active');
+		eq(buttonText[1], '√ Completed');
+		eq(buttonText[2], '√ Deleted');
 	},
 	"The app should save the state of the filter buttons to localStorage whenever they change.": function() {
-		localStorage.removeItem('test-filters');
+		localStorage.removeItem('test-todos-filters');
 
 		showActiveButton.textContent = 'Active';
 		showCompletedButton.textContent = '√ Completed';
@@ -5855,35 +5855,29 @@ tests({
 		showCompletedButton.click();
 		showDeletedButton.click();
 
-		writeFiltersToStorage('test-filters');
+		writeFiltersToStorage('test-todos');
 
-		var testSet = JSON.parse(localStorage.getItem('test-filters'));
+		var buttonText = JSON.parse(localStorage.getItem('test-todos-filters'));
 
-		eq(testSet.has('#active'), true);
-		eq(testSet.has('#completed'), false);
-		eq(testSet.has('#deleted'), false);
+		eq(buttonText[0], '√ Active');
+		eq(buttonText[1], 'Completed');
+		eq(buttonText[2], 'Deleted');
 	},
-	"When the page is loaded, the app should retrieve the state of the filter buttons from localStorage.": function() {
-		localStorage.removeItem('test-filters');
+	"When the page is loaded, the app should restore filter button text from localStorage.": function() {
+		localStorage.removeItem('test-todos-filters');		// filter key hardwired as storageKey + '-filters'
 		todos = [];
 
 		showActiveButton.textContent = 'Active';
 		showCompletedButton.textContent = '√ Completed';
 		showDeletedButton.textContent = '√ Deleted';
 		
-		writeFiltersToStorage('test-filters');
+		writeFiltersToStorage('test-todos');
 
 		startApp('test-todos');
 
 		eq(showActiveButton.textContent, 'Active');
 		eq(showCompletedButton.textContent, '√ Completed');
 		eq(showDeletedButton.textContent, '√ Deleted');
-		
-		var testSet = generateFilterSet();
-
-		eq(testSet.has('#active'), false);
-		eq(testSet.has('#completed'), true);
-		eq(testSet.has('#deleted'), true);
 	},
 	"Section: more features": function() {
 	},
