@@ -901,8 +901,8 @@ tests({
 		eq(child1.filteredIn, true);
 		eq(todo1LiEntry.classList.contains('parent-placeholder'), true);
 	},
-	"the app should set re-set markFilteredOutParentOfFilteredIn to baseline value (false) before each re-render.": function() {
-		// Fixes a bug where the property remained true when re-rendered
+	"the app should set filteredOutParentOfFilteredIn to baseline value (false) before each re-render.": function() {
+		// Identifies a bug where the property remained true when re-rendered
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -4020,7 +4020,21 @@ tests({
 
 		eq(selectAllButton.disabled, true);
 	},
+	"If all todos are in select mode, selectAll button text should be 'Unselect all'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		todo1.markSelectMode(true);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		todo2.markSelectMode(true);
+		insertTodo(todos, todo2);
+
+		startTestApp();
+
+		eq(selectAllButton.textContent, 'Unselect all');
+	},
 	"If there are any top-level todos in select mode, selectAll button text should be 'Unselect all'.": function() {
+		remove();
 		// Top-level todos in select mode are the only indicator that selectAll was used to select todos.
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -4034,6 +4048,7 @@ tests({
 		eq(selectAllButton.textContent, 'Unselect all');
 	},
 	"If all top-level todos are filtered-out parents, use the next layer of todos when setting 'Unselect all'.": function() {
+		// Identifies a bug whereby selectAllButton reads 'Select all' even when all todos displayed are selected.
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');

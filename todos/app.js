@@ -127,8 +127,9 @@ function applyDisplayTags(filterSet) {				// TODO Combine these into one functio
 				markFilteredInTodos(todo.children);
 			}
 			todo.markFilteredIn(filterSet);
-			if (todo.selected) {
+			if (!todo.filteredIn && todo.selected) {
 				todo.filteredIn = true;
+				// TODO disable filter button that would otherwise hide the todo to indicate visually what happened
 			}
 		}
 	}
@@ -833,6 +834,7 @@ function updateActionsBar() {
 	// Get conditionals for updating buttons
 	var filteredInTodos = anyFilteredInTodos(todos);
 	var filteredInRootTodosInSelectMode = anyFilteredInRootTodosInSelectMode(todos);
+	var allFilteredInInSelectMode = allFilteredInTodosInSelectMode(todos);
 	var allSelectedFilteredInCompleted = allSelectedFilteredInTodosCompleted(todos);
 	var allSelectedFilteredInDeleted = allSelectedFilteredInTodosDeleted(todos);
 	var selectedFilteredInTodosDeleted = anySelectedFilteredInTodosDeleted(todos);
@@ -849,7 +851,8 @@ function updateActionsBar() {
 		purgeSelectedDeletedButton.disabled = true;
 	}
 
-	if (filteredInRootTodosInSelectMode) {
+//	if (filteredInRootTodosInSelectMode) {
+	if (allFilteredInInSelectMode) {
 		selectAllButton.textContent = 'Unselect all';
 		completeSelectedButton.disabled = false;
 		deleteSelectedButton.disabled = false;
@@ -900,30 +903,6 @@ function createParentPlaceholderLi(todo) {
 	}
 	todoLi.appendChild(entry);
 
-/*	if (todo.children.length > 0) {		
-
-		var selectModeRoot = !todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
-		var rootAncestor = !todo.selectMode && !allFilteredInTodosInSelectMode(todo.children) && anyFilteredInTodosInSelectMode(todo.children);
-		var rootDescendant = todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
-		// potentialRoot = !todo.selectMode && !anyFilteredInTodosInSelectMode(todo.children);
-
-		var anyInSelectMode = anyFilteredInTodosInSelectMode(todo.children);
-
-		var showChildrenButton = document.createElement('button');
-		showChildrenButton.name = 'showChildren';
-		showChildrenButton.type = 'button';
-
-		if (todo.collapsed) {
-			showChildrenButton.textContent = 'Show children';
-		} else {
-			showChildrenButton.textContent = 'Hide children';
-		}
-		if (selectModeRoot || rootAncestor) {
-			showChildrenButton.disabled = true;
-		}
-		todoLi.appendChild(showChildrenButton);
-		
-	} */
 	return todoLi;
 }
 
