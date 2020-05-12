@@ -3990,6 +3990,18 @@ tests({
 	},
 	"Section: Actions bar -- Selection": function() {
 	},
+	"The app should stop select mode for todos under a select-mode-root if they all become unselected.": function() {
+		fail();
+	}, 
+	"Otherwise, the app should toggle selectChildren button text for the clicked button and any nested below.": function() {
+		fail();
+	},
+	"And the app should not toggle selectChildren buttons in the tree above the one clicked.": function() {
+		fail();
+	},
+	"The app should not toggle 'Unselect all' unless it is clicked or all todos become unselected and select mode stops.": function() {
+		fail();
+	},
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.name, 'selectAll');
