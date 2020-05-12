@@ -2737,6 +2737,15 @@ tests({
 		eq(child2.selected, false);
 		eq(child2.selectMode, false);
 	},
+	"The app should stop select mode for todos under a select-mode-root if they all become unselected.": function() {
+		fail();
+	}, 
+	"Otherwise, the app should toggle selectChildren button text for the clicked button and any nested below.": function() {
+		fail();
+	},
+	"And the app should not toggle selectChildren buttons in the tree above the one clicked.": function() {
+		fail();
+	},
 	"If all todos under a select-mode-root todo become unselected, all should set selectMode false.": function() {
 		// Case: clicked 'Unselect' button unselects last todo under a select-mode root
 		todos = [];
@@ -3990,18 +3999,6 @@ tests({
 	},
 	"Section: Actions bar -- Selection": function() {
 	},
-	"The app should stop select mode for todos under a select-mode-root if they all become unselected.": function() {
-		fail();
-	}, 
-	"Otherwise, the app should toggle selectChildren button text for the clicked button and any nested below.": function() {
-		fail();
-	},
-	"And the app should not toggle selectChildren buttons in the tree above the one clicked.": function() {
-		fail();
-	},
-	"The app should not toggle 'Unselect all' unless it is clicked or all todos become unselected and select mode stops.": function() {
-		fail();
-	},
 	"The header actions bar should have a 'selectAll' button to select all displayed todos.": function() {
 		eq(selectAllButton.nodeName, 'BUTTON');
 		eq(selectAllButton.name, 'selectAll');
@@ -4036,6 +4033,41 @@ tests({
 
 		eq(selectAllButton.textContent, 'Unselect all');
 	},
+	"If all top-level todos are filtered-out parents, use the next layer of todos when setting 'Unselect all'.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		child2 = new Todo('Child 2');
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+
+		startTestApp();
+
+		eq(showDeletedButton.textContent, 'Deleted');
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+
+		todoLi1SelectChildrenButton.click();
+
+		eq(selectAllButton.textContent, 'Select all');
+
+		var todoLi1 = todolist.children[0].children[0];
+		var todoLi1DeleteButton = todoLi1.children.namedItem('delete');
+
+		todoLi1DeleteButton.click();
+
+		eq(todo1.filteredOutParentOfFilteredIn, true);
+		eq(selectAllButton.textContent, 'Unselect all');
+
+		showDeletedButton.click();
+
+		eq(todo1.filteredOutParentOfFilteredIn, false);
+		eq(selectAllButton.textContent, 'Select all');
+	}, 
 	"Otherwise selectAll button text should be 'Select all'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
