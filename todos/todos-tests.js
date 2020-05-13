@@ -2738,13 +2738,16 @@ tests({
 		eq(child2.selectMode, false);
 	},
 	"The app should stop select mode for todos under a select-mode-root if they all become unselected.": function() {
-		fail();
+		// Not seeing the bad behavior that led me to write this test...
+		remove();
 	}, 
 	"Otherwise, the app should toggle selectChildren button text for the clicked button and any nested below.": function() {
-		fail();
+		// Not seeing the bad behavior that led me to write this test...
+		remove();
 	},
 	"And the app should not toggle selectChildren buttons in the tree above the one clicked.": function() {
-		fail();
+		// Not seeing the bad behavior that led me to write this test...
+		remove();
 	},
 	"If all todos under a select-mode-root todo become unselected, all should set selectMode false.": function() {
 		// Case: clicked 'Unselect' button unselects last todo under a select-mode root
@@ -5481,6 +5484,49 @@ tests({
 		eq(todoLi2.id, todo2.id);
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi, undefined);
+	},
+	"Newly displayed todos should be put in select mode if any siblings are in select mode.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		child1.markDeleted(true);
+		todo1.addChild(child1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+
+		debugger;
+		startTestApp();
+
+		selectAllButton.click();
+
+		eq(todo1.selectMode, true);
+
+		showDeletedButton.click();
+
+		eq(child1.selectMode, true);
+		eq(selectAllButton.textContent, 'Unselect all');
+	},
+	"Newly displayed todos should be put in select mode if any ancestors are in select mode.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		todo1.addChild(child1);
+		todo2 = new Todo('Item 2');
+		todo2.markDeleted(true);
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+
+		startTestApp();
+
+		selectAllButton.click();
+
+		eq(todo1.selectMode, true);
+
+		showDeletedButton.click();
+
+		eq(todo2.selectMode, true);
+		eq(selectAllButton.textContent, 'Unselect all');
 	},
 	"Section: Actions bar -- other buttons": function() {
 
