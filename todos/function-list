@@ -28,14 +28,14 @@ Functions and where they are used
 		renderTodolist				// and markFilteredOutParentsOfFilteredInTodos(todosArray)
 									// and markForDisplayInSelectMode(todosArray)
 
-	NOT USED markTodosSelected(array, bool)
+	DELETED markTodosSelected(array, bool)
 	markTodosSelectMode(array, bool)
 		leaveSelectModeIfNoneSelected(todo)
 	markFilteredInTodosSelected(array, bool)
 		todoClickHandler selectChildren
 		actionsClickHandler selectAll
-	NOT USED markFilteredInTodosSelectMode(array, bool)
-	NOT USED markSelectedAndSelectModeForFilteredInTodos(array, bool)
+	DELETED markFilteredInTodosSelectMode(array, bool)
+	DELETED markSelectedAndSelectModeForFilteredInTodos(array, bool)
 	setSelectedTodosStage(array, stage)
 		todoClickHandler completeSelectedChildren
 		actionsClickHandler completeSelected
@@ -66,10 +66,10 @@ Functions and where they are used
 		createTodosUl
 		leaveSelectModeIfNoneSelected
 		todoClickHandler selectChildren
-	NOT USED anyUnselectedTodos(array)			// returns true if any todos, including nested todos, are unselected
+	DELETED anyUnselectedTodos(array)			// returns true if any todos, including nested todos, are unselected
 	anySelectedRootTodos(array)					// returns true if any todos at root level of array are selected
 		createTodosUl
-	NOT USED anyRootTodosInSelectMode(array)	// returns true if any todos at root level of array are in select mode
+	DELETED anyRootTodosInSelectMode(array)	// returns true if any todos at root level of array are in select mode
 	anyFilteredInRootTodosInSelectMode(array)	// returns true if any filtered-in todos at root level of array are in select mode
 		updateActionsBar
 	anyFilteredInTodos(array)					// returns true if any todos, including nested , are filtered in for display
@@ -83,7 +83,7 @@ Functions and where they are used
 		createTodoLi
 	anySelectedFilteredInTodos(array)			// returns true if any todos, including nested , are selected and filtered in 
 		createTodoLi
-	NOT USED anySelectedFilteredInTodosCompleted(array)	// returns true if any selected filtered-in todos, including nested, are completed 
+	DELETED anySelectedFilteredInTodosCompleted(array)	// returns true if any selected filtered-in todos, including nested, are completed 
 	anySelectedFilteredInTodosDeleted(array)	// returns true if any selected filtered-in todos, including nested, are deleted 
 		updateActionsBar
 		todoClickHandler completeSelectedChildren

@@ -162,17 +162,6 @@ function applyDisplayTags(filterSet) {				// TODO Combine these into one functio
 	markFilteredOutParentsOfFilteredInTodos(todos);
 }
 
-// Recursively mark todo.selected true or false, starting with given array
-function markTodosSelected(todosArray, bool) {
-	for (var i = 0; i < todosArray.length; i++) {
-		var todo = todosArray[i];
-		if (todo.children.length > 0) {
-			markTodosSelected(todo.children, bool);
-		}
-		todo.selected = bool;
-	}
-}
-
 // Recursively mark todo.selectMode true or false, starting with given array
 function markTodosSelectMode(todosArray, bool) {
 	for (var i = 0; i < todosArray.length; i++) {
@@ -195,38 +184,6 @@ function markFilteredInTodosSelected(todosArray, bool) {
 			todo.selected = bool;
 		} else {
 			todo.selected = false;				// excludes filtered-out todos
-		}
-	}
-}
-
-// Recursively mark todo.selectMode true or false for filtered-in todos, starting with given array
-function markFilteredInTodosSelectMode(todosArray, bool) {
-	for (var i = 0; i < todosArray.length; i++) {
-		var todo = todosArray[i];
-		if (todo.children.length > 0) {
-			markFilteredInTodosSelectMode(todo.children, bool);
-		}
-		if (todo.filteredIn) {
-			todo.selectMode = bool;
-		} else {
-			todo.selectMode = false;		// excludes filtered-out todos
-		}
-	}
-}
-
-// Recursively mark todo.selected and todo.selectMode true or false for filtered-in todos, starting with given array
-function markSelectedAndSelectModeForFilteredInTodos(todosArray, bool) {
-	for (var i = 0; i < todosArray.length; i++) {
-		var todo = todosArray[i];
-		if (todo.children.length > 0) {
-			markSelectedAndSelectModeForFilteredInTodos(todo.children, bool);
-		}
-		if (todo.filteredIn) {
-			todo.selected = bool;
-			todo.selectMode = bool;
-		} else {
-			todo.selected = false;
-			todo.selectMode = false;		// excludes filtered-out todos
 		}
 	}
 }
@@ -507,39 +464,11 @@ function anySelectedTodos(array) {
 	return false;
 }
 
-// Return true if any todos, including nested todos, are unselected
-function anyUnselectedTodos(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (!todo.selected) {
-			return true;
-		}
-		if (todo.children.length > 0) {
-			var unselected = anyUnselectedTodos(todo.children);
-			if (unselected) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
 // Return true if any todos at root level of array are selected
 function anySelectedRootTodos(array) {
 	for (var i = 0; i < array.length; i++) {
 		var todo = array[i];
 		if (todo.selected) {
-			return true;
-		}
-	}
-	return false;
-}
-
-// Return true if any todos at root level of array are in select mode
-function anyRootTodosInSelectMode(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.selectMode) {
 			return true;
 		}
 	}
@@ -633,22 +562,6 @@ function anySelectedFilteredInTodos(array) {
 		}
 	}
 	return false;
-}
-
-// Return true if any filtered-in todos, including nested todos, are both completed and selected
-function anySelectedFilteredInTodosCompleted(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.stage === 'completed' && todo.selected && todo.filteredIn) {
-			return true;
-		}
-		if (todo.children.length > 0) {
-			var todoSelectedCompleted = anySelectedFilteredInCompletedTodos(todo.children);
-			if (todoSelectedCompleted) {
-				return true;
-			} 
-		}
-	}
 }
 
 // Return true if any filtered-in todos, including nested todos, are both deleted and selected
@@ -853,15 +766,11 @@ function updateActionsBar() {
 		selectAllButton.disabled = false;
 	} else {
 		selectAllButton.disabled = true;
-//		selectAllButton.textContent = 'Select all';
 		completeSelectedButton.disabled = true;
-//		completeSelectedButton.textContent = 'Complete selected';
 		deleteSelectedButton.disabled = true;
-//		deleteSelectedButton.textContent = 'Delete selected';
 		purgeSelectedDeletedButton.disabled = true;
 	}
 
-//	if (filteredInRootTodosInSelectMode) {
 	if (allFilteredInInSelectMode) {
 		selectAllButton.textContent = 'Unselect all';
 		completeSelectedButton.disabled = false;
@@ -1002,21 +911,19 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 	}
 	todoLi.appendChild(entry);
 	
-	// Some terminology to guide decisions on how to create selection-related buttons
-	//
-	//    A select-mode-root todo is the one on which a controlling 'Select children' button was clicked.
-	//       todo.selectMode === false && allFilteredInTodosInSelectMode(todo.children) === true
-	//
-	//    A select-mode-root-ancestor is higher in the tree.
-	//       todo.selectMode === false && allFilteredInTodosInSelectMode(todo.children) === false &&
-	//       anyFilteredInTodosInSelectMode(todo.children === true
-	//
-	//    A select-mode-root-descendant is lower in the tree.
-	//       todo.selectMode === true && allFilteredInTodosInSelectMode(todo.children) === true
-	//
-	//    A potential-select-mode-root todo is a candidate to receive a controlling 'Select children' click.
-	//       todo.selectMode === false && anyFilteredInTodosInSelectMode(todo.children) === false
+/*	 Some terminology to guide decisions on how to create selection-related buttons
 	
+	    A select-mode-root todo is the one on which a controlling 'Select children' button was clicked.
+	       todo.selectMode === false && allFilteredInTodosInSelectMode(todo.children) === true
+	
+	    A select-mode-root-ancestor is higher in the tree.
+	       todo.selectMode === false && allFilteredInTodosInSelectMode(todo.children) === false &&
+	       anyFilteredInTodosInSelectMode(todo.children === true
+	
+	    A select-mode-root-descendant is lower in the tree.
+	       todo.selectMode === true && allFilteredInTodosInSelectMode(todo.children) === true
+*/	
+
 	// Only create last four buttons if there are children
 	
 	if (todo.children.length > 0 && anyFilteredInTodos(todo.children)) {		
@@ -1024,7 +931,6 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 		var selectModeRoot = !todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
 		var rootAncestor = !todo.selectMode && !allFilteredInTodosInSelectMode(todo.children) && anyFilteredInTodosInSelectMode(todo.children);
 		var rootDescendant = todo.selectMode && allFilteredInTodosInSelectMode(todo.children);
-		// potentialRoot = !todo.selectMode && !anyFilteredInTodosInSelectMode(todo.children);
 
 		var anyInSelectMode = anyFilteredInTodosInSelectMode(todo.children);
 
@@ -1074,6 +980,7 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 			todoLi.appendChild(selectChildrenButton);
 
 			// Only create last two buttons for a select-mode-root todoLi with todos selected
+
 			if (selectModeRoot && anySelected) {
 				var completeSelectedChildrenButton = document.createElement('button');
 				completeSelectedChildrenButton.name = 'completeSelectedChildren';
@@ -1223,10 +1130,11 @@ function inputHandler(event) {
 		var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
 		var todoLiEntry = todoLi.querySelector('p');
 		var todo = findTodo(todos, todoLi.id);
-		// set up variables for undoEdit
-//		entryJustEdited = todoLiEntry;
-//		todoJustEdited = todo;
+		
+		// Set global undoEdit variables created earlier
+
 		originalEntry = todo.entry;
+		
 		if (oldUndoEditButton) {
 			oldUndoEditButton.disabled = true;	// only want one undoEditButton at a time
 		}
@@ -1364,11 +1272,9 @@ function actionsClickHandler(event) {
 		renderTodolist();
 	} else if (event.target.name === "selectAll") {
 		if (selectAllButton.textContent === 'Select all') {
-//			markSelectedAndSelectModeForFilteredInTodos(todos, true);	
 			markFilteredInTodosSelected(todos, true);
 			markTodosSelectMode(todos, true);
 		} else {
-//			markSelectedAndSelectModeForFilteredInTodos(todos, false);	
 			markFilteredInTodosSelected(todos, false);
 			markTodosSelectMode(todos, false);
 		}
@@ -1410,10 +1316,6 @@ function setUpEventListeners() {
 
 function startApp(key) {
 	storageKey = key;										// Tell the app where to store data
-
-//	showActiveButton.textContent = '√ Active';
-//	showCompletedButton.textContent = '√ Completed';
-//	showDeletedButton.textContent = 'Deleted';
 
 	restoreTodosFromLocalStorage(key);
 	restoreFiltersFromLocalStorage(key);
