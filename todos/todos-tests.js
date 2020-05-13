@@ -2931,7 +2931,86 @@ tests({
 		eq(grandchild1.selectMode, true);
 		eq(grandchild2.selectMode, true);
 	},
-	"The selectChildren button should operate on displayed (filtered-in) child todos only.": function() {
+	"The selectChildren button should select/unselect displayed (filtered-in) child todos only.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Item 1 child 1');
+		todo1.addChild(child1);
+		child2 = new Todo('Item 1 child 2');
+		todo1.addChild(child2);
+		child3 = new Todo('Item 1 child 3');
+		child3.markDeleted(true);
+		todo1.addChild(child3);
+		insertTodo(todos, todo1);
+		
+		startTestApp();
+
+		todoLi1 = todolist.children[0].children[0];
+		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		var todoLi1Ul = todoLi1.querySelector('ul');
+		var child1Li = todoLi1Ul.children[0];
+		var child2Li = todoLi1.querySelector('ul').children[1];
+		var child3Li = todoLi1.querySelector('ul').children[2];
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(child3.selected, false);
+		eq(child1.filteredIn, true);
+		eq(child2.filteredIn, true);
+		eq(child3.filteredIn, false);
+		eq(todoLi1Ul.children.length, 2);
+		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child2Li, todoLi1Ul.children[1]);
+		eq(child3Li, undefined);
+
+		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		child1Li = todoLi1Ul.children[0];
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child3Li = todoLi1.querySelector('ul').children[2];
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Unselect children');
+
+		eq(child1.selected, true);
+		eq(child2.selected, true);
+		eq(child3.selected, false);
+		eq(child1.filteredIn, true);
+		eq(child2.filteredIn, true);
+		eq(child3.filteredIn, false);
+		eq(todoLi1Ul.children.length, 2);
+		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child2Li, todoLi1Ul.children[1]);
+		eq(child3Li, undefined);
+
+		todoLi1SelectChildrenButton.click();
+
+		todoLi1 = todolist.children[0].children[0];
+		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
+		todoLi1Ul = todoLi1.querySelector('ul');
+		child1Li = todoLi1Ul.children[0];
+		child2Li = todoLi1.querySelector('ul').children[1];
+		child3Li = todoLi1.querySelector('ul').children[2];
+
+		eq(todoLi1SelectChildrenButton.textContent, 'Select children');
+
+		eq(child1.selected, false);
+		eq(child2.selected, false);
+		eq(child3.selected, false);
+		eq(child1.filteredIn, true);
+		eq(child2.filteredIn, true);
+		eq(child3.filteredIn, false);
+		eq(todoLi1Ul.children.length, 2);
+		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child2Li, todoLi1Ul.children[1]);
+		eq(child3Li, undefined);
+	}, 
+	"The selectChildren button should set/unset select mode on all child todos.": function() {
+		// So that newly filtered-in todos are displayed in select mode when they should be
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -5486,6 +5565,7 @@ tests({
 		eq(grandchildLi, undefined);
 	},
 	"Newly displayed todos should be put in select mode if any siblings are in select mode.": function() {
+		// Fixed by putting all todos in select mode on selectChildren or selectAll click rather than just filtered-in todos.
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -5495,7 +5575,6 @@ tests({
 		insertTodo(todos, todo1);
 		insertTodo(todos, todo2);
 
-		debugger;
 		startTestApp();
 
 		selectAllButton.click();

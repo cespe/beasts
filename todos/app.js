@@ -25,8 +25,6 @@ function Todo(entry) {
 	this.selected = false;
 	this.selectMode = false;
 
-//	this.mode = "entry";							// modes are entry and selection
-
 	this.filteredIn = true;							// new todo is filtered in for display on creation 
 	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
 }
@@ -118,7 +116,7 @@ function deleteTodo(array, todo) {
 	array.splice(position, 1);
 }
 
-function applyDisplayTags(filterSet) {				// TODO Combine these into one function to avoid two recursions
+function applyDisplayTags(filterSet) {				// TODO Combine these into one function to avoid extra recursions
 
 	function markFilteredInTodos(todosArray) {
 		for (var i = 0; i < todosArray.length; i++) {
@@ -128,8 +126,8 @@ function applyDisplayTags(filterSet) {				// TODO Combine these into one functio
 			}
 			todo.markFilteredIn(filterSet);
 			if (!todo.filteredIn && todo.selected) {
-				todo.filteredIn = true;
-				// TODO disable filter button that would otherwise hide the todo to indicate visually what happened
+				todo.filteredIn = true;				// selected todos should remain on display even if a filter
+													// says otherwise
 			}
 		}
 	}
@@ -142,10 +140,22 @@ function applyDisplayTags(filterSet) {				// TODO Combine these into one functio
 			}
 			todo.markFilteredOutParentOfFilteredIn();
 			if (todo.filteredOutParentOfFilteredIn) {
-				todo.collapsed = false;			// ensure that filtered-in children are visible
+				todo.collapsed = false;				// ensure that filtered-in children are visible
 			}
 		}
 
+	}
+	// Set newly displayed todos to select mode if siblings are in select mode
+	// Necessary because todos that are filtered out during selection events are not put in select mode
+	function markForDisplayInSelectMode(todosArray) {
+		if (anyFilteredInTodosInSelectMode(todosArray)) {
+			for (var i = 0; i < todosArray.length; i++) {
+				var todo = todosArray[i];
+				if (todo.filteredIn) {
+					todo.markSelectMode(true);
+				}
+			}
+		}
 	}
 
 	markFilteredInTodos(todos);
@@ -587,7 +597,7 @@ function allFilteredInTodosInSelectMode(array) {
 	function runTest(array) {
 		for (var i = 0; i < array.length; i++) {
 			var todo = array[i];
-			if (todo.selectMode) {
+			if (todo.selectMode && todo.filteredIn) {
 				selectModeCount++;
 			}
 			if (todo.filteredIn) {
@@ -1276,10 +1286,10 @@ function todoClickHandler(event) {
 	} else if (event.target.name === "selectChildren") {
 		if (anySelectedTodos(todo.children)) {
 			// 'Unselect children' clicked
-			markFilteredInTodosSelected(todo.children, false);	// TODO figure out marking filteredIn vs all
+			markFilteredInTodosSelected(todo.children, false);
 			if (!todo.selectMode) {
 				// Root button clicked, remove selectMode flag so normal buttons are restored
-				markFilteredInTodosSelectMode(todo.children, false);
+				markTodosSelectMode(todo.children, false);
 			} else /* root-descendant button clicked */ {
 				leaveSelectModeIfNoneSelected(todo);
 			}
@@ -1288,7 +1298,7 @@ function todoClickHandler(event) {
 			markFilteredInTodosSelected(todo.children, true);
 			if (!todo.selectMode) {
 				// Root button clicked, set selectMode flag so normal buttons are disabled 
-				markFilteredInTodosSelectMode(todo.children, true);
+				markTodosSelectMode(todo.children, true);
 			}
 		}
 		writeTodosToStorage(storageKey);
@@ -1346,9 +1356,13 @@ function actionsClickHandler(event) {
 		renderTodolist();
 	} else if (event.target.name === "selectAll") {
 		if (selectAllButton.textContent === 'Select all') {
-			markSelectedAndSelectModeForFilteredInTodos(todos, true);	
+//			markSelectedAndSelectModeForFilteredInTodos(todos, true);	
+			markFilteredInTodosSelected(todos, true);
+			markTodosSelectMode(todos, true);
 		} else {
-			markSelectedAndSelectModeForFilteredInTodos(todos, false);	
+//			markSelectedAndSelectModeForFilteredInTodos(todos, false);	
+			markFilteredInTodosSelected(todos, false);
+			markTodosSelectMode(todos, false);
 		}
 		writeTodosToStorage(storageKey);
 		renderTodolist();
