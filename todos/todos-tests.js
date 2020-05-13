@@ -6048,6 +6048,9 @@ tests({
 	"There should be a 'canceled' stage to complement 'active' and 'completed'.": function() {
 		future();
 	},
+	"There should be a way to back up/restore todos to/from a file.": function() {
+		future();
+	},
 	"Todos in local storage should be synchronized with remote storage.": function() {
 		future();
 	},
