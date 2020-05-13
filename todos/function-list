@@ -1,0 +1,143 @@
+Functions and where they are used
+
+
+	Data manipulation
+
+	todos							// global array holding todos
+	todoStages						// global set of supported stages
+
+	constructor function Todo with methods
+	Todo(entry)						// constructor function
+  	 .changeId()
+	 .update(changedEntry)
+	 .markSelected(bool)
+	 .markSelectMode(bool)
+	 .markDeleted(bool)
+	 .setStage(stage)				// active, completed, canceled
+	 .addChild(childTodo)
+	 .markCollapsed(bool)
+	 .markFilteredIn(filterSet)
+	 .markFilteredOutParentOfFilteredIn()
+
+	insertTodo(array, todoToInsert, todoBeforeInsertionPoint)
+
+	deleteTodo(array, todo)
+		purgeSelectedDeletedTodos
+
+	applyDisplayTags(filterSet)		// runs internal functions markFilteredInTodos(todosArray)
+		renderTodolist				// and markFilteredOutParentsOfFilteredInTodos(todosArray)
+									// and markForDisplayInSelectMode(todosArray)
+
+	NOT USED markTodosSelected(array, bool)
+	markTodosSelectMode(array, bool)
+		leaveSelectModeIfNoneSelected(todo)
+	markFilteredInTodosSelected(array, bool)
+		todoClickHandler selectChildren
+		actionsClickHandler selectAll
+	NOT USED markFilteredInTodosSelectMode(array, bool)
+	NOT USED markSelectedAndSelectModeForFilteredInTodos(array, bool)
+	setSelectedTodosStage(array, stage)
+		todoClickHandler completeSelectedChildren
+		actionsClickHandler completeSelected
+	markSelectedTodosDeleted(array, bool)
+		todoClickHandler deleteSelectedChildren
+		actionsClickHandler deleteSelected
+	purgeSelectedDeletedTodos(array)
+		actionsClickHandler purgeSelectedDeleted
+	leaveSelectModeIfNoneSelected(todo)
+		todoClickHandler select
+		todoClickHandler selectChildren
+
+	Data selection
+
+	findTodo(array, id)							// returns todo with given id
+		keyUpHandler
+		inputHandler
+		editHandler
+		todoClickHandler
+	findArray(array, id)						// returns array (either todos or a todo.children) holding the todo with the given id
+		keyUpHandler
+		todoClickHandler
+	findParent(childTodo)						// returns parent of given child or undefined if no parent
+		findSelectModeRoot
+	findSelectModeRoot(todo)					// returns select-mode root of todo or undefined
+		leaveSelectModeIfNoneSelected
+	anySelectedTodos(array)						// returns true if any todos, including nested todos, are selected
+		createTodosUl
+		leaveSelectModeIfNoneSelected
+		todoClickHandler selectChildren
+	NOT USED anyUnselectedTodos(array)			// returns true if any todos, including nested todos, are unselected
+	anySelectedRootTodos(array)					// returns true if any todos at root level of array are selected
+		createTodosUl
+	NOT USED anyRootTodosInSelectMode(array)	// returns true if any todos at root level of array are in select mode
+	anyFilteredInRootTodosInSelectMode(array)	// returns true if any filtered-in todos at root level of array are in select mode
+		updateActionsBar
+	anyFilteredInTodos(array)					// returns true if any todos, including nested , are filtered in for display
+		updateActionsBar
+		createTodoLi
+	anyFilteredInTodosInSelectMode(array)		// returns true if any todos, including nested todos, are in select mode
+		markForDisplayInSelectMode
+		createTodoLi
+	allFilteredInTodosInSelectMode(array)		// returns true if all todos, including nested todos, are in select mode
+		updateActionsBar
+		createTodoLi
+	anySelectedFilteredInTodos(array)			// returns true if any todos, including nested , are selected and filtered in 
+		createTodoLi
+	NOT USED anySelectedFilteredInTodosCompleted(array)	// returns true if any selected filtered-in todos, including nested, are completed 
+	anySelectedFilteredInTodosDeleted(array)	// returns true if any selected filtered-in todos, including nested, are deleted 
+		updateActionsBar
+		todoClickHandler completeSelectedChildren
+	allSelectedTodosCompleted(array)			// returns true if all selected todos, including nested todos, are completed 
+		createTodoLi
+	allSelectedFilteredInTodosCompleted(array)	// returns true if all filtered-in selected todos, including nested, are completed 
+		updateActionsBar
+	allSelectedTodosDeleted(array)				// returns true if all selected todos, including nested todos, are deleted 
+		createTodoLi
+		todoClickHandler deleteSelectedChildren
+	allSelectedFilteredInTodosDeleted(array)	// returns true if all filtered-in todos, including nested, are selected
+		updateActionsBar
+
+	DOM manipulation
+
+	generateFilterSet()					// returns a set of filters to control display
+		renderTodoList
+
+	renderTodolist()
+		all event handlers
+		insertNewTodoLi
+		appendNewChildTodoLi
+
+	createTodosUl(todosArray, filter)	// returns todosUl
+		renderTodolist
+
+	insertNewTodoLi(todoArray, todo)	// puts focus on the entry field of the new todoLi
+		keyUpHandler
+		todoClickHandler event.target addSibling
+		actionsClickHandler event.target addTodo
+
+	appendNewChildTodoLi(todo)			// like insertNewTodoLi but in a given todoLi's UL
+		keyUpHandler
+		todoClickHandler event.target addChild
+
+	Event handling
+
+	keyDownHandler(event)
+	keyUpHandler(event)
+	inputHandler(event)
+	editHandler(event)
+
+	updateActionsBar()
+		renderTodolist
+
+	createParentPlaceholderLi(todo)		// returns li for filtered-out parent of filtered-in descendants
+		createTodosUl
+
+	createTodoLi(todo)					// returns todoLi
+		createTodosUl
+	todoClickHandler(event)
+	actionsClickHandler(event)
+	setUpEventListeners()
+	startApp()
+
+setUpEventListeners()
+
