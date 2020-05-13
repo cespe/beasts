@@ -1996,23 +1996,6 @@ tests({
 		eq(todoLi1ShowChildrenButton.nodeName, 'BUTTON');
 		eq(todoLi1ShowChildrenButton.name, 'showChildren');
 	},
-	"Each parent-placeholder Li with children should have a showChildren button to expand/collapse nested todos.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markDeleted(true);
-		child1 = new Todo('Child 1');
-		todo1.addChild(child1);
-		insertTodo(todos, todo1);
-		
-		startTestApp();
-
-		placeholderLi1 = todolist.children[0].children[0];
-		var placeholderLi1ShowChildrenButton = placeholderLi1.children.namedItem('showChildren');
-
-		eq(placeholderLi1ShowChildrenButton.nodeName, 'BUTTON');
-		eq(placeholderLi1ShowChildrenButton.name, 'showChildren');
-	},
 	"If a todo has no children, todoLi should be created without a showChildren button.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2055,27 +2038,6 @@ tests({
 		eq(todo1.collapsed, true);
 		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
 	},
-	"If todo is a filtered-out parent and todo.collapsed true, placeholderLi showChildren button text should be 'Show children'.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markCollapsed(true);
-		todo1.markDeleted(true);
-		child1 = new Todo('Item 1 child 1');
-		todo1.addChild(child1);
-		insertTodo(todos, todo1);
-
-		startTestApp();
-
-		todosUl = todolist.children[0];
-		todoLi1 = todosUl.children[0];
-		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
-
-		eq(todo1.collapsed, true);
-		eq(todo1.filteredOutParentOfFilteredIn, true);
-		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
-	},
-
 	"If a todo has children and todo.collapsed is false, todoLi should be created with showChildren button text 'Hide children'.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -2090,25 +2052,6 @@ tests({
 		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 
 		eq(todo1.collapsed, false);
-		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
-	},
-	"If todo is filtered-out parent and todo.collapsed false, placeholderLi showChildren button text should be 'Hide children'.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markDeleted(true);
-		child1 = new Todo('Item 1 child 1');
-		todo1.addChild(child1);
-		insertTodo(todos, todo1);
-
-		startTestApp();
-
-		todosUl = todolist.children[0];
-		todoLi1 = todosUl.children[0];
-		todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
-
-		eq(todo1.collapsed, false);
-		eq(todo1.filteredOutParentOfFilteredIn, true);
 		eq(todoLi1ShowChildrenButton.textContent, 'Hide children');
 	},
 	"If a todo has any filtered-in descendants in select mode, showChildren button should be disabled.": function() {
@@ -2141,34 +2084,6 @@ tests({
 		eq(todoLi1ShowChildrenButton.disabled, true);
 		eq(childLi1ShowChildrenButton.disabled, true);
 	},
-	"If filtered-out parent todo has any filtered-in descendants in select mode, showChildren button should be disabled.": function() {
-		remove();
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markDeleted(true);
-		child1 = new Todo('Child 1');
-		child1.markDeleted(true);
-		grandchild1 = new Todo('Grandchild 1');
-		grandchild1.markSelected(true);
-		grandchild1.markSelectMode(true);
-		child1.addChild(grandchild1);
-		todo1.addChild(child1);
-		insertTodo(todos, todo1);
-
-		startTestApp();
-
-		todoLi1 = todolist.children[0].children[0];
-		todoLi1Ul = todoLi1.querySelector('ul');
-		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
-		childLi1 = todoLi1Ul.children[0];
-		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
-
-		eq(todo1.filteredOutParentOfFilteredIn, true);
-		eq(child1.filteredOutParentOfFilteredIn, true);
-		eq(todoLi1ShowChildrenButton.disabled, true);
-		eq(childLi1ShowChildrenButton.disabled, true);
-	},
-
 	"If showChildren button text is 'Show children', app should preserve spacing above the following entry.": function() {
 		// TODO there is probably a better way than just adding an empty <p> element
 		todos = [];
@@ -2735,18 +2650,6 @@ tests({
 		eq(child2.selectMode, false);
 		eq(child2.selected, false);
 		eq(child2.selectMode, false);
-	},
-	"The app should stop select mode for todos under a select-mode-root if they all become unselected.": function() {
-		// Not seeing the bad behavior that led me to write this test...
-		remove();
-	}, 
-	"Otherwise, the app should toggle selectChildren button text for the clicked button and any nested below.": function() {
-		// Not seeing the bad behavior that led me to write this test...
-		remove();
-	},
-	"And the app should not toggle selectChildren buttons in the tree above the one clicked.": function() {
-		// Not seeing the bad behavior that led me to write this test...
-		remove();
 	},
 	"If all todos under a select-mode-root todo become unselected, all should set selectMode false.": function() {
 		// Case: clicked 'Unselect' button unselects last todo under a select-mode root
@@ -4108,20 +4011,6 @@ tests({
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		todo2.markSelectMode(true);
-		insertTodo(todos, todo2);
-
-		startTestApp();
-
-		eq(selectAllButton.textContent, 'Unselect all');
-	},
-	"If there are any top-level todos in select mode, selectAll button text should be 'Unselect all'.": function() {
-		remove();
-		// Top-level todos in select mode are the only indicator that selectAll was used to select todos.
-		todos = [];
-		todo1 = new Todo('Item 1');
-		todo1.markSelectMode(true);
-		insertTodo(todos, todo1);
-		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
 
 		startTestApp();
