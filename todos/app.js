@@ -1032,8 +1032,10 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 		showChildrenButton.name = 'showChildren';
 		showChildrenButton.type = 'button';
 
+
 		if (todo.collapsed) {
 			showChildrenButton.textContent = 'Show children';
+			var showChildrenButtonLineBreak = document.createElement('br');
 		} else {
 			showChildrenButton.textContent = 'Hide children';
 		}
@@ -1041,6 +1043,12 @@ function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
 			showChildrenButton.disabled = true;
 		}
 		todoLi.appendChild(showChildrenButton);
+		
+		// Display needs an extra line after a 'Show children' button to look right
+		if (showChildrenButton.textContent === 'Show children') {
+			var extraLine = document.createElement('p');
+			todoLi.insertAdjacentElement('beforeend', extraLine);
+		}
 		
 		// Only create last three buttons if there are children showing
 

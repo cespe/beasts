@@ -2169,9 +2169,8 @@ tests({
 		eq(childLi1ShowChildrenButton.disabled, true);
 	},
 
-	"If showChildren button text is 'Show children', css should preserve spacing above the following entry if it exists.": function() {
-		fail();
-		manual();
+	"If showChildren button text is 'Show children', app should preserve spacing above the following entry.": function() {
+		// TODO there is probably a better way than just adding an empty <p> element
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -2197,8 +2196,8 @@ tests({
 		
 		eq(todoLi1Ul, null);			// childLi1 not created on re-render
 		eq(todoLi1ShowChildrenButton.textContent, 'Show children');
+		eq(todoLi1.lastElementChild.nodeName, 'P');
 
-		// css on button with text 'Show children' should add space below
 	},
 	"Clicking a showChildren button should toggle todo.collapsed and re-render todoLis, toggling button text.": function() {
 		todos = [];
