@@ -2,6 +2,9 @@
 
 Like todos-mvc but any todo can have nested todos. See Workflowy for inspiration.
 
+##These notes last maintained 11/4/19
+
+
 ##Workflowy notes
 No undelete! I deleted the inbox and now it is gone.
 Add a note by clicking the end of the one above where you want it and hitting Return
