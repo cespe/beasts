@@ -5,8 +5,30 @@
 }
 
 .faded-deleted {
-	/* styles deleted todos */
-	color: rgba(0, 0, 0, 0.4);
+	/* styles deleted todos faded red with dotted strikethrough */
+	color: rgba(255, 0, 0, 0.6);
+	text-decoration: line-through;
+	text-decoration-style: dotted;
+}
+
+.parent-placeholder {
+	/* styles filtered-out parents of todos that are not filtered out */
+	/* the removed parent todoLi shows the faded text of its entry but no buttons */
+	color: rgba(0, 0, 0, 0.15);
+}
+
+.highlighted {
+	/* styles selected todos */
+	background-color: rgba(211, 211, 211, 0.5);
+}
+
+li > ul {
+	margin-top: 1em;
+}
+
+button[disabled] {
+	/* styles disabled buttons to take up space but not be visible 
+	visibility: hidden; */
 }
 
 .dotted-deleted {
@@ -34,12 +56,6 @@
 	color: rgba(255, 0, 0, 1)
 }
 
-.parent-placeholder {
-	/* styles filtered-out parents of todos that are not filtered out */
-	/* the removed parent todoLi shows the faded text of its entry but no buttons */
-	color: rgba(0, 0, 0, 0.15);
-}
-
 .inactive {
 	/* styles inactive buttons */
 	display: none;
@@ -48,17 +64,4 @@
 .collapsed {
 	/* styles collapsed child todos */
 	display: none;
-}
-
-.highlighted {
-	/* styles selected todos */
-	background-color: rgba(211, 211, 211, 0.5);
-}
-li > ul {
-	margin-top: 1em;
-}
-
-button[disabled] {
-	/* styles disabled buttons to take up space but not be visible 
-	visibility: hidden; */
 }
