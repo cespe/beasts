@@ -5,10 +5,8 @@
 }
 
 .faded-deleted {
-	/* styles deleted todos faded red with dotted strikethrough */
+	/* styles deleted todos faded red */
 	color: rgba(255, 0, 0, 0.6);
-	text-decoration: line-through;
-	text-decoration-style: dotted;
 }
 
 .parent-placeholder {
