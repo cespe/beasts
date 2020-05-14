@@ -8,7 +8,7 @@ var todos = [];
 var todoStages = new Set();
 todoStages.add('active');
 todoStages.add('completed');
-todoStages.add('canceled');
+todoStages.add('canceled');							// TODO cancel not implemented
 
 function Todo(entry) {
 	this.id = Math.random().toString(36).slice(2);
@@ -20,7 +20,7 @@ function Todo(entry) {
 	this.children = [];
 	this.collapsed = false;
 	this.deleted = false;
-	this.stage = 'active';							// stages are active, completed, canceled
+	this.stage = 'active';							// stages are active, completed
 	
 	this.selected = false;
 	this.selectMode = false;
@@ -33,7 +33,7 @@ Todo.prototype.changeId = function() {
 	this.id = Math.random().toString(36).slice(2);
 }
 
-// TODO These setters are not used consistently in the code -- do I need them? What's the point?
+// TODO Do I need simple boolean setters like markSelected, markSelectMode, etc.? What's the point?
 
 Todo.prototype.update = function(changedEntry) {
 	this.entry = changedEntry;
@@ -72,7 +72,7 @@ Todo.prototype.markFilteredIn = function(filterSet) {
 	}
 }
 Todo.prototype.markFilteredOutParentOfFilteredIn = function() {
-	this.filteredOutParentOfFilteredIn = false;		// re-set to baseline value
+	this.filteredOutParentOfFilteredIn = false;
 	if (this.filteredIn === false && this.children.length > 0) {
 		for (var i = 0; i < this.children.length; i++) {
 			var child = this.children[i];
@@ -116,7 +116,7 @@ function deleteTodo(array, todo) {
 	array.splice(position, 1);
 }
 
-function applyDisplayTags(filterSet) {				// TODO Combine these into one function to avoid extra recursions
+function applyDisplayTags(filterSet) {				// TODO Combine helper functions to avoid extra recursions
 
 	function markFilteredInTodos(todosArray) {
 		for (var i = 0; i < todosArray.length; i++) {
@@ -144,18 +144,6 @@ function applyDisplayTags(filterSet) {				// TODO Combine these into one functio
 			}
 		}
 
-	}
-	// Set newly displayed todos to select mode if siblings are in select mode
-	// Necessary because todos that are filtered out during selection events are not put in select mode
-	function markForDisplayInSelectMode(todosArray) {
-		if (anyFilteredInTodosInSelectMode(todosArray)) {
-			for (var i = 0; i < todosArray.length; i++) {
-				var todo = todosArray[i];
-				if (todo.filteredIn) {
-					todo.markSelectMode(true);
-				}
-			}
-		}
 	}
 
 	markFilteredInTodos(todos);
@@ -243,8 +231,6 @@ function leaveSelectModeIfNoneSelected(todo) {
 
 /************************************ Data storage ***************************************/
 
-// localStorage has a quirk: undefined can be a key.
-
 // filter storage key is hard-wired to storageKey + '-filters'
 function writeFiltersToStorage(key) {
 	var filterKey = key + '-filters';
@@ -266,6 +252,8 @@ function restoreFiltersFromLocalStorage(key) {
 		showDeletedButton.textContent = 'Deleted';
 	}
 }
+
+// localStorage has a quirk: undefined can be a key, so watch out.
 
 var storageKey = undefined;		// Key will be passed in by startApp(key)
 
@@ -299,6 +287,10 @@ function restoreTodosFromLocalStorage(key) {
 }
 
 // Constructor to put saved todo data back into a 'real' todo object i.e. one with methods.
+
+// TODO Move this functionality into the main Todo constructor to avoid having to
+//		keep the two versions in sync.
+
 function RestoredTodo(savedTodo) {
 	this.entry = savedTodo.entry;
 	this.children = savedTodo.children;
@@ -318,8 +310,6 @@ RestoredTodo.prototype.changeId = function() {
 	this.id = Math.random().toString(36).slice(2);
 }
 
-// TODO These setters are not used consistently in the code -- do I need them? What's the point?
-
 RestoredTodo.prototype.update = function(changedEntry) {
 	this.entry = changedEntry;
 }
@@ -336,7 +326,7 @@ RestoredTodo.prototype.markDeleted = function(bool) {
 	this.deleted = bool;
 }
 RestoredTodo.prototype.setStage = function(stage) {
-	if (todoStages.has(stage)) {		// TODO throw error if not an allowed value?
+	if (todoStages.has(stage)) {
 		this.stage = stage;
 	}
 }
@@ -357,7 +347,7 @@ RestoredTodo.prototype.markFilteredIn = function(filterSet) {
 	}
 }
 RestoredTodo.prototype.markFilteredOutParentOfFilteredIn = function() {
-	this.filteredOutParentOfFilteredIn = false;		// re-set to baseline value
+	this.filteredOutParentOfFilteredIn = false;
 	if (this.filteredIn === false && this.children.length > 0) {
 		for (var i = 0; i < this.children.length; i++) {
 			var child = this.children[i];
@@ -369,7 +359,8 @@ RestoredTodo.prototype.markFilteredOutParentOfFilteredIn = function() {
 	}
 }
 
-/*********************************** Data selection **************************************/
+/*********************************** Data selection ***************************************/
+
 // Return the todo with the given id
 function findTodo(array, id) {
 	for (var i = 0; i < array.length; i++) {
@@ -825,7 +816,7 @@ function createParentPlaceholderLi(todo) {
 	return todoLi;
 }
 
-function createTodoLi(todo, selectMode) {		// selection mode boolean is optional
+function createTodoLi(todo) {	
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
 
@@ -1016,22 +1007,10 @@ function createTodosUl(todosArray) {
 	
 	var todosUl = document.createElement('ul');
 
-	var selectionMode = false;		// determines whether 'select' buttons are enabled and others disabled
-
-	if (todosArray === todos) {
-		if (anySelectedRootTodos(todos)) {
-			selectionMode = true;
-		}
-	} else {	// todo.children array
-		if (anySelectedTodos(todosArray)) {
-			selectionMode = true;
-		}
-	}
-
 	for (var i = 0; i < todosArray.length; i++) {
 		var todo = todosArray[i];
 		if (todo.filteredIn)  {
-			var todoLi = createTodoLi(todo, selectionMode)
+			var todoLi = createTodoLi(todo)
 		} else if (todo.filteredOutParentOfFilteredIn) {
 			var todoLi = createParentPlaceholderLi(todo);
 		}
