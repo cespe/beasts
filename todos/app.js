@@ -1064,8 +1064,9 @@ function keyDownHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
 		if (event.key === "Enter") {
-			event.preventDefault();		// Prevents an unwanted return character from being added to the entry
-										// Calling event.preventDefault() on keyUp event is too late to do the job
+			event.preventDefault();		// Prevents an unwanted return character from being added
+										// to the entry. Calling event.preventDefault() on keyUp
+										// event is too late to do the job.
 		}
 	}
 }
@@ -1079,7 +1080,7 @@ function keyUpHandler(event) {
 		var todoArray = findArray(todos, todo.id);
 		if (event.key === "Enter") {
 			if (todo.entry != editedEntry) {
-				todo.update(editedEntry);			// Must update entry before re-rendering
+				todo.update(editedEntry);				// Must update entry before re-rendering
 			}
 			if (event.shiftKey) {
 				if (todo.selectMode === false && showActiveButton.textContent === '√ Active') {
@@ -1094,13 +1095,13 @@ function keyUpHandler(event) {
 			var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
 			if (todoLiUndoEditButton.disabled === false) /* prevent restoring the wrong entry */ {
 				undoEntryEdit(todo, todoLi);
-				todoLiEntry.blur();		// Blur to match result of clicking undoEdit button
+				var todoLiEntry = todoLi.querySelector('p');
+				todoLiEntry.blur();						// Blur matches result of clicking undoEditButton
 			}
 		}
 	}
 }
 
-// Used in todolist.addEventListener('input', inputHandler);
 // input event fires when the value of <textarea> changes
 function inputHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
@@ -1122,17 +1123,18 @@ function inputHandler(event) {
 	}
 }
 
-// Used in todolist.addEventListener('focusout', editHandler);
 function editHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
 		var todoLi = event.target.parentElement;
 		var editedEntry = event.target.textContent;
 		var todo = findTodo(todos, todoLi.id);
-		if (todo) {											// TODO Is this conditional necessary?
-			if (todo.entry !== editedEntry) {
-				todo.update(editedEntry);
-			}
+		if (todo && todo.entry !== editedEntry) {	// The extra check for todo keeps the handler
+													// from failing with a reference error when
+													// a match is not found by findTodo.
+													// TODO Investigate why a matching id is not always
+													// in todos.
+			todo.update(editedEntry);
 		}
 	}
 }
@@ -1165,7 +1167,7 @@ function todoClickHandler(event) {
 		renderTodolist();
 
 	} else if (event.target.name === "addSibling") {
-		insertNewTodoLi(todoArray, todo)		// todoArray and todo are set above by clickHandler
+		insertNewTodoLi(todoArray, todo)			// todoArray and todo are set above by clickHandler
 
 	} else if (event.target.name === "addChild") {
 		appendNewChildTodoLi(todo)
@@ -1183,7 +1185,7 @@ function todoClickHandler(event) {
 			// 'Unselect children' clicked
 			markFilteredInTodosSelected(todo.children, false);
 			if (!todo.selectMode) {
-				// Root button clicked, remove selectMode flag so normal buttons are restored
+				// select-mode-root button clicked, remove selectMode flag so normal buttons are restored
 				markTodosSelectMode(todo.children, false);
 			} else /* root-descendant button clicked */ {
 				leaveSelectModeIfNoneSelected(todo);
@@ -1192,7 +1194,7 @@ function todoClickHandler(event) {
 			// 'Select children' clicked
 			markFilteredInTodosSelected(todo.children, true);
 			if (!todo.selectMode) {
-				// Root button clicked, set selectMode flag so normal buttons are disabled 
+				// select-mode-root button clicked, set selectMode flag so normal buttons are disabled 
 				markTodosSelectMode(todo.children, true);
 			}
 		}
@@ -1301,7 +1303,7 @@ function startApp(key) {
 	renderTodolist();
 }
 
-// Start app without loading todos from storage
+// Start app for non-storage tests without loading todos from storage
 function startTestApp() {
 	showActiveButton.textContent = '√ Active';
 	showCompletedButton.textContent = '√ Completed';

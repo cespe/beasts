@@ -573,7 +573,6 @@ tests({
 		insertTodo(todos, todo1);
 
 		grandchild1.markSelectMode(true);
-//		grandchild1.markSelected(true);
 
 		eq(allFilteredInTodosInSelectMode(todo1.children), false);
 		eq(allFilteredInTodosInSelectMode(child1.children), true);
@@ -1988,7 +1987,7 @@ tests({
 	},
 	"If a todo has any filtered-in descendants in select mode, showChildren button should be disabled.": function() {
 		// By design, don't allow todos to be removed from the display while they are in select mode. This is the same design
-		// decision that governs not allowing new todos while in select mode.
+		// decision that governs not allowing new todos while in select mode. It's important to focus on the task at hand.
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
@@ -5869,6 +5868,9 @@ tests({
 	"There should be a 'canceled' stage to complement 'active' and 'completed'.": function() {
 		future();
 	},
+	"There should be 'expandAll' buttons on Actions bar and on todoLis to set todo.collapsed false for all nested todos.": function() {
+		future();
+	},
 	"There should be a way to back up/restore todos to/from a file.": function() {
 		// https://developer.mozilla.org/en-US/docs/Web/API/File
 		future();
@@ -5885,7 +5887,7 @@ tests({
 		// Drag to new position?
 		future();
 	},
-	"There should be a 'find' input to filter the display according to keywords or entry text.": function() {
+	"There should be a 'find' input to filter the display according to keywords/tags or entry text.": function() {
 		future();
 	}, 
 	"Each todoLi should have a 'zoom in/out' button to filter the display to just that todoLi.": function() {
@@ -5958,6 +5960,6 @@ tests({
 		// Restore defaults after last test
 		localStorage.removeItem('test-todos');
 		todos = [];
-		startApp('todos');
+		startApp('test-todos');
 	},
 });
