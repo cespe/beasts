@@ -465,8 +465,7 @@ function anySelectedRootTodos(array) {
 	}
 	return false;
 }
-
-// Return true if any filtered-in todos at root level of array are in select mode
+/* // Return true if any filtered-in todos at root level of array are in select mode
 function anyFilteredInRootTodosInSelectMode(array) {
 	for (var i = 0; i < array.length; i++) {
 		var todo = array[i];
@@ -475,7 +474,7 @@ function anyFilteredInRootTodosInSelectMode(array) {
 		}
 	}
 	return false;
-}
+} */
 
 // Return true if any todos, including nested todos, are filtered in for display
 function anyFilteredInTodos(array) {
@@ -507,6 +506,34 @@ function anyFilteredInTodosInSelectMode(array) {
 		}
 	}
 	return false;
+}
+
+// Return true if there are any todos and all of them, including nested todos, are in select mode
+function allTodosInSelectMode(array) {
+	var selectModeCount = 0;
+	var todoCount = 0;
+
+	function runTest(array) {
+		for (var i = 0; i < array.length; i++) {
+			var todo = array[i];
+			if (todo.selectMode) {
+				selectModeCount++;
+			}
+			todoCount++;
+
+			if (todo.children.length > 0) {
+				runTest(todo.children);
+			}
+		}
+	}
+
+	runTest(array);
+
+	if (todoCount > 0 && todoCount === selectModeCount) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 // Return true if all filtered-in todos, including nested todos, are in select mode
@@ -555,7 +582,23 @@ function anySelectedFilteredInTodos(array) {
 	return false;
 }
 
-// Return true if any filtered-in todos, including nested todos, are both deleted and selected
+// Return true if any selected todos, including nested todos, are deleted
+function anySelectedTodosDeleted(array) {
+	for (var i = 0; i < array.length; i++) {
+		var todo = array[i];
+		if (todo.deleted && todo.selected) {
+			return true;
+		}
+		if (todo.children.length > 0) {
+			var todoSelectedDeleted = anySelectedTodosDeleted(todo.children);
+			if (todoSelectedDeleted) {
+				return true;
+			} 
+		}
+	}
+}
+
+/* // Return true if any filtered-in todos, including nested todos, are both deleted and selected
 function anySelectedFilteredInTodosDeleted(array) {
 	for (var i = 0; i < array.length; i++) {
 		var todo = array[i];
@@ -569,9 +612,9 @@ function anySelectedFilteredInTodosDeleted(array) {
 			} 
 		}
 	}
-}
+} */
 
-// Return true if all selected todos, including nested todos, are completed
+// Return true if there are selected todos and all of them, including nested todos, are completed
 function allSelectedTodosCompleted(array) {
 	var selected = 0;
 	var andCompleted = 0;
@@ -601,7 +644,7 @@ function allSelectedTodosCompleted(array) {
 	}
 }
 
-// Return true if all selected filtered-in todos, including nested todos, are completed
+/* // Return true if there are selected filtered-in todos and all of them, including nested todos, are completed
 function allSelectedFilteredInTodosCompleted(array) {
 	var selected = 0;
 	var andCompleted = 0;
@@ -629,9 +672,9 @@ function allSelectedFilteredInTodosCompleted(array) {
 	} else {
 		return false;
 	}
-}
+} */
 
-// Return true if all selected todos, including nested todos, are deleted
+// Return true if there are selected todos and all of them, including nested todos, are deleted
 function allSelectedTodosDeleted(array) {
 	var selected = 0;
 	var andDeleted = 0;
@@ -661,7 +704,7 @@ function allSelectedTodosDeleted(array) {
 	}
 }
 
-// Return true if all selected filtered-in todos, including nested todos, are deleted
+/* // Return true if there are selected filtered-in todos and all of them, including nested todos, are deleted
 function allSelectedFilteredInTodosDeleted(array) {
 	var selected = 0;
 	var andDeleted = 0;
@@ -689,7 +732,7 @@ function allSelectedFilteredInTodosDeleted(array) {
 	} else {
 		return false;
 	}
-}
+} */
 
 
 /************************************* DOM manipulation ********************************/
@@ -745,13 +788,18 @@ function updateActionsBar() {
 	
 	// TODO check for filtered-in todos or rely on selection handlers to only operate on filtered-in todos?
 	
-	// Get conditionals for updating buttons
+	// Get conditions for updating buttons
 	var filteredInTodos = anyFilteredInTodos(todos);
-	var filteredInRootTodosInSelectMode = anyFilteredInRootTodosInSelectMode(todos);
 	var allFilteredInInSelectMode = allFilteredInTodosInSelectMode(todos);
-	var allSelectedFilteredInCompleted = allSelectedFilteredInTodosCompleted(todos);
-	var allSelectedFilteredInDeleted = allSelectedFilteredInTodosDeleted(todos);
-	var selectedFilteredInTodosDeleted = anySelectedFilteredInTodosDeleted(todos);
+	var allSelectedCompleted = allSelectedTodosCompleted(todos);
+	var allSelectedDeleted = allSelectedTodosDeleted(todos);
+	var anySelectedDeleted = anySelectedTodosDeleted(todos);
+
+//	var filteredInRootTodosInSelectMode = anyFilteredInRootTodosInSelectMode(todos);
+//	var allInSelectMode = allTodosInSelectMode(todos);
+//	var allSelectedFilteredInCompleted = allSelectedFilteredInTodosCompleted(todos);
+//	var allSelectedFilteredInDeleted = allSelectedFilteredInTodosDeleted(todos);
+//	var selectedFilteredInTodosDeleted = anySelectedFilteredInTodosDeleted(todos);
 
 	if (filteredInTodos) {
 		selectAllButton.disabled = false;
@@ -762,6 +810,9 @@ function updateActionsBar() {
 		purgeSelectedDeletedButton.disabled = true;
 	}
 
+	// Must test for filtered-in vs all because a root-level todo not in select mode could become filtered out
+	// See test "If all top-level todos are filtered-out parents, use the next layer of todos
+	// when setting 'Unselect all'"
 	if (allFilteredInInSelectMode) {
 		selectAllButton.textContent = 'Unselect all';
 		completeSelectedButton.disabled = false;
@@ -772,25 +823,30 @@ function updateActionsBar() {
 		deleteSelectedButton.disabled = true;
 	}
 
-	if (filteredInRootTodosInSelectMode && allSelectedFilteredInCompleted) {
+//	if (filteredInRootTodosInSelectMode && allSelectedFilteredInCompleted) {
+//	if (allSelectedFilteredInCompleted) {
+	if (allSelectedCompleted) {
 		completeSelectedButton.textContent = 'Uncomplete selected';	
 	} else {
 		completeSelectedButton.textContent = 'Complete selected';	
 	}
 
-	if (filteredInRootTodosInSelectMode && allSelectedFilteredInDeleted) {
+//	if (filteredInRootTodosInSelectMode && allSelectedFilteredInDeleted) {
+	if (allSelectedDeleted) {
 		deleteSelectedButton.textContent = 'Undelete selected';	
 	} else {
 		deleteSelectedButton.textContent = 'Delete selected';	
 	}
 
-	if (selectedFilteredInTodosDeleted) {
+//	if (selectedFilteredInTodosDeleted) {
+	if (anySelectedDeleted) {
 		purgeSelectedDeletedButton.disabled = false;	
 	} else {
 		purgeSelectedDeletedButton.disabled = true;	
 	}
 
-	if (showActiveButton.textContent === 'Active' || filteredInRootTodosInSelectMode) {
+//	if (showActiveButton.textContent === 'Active' || filteredInRootTodosInSelectMode) {
+if (showActiveButton.textContent !== '√ Active' || allFilteredInInSelectMode) {
 		addTodoButton.disabled = true;	
 	} else {
 		addTodoButton.disabled = false;	
