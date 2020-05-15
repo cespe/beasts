@@ -466,17 +466,6 @@ function anySelectedRootTodos(array) {
 	return false;
 }
 
-// Return true if any filtered-in todos at root level of array are in select mode
-function anyFilteredInRootTodosInSelectMode(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.selectMode && todo.filteredIn) {
-			return true;
-		}
-	}
-	return false;
-}
-
 // Return true if any todos, including nested todos, are filtered in for display
 function anyFilteredInTodos(array) {
 	for (var i = 0; i < array.length; i++) {
@@ -599,22 +588,6 @@ function anySelectedTodosDeleted(array) {
 	}
 }
 
-// Return true if any filtered-in todos, including nested todos, are both deleted and selected
-function anySelectedFilteredInTodosDeleted(array) {
-	for (var i = 0; i < array.length; i++) {
-		var todo = array[i];
-		if (todo.deleted && todo.selected && todo.filteredIn) {
-			return true;
-		}
-		if (todo.children.length > 0) {
-			var todoSelectedDeleted = anySelectedFilteredInTodosDeleted(todo.children);
-			if (todoSelectedDeleted) {
-				return true;
-			} 
-		}
-	}
-}
-
 // Return true if there are selected todos and all of them, including nested todos, are completed
 function allSelectedTodosCompleted(array) {
 	var selected = 0;
@@ -624,36 +597,6 @@ function allSelectedTodosCompleted(array) {
 		for (var i = 0; i < array.length; i++) {
 			var todo = array[i];
 			if (todo.selected) {
-				selected++;
-				if (todo.stage === 'completed') {
-					andCompleted++;
-				}
-			} 
-
-			if (todo.children.length > 0) {
-				runTest(todo.children);
-			}
-		}
-	}
-
-	runTest(array);
-
-	if (selected > 0 && selected === andCompleted) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-// Return true if there are selected filtered-in todos and all of them, including nested todos, are completed
-function allSelectedFilteredInTodosCompleted(array) {
-	var selected = 0;
-	var andCompleted = 0;
-
-	function runTest(array) {
-		for (var i = 0; i < array.length; i++) {
-			var todo = array[i];
-			if (todo.selected && todo.filteredIn) {
 				selected++;
 				if (todo.stage === 'completed') {
 					andCompleted++;
@@ -704,37 +647,6 @@ function allSelectedTodosDeleted(array) {
 		return false;
 	}
 }
-
-// Return true if there are selected filtered-in todos and all of them, including nested todos, are deleted
-function allSelectedFilteredInTodosDeleted(array) {
-	var selected = 0;
-	var andDeleted = 0;
-
-	function runTest(array) {
-		for (var i = 0; i < array.length; i++) {
-			var todo = array[i];
-			if (todo.selected && todo.filteredIn) {
-				selected++;
-				if (todo.deleted === true) {
-					andDeleted++;
-				}
-			} 
-
-			if (todo.children.length > 0) {
-				runTest(todo.children);
-			}
-		}
-	}
-
-	runTest(array);
-
-	if (selected > 0 && selected === andDeleted) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 
 /************************************* DOM manipulation ********************************/
 
@@ -796,11 +708,6 @@ function updateActionsBar() {
 	var allSelectedDeleted = allSelectedTodosDeleted(todos);
 	var anySelectedDeleted = anySelectedTodosDeleted(todos);
 
-//	var filteredInRootTodosInSelectMode = anyFilteredInRootTodosInSelectMode(todos);
-//	var allSelectedFilteredInCompleted = allSelectedFilteredInTodosCompleted(todos);
-//	var allSelectedFilteredInDeleted = allSelectedFilteredInTodosDeleted(todos);
-//	var selectedFilteredInTodosDeleted = anySelectedFilteredInTodosDeleted(todos);
-
 	if (filteredInTodos) {
 		selectAllButton.disabled = false;
 	} else {
@@ -820,26 +727,25 @@ function updateActionsBar() {
 		deleteSelectedButton.disabled = true;
 	}
 
-//	if (filteredInRootTodosInSelectMode && allSelectedFilteredInCompleted) {
-	if (allSelectedFilteredInCompleted) {
+	if (allSelectedCompleted) {
 		completeSelectedButton.textContent = 'Uncomplete selected';	
 	} else {
 		completeSelectedButton.textContent = 'Complete selected';	
 	}
 
-	if (filteredInRootTodosInSelectMode && allSelectedFilteredInDeleted) {
+	if (allSelectedDeleted) {
 		deleteSelectedButton.textContent = 'Undelete selected';	
 	} else {
 		deleteSelectedButton.textContent = 'Delete selected';	
 	}
 
-	if (selectedFilteredInTodosDeleted) {
+	if (anySelectedDeleted) {
 		purgeSelectedDeletedButton.disabled = false;	
 	} else {
 		purgeSelectedDeletedButton.disabled = true;	
 	}
 
-	if (showActiveButton.textContent === 'Active' || filteredInRootTodosInSelectMode) {
+if (showActiveButton.textContent !== '√ Active' || allFilteredInInSelectMode) {
 		addTodoButton.disabled = true;	
 	} else {
 		addTodoButton.disabled = false;	
