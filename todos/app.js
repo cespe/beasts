@@ -8,7 +8,6 @@ var todos = [];
 var todoStages = new Set();
 todoStages.add('active');
 todoStages.add('completed');
-todoStages.add('canceled');							// TODO cancel not implemented
 
 function Todo(entry) {
 	this.id = Math.random().toString(36).slice(2);
@@ -33,8 +32,6 @@ Todo.prototype.changeId = function() {
 	this.id = Math.random().toString(36).slice(2);
 }
 
-// TODO Do I need simple boolean setters like markSelected, markSelectMode, etc.? What's the point?
-
 Todo.prototype.update = function(changedEntry) {
 	this.entry = changedEntry;
 }
@@ -51,7 +48,7 @@ Todo.prototype.markDeleted = function(bool) {
 	this.deleted = bool;
 }
 Todo.prototype.setStage = function(stage) {
-	if (todoStages.has(stage)) {					// TODO throw error if not an allowed value?
+	if (todoStages.has(stage)) {
 		this.stage = stage;
 	}
 }
@@ -288,8 +285,9 @@ function restoreTodosFromLocalStorage(key) {
 
 // Constructor to put saved todo data back into a 'real' todo object i.e. one with methods.
 
-// TODO Move this functionality into the main Todo constructor to avoid having to
-//		keep the two versions in sync.
+// TODO Consider moving this functionality into the main Todo constructor to avoid having to
+//		keep the two versions in sync. Drawback would be complicating the main constructor and
+//		having to introduce a parameter to test which constructor settings to use.
 
 function RestoredTodo(savedTodo) {
 	this.entry = savedTodo.entry;
@@ -698,8 +696,6 @@ function renderTodolist() {
 }
 
 function updateActionsBar() {
-	
-	// TODO check for filtered-in todos or rely on selection handlers to only operate on filtered-in todos?
 	
 	// Get conditions for updating buttons
 	var filteredInTodos = anyFilteredInTodos(todos);
