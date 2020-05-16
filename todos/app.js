@@ -1078,17 +1078,14 @@ function inputHandler(event) {
 	}
 }
 
+// Handle focusout event.
 function editHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
 		// target is a todo entry
 		var todoLi = event.target.parentElement;
 		var editedEntry = event.target.textContent;
 		var todo = findTodo(todos, todoLi.id);
-		if (todo && todo.entry !== editedEntry) {	// The extra check for todo keeps the handler
-													// from failing with a reference error when
-													// a match is not found by findTodo.
-													// TODO Investigate why a matching id is not always
-													// in todos.
+		if (todo.entry !== editedEntry) {
 			todo.update(editedEntry);
 		}
 	}

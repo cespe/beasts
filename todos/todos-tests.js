@@ -920,6 +920,7 @@ tests({
 		eq(todosUl.children[0].querySelector('p').textContent, '');
 	},
 	"The app should have a way to insert a new sibling todo after a given todo.": function() {
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -959,6 +960,7 @@ tests({
 		eq(todos[2], todo2);
 	},
 	"The app should have a way to nest a new child todo under a given todo.": function() {
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1004,6 +1006,7 @@ tests({
 		eq(child2Li.nodeName, "LI");
 	},
 	"A todoLi should allow for editing its todo entry.": function() {
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1092,10 +1095,15 @@ tests({
 	"Section: todoLi buttons": function() {
 	},
 	"Each todoLi should have a 'complete' button to toggle 'Complete/Uncomplete'.": function() {
+		todolist.innerHTML = '';
 		todos = [];
-		var todo1 = new Todo('Item 1');
+		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todoLi = createTodoLi(todo1);
+
+		startTestApp();
+
+		todoLi = todolist.children[0].children[0];
+
 		eq(todoLi.children.namedItem('complete').nodeName, 'BUTTON');
 		eq(todoLi.children.namedItem('complete').name, 'complete');
 	},
@@ -1244,7 +1252,11 @@ tests({
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todoLi = createTodoLi(todo1);
+
+		startTestApp();
+
+		var todoLi = todolist.children[0].children[0];
+
 		eq(todoLi.children.namedItem('delete').nodeName, 'BUTTON');
 		eq(todoLi.children.namedItem('delete').name, 'delete');
 	},
@@ -1262,6 +1274,7 @@ tests({
 		eq(todoLi1DeleteButton.textContent, 'Delete');
 	},
 	"If todo is deleted, its todoLi 'deleted' button text should be 'Undelete'.": function() {
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo1.markDeleted(true);
@@ -1457,6 +1470,7 @@ tests({
 		eq(document.hasFocus(), true);				// doesn't pass unless console is closed
 	},
 	"Each todo li should have an 'addChild' button to add a child todo underneath it.": function() {
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1509,6 +1523,7 @@ tests({
 		eq(document.hasFocus(), true);					// doesn't pass unless console is closed
 	},
 	"Clicking an addChild button should set todo.collapsed false and display nested todos on re-render.": function() {
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1554,16 +1569,21 @@ tests({
 		eq(todoLi1Ul.children[1], childLi2);
 	},
 	"Each todo li should have a 'select' button to toggle 'selected/unselected'.": function() {
+		todolist.innerHTML = '';
 		todos = [];
 		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
-		var todoLi = createTodoLi(todo1);
+
+		startTestApp();
+
+		todoLi = todolist.children[0].children[0];
+
 		eq(todoLi.children.namedItem('select').nodeName, 'BUTTON');
 		eq(todoLi.children.namedItem('select').name, 'select');
 	},
 	"If a todo is not selected, its todoLi 'select' button text should be 'Select'.": function() {
-		todos = []
-		todo1 = new Todo('Item 1');
+		todos = [];
+		var todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
 		
 		startTestApp();
@@ -5604,6 +5624,7 @@ tests({
 	},
 	"If root todos are in select mode, the addTodo button should be disabled.": function() {
 		// No new todos allowed while in select mode.
+		todolist.innerHTML = '';
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo2 = new Todo('Item 2');
@@ -5796,6 +5817,7 @@ tests({
 		future();
 	},
 	"On page load, saved todos should be retrieved from localStorage.": function() {
+		todolist.innerHTML = '';
 		localStorage.removeItem('test-todos');
 		todos = [];
 		startApp('test-todos');
