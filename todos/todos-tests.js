@@ -1,10 +1,18 @@
 // Beasts 8. Nested todos 
-//
-// TODO Protect properties of todo object in a closure?
-// buglist
-// selectAll does not toggle properly when todos are under a filteredOutParent
-//
-// Toggling a filter on (e.g. Active --> √ Active) does not render newly displayed todos in select mode
+
+/*
+ These tests use a custom version of simpletest (included in the same directory and hardwired into todos-tdd.html test page).
+
+ A test that begins with 'Section:' becomes a Section heading to organize tests
+
+ There are three new helper functions that work like fail():
+	future() highlights tests dealing with unimplemented features;
+	manual() highlights tests that can't be automated;
+	remove() highlights tests that are no longer needed and can be removed;
+
+ The alias eq is bound to assertStrictEquals instead of assertEquals as in the original simpletest. eqstrict is commented out.
+ There is a new alias, neq, bound to a new function assertStrictDoesNotEqual that fails when expected === actual.
+*/
 
 tests({
 	"The app should have a 'todos' array for storing todos.": function() {
@@ -96,7 +104,6 @@ tests({
 		newTodo = new Todo('Item 1');
 		eq(newTodo.stage, 'active');
 		eq(todoStages instanceof Set, true);
-		// TODO test for error if value is not in todoStages
 		newTodo.setStage('completed');
 		eq(newTodo.stage, 'completed');
 		newTodo.setStage('canceled');
@@ -1819,7 +1826,7 @@ tests({
 	},
 	"undoEditButton should become enabled when a todoLi entry is edited.": function() {
 		manual();
-		// app code works, TODO need to figure out synthetic events
+		// app code works; TODO need alternative to synthetic key events, which don't trigger code
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1861,7 +1868,7 @@ tests({
 	},
 	"undoEditButton should be disabled when an edit is completed.": function() {
 		manual();
-		// app code works, TODO need to figure out synthetic events
+		// app code works; TODO need alternative to synthetic key events, which don't trigger code
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1877,7 +1884,7 @@ tests({
 
 		// Case 1: edit completed with undoEditButton click
 
-		// TODO code to append a '1' with a synthetic key event
+		// TODO code to append a '1' with a synthetic key event alternative
 
 		eq(todoLi1UndoEditButton.disabled, false);
 		eq(todoLi1Entry.textContent, 'Item 11');
@@ -1889,7 +1896,7 @@ tests({
 
 		// Case 2: edit completed when entry loses focus
 
-		// TODO code to append a '1' with a synthetic key event
+		// TODO code to append a '1' with a synthetic key event alternative
 
 		eq(todoLi1UndoEditButton.disabled, false);
 		eq(todoLi1Entry.textContent, 'Item 11');
@@ -5739,7 +5746,7 @@ tests({
 		eq(stored[2].id, todo3.id);	
 	},
 	"The app should allow for saving the todos array to more than one localStorage key.": function() {
-		// Facilitates testing and perhaps backup -- it is very easy to wipe out saved todos.
+		// Facilitates testing and backup -- it is very easy to wipe out saved todos.
 		localStorage.removeItem('test-todos');
 		todos = [];
 		todo1 = new Todo('Item 1');
