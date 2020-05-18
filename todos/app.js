@@ -8,24 +8,40 @@ var todos = [];
 var todoStages = new Set();
 todoStages.add('active');
 todoStages.add('completed');
+todoStages.add('canceled');								// TODO add buttons to cancel todos
 
+// Restore a todo from JSON storage or create a new todo with supplied entry
 function Todo(entry) {
-	this.id = Math.random().toString(36).slice(2);
-	if (typeof entry !== "string") {
-		this.entry = "";
+	if (typeof entry === 'object') {
+		// Restore JSON data fields from storage into a proper object with methods
+		this.entry = entry.entry;
+		this.id = entry.id;
+		this.children = entry.children;
+		this.collapsed = entry.collapsed;
+		this.deleted = entry.deleted;
+		this.stage = entry.stage;
+		this.selected = entry.selected;
+		this.selectMode = entry.selectMode;
+		this.filteredIn = entry.filteredIn;
+		this.filteredOutParentOfFilteredIn = entry.filteredOutParentOfFilteredIn;
 	} else {
-		this.entry = entry;
-	}
-	this.children = [];
-	this.collapsed = false;
-	this.deleted = false;
-	this.stage = 'active';							// stages are active, completed
+		if (typeof entry === 'string') {
+			this.entry = entry;
+		} else {
+			this.entry = "";
+		}
+		this.id = Math.random().toString(36).slice(2);
+		this.children = [];
+		this.collapsed = false;							// flag to manage showing or hiding nested todos
+		this.deleted = false;							// flag to enable undelete
+		this.stage = 'active';							// new todo starts out active
 	
-	this.selected = false;
-	this.selectMode = false;
-
-	this.filteredIn = true;							// new todo is filtered in for display on creation 
-	this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
+		this.selected = false;
+		this.selectMode = false;						// flag to manage UI in select mode
+	
+		this.filteredIn = true;							// new todo is filtered in for display on creation 
+		this.filteredOutParentOfFilteredIn = false;		// true if this todo is filtered out but descendant(s) are not
+	}
 }
 
 Todo.prototype.changeId = function() {
@@ -265,7 +281,7 @@ function restoreTodosFromLocalStorage(key) {
 	function restoreInPlace(dataArray) {
 		for (var i = 0; i < dataArray.length; i++) {
 			var todo = dataArray[i];
-			restoredTodo = new RestoredTodo(todo);
+			restoredTodo = new Todo(todo);
 			dataArray[i] = restoredTodo;
 		
 			if (todo.children.length > 0) {
