@@ -129,8 +129,9 @@ function deleteTodo(array, todo) {
 	array.splice(position, 1);
 }
 
-function applyDisplayTags(filterSet) {				// TODO Combine helper functions to avoid extra recursions
+function applyDisplayTags(filterSet) {
 
+	// Recurse to set filteredIn and filteredOutParentOfFilteredIn flags for each todo
 	function markFilteredInTodos(todosArray) {
 		for (var i = 0; i < todosArray.length; i++) {
 			var todo = todosArray[i];
@@ -149,21 +150,7 @@ function applyDisplayTags(filterSet) {				// TODO Combine helper functions to av
 		}
 	}
 
-/*	function markFilteredOutParentsOfFilteredInTodos(todosArray) {
-		for (var i = 0; i < todosArray.length; i++) {
-			var todo = todosArray[i];
-			if (todo.children.length > 0) {
-				markFilteredOutParentsOfFilteredInTodos(todo.children);
-			}
-			todo.markFilteredOutParentOfFilteredIn();
-			if (todo.filteredOutParentOfFilteredIn) {
-				todo.collapsed = false;				// ensure that filtered-in children are visible
-			}
-		}
-	}
-*/
 	markFilteredInTodos(todos);
-//	markFilteredOutParentsOfFilteredInTodos(todos);
 }
 
 // Recursively mark todo.selectMode true or false, starting with given array
