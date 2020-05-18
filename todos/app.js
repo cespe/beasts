@@ -141,11 +141,15 @@ function applyDisplayTags(filterSet) {				// TODO Combine helper functions to av
 			if (!todo.filteredIn && todo.selected) {
 				todo.filteredIn = true;				// selected todos should remain on display even if a filter
 													// says otherwise
+			}												
+			todo.markFilteredOutParentOfFilteredIn();
+			if (todo.filteredOutParentOfFilteredIn) {
+				todo.collapsed = false;				// ensure that filtered-in children are visible
 			}
 		}
 	}
 
-	function markFilteredOutParentsOfFilteredInTodos(todosArray) {
+/*	function markFilteredOutParentsOfFilteredInTodos(todosArray) {
 		for (var i = 0; i < todosArray.length; i++) {
 			var todo = todosArray[i];
 			if (todo.children.length > 0) {
@@ -156,11 +160,10 @@ function applyDisplayTags(filterSet) {				// TODO Combine helper functions to av
 				todo.collapsed = false;				// ensure that filtered-in children are visible
 			}
 		}
-
 	}
-
+*/
 	markFilteredInTodos(todos);
-	markFilteredOutParentsOfFilteredInTodos(todos);
+//	markFilteredOutParentsOfFilteredInTodos(todos);
 }
 
 // Recursively mark todo.selectMode true or false, starting with given array
