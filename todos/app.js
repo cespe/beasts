@@ -238,7 +238,8 @@ function leaveSelectModeIfNoneSelected(todo) {
 
 var storageKey = undefined;			// localStorage has a quirk: undefined can be a key, so watch out.
 									// Many button event handler tests write to 'undefined' key because
-									// a 'real' key has not been supplied through startApp(key).
+									// a 'real' key has not been supplied through startApp(key) before
+									// the tests run.
 
 // Write serialized todos to the specified key in localStorage
 function writeTodosToStorage(key) {
@@ -269,7 +270,7 @@ function restoreTodosFromLocalStorage(key) {
 	}
 }
 
-// filter storage key is hard-wired to key + '-filters'
+// Serialize filter state and write to filter storage key hard-wired to key + '-filters'
 function writeFiltersToStorage(key) {
 	var filterKey = key + '-filters';
 	var buttonText = [showActiveButton.textContent, showCompletedButton.textContent, showDeletedButton.textContent];
