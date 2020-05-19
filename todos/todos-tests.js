@@ -5725,6 +5725,8 @@ tests({
 	"The app should have a way to save todos array to localStorage.": function() {
 		// Tests writeTodosToStorage(key)
 		localStorage.removeItem('test-todos');
+		localStorage.removeItem('undefined');			// left over from todo event handler tests
+		localStorage.removeItem('undefined-filters');
 		todos = [];
 		todo1 = new Todo('Item 1');
 		todo2 = new Todo('Item 2');
@@ -5777,6 +5779,11 @@ tests({
 		eq(stored2[2].id, todo3.id);	
 
 		localStorage.removeItem('test-todos-2');
+	},
+	"There should be an interface for choosing which key to save data to.": function() {
+		future();
+		// A 'Save as' input field to get a new key name.
+		// A way to choose from existing keys, delete them individually by name, or clear all keys.
 	},
 	"The app should have a way to convert todo data from localStorage back to todo objects with methods": function() {
 		// Tests restoreTodosFromLocalStorage(key)
@@ -5843,7 +5850,7 @@ tests({
 	},
 	"There should be a way to save the state of the Actions bar filter buttons to a given localStorage key.": function() {
 		// Tests writeFiltersToStorage(key)
-		localStorage.removeItem('test-todos-filters');		// filter key hardwired as storageKey + '-filters'
+		localStorage.removeItem('test-todos');
 
 		showActiveButton.textContent = 'Active';
 		showCompletedButton.textContent = '√ Completed';
@@ -5851,7 +5858,7 @@ tests({
 		
 		writeFiltersToStorage('test-todos');
 
-		var buttonText = JSON.parse(localStorage.getItem('test-todos-filters'));
+		var buttonText = JSON.parse(localStorage.getItem('test-todos-filters')); // filter key hardwired as storageKey + '-filters'
 
 		eq(buttonText[0], 'Active');
 		eq(buttonText[1], '√ Completed');
@@ -5859,6 +5866,7 @@ tests({
 	},
 	"The app should save the state of the filter buttons to localStorage whenever they change.": function() {
 		localStorage.removeItem('test-todos-filters');		// filter key hardwired as storageKey + '-filters'
+		localStorage.removeItem('test-todos');
 
 		showActiveButton.textContent = 'Active';
 		showCompletedButton.textContent = '√ Completed';
@@ -5922,6 +5930,14 @@ tests({
 	"Each todoLi should have a 'zoom in/out' button to filter the display to just that todoLi.": function() {
 		future();
 	},
+	"Such a zoom in feature could replace the whole selection mode system.": function() {
+		future();
+		// No more selectAll function; completeAll and deleteAll would replace
+		// completeSelected and deleteSelected and apply to all displayed todos.
+		// No more selectChildren, completeSelectedChildren, or deleteSelectedChildren; A user wanting to
+		// complete or delete children would instead zoom in on the parent todo and use the global
+		// completeAll or deleteAll buttons.
+	},
 	"Todos should log events, e.g. created, edited, stage-change, work-progress, deadline-approaching, urgency.": function() {
 		future();
 	},
@@ -5984,10 +6000,24 @@ tests({
 		todoLi2 = todosUl.children[1];
 
 		eq(todoLi1.id, todo1.id);
-		eq(todoLi2, undefined);
+		eq(todoLi2, undefined);					// because deleted are filtered out
+
+		showDeletedButton.click();
+
+		startApp('test-todos')
+
+		eq(showDeletedButton.textContent, '√ Deleted');
+
+		todosUl = todolist.children[0];
+		todoLi1 = todosUl.children[0];
+		todoLi2 = todosUl.children[1];
+
+		eq(todoLi1.id, todo1.id);
+		eq(todoLi2.id, todo2.id);					// because deleted are not filtered out
 
 		// Restore defaults after last test
 		localStorage.removeItem('test-todos');
+		localStorage.removeItem('test-todos-filters');
 		todos = [];
 		startApp('test-todos');
 	},
