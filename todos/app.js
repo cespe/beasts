@@ -77,11 +77,12 @@ Todo.prototype.markCollapsed = function(bool) {
 Todo.prototype.markFilteredIn = function(filterSet) {
 	this.filteredIn = false;
 	var stageTag = '#' + this.stage;
-	if (filterSet.has(stageTag)) {
-		this.filteredIn = true;	
-		if (this.deleted && !filterSet.has('#deleted')) {
-			this.filteredIn = false;
+	if (this.deleted) {
+		if (filterSet.has('#deleted')) {
+			this.filteredIn = true;
 		}
+	} else if (filterSet.has(stageTag)) {
+		this.filteredIn = true;
 	}
 }
 Todo.prototype.markFilteredOutParentOfFilteredIn = function() {
@@ -1116,7 +1117,7 @@ function actionsClickHandler(event) {
 		} else {
 			showActiveButton.textContent = '√ Active';
 		}
-		writeFiltersToStorage();
+		writeFiltersToStorage(storageKey);
 		renderTodolist();
 	} else if (event.target.name === "showCompleted") {
 		if (showCompletedButton.textContent === '√ Completed') {
@@ -1124,7 +1125,7 @@ function actionsClickHandler(event) {
 		} else {
 			showCompletedButton.textContent = '√ Completed';
 		}
-		writeFiltersToStorage();
+		writeFiltersToStorage(storageKey);
 		renderTodolist();
 	} else if (event.target.name === "showDeleted") {
 		if (showDeletedButton.textContent === '√ Deleted') {
