@@ -5825,11 +5825,6 @@ tests({
 
 		eq(stored[0].id, todo1.id);
 	},
-	"To save storage space, the app should not save ephemeral properties of todos in storage.": function() {
-		// filteredIn and filteredOutParentOfFilteredIn can be excluded by using a referrer array
-		// argument with JSON.stringify
-		future();
-	},
 	"On page load, saved todos should be retrieved from localStorage.": function() {
 		todolist.innerHTML = '';
 		localStorage.removeItem('test-todos');
