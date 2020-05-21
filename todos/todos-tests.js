@@ -5219,6 +5219,10 @@ tests({
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi, undefined);
 	},
+	"The app should blur filter buttons after they are clicked.": function() {
+		// Because they don't change textContent like other buttons, they stay in focus unless deliberately blurred.
+		fail();
+	},
 	"Bug fix: unchecking '√ Active' should show completed and deleted children of an active parent.": function() {
 		// markFilteredIn was not setting filteredIn true for active deleted todos when active was filtered out
 		todos = [];
