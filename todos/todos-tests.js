@@ -5219,9 +5219,13 @@ tests({
 		eq(childLi.id, todo2Child.id);
 		eq(grandchildLi, undefined);
 	},
-	"The app should blur filter buttons after they are clicked.": function() {
-		// Because they don't change textContent like other buttons, they stay in focus unless deliberately blurred.
-		fail();
+	"The app should blur actions bar buttons after they are clicked.": function() {
+		// Because they aren't recreated like todoLi buttons, they stay highlighted unless deliberately blurred.
+
+		// Turns out that this is deliberate behavior in Chrome. Safari and Firefox both unselect the buttons after
+		// they are clicked.
+
+		remove();
 	},
 	"Bug fix: unchecking '√ Active' should show completed and deleted children of an active parent.": function() {
 		// markFilteredIn was not setting filteredIn true for active deleted todos when active was filtered out
@@ -5619,6 +5623,11 @@ tests({
 		// A 'Save as' input field to get a new key name.
 		// A way to choose from existing keys, delete them individually by name, or clear all keys.
 	},
+	"There should be a way to back up/restore todos to/from a file.": function() {
+		// Because accidentally erasing all your todos is just a localStorage.removeItem() or clear() away.
+		// https://developer.mozilla.org/en-US/docs/Web/API/File
+		future();
+	},
 	"The app should have a way to convert todo data from localStorage back to todo objects with methods": function() {
 		// Tests restoreTodosFromLocalStorage(key)
 		localStorage.removeItem('test-todos');
@@ -5737,13 +5746,6 @@ tests({
 	"There should be 'expandAll' buttons on Actions bar and on todoLis to set todo.collapsed false for all nested todos.": function() {
 		future();
 	},
-	"There should be a way to back up/restore todos to/from a file.": function() {
-		// https://developer.mozilla.org/en-US/docs/Web/API/File
-		future();
-	},
-	"Todos in local storage should be synchronized with remote storage.": function() {
-		future();
-	},
 	"There should be a way to move a todo in the list, for example to the top of the list.": function() {
 		// 'Shift up' and 'Shift down' buttons.
 		// 'Shift to top' and 'Shift to bottom' buttons.
@@ -5766,9 +5768,6 @@ tests({
 		// No more selectChildren, completeSelectedChildren, or deleteSelectedChildren; A user wanting to
 		// complete or delete children would instead zoom in on the parent todo and use the global
 		// completeAll or deleteAll buttons.
-	},
-	"Todos should log events, e.g. created, edited, stage-change, work-progress, deadline-approaching, urgency.": function() {
-		future();
 	},
 	"Section: On startup": function() {
 
