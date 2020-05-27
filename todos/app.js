@@ -585,7 +585,6 @@ function allSelectedTodosDeleted(array) {
 /************************************* DOM manipulation ********************************/
 
 // Fixed page elements
-//var appheader = document.getElementById('appheader');
 var actionsBar = document.getElementById('actions');
 var selectAllButton = actionsBar.children.namedItem('selectAll');
 var completeSelectedButton = actionsBar.children.namedItem('completeSelected');
