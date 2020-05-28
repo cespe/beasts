@@ -822,7 +822,7 @@ function createTodoLi(todo) {
 		} else {
 			showChildrenButton.textContent = 'Hide children';
 		}
-		if (selectModeRoot || rootAncestor) {
+		if (selectModeRoot || rootAncestor || rootDescendant) {
 			showChildrenButton.disabled = true;
 		}
 		todoLi.appendChild(showChildrenButton);
