@@ -2034,6 +2034,8 @@ tests({
 		child1 = new Todo('Child 1');
 		grandchild1 = new Todo('Grandchild 1');
 		child1.addChild(grandchild1);
+		greatgrandchild1 = new Todo('Great grandchild 1');
+		grandchild1.addChild(greatgrandchild1);
 		todo1.addChild(child1);
 		insertTodo(todos, todo1);
 
@@ -2052,9 +2054,13 @@ tests({
 		var todoLi1ShowChildrenButton = todoLi1.children.namedItem('showChildren');
 		childLi1 = todoLi1Ul.children[0];
 		var childLi1ShowChildrenButton = childLi1.children.namedItem('showChildren');
+		childLi1Ul = childLi1.querySelector('ul');
+		var grandchildLi1 = childLi1Ul.children[0];
+		var grandchildLi1ShowChildrenButton = grandchildLi1.children.namedItem('showChildren');
 
 		eq(todoLi1ShowChildrenButton.disabled, true);
 		eq(childLi1ShowChildrenButton.disabled, true);
+		eq(grandchildLi1ShowChildrenButton.disabled, true);
 	},
 	"If showChildren button text is 'Show children', app should preserve spacing above the following entry.": function() {
 		// TODO there is probably a better way than just adding an empty <p> element
