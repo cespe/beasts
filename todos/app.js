@@ -706,6 +706,9 @@ function createTodoLi(todo) {
 	var todoLi = document.createElement('li');
 	todoLi.id = todo.id;
 
+	// A line to visually separate todos during development
+	var todoSeparator = document.createElement('hr');
+
 	// All these buttons are created with button.type = 'button' to distinguish from a submit
 	// or reset button, as recommended by MDN.
 
@@ -766,7 +769,8 @@ function createTodoLi(todo) {
 		addSiblingButton.disabled = true;
 		addChildButton.disabled = true;
 	}
-		
+	
+	todoLi.appendChild(todoSeparator);
 	todoLi.appendChild(selectButton);
 	todoLi.appendChild(completeButton);
 	todoLi.appendChild(deleteButton);
