@@ -589,11 +589,11 @@ var actionsBar = document.getElementById('actions');
 var selectAllButton = actionsBar.children.namedItem('selectAll');
 var completeSelectedButton = actionsBar.children.namedItem('completeSelected');
 var deleteSelectedButton = actionsBar.children.namedItem('deleteSelected');
+var purgeSelectedDeletedButton = actionsBar.children.namedItem('purgeSelectedDeleted');
+var addTodoButton = actionsBar.children.namedItem('addTodo');
 var showActiveButton = actionsBar.children.namedItem('showActive');
 var showCompletedButton = actionsBar.children.namedItem('showCompleted');
 var showDeletedButton = actionsBar.children.namedItem('showDeleted');
-var purgeSelectedDeletedButton = actionsBar.children.namedItem('purgeSelectedDeleted');
-var addTodoButton = actionsBar.children.namedItem('addTodo');
 
 var todolist = document.getElementById('todolist');
 
@@ -1077,7 +1077,7 @@ function todoClickHandler(event) {
 				markTodosSelectMode(todo.children, false);
 			} else {
 				// button is select-mode-root-descendant
-				leaveSelectModeIfNoneSelected(todo);
+				leaveSelectModeIfNoneSelected(todo)
 			}
 		} else {	// 'Select children' clicked
 			markFilteredInTodosSelected(todo.children, true);
