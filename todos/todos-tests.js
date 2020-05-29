@@ -4870,7 +4870,7 @@ tests({
 		eq(childLi1Entry.classList.contains('faded-deleted'), false);
 	},
 	"Section: Actions bar -- filters": function() {
-		// Choose to display todos based on their stage in life or whether or not they are deleted.
+		// Choose to display todos based on their stage in life (active or completed) and whether or not they are deleted.
 	},
 	"The header actions bar should have a showActive button to toggle the display of active todos.": function() {
 		todos = [];
@@ -5299,7 +5299,114 @@ tests({
 		// Turns out that this is deliberate behavior in Chrome. Safari and Firefox both unselect the buttons after
 		// they are clicked.
 
-		remove();
+		future();
+	},
+	"The app should display todos according to the filter settings.": function() {
+		// There are three buttons: Active, Completed, and Deleted.
+		// Each can be checked (meaning activated) or unchecked (meaning deactivated), giving eight combinations.
+		// | √ Active | √ Completed | √ Deleted |	Show all todos
+		// | √ Active |   Completed |   Deleted |	Show active todos that are not deleted
+		// |   Active | √ Completed |   Deleted |	Show completed todos that are not deleted
+		// |   Active |   Completed | √ Deleted |	Show deleted todos only regardless of lifecycle stage
+		// | √ Active | √ Completed |   Deleted |	Show todos that are active or completed
+		// | √ Active |   Completed | √ Deleted |	Show todos that are active or deleted (including deleted completed)
+		// |   Active | √ Completed | √ Deleted |	Show todos that are completed or deleted (including deleted active)
+		// |   Active |   Completed |   Deleted |	Show no todos
+		// 
+		// Active and Completed are mutually exclusive because they are lifecycle stages, but either can combine with Deleted.
+		// Therefore, there are only four todo combinations to test:
+		//		Active not deleted
+		//		Active deleted
+		//		Completed not deleted
+		//		Completed deleted
+
+		todos = [];
+		todo1 = new Todo('1. Active not deleted');
+		todo2 = new Todo('2. Active deleted');
+		todo2.markDeleted(true);
+		todo3 = new Todo('3. Completed not deleted');
+		todo3.setStage('completed');
+		todo4 = new Todo('4. Completed deleted');
+		todo4.setStage('completed');
+		todo4.markDeleted(true);
+		insertTodo(todos, todo1);
+		insertTodo(todos, todo2);
+		insertTodo(todos, todo3);
+		insertTodo(todos, todo4);
+
+		startTestApp();
+
+		// | √ Active | √ Completed | √ Deleted |	Show all todos
+		showDeletedButton.click();
+
+		eq(todo1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, true);
+		eq(todo4.filteredIn, true);
+
+		// | √ Active |   Completed |   Deleted |	Show active todos that are not deleted
+		showDeletedButton.click();
+		showCompletedButton.click();
+
+		eq(todo1.filteredIn, true);
+		eq(todo2.filteredIn, false);
+		eq(todo3.filteredIn, false);
+		eq(todo4.filteredIn, false);
+
+		// |   Active | √ Completed |   Deleted |	Show completed todos that are not deleted
+		showActiveButton.click();
+		showCompletedButton.click();
+
+		eq(todo1.filteredIn, false);
+		eq(todo2.filteredIn, false);
+		eq(todo3.filteredIn, true);
+		eq(todo4.filteredIn, false);
+
+		// |   Active |   Completed | √ Deleted |	Show deleted todos only regardless of lifecycle stage
+		showCompletedButton.click();
+		showDeletedButton.click();
+
+		eq(todo1.filteredIn, false);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo4.filteredIn, true);
+
+		// | √ Active | √ Completed |   Deleted |	Show todos that are active or completed
+		showActiveButton.click();
+		showCompletedButton.click();
+		showDeletedButton.click();
+
+		eq(todo1.filteredIn, true);
+		eq(todo2.filteredIn, false);
+		eq(todo3.filteredIn, true);
+		eq(todo4.filteredIn, false);
+
+		// | √ Active |   Completed | √ Deleted |	Show todos that are active or deleted (including deleted completed)
+		showCompletedButton.click();
+		showDeletedButton.click();
+
+		eq(todo1.filteredIn, true);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, false);
+		eq(todo4.filteredIn, true);
+
+		// |   Active | √ Completed | √ Deleted |	Show todos that are completed or deleted (including deleted active)
+		showActiveButton.click();
+		showCompletedButton.click();
+
+		eq(todo1.filteredIn, false);
+		eq(todo2.filteredIn, true);
+		eq(todo3.filteredIn, true);
+		eq(todo4.filteredIn, true);
+
+		// |   Active |   Completed |   Deleted |	Show no todos
+		showCompletedButton.click();
+		showDeletedButton.click();
+
+		eq(todo1.filteredIn, false);
+		eq(todo2.filteredIn, false);
+		eq(todo3.filteredIn, false);
+		eq(todo4.filteredIn, false);
 	},
 	"Bug fix: unchecking '√ Active' should show completed and deleted children of an active parent.": function() {
 		// markFilteredIn was not setting filteredIn true for active deleted todos when active was filtered out
