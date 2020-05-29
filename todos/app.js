@@ -1068,23 +1068,42 @@ function todoClickHandler(event) {
 		renderTodolist();
 
 	} else if (event.target.name === "selectChildren") {
-		if (anySelectedTodos(todo.children)) {
-			// 'Unselect children' clicked
+		var todoLiSelectChildrenButton = todoLi.children.namedItem('selectChildren');
+
+		if (todoLiSelectChildrenButton.textContent === 'Unselect children') {
 			markFilteredInTodosSelected(todo.children, false);
 			if (!todo.selectMode) {
-				// select-mode-root button clicked, remove selectMode flag so normal buttons are restored
+				// button is select-mode-root, remove selectMode flags to restore normal buttons
 				markTodosSelectMode(todo.children, false);
-			} else /* root-descendant button clicked */ {
+			} else {
+				// button is select-mode-root-descendant
 				leaveSelectModeIfNoneSelected(todo);
 			}
-		} else {
-			// 'Select children' clicked
+		} else {	// 'Select children' clicked
 			markFilteredInTodosSelected(todo.children, true);
 			if (!todo.selectMode) {
-				// select-mode-root button clicked, set selectMode flag so normal buttons are disabled 
+				// button is select-mode-root, set selectMode flags so normal buttons are disabled
 				markTodosSelectMode(todo.children, true);
 			}
 		}
+
+//		if (anySelectedTodos(todo.children)) {
+//			// 'Unselect children' clicked
+//			markFilteredInTodosSelected(todo.children, false);
+//			if (!todo.selectMode) {
+//				// select-mode-root button clicked, remove selectMode flag so normal buttons are restored
+//				markTodosSelectMode(todo.children, false);
+//			} else /* root-descendant button clicked */ {
+//				leaveSelectModeIfNoneSelected(todo);
+//			}
+//		} else {
+//			// 'Select children' clicked
+//			markFilteredInTodosSelected(todo.children, true);
+//			if (!todo.selectMode) {
+//				// select-mode-root button clicked, set selectMode flag so normal buttons are disabled 
+//				markTodosSelectMode(todo.children, true);
+//			}
+//		}
 		writeTodosToStorage(storageKey);
 		renderTodolist();
 
