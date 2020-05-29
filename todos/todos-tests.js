@@ -6029,5 +6029,7 @@ tests({
 		localStorage.removeItem('test-todos-filters');
 		todos = [];
 		startApp('test-todos');
-	},
+	}
 });
+
+startApp('saved-todos');
