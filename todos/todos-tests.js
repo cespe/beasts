@@ -1841,9 +1841,11 @@ tests({
 	"undoEditButton should become enabled when a todoLi entry is edited.": function() {
 		
 		manual();
+		// Add a todo. undoEdit button is disabled. Hit a key, button is enabled.
 
+
+		/*		
 		// Need alternative to synthetic key events, which don't trigger code, to automate this test
-
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1882,11 +1884,25 @@ tests({
 
 		eq(todoLi2UndoEditButton.disabled, false);
 		eq(todoLi2Entry.textContent, 'Item 2');
+		*/
 	},
-	"undoEditButton should be disabled when an edit is completed.": function() {
+	"undoEditButton should remain enabled until an edit is started on another entry or todolist re-renders.": function() {
+		// By design, you are allowed to undo an edit even if the entry loses focus until
+		// 1) the todolist re-renders or 2) another entry is edited (i.e. fires an input event).
+		// You can click out of entry A, even on to another entry B or C, but until a different entry
+		// is being edited or a button is clicked, the edit to entry A can still be undone.
 
 		manual();
 
+		// Add a todo (Todo A) and enter 'A'. undoEdit button becomes enabled.
+		// Add another todo (Todo B) but do not enter anything. Todo A undoEdit button becomes disabled. Todo B button also disabled.
+		// Enter 'B' in Todo B. Todo B undoEdit button becomes enabled.
+		// Go back and edit todo A. Todo B button becomes disabled. Todo A button enabled.
+		// Click on Todo B entry but do not edit it. Todo A undoEdit button still enabled.
+		// Click outside of entries on body but not on a button. Todo A button still enabled.
+		// Click Todo A undoEdit button. Entry reverts to original 'A'. Todo A undoEdit button becomes disabled.
+
+		/*
 		// Need alternative to synthetic key events, which don't trigger code, to automate this test
 		
 		todos = [];
@@ -1929,11 +1945,17 @@ tests({
 
 		eq(todoLi1UndoEditButton.disabled, false);
 		eq(todoLi1Entry.textContent, 'Item 11');
+		*/
 	},
 	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton disabled.": function() {
 
 		manual();
 
+		// Add a todo. Enter text. Click undoEdit button. Text goes away and undoEdit button becomes disabled.
+
+		/*
+		// Need alternative to synthetic key events, which don't trigger code, to automate this test
+		
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1960,6 +1982,7 @@ tests({
 		eq(todoLi1Entry.textContent, 'Item 1');
 
 		// TODO should entry still have focus?
+		*/
 	},
 	"Each todoLi with children should have a showChildren button to expand/collapse nested todos.": function() {
 		todos = [];

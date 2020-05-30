@@ -970,9 +970,7 @@ function keyUpHandler(event) {
 		var todo = findTodo(todos, todoLi.id);
 		var todoArray = findArray(todos, todo.id);
 		if (event.key === "Enter") {
-//			if (todo.entry != editedEntry) {
 			todo.update(editedEntry);				// Must update entry before re-rendering
-//			}
 			if (event.shiftKey) {
 				if (todo.selectMode === false && showActiveButton.textContent === '√ Active') {
 					appendNewChildTodoLi(todo)			// Shift-return appends a new child todo
@@ -1020,12 +1018,9 @@ function editHandler(event) {
 		// target is a todo entry
 		var todoLi = event.target.parentElement;
 		var editedEntry = event.target.textContent;
-		event.target.style.background = 'pink';
 		var todo = findTodo(todos, todoLi.id);
-//		if (todo.entry !== editedEntry) {
 		todo.update(editedEntry);
 		writeTodosToStorage(storageKey);
-//		}
 	}
 }
 
