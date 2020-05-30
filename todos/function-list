@@ -1,6 +1,5 @@
 Functions and where they are used
 
-
 	Data manipulation
 
 	todos							// global array holding todos
@@ -47,6 +46,21 @@ Functions and where they are used
 	leaveSelectModeIfNoneSelected(todo)
 		todoClickHandler select
 		todoClickHandler selectChildren
+
+	Data storage
+
+	writeTodosToStorage(key)
+		insertNewTodoLi
+		appendNewChildTodoLi
+		undoEntryEdit
+		todoClickHandler all but addSibling, addChild, undoEdit
+		actionsClickHandler all but addTodo
+	restoreTodosFromLocalStorage(key)
+		startApp
+	writeFiltersToStorage(key)
+		actionsClickHandler showActive, showCompleted, showDeleted
+	restoreFiltersFromLocalStorage(key)
+		startApp
 
 	Data selection
 
@@ -103,7 +117,7 @@ Functions and where they are used
 		renderTodoList
 
 	renderTodolist()
-		all event handlers
+		most click event handlers
 		insertNewTodoLi
 		appendNewChildTodoLi
 
@@ -118,6 +132,10 @@ Functions and where they are used
 	appendNewChildTodoLi(todo)			// like insertNewTodoLi but in a given todoLi's UL
 		keyUpHandler
 		todoClickHandler event.target addChild
+
+	undoEntryEdit(todo, todoLi)
+		keyUpHandler Escape
+		todoClickHandler undoEdit
 
 	Event handling
 
