@@ -946,6 +946,7 @@ function undoEntryEdit(todo, todoLi) {
 	todo.entry = originalEntry;
 	todoLiEntry.textContent = originalEntry;
 	todoLiUndoEditButton.disabled = true;
+	writeTodosToStorage(storageKey);
 }
 
 /************************************* Event handling ***********************************/
@@ -969,9 +970,9 @@ function keyUpHandler(event) {
 		var todo = findTodo(todos, todoLi.id);
 		var todoArray = findArray(todos, todo.id);
 		if (event.key === "Enter") {
-			if (todo.entry != editedEntry) {
-				todo.update(editedEntry);				// Must update entry before re-rendering
-			}
+//			if (todo.entry != editedEntry) {
+			todo.update(editedEntry);				// Must update entry before re-rendering
+//			}
 			if (event.shiftKey) {
 				if (todo.selectMode === false && showActiveButton.textContent === '√ Active') {
 					appendNewChildTodoLi(todo)			// Shift-return appends a new child todo
@@ -987,7 +988,7 @@ function keyUpHandler(event) {
 				undoEntryEdit(todo, todoLi);
 				var todoLiEntry = todoLi.querySelector('p');
 				todoLiEntry.blur();						// Blur matches result of clicking undoEditButton
-			}
+			}											// and prevents the cursor from going to the 0th position
 		}
 	}
 }
@@ -1019,10 +1020,12 @@ function editHandler(event) {
 		// target is a todo entry
 		var todoLi = event.target.parentElement;
 		var editedEntry = event.target.textContent;
+		event.target.style.background = 'pink';
 		var todo = findTodo(todos, todoLi.id);
-		if (todo.entry !== editedEntry) {
-			todo.update(editedEntry);
-		}
+//		if (todo.entry !== editedEntry) {
+		todo.update(editedEntry);
+		writeTodosToStorage(storageKey);
+//		}
 	}
 }
 
@@ -1054,7 +1057,7 @@ function todoClickHandler(event) {
 		renderTodolist();
 
 	} else if (event.target.name === "addSibling") {
-		insertNewTodoLi(todoArray, todo)			// todoArray and todo are set above by clickHandler
+		insertNewTodoLi(todoArray, todo)
 
 	} else if (event.target.name === "addChild") {
 		appendNewChildTodoLi(todo)
@@ -1086,24 +1089,6 @@ function todoClickHandler(event) {
 				markTodosSelectMode(todo.children, true);
 			}
 		}
-
-//		if (anySelectedTodos(todo.children)) {
-//			// 'Unselect children' clicked
-//			markFilteredInTodosSelected(todo.children, false);
-//			if (!todo.selectMode) {
-//				// select-mode-root button clicked, remove selectMode flag so normal buttons are restored
-//				markTodosSelectMode(todo.children, false);
-//			} else /* root-descendant button clicked */ {
-//				leaveSelectModeIfNoneSelected(todo);
-//			}
-//		} else {
-//			// 'Select children' clicked
-//			markFilteredInTodosSelected(todo.children, true);
-//			if (!todo.selectMode) {
-//				// select-mode-root button clicked, set selectMode flag so normal buttons are disabled 
-//				markTodosSelectMode(todo.children, true);
-//			}
-//		}
 		writeTodosToStorage(storageKey);
 		renderTodolist();
 
