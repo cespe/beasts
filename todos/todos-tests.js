@@ -1043,7 +1043,7 @@ tests({
 
 	},
 	"An empty todo should be created in editing mode for text entry (close devtools to pass test).": function() {
-		// Devtools must be closed for the focus() tests below to pass.
+		// Devtools must be closed for the focus tests below to pass.
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1089,7 +1089,7 @@ tests({
 		eq(document.hasFocus(), true);
 	},
 	"When editing, losing focus on the todoLi should save the revised entry (close devtools to pass test).": function() {
-		// Devtools must be closed for the tests below to pass.
+		// Devtools must be closed for the focus tests below to pass.
 		todolist.innerHTML = '';
 		todos = [];
 		insertNewTodoLi(todos);
@@ -1839,8 +1839,11 @@ tests({
 		eq(todoLi1UndoEditButton.disabled, true);
 	},
 	"undoEditButton should become enabled when a todoLi entry is edited.": function() {
+		
 		manual();
-		// app code works; TODO need alternative to synthetic key events, which don't trigger code
+
+		// Need alternative to synthetic key events, which don't trigger code, to automate this test
+
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1881,8 +1884,11 @@ tests({
 		eq(todoLi2Entry.textContent, 'Item 2');
 	},
 	"undoEditButton should be disabled when an edit is completed.": function() {
+
 		manual();
-		// app code works; TODO need alternative to synthetic key events, which don't trigger code
+
+		// Need alternative to synthetic key events, which don't trigger code, to automate this test
+		
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -1925,7 +1931,9 @@ tests({
 		eq(todoLi1Entry.textContent, 'Item 11');
 	},
 	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton disabled.": function() {
+
 		manual();
+
 		todos = [];
 		todo1 = new Todo('Item 1');
 		insertTodo(todos, todo1);
@@ -5848,6 +5856,25 @@ tests({
 		var stored = JSON.parse(localStorage.getItem('test-todos'));
 
 		eq(stored[0].id, todo1.id);
+		eq(stored[0].stage, todo1.stage);
+		eq(todo1.stage, 'active');
+
+		todo1Li = todolist.children[0].children[0];
+		todo1LiCompleteButton = todo1Li.children.namedItem('complete');
+
+		todo1LiCompleteButton.click();
+
+		var stored = JSON.parse(localStorage.getItem('test-todos'));
+
+		eq(stored[0].id, todo1.id);
+		eq(stored[0].stage, todo1.stage);
+		eq(todo1.stage, 'completed');
+	},
+	"Edited entries should also be saved to localStorage when they lose focus.": function() {
+		// Targets a bug whereby an edited entry was not saved unless/until there wasw a re-render.
+
+		manual();
+		// Create a todo, edit its entry, reload page. Edited entry should survive the reload.
 	},
 	"On page load, saved todos should be retrieved from localStorage.": function() {
 		todolist.innerHTML = '';
