@@ -598,7 +598,8 @@ var showDeletedButton = actionsBar.children.namedItem('showDeleted');
 var todolist = document.getElementById('todolist');
 
 // Global variables for todo entry being edited
-var originalEntry = undefined;		// entry to be restored by undoEdit	
+var originalEntry = undefined;		// entry to be restored by 'Undo edit'	
+var changedEntry = undefined;		// entry to be restored by 'Redo edit'
 var oldUndoEditButton = undefined;	// button to deactivate from last todoLi to be edited
 
 // A set to specify which todos will be displayed
@@ -943,9 +944,19 @@ function undoEntryEdit(todo, todoLi) {
 	var todoLiEntry = todoLi.querySelector('p');
 	var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
 	
-	todo.entry = originalEntry;
-	todoLiEntry.textContent = originalEntry;
-	todoLiUndoEditButton.disabled = true;
+	if (todoLiUndoEditButton.textContent === 'Undo edit') {
+		changedEntry = todoLiEntry.textContent;		// must be todoLiEntry instead of todo.entry because it is
+													// not updated in time from the in-focus entry field
+													// when the keyboard shortcut 'esc' is the trigger
+		todo.entry = originalEntry;
+		todoLiEntry.textContent = originalEntry;
+//		todoLiUndoEditButton.disabled = true;
+		todoLiUndoEditButton.textContent = 'Redo edit';
+	} else {	// 'Redo edit' clicked
+		todo.entry = changedEntry;
+		todoLiEntry.textContent = changedEntry;
+		todoLiUndoEditButton.textContent = 'Undo edit';
+	}
 	writeTodosToStorage(storageKey);
 }
 
@@ -983,10 +994,9 @@ function keyUpHandler(event) {
 		} else if (event.key === "Escape") {
 			var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
 			if (todoLiUndoEditButton.disabled === false) /* prevent restoring the wrong entry */ {
-				undoEntryEdit(todo, todoLi);
-				var todoLiEntry = todoLi.querySelector('p');
-				todoLiEntry.blur();						// Blur matches result of clicking undoEditButton
-			}											// and prevents the cursor from going to the 0th position
+				undoEntryEdit(todo, todoLi);			// esc reverts/restores an edited entry
+
+			}
 		}
 	}
 }
@@ -1000,15 +1010,27 @@ function inputHandler(event) {
 		var todoLiEntry = todoLi.querySelector('p');
 		var todo = findTodo(todos, todoLi.id);
 		
-		// Set global undoEdit variables created earlier
-
+		// Save current entry in global variable so change can be undone
 		originalEntry = todo.entry;
 		
+		// There should only be one undoEditButton enabled at a time. If there was an edit going on before 
+		// this one, then its undoEdit button needs to be disabled and text restored to default.
 		if (oldUndoEditButton) {
-			oldUndoEditButton.disabled = true;	// only want one undoEditButton at a time
+			oldUndoEditButton.disabled = true;	
+			oldUndoEditButton.textContent = 'Undo edit';
 		}
 		todoLiUndoEditButton.disabled = false;
+		// Save button reference to global variable so it can be disabled when the entry edit starts.	
 		oldUndoEditButton = todoLiUndoEditButton;
+	}
+}
+
+// Test focusin event
+
+function focusInHandler(event) {
+	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
+		// target is a todo entry
+		event.target.style.background = 'yellow';
 	}
 }
 
@@ -1020,6 +1042,7 @@ function editHandler(event) {
 		var editedEntry = event.target.textContent;
 		var todo = findTodo(todos, todoLi.id);
 		todo.update(editedEntry);
+		event.target.style.background = 'pink';
 		writeTodosToStorage(storageKey);
 	}
 }
@@ -1173,6 +1196,7 @@ function actionsClickHandler(event) {
 }
 
 function setUpEventListeners() {
+	todolist.addEventListener('focusin', focusInHandler);
 	todolist.addEventListener('focusout', editHandler);		// using focusout event instead of change event
 	todolist.addEventListener('click', todoClickHandler);
 	actionsBar.addEventListener('click', actionsClickHandler);
