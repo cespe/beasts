@@ -995,7 +995,6 @@ function keyUpHandler(event) {
 			var todoLiUndoEditButton = todoLi.children.namedItem('undoEdit');
 			if (todoLiUndoEditButton.disabled === false) /* prevent restoring the wrong entry */ {
 				undoEntryEdit(todo, todoLi);			// esc reverts/restores an edited entry
-
 			}
 		}
 	}
@@ -1020,7 +1019,7 @@ function inputHandler(event) {
 			oldUndoEditButton.textContent = 'Undo edit';
 		}
 		todoLiUndoEditButton.disabled = false;
-		// Save button reference to global variable so it can be disabled when the entry edit starts.	
+		// Save button reference to global variable so it can be disabled when a new entry edit starts.	
 		oldUndoEditButton = todoLiUndoEditButton;
 	}
 }

@@ -5771,6 +5771,11 @@ tests({
 	"When editing, Esc should be a shortcut for 'Undo Edit'.": function() {
 		manual();
 	},
+	"Toggling 'Undo/Redo edit' with 'esc' puts cursor at beginning of entry, app should move it to the end.": function() {
+		// There is HTMLInputElement.setSelectionRange() but it doesn't seem to work on a contenteditable <p>. 
+		future();
+		// Add a todo. Enter 'Fresh entry'. Hit esc twice. 'Fresh entry' should be there with cursor at the end.
+	},
 	"Esc should apply only to the current todoLi entry.": function() {
 		// There was a bug such that Esc would restore originalEntry from the wrong todoLi.
 		// Fixed by adding a check on undoEdit button.
