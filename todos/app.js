@@ -1024,15 +1024,6 @@ function inputHandler(event) {
 	}
 }
 
-// Test focusin event
-
-function focusInHandler(event) {
-	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
-		// target is a todo entry
-		event.target.style.background = 'yellow';
-	}
-}
-
 // Handle focusout event.
 function editHandler(event) {
 	if (event.target.nodeName === "P" && event.target.parentElement.nodeName === "LI") {
@@ -1041,7 +1032,6 @@ function editHandler(event) {
 		var editedEntry = event.target.textContent;
 		var todo = findTodo(todos, todoLi.id);
 		todo.update(editedEntry);
-		event.target.style.background = 'pink';
 		writeTodosToStorage(storageKey);
 	}
 }
@@ -1195,7 +1185,6 @@ function actionsClickHandler(event) {
 }
 
 function setUpEventListeners() {
-	todolist.addEventListener('focusin', focusInHandler);
 	todolist.addEventListener('focusout', editHandler);		// using focusout event instead of change event
 	todolist.addEventListener('click', todoClickHandler);
 	actionsBar.addEventListener('click', actionsClickHandler);
