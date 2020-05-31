@@ -1841,8 +1841,8 @@ tests({
 	"undoEditButton should become enabled when a todoLi entry is edited.": function() {
 		
 		manual();
-		// Add a todo. undoEdit button is disabled. Hit a key, button is enabled.
 
+		// Add a todo. undoEdit button is disabled. Hit a key, button is enabled.
 
 		/*		
 		// Need alternative to synthetic key events, which don't trigger code, to automate this test
@@ -1900,7 +1900,8 @@ tests({
 		// Go back and edit todo A. Todo B button becomes disabled. Todo A button enabled.
 		// Click on Todo B entry but do not edit it. Todo A undoEdit button still enabled.
 		// Click outside of entries on body but not on a button. Todo A button still enabled.
-		// Click Todo A undoEdit button. Entry reverts to original 'A'. Todo A undoEdit button becomes disabled.
+		// Click Todo A undoEdit button. Entry reverts to original 'A'. Todo A undoEdit button text becomes 'Redo edit'.
+		// Click showDeletedButton to re-render. Todo A undoEdit button reads 'Undo edit' and is disabled.
 
 		/*
 		// Need alternative to synthetic key events, which don't trigger code, to automate this test
@@ -1947,11 +1948,12 @@ tests({
 		eq(todoLi1Entry.textContent, 'Item 11');
 		*/
 	},
-	"Clicking undoEditButton should revert text of todo being edited to old version and set undoEditButton disabled.": function() {
+	"Clicking 'Undo edit' button should revert entry to old version and toggle button text to 'Redo edit'.": function() {
 
 		manual();
 
-		// Add a todo. Enter text. Click undoEdit button. Text goes away and undoEdit button becomes disabled.
+		// Add a todo. Enter text. Click undoEdit button. Text goes away and undoEdit button reads 'Redo edit'.
+		// The entry loses focus as a consequence of the button click. That is the natural expected behavior.
 
 		/*
 		// Need alternative to synthetic key events, which don't trigger code, to automate this test
@@ -1974,15 +1976,28 @@ tests({
 		todoLi1Entry.textContent = 'Item 11';
 
 		eq(todoLi1UndoEditButton.disabled, false);
+		eq(todoLiUndoEditButton.textContent, 'Undo edit');
 		eq(todoLi1Entry.textContent, 'Item 11');
 
 		todoLi1UndoEditButton.click();
 
-		eq(todoLi1UndoEditButton.disabled, true);
+		eq(todoLi1UndoEditButton.disabled, false);
+		eq(todoLiUndoEditButton.textContent, 'Redo edit');
 		eq(todoLi1Entry.textContent, 'Item 1');
-
-		// TODO should entry still have focus?
 		*/
+	},
+	"Clicking 'Redo edit' button should revert entry to edited version and toggle button text to 'Undo edit'.": function() {
+		// By design, the undoing/re-doing process is cumulative. If you re-do an edit and then add more to the entry,
+		// the redone edit becomes the new baseline for undoing the most recent addition.
+		
+		manual();
+		
+		// Add a todo. Enter text 'Fresh entry'. Click undoEdit button. Text goes away and undoEdit button reads 'Redo edit'.
+		// Click 'Redo edit' button. 'Fresh entry' re-appears. Button toggles back to 'Undo edit'.
+		// Add 'edited again' after 'Fresh entry'. Click 'Undo edit' again. Text reverts to 'Fresh entry' and button to 'Redo edit' 
+		// Click 'Redo edit'. Text goes back to 'Fresh entry edited again'. Button reads 'Undo edit'.
+		// Click 'Undo edit' one last time. Text revers to 'Fresh entry' and button to 'Redo edit'.
+		// Click showDeleted filter button. undoEdit button reads 'Undo edit' and is disabled.
 	},
 	"Each todoLi with children should have a showChildren button to expand/collapse nested todos.": function() {
 		todos = [];
