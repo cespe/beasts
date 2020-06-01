@@ -1185,7 +1185,8 @@ function actionsClickHandler(event) {
 }
 
 function setUpEventListeners() {
-	todolist.addEventListener('focusout', editHandler);		// using focusout event instead of change event
+	todolist.addEventListener('focusout', editHandler);		// using focusout event instead of change event,
+															// which does not work on a contenteditable <p>
 	todolist.addEventListener('click', todoClickHandler);
 	actionsBar.addEventListener('click', actionsClickHandler);
 	todolist.addEventListener('input', inputHandler);

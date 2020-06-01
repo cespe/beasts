@@ -5625,9 +5625,8 @@ tests({
 		eq(purgeSelectedDeletedButton.disabled, true);
 	},
 	"Clicking the purgeSelectedDeletedButton should remove selected deleted todos from storage and display.": function() {
-		// TODO Warn against purging if any selected deleted todos have undeleted nested todos
 		// TODO Consider applying this very focused style of code to other tests. No unnecessary assertions, easy to see
-		// the sequence of clicks.
+		// the sequence of clicks. Contrast with the test just above.
 
 		todos = [];
 		todo1 = new Todo('Item 1');
@@ -5655,6 +5654,9 @@ tests({
 
 		eq(todos.length, 1);
 		eq(todolist.children[0].children.length, 1);
+	},
+	"The app should warn the user before purging selected deleted todos with nested todos that are not deleted.": function() {
+		future();
 	},
 	"The header actions bar should have an 'addTodo' button to add a new todo to the end of the list.": function() {
 		// In case filtering the list results in no displayed todos so that addSibling is unavailable.
