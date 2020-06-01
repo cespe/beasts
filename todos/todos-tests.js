@@ -68,6 +68,11 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.collapsed, false);
 	},
+	"A todo object should be created with a 'displayed' property of type Boolean set to false.": function() {
+		// Necessary to prevent hidden todos from being selected
+		newTodo = Todo();
+		eq(newTodo.displayed, true);
+	},
 	"A todo object should be created with a 'filteredIn' property of type Boolean set to true.": function() {
 		// Created true because default stage is 'active' and the app only creates new todos when showActiveButton is '√ Active'.
 		// When showActiveButton is 'Active', addTodo, addSibling, addChild buttons and key shortcuts are disabled.
@@ -135,6 +140,14 @@ tests({
 		newTodo.markCollapsed(false);
 		eq(newTodo.collapsed, false);
 	},
+	"The app should have a way to mark a todo's displayed property true or false.": function() {
+		todo1 = new Todo('Item 1');
+		eq(todo1.displayed, true);
+		todo1.markDisplayed(false);
+		eq(todo1.displayed, false);
+		todo1.markDisplayed(true);
+		eq(todo1.displayed, true);
+	},
 	"The app should have a way to mark a todo filtered in for display or not according to a supplied set of tags.": function() {
 		// Tests todo.markFilteredIn(set)
 		todo1 = new Todo('Item 1 active');
@@ -170,7 +183,7 @@ tests({
 		eq(todo3.filteredIn, true);
 
 	},
-	"The app should have a way to mark a todo as a filtered-out parent of filtered-in todos according to a supplied set of display tags.": function() {
+	"The app should have a way to mark a todo as a filtered-out parent of filtered-in todos according to a supplied set of filter tags.": function() {
 		// Tests todo.markFilteredOutParentOfFilteredIn();
 		todo1 = new Todo('Item 1 filtered in');						// tagged active on creation
 		todo2 = new Todo('Item 2 filtered-out parent');
