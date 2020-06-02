@@ -68,9 +68,9 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.collapsed, false);
 	},
-	"A todo object should be created with a 'displayed' property of type Boolean set to false.": function() {
+	"A todo object should be created with a 'displayed' property of type Boolean set to true.": function() {
 		// Necessary to prevent hidden todos from being selected
-		newTodo = Todo();
+		newTodo = new Todo();
 		eq(newTodo.displayed, true);
 	},
 	"A todo object should be created with a 'filteredIn' property of type Boolean set to true.": function() {
@@ -398,6 +398,24 @@ tests({
 		eq(todo1.filteredIn, true);
 		eq(todo2.selected, true);
 		eq(todo2.filteredIn, true);		// filtered in even though deleted because it is selected
+	},
+	"The app should have a way to set todo display property for all children of a given array.": function() {
+		// Tests markTodosDisplayed(todoArray)
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		todo1.addChild(child1);
+		todo1.markCollapsed(true);
+
+		eq(child1.displayed, true);
+		eq(grandchild1.displayed, true);
+
+		markTodosDisplayed(todos)
+
+		eq(child1.displayed, false);
+		eq(grandchild1.displayed, false);
 	},
 	"Section: todo array helper functions": function() {
 	},
