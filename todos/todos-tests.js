@@ -68,10 +68,10 @@ tests({
 		newTodo = new Todo();
 		eq(newTodo.collapsed, false);
 	},
-	"A todo object should be created with a 'displayed' property of type Boolean set to true.": function() {
+	"A todo object should be created with a 'hidden' property of type Boolean set to false.": function() {
 		// Necessary to prevent hidden todos from being selected
 		newTodo = new Todo();
-		eq(newTodo.displayed, true);
+		eq(newTodo.hidden, false);
 	},
 	"A todo object should be created with a 'filteredIn' property of type Boolean set to true.": function() {
 		// Created true because default stage is 'active' and the app only creates new todos when showActiveButton is '√ Active'.
@@ -140,13 +140,13 @@ tests({
 		newTodo.markCollapsed(false);
 		eq(newTodo.collapsed, false);
 	},
-	"The app should have a way to mark a todo's displayed property true or false.": function() {
+	"The app should have a way to mark a todo's hidden property true or false.": function() {
 		todo1 = new Todo('Item 1');
-		eq(todo1.displayed, true);
-		todo1.markDisplayed(false);
-		eq(todo1.displayed, false);
-		todo1.markDisplayed(true);
-		eq(todo1.displayed, true);
+		eq(todo1.hidden, false);
+		todo1.markHidden(true);
+		eq(todo1.hidden, true);
+		todo1.markHidden(false);
+		eq(todo1.hidden, false);
 	},
 	"The app should have a way to mark a todo filtered in for display or not according to a supplied set of tags.": function() {
 		// Tests todo.markFilteredIn(set)
@@ -399,23 +399,30 @@ tests({
 		eq(todo2.selected, true);
 		eq(todo2.filteredIn, true);		// filtered in even though deleted because it is selected
 	},
-	"The app should have a way to set todo display property for all children of a given array.": function() {
-		// Tests markTodosDisplayed(todoArray)
+	"The app should have a way to mark todos in collapsed todo.children arrays hidden.": function() {
+		// Tests markHiddenTodos(todosArray)
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
 		grandchild1 = new Todo('Grandchild 1');
+		greatgrandchild1 = new Todo('Great grandchild 1');
+		grandchild1.addChild(greatgrandchild1);
 		child1.addChild(grandchild1);
 		todo1.addChild(child1);
-		todo1.markCollapsed(true);
+		child1.markCollapsed(true);
+		insertTodo(todos, todo1);
+		
+		eq(todo1.hidden, false);
+		eq(child1.hidden, false);
+		eq(grandchild1.hidden, false);
+		eq(greatgrandchild1.hidden, false);
 
-		eq(child1.displayed, true);
-		eq(grandchild1.displayed, true);
+		markHiddenTodos(todos);
 
-		markTodosDisplayed(todos)
-
-		eq(child1.displayed, false);
-		eq(grandchild1.displayed, false);
+		eq(greatgrandchild1.hidden, true);
+		eq(grandchild1.hidden, true);
+		eq(child1.hidden, false);
+		eq(todo1.hidden, false);
 	},
 	"Section: todo array helper functions": function() {
 	},
@@ -2751,7 +2758,7 @@ tests({
 		eq(grandchild1.selectMode, true);
 		eq(grandchild2.selectMode, true);
 	},
-	"The selectChildren button should select/unselect displayed (filtered-in) nested todos only.": function() {
+	"The selectChildren button should select/unselect displayed (filtered-in and not hidden) nested todos only.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Item 1 child 1');
@@ -2773,6 +2780,7 @@ tests({
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		var child1Li = todoLi1Ul.children[0];
 		var child1LiShowChildrenButton = child1Li.children.namedItem('showChildren');
+		var child1LiUl = child1Li.querySelector('ul');
 		var child2Li = todoLi1.querySelector('ul').children[1];
 		var child3Li = todoLi1.querySelector('ul').children[2];
 
@@ -2784,11 +2792,16 @@ tests({
 		eq(child2.selected, false);
 		eq(child3.selected, false);
 		eq(child1.filteredIn, true);
-		eq(grandchild1.filteredIn, false);
+		eq(grandchild1.filteredIn, true);
 		eq(child2.filteredIn, true);
 		eq(child3.filteredIn, false);
+		eq(child1.hidden, false);
+		eq(grandchild1.hidden, true);
+		eq(child2.hidden, false);
+		eq(child3.hidden, false);
 		eq(todoLi1Ul.children.length, 2);
 		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child1LiUl, null);					// because child1.children is collapsed
 		eq(child2Li, todoLi1Ul.children[1]);
 		eq(child3Li, undefined);
 
@@ -2798,6 +2811,8 @@ tests({
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		todoLi1Ul = todoLi1.querySelector('ul');
 		child1Li = todoLi1Ul.children[0];
+		child1LiUl = child1Li.querySelector('ul');
+		eq(child1LiUl, null);
 		child2Li = todoLi1.querySelector('ul').children[1];
 		child3Li = todoLi1.querySelector('ul').children[2];
 
@@ -2808,11 +2823,16 @@ tests({
 		eq(child2.selected, true);
 		eq(child3.selected, false);
 		eq(child1.filteredIn, true);
-		eq(grandchild1.filteredIn, false);
+		eq(grandchild1.filteredIn, true);
 		eq(child2.filteredIn, true);
 		eq(child3.filteredIn, false);
+		eq(child1.hidden, false);
+		eq(grandchild1.hidden, true);
+		eq(child2.hidden, false);
+		eq(child3.hidden, false);
 		eq(todoLi1Ul.children.length, 2);
 		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child1LiUl, null);
 		eq(child2Li, todoLi1Ul.children[1]);
 		eq(child3Li, undefined);
 
@@ -2822,6 +2842,7 @@ tests({
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		todoLi1Ul = todoLi1.querySelector('ul');
 		child1Li = todoLi1Ul.children[0];
+		child1LiUl = child1Li.querySelector('ul');
 		child2Li = todoLi1.querySelector('ul').children[1];
 		child3Li = todoLi1.querySelector('ul').children[2];
 
@@ -2832,11 +2853,16 @@ tests({
 		eq(child2.selected, false);
 		eq(child3.selected, false);
 		eq(child1.filteredIn, true);
-		eq(grandchild1.filteredIn, false);
+		eq(grandchild1.filteredIn, true);
 		eq(child2.filteredIn, true);
 		eq(child3.filteredIn, false);
+		eq(child1.hidden, false);
+		eq(grandchild1.hidden, true);
+		eq(child2.hidden, false);
+		eq(child3.hidden, false);
 		eq(todoLi1Ul.children.length, 2);
 		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child1LiUl, null);
 		eq(child2Li, todoLi1Ul.children[1]);
 		eq(child3Li, undefined);
 	}, 
@@ -2847,12 +2873,12 @@ tests({
 		child1 = new Todo('Item 1 child 1');
 		grandchild1 = new Todo('Item 1 grandchild 1');
 		child1.addChild(grandchild1);
-		child1.markCollapsed(true);						// to test case of filtering out by hiding children	
+		child1.markCollapsed(true);						// to test case of hidden children	
 		todo1.addChild(child1);
 		child2 = new Todo('Item 1 child 2');
 		todo1.addChild(child2);
 		child3 = new Todo('Item 1 child 3');
-		child3.markDeleted(true);						// to test case of filtering out by filter
+		child3.markDeleted(true);						// to test case of filtering out
 		todo1.addChild(child3);
 		insertTodo(todos, todo1);
 		
@@ -2862,6 +2888,7 @@ tests({
 		var todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		var todoLi1Ul = todoLi1.querySelector('ul');
 		var child1Li = todoLi1Ul.children[0];
+		var child1LiUl = child1Li.querySelector('ul');
 		var child1LiShowChildrenButton = child1Li.children.namedItem('showChildren');
 		var child2Li = todoLi1.querySelector('ul').children[1];
 		var child3Li = todoLi1.querySelector('ul').children[2];
@@ -2874,11 +2901,16 @@ tests({
 		eq(child2.selectMode, false);
 		eq(child3.selectMode, false);
 		eq(child1.filteredIn, true);
-		eq(grandchild1.filteredIn, false);
+		eq(grandchild1.filteredIn, true);
 		eq(child2.filteredIn, true);
 		eq(child3.filteredIn, false);
+		eq(child1.hidden, false);
+		eq(grandchild1.hidden, true);
+		eq(child2.hidden, false);
+		eq(child3.hidden, false);
 		eq(todoLi1Ul.children.length, 2);
 		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child1LiUl, null);
 		eq(child2Li, todoLi1Ul.children[1]);
 		eq(child3Li, undefined);
 
@@ -2888,6 +2920,7 @@ tests({
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		todoLi1Ul = todoLi1.querySelector('ul');
 		child1Li = todoLi1Ul.children[0];
+		child1LiUl = child1Li.querySelector('ul');
 		child2Li = todoLi1.querySelector('ul').children[1];
 		child3Li = todoLi1.querySelector('ul').children[2];
 
@@ -2898,11 +2931,16 @@ tests({
 		eq(child2.selectMode, true);
 		eq(child3.selectMode, true);
 		eq(child1.filteredIn, true);
-		eq(grandchild1.filteredIn, false);
+		eq(grandchild1.filteredIn, true);
 		eq(child2.filteredIn, true);
 		eq(child3.filteredIn, false);
+		eq(child1.hidden, false);
+		eq(grandchild1.hidden, true);
+		eq(child2.hidden, false);
+		eq(child3.hidden, false);
 		eq(todoLi1Ul.children.length, 2);
 		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child1LiUl, null);
 		eq(child2Li, todoLi1Ul.children[1]);
 		eq(child3Li, undefined);
 
@@ -2912,6 +2950,8 @@ tests({
 		todoLi1SelectChildrenButton = todoLi1.children.namedItem('selectChildren');
 		todoLi1Ul = todoLi1.querySelector('ul');
 		child1Li = todoLi1Ul.children[0];
+		child1Li = todoLi1Ul.children[0];
+		child1LiUl = child1Li.querySelector('ul');
 		child2Li = todoLi1.querySelector('ul').children[1];
 		child3Li = todoLi1.querySelector('ul').children[2];
 
@@ -2922,11 +2962,16 @@ tests({
 		eq(child2.selectMode, false);
 		eq(child3.selectMode, false);
 		eq(child1.filteredIn, true);
-		eq(grandchild1.filteredIn, false);
+		eq(grandchild1.filteredIn, true);
 		eq(child2.filteredIn, true);
 		eq(child3.filteredIn, false);
+		eq(child1.hidden, false);
+		eq(grandchild1.hidden, true);
+		eq(child2.hidden, false);
+		eq(child3.hidden, false);
 		eq(todoLi1Ul.children.length, 2);
 		eq(child1Li, todoLi1Ul.children[0]);
+		eq(child1LiUl, null);
 		eq(child2Li, todoLi1Ul.children[1]);
 		eq(child3Li, undefined);
 	}, 
@@ -4027,11 +4072,60 @@ tests({
 
 		eq(selectAllButton.textContent, 'Select all');
 	},
-	"Clicking selectAll button should toggle select and selectMode on all filtered-in nested todos.": function() {
+	"Clicking selectAll button should toggle selectMode on all todos, including nested todos.": function() {
 		todos = [];
 		todo1 = new Todo('Item 1');
 		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		child1.markCollapsed(true);
+		child2 = new Todo('Child 2');
+		child2.markDeleted(true);
 		todo1.addChild(child1);
+		todo1.addChild(child2);
+		insertTodo(todos, todo1);
+		todo2 = new Todo('Item 2');
+		insertTodo(todos, todo2);
+
+		startTestApp();
+
+		eq(todo1.selectMode, false);
+		eq(todo2.selectMode, false);
+		eq(child1.selectMode, false);
+		eq(child2.selectMode, false);
+		eq(grandchild1.selectMode, false);
+
+		eq(selectAllButton.textContent, 'Select all');
+
+		selectAllButton.click();
+
+		eq(todo1.selectMode, true);
+		eq(todo2.selectMode, true);
+		eq(child1.selectMode, true);
+		eq(child2.selectMode, true);		// even though it is filtered out
+		eq(grandchild1.selectMode, true);	// even though it is hidden
+
+		eq(selectAllButton.textContent, 'Unselect all');
+
+		selectAllButton.click();
+
+		eq(todo1.selectMode, false);
+		eq(todo2.selectMode, false);
+		eq(child1.selectMode, false);
+		eq(child2.selectMode, false);
+		eq(grandchild1.selectMode, false);
+	},
+	"Clicking selectAll button should toggle select on all displayed (filtered in and not hidden) nested todos.": function() {
+		todos = [];
+		todo1 = new Todo('Item 1');
+		child1 = new Todo('Child 1');
+		grandchild1 = new Todo('Grandchild 1');
+		child1.addChild(grandchild1);
+		child1.markCollapsed(true);
+		child2 = new Todo('Child 2');
+		child2.markDeleted(true);
+		todo1.addChild(child1);
+		todo1.addChild(child2);
 		insertTodo(todos, todo1);
 		todo2 = new Todo('Item 2');
 		insertTodo(todos, todo2);
@@ -4041,9 +4135,8 @@ tests({
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
 		eq(child1.selected, false);
-		eq(todo1.selectMode, false);
-		eq(todo2.selectMode, false);
-		eq(child1.selectMode, false);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, false);
 
 		eq(selectAllButton.textContent, 'Select all');
 
@@ -4052,9 +4145,8 @@ tests({
 		eq(todo1.selected, true);
 		eq(todo2.selected, true);
 		eq(child1.selected, true);
-		eq(todo1.selectMode, true);
-		eq(todo2.selectMode, true);
-		eq(child1.selectMode, true);
+		eq(child2.selected, false);			// because it is filtered out
+		eq(grandchild1.selected, false);	// because it is hidden
 
 		eq(selectAllButton.textContent, 'Unselect all');
 
@@ -4063,9 +4155,8 @@ tests({
 		eq(todo1.selected, false);
 		eq(todo2.selected, false);
 		eq(child1.selected, false);
-		eq(todo1.selectMode, false);
-		eq(todo2.selectMode, false);
-		eq(child1.selectMode, false);
+		eq(child2.selected, false);
+		eq(grandchild1.selected, false);
 	},
 	"Clicking selectAll button should re-render todoLis.": function() {
 		todos = [];
